@@ -7,3 +7,7 @@ guide.pdf
 ./docs/diagrams/render_workflow.py
 ./docs/diagrams/workflow.dot
 ./docs/diagrams/workflow.svg
+.env
+.cache/
+dev/
+*.zip
