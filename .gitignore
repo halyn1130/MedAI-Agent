@@ -1,9 +1,86 @@
-__pycache__/
-*.pyc
+# 환경변수·인증 정보
+.env
+.env.*
+!.env.example
+.envrc
+*.pem
+*.key
+
+# Python 가상환경·캐시·빌드
 .venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Risk 구현은 이번 공유에서 제외 (로컬 보존)
+/agents/risk/
+/risk/
+/examples/risk/
+/tests/test_risk.py
+/docs/diagrams/render_risk_workflow.py
+
+# 로컬 수집·다이어그램 생성 도구
+/scripts/
+/docs/diagrams/render_workflow.py
+/docs/diagrams/workflow.dot
+
+# 실행·변환 산출물과 임시 파일
+/outputs/
+/output/pdf/
+/output/images/
+/tmp/
+/temp/
+.cache/
+*.log
+*.tmp
+*.temp
+
+# 재생성 가능한 RAG 인덱스
+/data/vectorstore/
+/data/vector_store/
+/data/chroma/
+/data/faiss/
+
+# PDF 전체
+*.[pP][dD][fF]
+
+# 이미지 전체 (공유 README에서 사용하는 이미지는 아래에 예외 추가)
+*.[pP][nN][gG]
+*.[jJ][pP][gG]
+*.[jJ][pP][eE][gG]
+*.[sS][vV][gG]
+*.[gG][iI][fF]
+*.[wW][eE][bB][pP]
+*.[aA][vV][iI][fF]
+*.[bB][mM][pP]
+*.[tT][iI][fF]
+*.[tT][iI][fF][fF]
+*.[iI][cC][oO]
+*.[hH][eE][iI][cC]
+*.[hH][eE][iI][fF]
+
+# OS·편집기 개인 설정
 .DS_Store
-./scripts
-guide.pdf
-./docs/diagrams/render_workflow.py
-./docs/diagrams/workflow.dot
-./docs/diagrams/workflow.svg
+._*
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
