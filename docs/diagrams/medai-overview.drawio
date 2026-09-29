@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="medai-main" name="전체 실행 흐름">
+    <mxGraphModel dx="1530" dy="1350" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1530" pageHeight="1350" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="의료 AI 스타트업 투자 평가" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=26;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="200" y="22" width="800" height="38" />
+        </mxCell>
+        <mxCell id="subtitle" value="LangGraph · 7개 에이전트 · 시장·사업성 분석에만 RAG 적용" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=15;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="150" y="60" width="900" height="25" />
+        </mxCell>
+        <mxCell id="company_scope" value="" style="rounded=1;arcSize=5;fillColor=#FAFBFD;strokeColor=#CBD5E1;dashed=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="80" y="388" width="1390" height="552" />
+        </mxCell>
+        <mxCell id="scope_label" value="기업별 실행 영역 · 각 기업 안에서 4개 분석 병렬 수행" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=14;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="90" y="390" width="510" height="25" />
+        </mxCell>
+        <mxCell id="e0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="start" target="profile">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="profile" target="eligible">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="eligible" target="clinical">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="570" y="420" />
+              <mxPoint x="207.5" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="eligible" target="market">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="570" y="420" />
+              <mxPoint x="452.5" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="eligible" target="traction">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="570" y="420" />
+              <mxPoint x="697.5" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="eligible" target="risk">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="570" y="420" />
+              <mxPoint x="932.5" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="clinical" target="join">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="207.5" y="560" />
+              <mxPoint x="570" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="market" target="join">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="452.5" y="560" />
+              <mxPoint x="570" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="traction" target="join">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="697.5" y="560" />
+              <mxPoint x="570" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="risk" target="join">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="932.5" y="560" />
+              <mxPoint x="570" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="join" target="judge">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="judge" target="decision">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;" edge="1" parent="1" source="decision" target="retry_check">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=0.0;entryX=0.38571428571428573;entryY=1.0;" edge="1" parent="1" source="retry_check" target="retry">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;" edge="1" parent="1" source="retry_check" target="hold">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=1.0;entryY=0.5;" edge="1" parent="1" source="hold" target="all_results">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1330" y="1012.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=0.0;entryX=1.0;entryY=0.5;" edge="1" parent="1" source="retry" target="join">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1000" y="627.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="decision" target="all_results">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="all_results" target="report">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#69788D;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;" edge="1" parent="1" source="report" target="end">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="start" value="시작" style="rounded=1;arcSize=100;whiteSpace=wrap;html=0;fillColor=#F3F5F8;strokeColor=#99A5B6;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="490" y="95" width="160" height="44" />
+        </mxCell>
+        <mxCell id="profile" value="데이터 입력·정규화&#10;제공 데이터셋 · 공통 입력 · 추가 수집 없음" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#EFF6FF;strokeColor=#7CA4DD;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="365" y="175" width="410" height="72" />
+        </mxCell>
+        <mxCell id="eligible" value="전체 적격 기업 병렬 실행&#10;기업 A · 기업 B · 기업 C · …" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#E6F6F1;strokeColor=#52A995;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="365" y="290" width="410" height="72" />
+        </mxCell>
+        <mxCell id="clinical" value="임상·인허가 분석&#10;임상 근거 · 허가 상태" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#EFF6FF;strokeColor=#7CA4DD;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="105" y="440" width="205" height="80" />
+        </mxCell>
+        <mxCell id="market" value="시장·사업성 분석&#10;시장 · 수요 · 수익 모델&#10;RAG · 최대 200페이지" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#E6F6F1;strokeColor=#52A995;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="340" y="440" width="225" height="80" />
+        </mxCell>
+        <mxCell id="traction" value="실적·성장성 분석&#10;매출 · 계약 · 도입 성과" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#EFF6FF;strokeColor=#7CA4DD;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="595" y="440" width="205" height="80" />
+        </mxCell>
+        <mxCell id="risk" value="리스크 분석&#10;사업 운영의 불확실성" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#EFF6FF;strokeColor=#7CA4DD;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="830" y="440" width="205" height="80" />
+        </mxCell>
+        <mxCell id="join" value="기업별 분석 결과 취합&#10;근거 · 출처 · 미확인 사항" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#F3F5F8;strokeColor=#99A5B6;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="405" y="595" width="330" height="65" />
+        </mxCell>
+        <mxCell id="judge" value="기업별 투자 심사&#10;Python 점수 계산 · 근거 검토" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#EFF6FF;strokeColor=#7CA4DD;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="405" y="710" width="330" height="72" />
+        </mxCell>
+        <mxCell id="decision" value="판단" style="rhombus;whiteSpace=wrap;html=0;fillColor=#F3F5F8;strokeColor=#99A5B6;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="485" y="825" width="170" height="100" />
+        </mxCell>
+        <mxCell id="retry_check" value="보완 횟수가&#10;상한 미만인가?" style="rhombus;whiteSpace=wrap;html=0;fillColor=#FFF6E5;strokeColor=#D6AA53;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="865" y="825" width="190" height="100" />
+        </mxCell>
+        <mxCell id="retry" value="해당 기업의 담당 에이전트만 보완&#10;부족 항목 · 충돌 출처 전달&#10;웹 재조사 / 시장 RAG 재검색&#10;기업별 보완 횟수 +1" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#FFF6E5;strokeColor=#D6AA53;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="825" y="680" width="350" height="110" />
+        </mxCell>
+        <mxCell id="hold" value="보류 확정&#10;미해결 근거 · 한계 기록" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#FFF6E5;strokeColor=#D6AA53;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1210" y="835" width="240" height="80" />
+        </mxCell>
+        <mxCell id="all_results" value="전체 기업 결과 취합&#10;모든 기업의 투자·보류 판단 완료 후" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#E6F6F1;strokeColor=#52A995;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="365" y="980" width="410" height="65" />
+        </mxCell>
+        <mxCell id="report" value="최종 보고서 작성&#10;기업별 평가 · 투자·보류 근거" style="rounded=1;arcSize=20;whiteSpace=wrap;html=0;fillColor=#EFF6FF;strokeColor=#7CA4DD;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="405" y="1090" width="330" height="72" />
+        </mxCell>
+        <mxCell id="end" value="PDF 저장 · 종료" style="rounded=1;arcSize=100;whiteSpace=wrap;html=0;fillColor=#F3F5F8;strokeColor=#99A5B6;fontColor=#22324A;fontSize=16;spacing=8;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="460" y="1200" width="220" height="48" />
+        </mxCell>
+        <mxCell id="label12" value="필수 근거 부족 · 출처 충돌" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=13;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="580" y="843" width="360" height="22" />
+        </mxCell>
+        <mxCell id="label13" value="예" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=13;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="809" y="796" width="360" height="22" />
+        </mxCell>
+        <mxCell id="label14" value="아니요 · 상한 도달" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=13;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="951" y="843" width="360" height="22" />
+        </mxCell>
+        <mxCell id="label15" value="보류 결과 포함" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=13;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="940" y="981" width="360" height="22" />
+        </mxCell>
+        <mxCell id="label16" value="해당 결과 갱신 · 나머지 결과 유지" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=13;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="807" y="598" width="360" height="22" />
+        </mxCell>
+        <mxCell id="label17" value="근거 충분 → 투자 / 보류" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=13;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="498" y="942" width="360" height="22" />
+        </mxCell>
+        <mxCell id="note" value="보완 후 재취합 → 점수 재계산 → 재심사  |  상한 도달 시 보류 처리" style="text;html=0;strokeColor=none;fillColor=none;align=center;fontSize=14;fontColor=#22324A;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="100" y="1290" width="1000" height="25" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
