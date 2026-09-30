@@ -17,7 +17,7 @@ investment_review/
   nodes.py             # LangGraph: 기업별 그래프 + 전체 그래프
   inputs.py            # 기업 목록·저장된 결과 불러오기 (01 대체)
   adapters/            # 02~05 원래 형식 읽기 → AgentResult, stub(결과 없음)
-  report/              # context_builder → writer → checker → renderer
+  report/              # context_builder → writer(선택) → checker → renderer, CLI
   tests/fixtures/      # 02~05 실제 코드로 만든 출력 샘플 (build_fixtures.py)
 ```
 
@@ -106,6 +106,30 @@ python -m agents.investment_review --market-json m.json --traction-json t.json -
 - 기업 ID는 `inputs.py`가 02 임상과 같은 규칙(c001~)으로 만들고, Risk ID는 기업명으로 연결합니다 (01 정규화 대체).
 - 02 임상 보완 결과는 `--out/clinical_results/`에 저장됩니다(`CLINICAL_RESULT_DIR`).
 - 결과: `--out/final_reviews.json` (기본 `outputs/investment_review/`)
+
+## 보고서
+
+`report/`가 구조화 → (선택) LLM 서술 → 검증 → 렌더링 순서로 `final_report.md`를 만듭니다. 목차는 설계서 27쪽을 따릅니다.
+
+```text
+# 투자 검토 보고서
+## 1. SUMMARY              전체 결과 요약 (1/2쪽 이내)
+## 2. 선정 기업             기업별 고객 문제·시장 / 기술·임상·인허가 / 사업모델·실적 / 운영 리스크 + C1~C6 비교표
+## 3. 전체 후보 판정        모든 후보의 판정·총점·사유·0점 처리 항목
+## 4. 보완 이력·한계
+## 5. 추가 실사 질문
+## REFERENCE               본문에서 [n]으로 인용한 원문 출처만
+```
+
+```bash
+python -m agents.investment_review.report --run-dir outputs/investment_review          # 템플릿 문장 (기본)
+python -m agents.investment_review.report --run-dir outputs/investment_review --llm    # SUMMARY·핵심 검토 논점 LLM 서술
+```
+
+- 표·수치는 템플릿으로 직접 렌더링하고, LLM은 SUMMARY와 선정 기업별 핵심 검토 논점만 씁니다 (`REPORT_MODEL`, 없으면 `MARKET_MODEL`).
+- `checker.py`가 분량(5쪽·SUMMARY 1/2쪽, 줄 너비 기준 추정), 인용 번호 ↔ REFERENCE 일치, 전체 후보 포함을 검사해 `report_check.json`에 남깁니다.
+- LLM 문장에 보고서 데이터에 없는 숫자가 있으면 그 문장은 버리고 템플릿 문장을 씁니다. **의미 오류(예: "미발견"을 "없음 확인"으로 쓰기)는 잡지 못하므로 LLM 서술은 선택 기능입니다.**
+- 전체 실행(`python -m agents.investment_review`)도 끝에 보고서를 만듭니다 (`--no-report`, `--llm-report`).
 
 ## 테스트
 

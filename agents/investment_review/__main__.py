@@ -17,7 +17,7 @@ from pathlib import Path
 
 from .inputs import ROOT, DEFAULT_CSV, load_companies, saved_clinical, saved_json, saved_risk
 from .nodes import build_graph
-from .policy import PARTIAL_POLICY, STRICT_POLICY, ZERO_FILL_POLICY
+from .policy import DEFAULT_K, PARTIAL_POLICY, STRICT_POLICY, ZERO_FILL_POLICY
 
 POLICIES = {"zero_fill": ZERO_FILL_POLICY, "partial": PARTIAL_POLICY, "strict": STRICT_POLICY}
 
@@ -42,6 +42,8 @@ def main() -> None:
     ap.add_argument("--market-json", type=Path, help="저장된 시장 결과 {company_id: Envelope}")
     ap.add_argument("--traction-json", type=Path, help="저장된 실적 결과 {company_id: Envelope}")
     ap.add_argument("--max-concurrency", type=int, default=5)
+    ap.add_argument("--no-report", action="store_true", help="보고서 생성 생략")
+    ap.add_argument("--llm-report", action="store_true", help="보고서 SUMMARY·논점을 LLM으로 서술")
     args = ap.parse_args()
 
     companies = load_companies(args.csv)
@@ -85,6 +87,14 @@ def main() -> None:
     (args.out / "risk_analysis.json").write_text(json.dumps(
         {cid: {"risk_analysis": a["risk_analysis"], "references": a.get("references", [])}
          for cid, a in analyses.items() if "risk_analysis" in a}, ensure_ascii=False), encoding="utf-8")
+    meta = {"as_of": args.as_of, "criteria_version": POLICIES[args.policy].criteria_version,
+            "policy": args.policy, "k": args.k or DEFAULT_K}
+    (args.out / "run_meta.json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
+    if not args.no_report:
+        from .report.__main__ import write_report
+        check = write_report(args.out, out["final_reviews"], analyses, {c["company_id"]: c for c in companies},
+                             meta, "auto" if args.llm_report else None)
+        print(f"보고서: {args.out / 'final_report.md'} · 약 {check['pages']}쪽 · 검증 {'통과' if check['ok'] else check['issues']}")
     names = {c["company_id"]: c["company_name"] for c in companies}
     for r in out["final_reviews"]:
         total = "-" if r["total_score"] is None else f"{r['total_score']:.1f}"
