@@ -13,6 +13,19 @@
 | 선정 | 적격 기업 최대 5개 |
 | 구현 상태 | 모듈별 개발·통합 진행 중, 전체 실행 진입점 미구현 |
 
+## 기술 스택
+
+| 구분 | 기술 |
+|---|---|
+| 언어 | Python |
+| Agent 구성 | LangGraph, LangChain |
+| LLM 연동 | OpenAI API, langchain-openai |
+| 임베딩 | BAAI/bge-m3, Sentence Transformers |
+| 벡터 저장소 | ChromaDB (현재 구현), FAISS (설계안) |
+| 데이터 수집·처리 | Requests, Beautiful Soup, Playwright, pypdf |
+| 스키마 검증 | Pydantic |
+| 테스트 | pytest |
+
 ## 구조
 
 <p align="center">
@@ -73,8 +86,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 cp -n .env.example .env
 
-# Risk 실행: .env 설정 및 입력 데이터 준비 후
-python -m agents.risk --company-id "등록된_company_id" --output outputs/risk_result.json
+# 투자 심사 실행
+python -m agents.investment_review --as-of 2026-09-30
 
 # 테스트
 python -m pytest tests agents/risk -q
@@ -82,7 +95,6 @@ python -m pytest tests agents/risk -q
 
 - 필수 설정: `.env`의 `OPENAI_API_KEY`, `RISK_MODEL`
 - 필수 데이터: `agents/risk/data/frozen_manifest.json` 및 등록 원문 별도 확보 (Git 제외)
-- [상세 설정·실적 분석 실행](docs/readme/development.md)
 
 ## 문서
 
@@ -100,7 +112,7 @@ python -m pytest tests agents/risk -q
 | 시장·사업성 | 원문 품질·검색 고도화, 검색 성능 비교 평가 |
 | 실적·성장성 | 법인·재무·고용 데이터 정합성 강화, 판정 정확도 평가 |
 | Risk | 후속 근거 확충, 판단 기준·보완 루프 개선, 정확도 평가 |
-| 투자 심사·보고서 | 미정 |
+| 투자 심사·보고서 | 평가 입력 통합·판정 일관성 강화, 보고서 수치·인용 정확도 검증 |
 
 [상세 개선 계획](docs/readme/future_work.md)
 
@@ -127,4 +139,4 @@ SKALA 4기 울산캠퍼스 2반 5조
 
 ## 최종 산출물 예시
 
-[최종 산출물 예시 보기](docs/readme/output_example.md)
+[최종 산출물 예시 보기](docs/readme/final_report.pdf)
