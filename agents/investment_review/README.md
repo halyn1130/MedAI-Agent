@@ -14,7 +14,8 @@ investment_review/
   scoring.py           # C1~C6, 총점
   judge.py             # 최종 판정·reason_codes
   selection.py         # 정렬·K개 선정
-  nodes.py             # LangGraph 노드 래퍼
+  nodes.py             # LangGraph: 기업별 그래프 + 전체 그래프
+  inputs.py            # 기업 목록·저장된 결과 불러오기 (01 대체)
   adapters/            # 02~05 원래 형식 읽기 → AgentResult, stub(결과 없음)
   report/              # context_builder → writer → checker → renderer
   tests/fixtures/      # 02~05 실제 코드로 만든 출력 샘플 (build_fixtures.py)
@@ -78,6 +79,33 @@ investment_review/
 - 모집단에서 적용 항목인데 기업별로 `not_applicable`이 오면 `unknown`으로 바꿉니다. 불리한 항목을 빼고 재가중하지 않기 위해서입니다.
 - **참고 점수**: 총점이 null이면 채점된 항목만으로 `reference_score`를 계산하고, 쓴 항목(`reference_criteria`)과 가중치 비율(`reference_weight`)을 함께 남깁니다. 판정·순위·선정에는 쓰지 않고 판단불가 사유 옆에 표시만 합니다.
 - 총점은 소수 6자리로 반올림해 60점 경계가 부동소수 오차로 흔들리지 않게 합니다.
+
+## 실행 (LangGraph)
+
+`nodes.py`의 `build_graph()`가 기업별 그래프를 병렬로 돌리고 적격 기업 중 최대 K개를 선정합니다.
+
+```text
+기업별: START ─┬─ clinical ─┐
+               ├─ market   ─┤
+               ├─ traction ─┼→ review ─(보완 요청·1회차)→ 요청받은 Agent만 재실행 → review
+               └─ risk     ─┘           └─────────────→ finalize(판정) → END
+전체:   START → 기업별 그래프(병렬, Send) → select → END
+```
+
+```bash
+# 저장된 임상·Risk 결과를 재사용하고, 시장·실적은 새로 실행 (API 비용 발생)
+python -m agents.investment_review --as-of 2026-09-30
+
+# 저장된 시장·실적 결과까지 재사용 → 06이 보완을 요청한 Agent만 호출
+python -m agents.investment_review --market-json m.json --traction-json t.json --only c001 c022
+```
+
+- 팀원 노드를 그대로 호출하고, 래퍼가 Agent별 입력 형식(`review_requests` list/dict, Risk 자체 ID)을 맞춥니다.
+- 결과가 이미 있고 보완 요청이 없으면 Agent를 호출하지 않습니다. Agent 예외는 그 분석만 `failed`로 기록합니다.
+- Risk 내부 보완은 끄고(`max_reviews=0`) 06 보완 루프(기업당 1회)만 씁니다.
+- 기업 ID는 `inputs.py`가 02 임상과 같은 규칙(c001~)으로 만들고, Risk ID는 기업명으로 연결합니다 (01 정규화 대체).
+- 02 임상 보완 결과는 `--out/clinical_results/`에 저장됩니다(`CLINICAL_RESULT_DIR`).
+- 결과: `--out/final_reviews.json` (기본 `outputs/investment_review/`)
 
 ## 테스트
 
