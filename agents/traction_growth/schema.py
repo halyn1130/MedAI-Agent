@@ -44,7 +44,6 @@ RF2_HEADCOUNT_DROP = -0.20        # RF2: 12개월 고용 감소율 ≤ -20%
 RF3_MIN_MOU = 2                   # RF3: 24개월 내 서로 다른 MOU ≥ 2
 INITIAL_MAX_CALLS = 40            # 최초 실행 기업당 외부 호출 예산 (4번 정의)
 BUDGET_SPLIT = {"dart": 10, "news": 16, "nps": 14}   # 병렬 수집 노드별 몫 (합 = INITIAL_MAX_CALLS)
-RF1_EXEMPT_WITH_DISCLOSED_REVENUE = True   # 24개월 내 공시 매출(> 0)이 있으면 RF1 면제 (4번 정의)
 NEWS_MAX_AGE_MONTHS = 48          # 이보다 오래된 기사는 LLM 추출 대상에서 제외 (4번 정의)
 
 C5_COMMERCIAL_SCORE = {"A": 5, "B": 4, "C": 2, "D": 1, "none": None}
@@ -53,8 +52,8 @@ C5_WEIGHTS = (0.7, 0.3)           # 둘 다 있으면 0.7·S + 0.3·T, T 없으�
 
 # 투자 단계 → 최소 기대 상업화 단계. 목록 밖·값 없음 → expectation_status=unknown
 STAGE_EXPECTATION = {
-    "Pre-seed": "C", "Seed": "C", "Pre-A": "C",        # Pre-A는 4번 정의(Seed와 같게)
-    "Series A": "B", "Pre-B": "B", "Series B": "B",    # Pre-B는 4번 정의(Series A·B와 같게)
+    "Pre-seed": "C", "Seed": "C",
+    "Series A": "B", "Series B": "B",
     "Series C": "A", "Series D": "A", "Series E": "A", "Pre-IPO": "A",
 }
 
@@ -356,7 +355,6 @@ class SearchLog(BaseModel):
     entity_names: list[str] = Field(default_factory=list, description="조회에 쓴 정식명·이전 명칭·식별자")
     source_ids: list[str] = Field(default_factory=list)
     error: Optional[str] = None
-    tool: Optional[str] = Field(None, description="dart | tavily | naver | nps | llm")
 
 
 # ─────────────────────────────────────────────
@@ -373,9 +371,6 @@ class GrowthDetail(BaseModel):
     observed_years: list[int] = Field(default_factory=list)
     periods: int = 0
     unavailable_reason: Optional[str] = Field(None, description="누락·시작 매출 ≤ 0·음수·범위 차이 등")
-    method: Literal["cagr", "chain_linked"] = Field(
-        "cagr", description="chain_linked: 재작성 연도가 있어 보고서별 전년 대비 증가율을 연쇄 (4번 정의)")
-    restated_years: list[int] = Field(default_factory=list, description="보고서마다 값이 다른 연도(정정·연결범위 변경)")
 
 
 class TrendDetail(BaseModel):

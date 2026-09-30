@@ -105,9 +105,19 @@ def host_of(url: str) -> str:
 
 def search_log(query: str, status: str, tool: str, names: list[str],
                error: Optional[str] = None, urls: Optional[list[str]] = None) -> dict:
-    """schema.SearchLog 형태. '_urls'는 judge 단계에서 source_ids로 바꾸는 내부 필드."""
-    return {"query": query, "searched_at": now_iso(), "status": status, "entity_names": list(names),
-            "source_ids": [], "error": error, "tool": tool, "_urls": list(urls or [])}
+    """schema.SearchLog 형태(PDF 필드만). 도구 이름은 query 앞에 '[tavily]'처럼 붙인다.
+    '_urls'는 judge 단계에서 source_ids로 바꾸는 내부 필드."""
+    return {"query": f"[{tool}] {query}", "searched_at": now_iso(), "status": status,
+            "entity_names": list(names), "source_ids": [], "error": error, "_urls": list(urls or [])}
+
+
+def log_tool(entry: dict) -> str:
+    m = re.match(r"^\[(\w+)\]", entry.get("query") or "")
+    return m.group(1) if m else ""
+
+
+def log_query(entry: dict) -> str:
+    return re.sub(r"^\[\w+\]\s*", "", entry.get("query") or "")
 
 
 class Budget:
@@ -828,18 +838,17 @@ def growth_tier(r: Optional[float]) -> str:
     return "G4"
 
 
-RESTATE_TOL = 0.005   # 같은 연도 값이 보고서 간 0.5% 넘게 다르면 재작성으로 본다 (4번 정의)
+RESTATE_TOL = 0.005   # 같은 연도 값이 보고서 간 0.5% 넘게 다르면 기준이 다른 값(정정·연결범위 변경)으로 본다
 
 
 def cagr(by_year: dict, report_values: Optional[dict] = None) -> tuple[Optional[float], str, dict]:
-    """(CAGR, 성장 구간, growth_detail). 동일 범위 연속 3개 결산연도, 시작>0, 마지막≥0.
+    """(CAGR, 성장 구간, growth_detail). PDF 05: 동일 범위의 연속 3개 결산연도, 시작 > 0, 마지막 ≥ 0일 때
+    (last/first)^(1/2) - 1. 누락·음수·범위 차이는 null/G0.
 
-    report_values: {보고서(source_id): {연도: 값}} — 같은 범위 감사보고서별 당기·전기 값.
-    같은 연도 값이 보고서마다 다르면(정정·연결범위 변경) 서로 다른 기준의 값을 섞지 않도록
-    각 보고서 안의 전년 대비 증가율을 이어 붙여(연쇄) 2년 연평균을 계산한다."""
+    report_values: {보고서 키: {연도: 값}} — 같은 연도 값이 보고서마다 다르면(정정·연결범위 변경)
+    같은 기준의 시계열이 아니므로 '범위 차이'로 보고 G0 처리한다."""
     years = sorted(y for y, v in by_year.items() if v.get("value") is not None)
-    detail = {"observed_years": years, "periods": 0, "unavailable_reason": None,
-              "method": "cagr", "restated_years": []}
+    detail = {"observed_years": years, "periods": 0, "unavailable_reason": None}
     if not years:
         detail["unavailable_reason"] = "연도별 매출 관측 없음"
         return None, "G0", detail
@@ -853,37 +862,30 @@ def cagr(by_year: dict, report_values: Optional[dict] = None) -> tuple[Optional[
     if len({by_year[y].get("currency") for y in need}) > 1:
         detail["unavailable_reason"] = "통화 불일치"
         return None, "G0", detail
+    restated = restated_years(need, report_values)
+    if restated:
+        detail["unavailable_reason"] = (f"범위 차이: {', '.join(map(str, restated))}년 매출이 감사보고서마다 다름"
+                                        "(정정·연결범위 변경) — 같은 기준의 3개년 시계열 아님")
+        return None, "G0", detail
     if first <= 0:
         detail["unavailable_reason"] = f"시작 연도({need[0]}) 매출 ≤ 0"
         return None, "G0", detail
     if last < 0:
         detail["unavailable_reason"] = f"마지막 연도({last_y}) 매출 음수"
         return None, "G0", detail
+    r = round((last / first) ** 0.5 - 1, 4)
     detail["periods"] = 2
     detail["observed_years"] = need
-    restated = []
-    for y in need:
+    return r, growth_tier(r), detail
+
+
+def restated_years(years: list[int], report_values: Optional[dict]) -> list[int]:
+    out = []
+    for y in years:
         vals = [rv[y] for rv in (report_values or {}).values() if y in rv]
         if len(vals) > 1 and max(vals) - min(vals) > RESTATE_TOL * max(abs(v) for v in vals):
-            restated.append(y)
-    detail["restated_years"] = restated
-    if not restated:
-        r = round((last / first) ** 0.5 - 1, 4)
-        return r, growth_tier(r), detail
-    factors = []
-    for y in need[1:]:
-        pairs = [(k, rv) for k, rv in report_values.items() if y in rv and y - 1 in rv and rv[y - 1] > 0]
-        if not pairs:
-            detail["unavailable_reason"] = f"재작성 연도({restated}) 있음 + 같은 보고서 안의 {y - 1}→{y} 비교값 없음"
-            return None, "G0", detail
-        rv = max(pairs, key=lambda kv: (max(kv[1]), kv[0]))[1]   # 최신 연도 → 같으면 최근 접수 보고서
-        factors.append(rv[y] / rv[y - 1])
-    if factors[0] * factors[1] < 0:
-        detail["unavailable_reason"] = "연쇄 증가율 계산 불가(음수 매출)"
-        return None, "G0", detail
-    r = round((factors[0] * factors[1]) ** 0.5 - 1, 4)
-    detail["method"] = "chain_linked"
-    return r, growth_tier(r), detail
+            out.append(y)
+    return out
 
 
 # ─────────────────────────────────────────────
@@ -969,12 +971,8 @@ def expectation(invest_stage: Optional[str], stage: str, none_reason: Optional[s
 def red_flags(as_of: date, contracts: list, activities: list, confirmed: set[str],
               tier: str, revenue_cagr: Optional[float], growth_ids: list[str],
               headcount_detail: dict, expectation_status: str, invest_stage: Optional[str],
-              stage: str, required: Optional[str], contract_search_ok: bool,
-              disclosed_revenue: Optional[list] = None) -> tuple[list[dict], list[str]]:
-    """(flags[{code, reason, evidence_ids, status}], 날짜 경계 메모).
-
-    disclosed_revenue: 공시(DART) 매출 레코드. 24개월 안에 끝난 결산연도 매출(> 0)이 있으면 RF1 면제
-    — 공시 매출 자체가 유료 고객이 있다는 증거 (S.RF1_EXEMPT_WITH_DISCLOSED_REVENUE, 4번 정의)."""
+              stage: str, required: Optional[str], contract_search_ok: bool) -> tuple[list[dict], list[str]]:
+    """(flags[{code, reason, evidence_ids, status}], 날짜 경계 메모). 조건은 PDF 05 레드플래그 표 그대로."""
     flags, notes = [], []
     start24 = add_months(as_of, -S.RF_WINDOW_MONTHS)
     period = f"{start24.isoformat()}~{as_of.isoformat()}"
@@ -986,13 +984,7 @@ def red_flags(as_of: date, contracts: list, activities: list, confirmed: set[str
         notes.append(f"{c.get('counterparty_name')} 계약({c.get('event_date')})이 24개월 경계에 걸림 → RF1 확정 보류")
 
     # RF1
-    rev_in = [r for r in disclosed_revenue or []
-              if (r.get("value") or 0) > 0 and _ok(r.get("evidence_ids"), confirmed)
-              and in_window(r.get("period_end"), start24, as_of) == "in"]
-    exempt = S.RF1_EXEMPT_WITH_DISCLOSED_REVENUE and bool(rev_in)
-    if exempt and not paid_in:
-        notes.append(f"RF1 면제: 24개월 내 공시 매출({', '.join(str(r['fiscal_year']) for r in rev_in)}년) 확인")
-    if contract_search_ok and not paid_in and not paid_unc and not exempt:
+    if contract_search_ok and not paid_in and not paid_unc:
         flags.append({"code": "RF1", "status": "needs_review", "evidence_ids": [],
                       "reason": f"기준일 직전 24개월({period})에 인정 신규 유료 계약을 찾지 못함 (계약 없음 확정 아님)"})
 
@@ -1586,8 +1578,6 @@ def item_to_fact(it, doc: dict, as_of: Optional[date] = None) -> Optional[dict]:
         # 기준일보다 나중에 받은 결과(과거 기준일로 다시 돌리는 경우)는 존재 확인 불가 → partial (schema.Source 규칙)
         if not (as_of and doc.get("retrieved_at") and doc["retrieved_at"] <= as_of.isoformat()):
             status = "partial"
-    if it.kind == "revenue" and doc["source_type"] != "official":
-        status = "unverified"       # 기사·홈페이지·집계 사이트 매출은 회사 제공 수치 → A 등급 근거 아님 (4번 정의)
     src = {k: doc.get(k) for k in ("url", "title", "publisher", "source_type", "published_at")}
     f = {"source": src, "statement": it.statement, "excerpt": it.excerpt if verified else None,
          "locator": None, "event_date": it.event_date, "status": status, "date_uncertainty": None}
@@ -1829,9 +1819,7 @@ def assemble(ctx: Ctx, state: dict) -> dict:
     exp, req = expectation(ctx.invest_stage, stage, none_reason)
     flags, rf_notes = red_flags(as_of, rec["contract_records"], rec["activity_records"], confirmed, tier, rate,
                                   growth_ids, hc_detail, exp, ctx.invest_stage, stage, req,
-                                  contract_search_ok=(news_state == "ok"),
-                                  disclosed_revenue=[r for r in rec["revenue_records"]
-                                                     if r.get("accounting_scope") in ("separate", "consolidated")])
+                                  contract_search_ok=(news_state == "ok"))
     c5_in = c5(stage, tier, stage_ids + growth_ids)
 
     # ── findings
@@ -1846,11 +1834,9 @@ def assemble(ctx: Ctx, state: dict) -> dict:
           + f" — 최근 {S.STAGE_WINDOW_MONTHS}개월 인정 근거 기준", stage_ids, "; ".join(stage_notes))
     add_f("disclosure", "disclosure", f"DART 감사보고서 조회 결과 {fds}"
           + (f", {scope} 매출 {len(by_year)}개 연도" if by_year else ""), growth_ids)
-    label = "매출 연평균 증가율(보고서별 연쇄)" if gdetail.get("method") == "chain_linked" else "매출 CAGR"
     add_f("growth", "growth",
-          f"{label} {rate:.1%} ({gdetail['observed_years'][0]}→{gdetail['observed_years'][-1]}, {scope}) → {tier}"
-          if rate is not None else f"성장 구간 G0: {gdetail['unavailable_reason']}", growth_ids,
-          f"재작성 연도 {gdetail['restated_years']} — 정정·연결범위 변경 확인 필요" if gdetail.get("restated_years") else None)
+          f"매출 CAGR {rate:.1%} ({gdetail['observed_years'][0]}→{gdetail['observed_years'][-1]}, {scope}) → {tier}"
+          if rate is not None else f"성장 구간 G0: {gdetail['unavailable_reason']}", growth_ids)
     for name, tr, dt in (("headcount", hc_trend, hc_detail), ("customer", cu_trend, cu_detail)):
         label = {"headcount": "고용", "customer": "고객"}[name]
         claim = (f"{label} 추이 {tr} ({dt['change_rate']:+.1%}, {dt['period_start']}→{dt['period_end']})"
@@ -1891,7 +1877,7 @@ def assemble(ctx: Ctx, state: dict) -> dict:
              "contract": {"naver", "tavily", "news"}, "activity": {"naver", "tavily", "news"},
              "customer": {"naver", "tavily", "news"}}
     coverage = [{"scope": k, "status": v, "note": f"news_state={news_state}" if k in ("contract", "activity", "customer") else "",
-                 "search_log_indices": [i for i, x in enumerate(logs) if x.get("tool") in tools[k]]}
+                 "search_log_indices": [i for i, x in enumerate(logs) if log_tool(x) in tools[k]]}
                 for k, v in cov.items()]
     core = [cov["disclosure"], cov["contract"], cov["headcount"]]
     bad = [c for c in core if c in ("search_failed", "not_reviewed")]
@@ -1922,13 +1908,14 @@ def assemble(ctx: Ctx, state: dict) -> dict:
               "단계 B·C·D, RF1·RF3 판단 불완전", "뉴스 검색 실패 또는 API 키·LLM 미설정")
 
     # ── open_questions
-    restated = set(gdetail.get("restated_years") or [])
+    restated = set(restated_years(sorted(by_year), report_values))
     dart_notes = [x for x in b.notes if not any(x.startswith(f"{y}년 매출({scope})") for y in restated)]
     oq = list(dict.fromkeys(stage_notes + rf_notes + dart_notes + (state.get("notes") or [])))
     if b.unknown_mismatch:
         oq.append(f"기사상 매출(회계 범위 불명) 출처 간 불일치 {b.unknown_mismatch}건 — 성장률 계산에는 미사용")
-    if gdetail.get("method") == "chain_linked":
-        oq.append(f"{gdetail['restated_years']}년 매출이 감사보고서마다 달라 보고서별 증가율을 연쇄 계산 — 정정·연결범위 변경 사유 확인")
+    if restated:
+        oq.append(f"{sorted(restated)}년 매출이 감사보고서마다 다름(정정·연결범위 변경) → 성장률 G0 처리. "
+                  "변경 사유와 같은 기준의 3개년 매출 확인 필요")
     if stage == "B" and not by_year:
         oq.append("유료 계약은 확인됐으나 연도별 매출 미확인 — 매출 규모 확인 필요")
     if by_year and max(by_year) < as_of.year - 1:
@@ -2051,8 +2038,8 @@ def _review_plan(ctx: Ctx, related: dict) -> None:
     ctx.dart_both_scopes, ctx.dart_reports_per_scope = True, 3
     ctx.run_nps = False                              # 대체 조회 경로 없음 (limitations에 기록)
 
-    used = {x.get("query") for x in prev.get("data", {}).get("search_log", [])}
-    used |= {x.get("query") for x in req.get("context", {}).get("previous_search_history", [])}
+    used = {log_query(x) for x in prev.get("data", {}).get("search_log", [])}
+    used |= {log_query(x) for x in req.get("context", {}).get("previous_search_history", [])}
     clues: list[str] = []
     for p in ctx.profile.get("products") or []:
         if p.get("name") or p.get("product_name"):
