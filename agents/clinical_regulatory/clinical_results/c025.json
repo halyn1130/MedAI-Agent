@@ -1,0 +1,1252 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c025",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c025:clinical:ev02",
+          "c025:clinical:ev03",
+          "c025:clinical:ev04"
+        ]
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c025:clinical:ev01"
+        ]
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c025:clinical:reg01",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "certification",
+        "record_number": null,
+        "permitted_use": "AI 기반 치료계획 소프트웨어",
+        "status": "active",
+        "effective_at": "2022-07-05",
+        "valid_until": null,
+        "evidence_ids": [
+          "c025:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c025:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": "제허 25-152",
+        "permitted_use": "고주파 자극기",
+        "status": "active",
+        "effective_at": "2025-08-18",
+        "valid_until": null,
+        "evidence_ids": [
+          "c025:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c025:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "notification",
+        "record_number": "수신 25-1424",
+        "permitted_use": "비멸균 의료용 겔",
+        "status": "active",
+        "effective_at": "2025-07-02",
+        "valid_until": null,
+        "evidence_ids": [
+          "c025:clinical:ev03"
+        ]
+      },
+      {
+        "record_id": "c025:clinical:reg04",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": "제허 25-612",
+        "permitted_use": "의료용 고주파 온열기",
+        "status": "active",
+        "effective_at": "2025-09-04",
+        "valid_until": null,
+        "evidence_ids": [
+          "c025:clinical:ev04"
+        ]
+      },
+      {
+        "record_id": "c025:clinical:reg05",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c025:clinical:reg06",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c025:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신의료기기 지정",
+        "status": "active",
+        "scope": "전기장 암 치료기기",
+        "effective_at": null,
+        "evidence_ids": [
+          "c025:clinical:ev05"
+        ]
+      }
+    ],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c025:clinical:st01",
+        "product_id": "p001",
+        "design": "in vitro",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "cell proliferation, apoptotic fractions",
+        "result": "TTFields treatment progressively suppressed cell proliferation, induced G2/M-phase arrest, increased apoptotic fractions.",
+        "limitations": "없음",
+        "evidence_ids": [
+          "c025:clinical:ev06"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c025:clinical:st02",
+        "product_id": "p001",
+        "design": "in vitro",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "cell viability, clonogenic survival, migratory capacity",
+        "result": "TTFields significantly reduced cell viability, clonogenic survival and migratory capacity while increasing apoptotic susceptibility.",
+        "limitations": "없음",
+        "evidence_ids": [
+          "c025:clinical:ev07"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c025:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "온코필드는 CT·MRI 영상 데이터를 기반으로 환자 체내 전기장 분포를 3차원으로 계산하고 종양에 가장 효과적인 전극 배치와 출력 조건을 도출하는 AI 치료계획 시스템이다.",
+        "status": "supported",
+        "comparison_reason": "온코필드는 AI 기반 치료계획 소프트웨어로 인증받았으며, 이는 회사 주장을 뒷받침한다.",
+        "evidence_ids": [
+          "c025:clinical:ev01"
+        ]
+      },
+      {
+        "claim_id": "c025:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "온코필드는 시뮬레이션과 최적화 알고리즘을 통해 환자 맞춤형 치료 설계를 가능하게 한다.",
+        "status": "supported",
+        "comparison_reason": "온코필드는 AI 기반 치료계획 소프트웨어로 인증받았으며, 이는 회사 주장을 뒷받침한다.",
+        "evidence_ids": [
+          "c025:clinical:ev01"
+        ]
+      },
+      {
+        "claim_id": "c025:p004:cl01",
+        "product_id": "p004",
+        "original_claim": "딥필드-A460은 심부 종양에 고주파 열을 전달하는 온열치료 장비다. 전극 하부 피부나 피하지방에는 열 집중을 최소화하고, 종양 부위에는 약 42℃ 이상의 치료 유효 온도를 유지·전달할 수 있다.",
+        "status": "unknown",
+        "comparison_reason": "딥필드-A460에 대한 허가 기록이 없으며, 관련 근거를 찾지 못했다.",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 필드큐어 (c025) | 기준일 2026-09-30\n- p001 전기장 암 치료기: hardware/in_scope | 공식 상태: KR approval·active(\"고주파 자극기\"); KR notification·active(\"비멸균 의료용 겔\"); KR approval·active(\"의료용 고주파 온열기\") | 제도: 혁신의료기기 지정·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 온코필드: ai_software/in_scope | 공식 상태: KR certification·active(\"AI 기반 치료계획 소프트웨어\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 2 | 평가 상태 complete\n- p003 아이멧: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p004 딥필드: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 1 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003], regulatory_records[p004][KR], criteria_inputs.C1[p004]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c025:clinical:reg01": "c025:clinical:fd01",
+      "finding|regulatory|c025:clinical:reg02": "c025:clinical:fd02",
+      "finding|regulatory|c025:clinical:reg03": "c025:clinical:fd03",
+      "finding|regulatory|c025:clinical:reg04": "c025:clinical:fd04",
+      "finding|regulatory|c025:clinical:reg05": "c025:clinical:fd05",
+      "finding|regulatory|c025:clinical:reg06": "c025:clinical:fd06",
+      "finding|designation|c025:clinical:des01": "c025:clinical:fd07",
+      "finding|clinical_evidence|p001": "c025:clinical:fd08",
+      "finding|clinical_evidence|p002": "c025:clinical:fd09",
+      "finding|clinical_evidence|p003": "c025:clinical:fd10",
+      "finding|clinical_evidence|p004": "c025:clinical:fd11",
+      "finding|claim|c025:p004:cl01": "c025:clinical:fd12"
+    },
+    "collected_profile": {
+      "legal_name": "필드큐어",
+      "english_name": "FieldCure",
+      "homepage": "https://fieldcure.com/kor/main",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "전기장 암 치료기",
+          "model": null,
+          "intended_use": "전기장 암 치료기",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "온코필드",
+          "model": null,
+          "intended_use": "AI 기반 치료계획 소프트웨어",
+          "target_disease": "암",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "소프트웨어",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "온코필드는 CT·MRI 영상 데이터를 기반으로 환자 체내 전기장 분포를 3차원으로 계산하고 종양에 가장 효과적인 전극 배치와 출력 조건을 도출하는 AI 치료계획 시스템이다.",
+              "url": "http://www.kmdianews.com/news/articleView.html?idxno=68756",
+              "claimed_at": null
+            },
+            {
+              "text": "온코필드는 시뮬레이션과 최적화 알고리즘을 통해 환자 맞춤형 치료 설계를 가능하게 한다.",
+              "url": "https://fieldcure.com/kor/main",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p003",
+          "name": "아이멧",
+          "model": null,
+          "intended_use": "전기장 치료 시스템",
+          "target_disease": "암",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "의료기기",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p004",
+          "name": "딥필드",
+          "model": "딥필드-A460",
+          "intended_use": "고주파 온열암 치료기",
+          "target_disease": "암",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "의료기기",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "딥필드-A460은 심부 종양에 고주파 열을 전달하는 온열치료 장비다. 전극 하부 피부나 피하지방에는 열 집중을 최소화하고, 종양 부위에는 약 42℃ 이상의 치료 유효 온도를 유지·전달할 수 있다.",
+              "url": "http://www.kmdianews.com/news/articleView.html?idxno=68756",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://fieldcure.com/kor/main",
+          "http://www.kmdianews.com/news/articleView.html?idxno=68756",
+          "https://www.nextunicorn.kr/company/cd9e76e594b4fe67",
+          "https://thevc.kr/fieldcure",
+          "https://www.hankyung.com/article/202503144854i"
+        ],
+        "dropped_claims_not_in_page": [
+          "기존 장비 대비 치료 시간을 크게 단축하는 것이 목표다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c025:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 필드큐어",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%ED%95%84%EB%93%9C%ED%81%90%EC%96%B4",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src03",
+      "title": "“전기장 항암치료 도전, 필드큐어의 통합 플랫폼 전략” < 인터뷰 < 뉴스 < 기사본문 - 의료기기뉴스라인",
+      "url": "http://www.kmdianews.com/news/articleView.html?idxno=68756",
+      "publisher": "www.kmdianews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src05",
+      "title": "필드큐어(전기장 암 치료기) - 기업정보 | 투자, 매출, 기업가치 - THE VC",
+      "url": "https://thevc.kr/fieldcure",
+      "publisher": "thevc.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src13",
+      "title": "필드큐어 전기장 암치료기기 iMET 식약처 혁신의료기기 지정 | 한국경제",
+      "url": "https://www.hankyung.com/article/202509258217i",
+      "publisher": "www.hankyung.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src21",
+      "title": "필드큐어",
+      "url": "https://www.fieldcure.com/kor/company/news.php?m=v&idx=27",
+      "publisher": "www.fieldcure.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src22",
+      "title": "필드큐어, '온코필드'(OncoFIeld) 식약처 인증 - 머니투데이",
+      "url": "https://www.mt.co.kr/industry/2022/08/18/2022081709413286939",
+      "publisher": "www.mt.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src24",
+      "title": "식약처, 지난해 혁신의료기기 45개 지정…AI 활용 제품 두드러져 - 전자신문",
+      "url": "https://www.etnews.com/20260129000101",
+      "publisher": "www.etnews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src62",
+      "title": "Tumor Treating Fields modulate apoptotic and immune programs in T-cell acute lymphoblastic leukemia cell lines.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42305707/",
+      "publisher": "Exp Ther Med",
+      "source_type": "research",
+      "published_at": "2026-05-29",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c025:clinical:src63",
+      "title": "Intensity- and time-dependent anticancer effects of alternating electric fields in non-small cell lung cancer cell lines.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42038346/",
+      "publisher": "Oncol Lett",
+      "source_type": "research",
+      "published_at": "2026-04-15",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c025:clinical:ev01",
+      "company_id": "c025",
+      "product_id": "p002",
+      "statement": "필드큐어가 식품의약품안전처로부터 의료영상 치료계획 소프트웨어 시제품 '온코필드'를 2등급 의료기기 인증을 받는데 성공했다.",
+      "source_ids": [
+        "c025:clinical:src21",
+        "c025:clinical:src22"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2022-07-05",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c025:clinical:ev02",
+      "company_id": "c025",
+      "product_id": "p001",
+      "statement": "필드큐어의 고주파 자극기가 식약처로부터 1등급 의료기기 인증을 받았다.",
+      "source_ids": [
+        "c025:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-08-18",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c025:clinical:ev03",
+      "company_id": "c025",
+      "product_id": "p001",
+      "statement": "필드큐어의 비멸균 의료용 겔이 식약처로부터 2등급 의료기기 인증을 받았다.",
+      "source_ids": [
+        "c025:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-07-02",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c025:clinical:ev04",
+      "company_id": "c025",
+      "product_id": "p001",
+      "statement": "필드큐어의 의료용 고주파 온열기가 식약처로부터 1등급 의료기기 인증을 받았다.",
+      "source_ids": [
+        "c025:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-09-04",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c025:clinical:ev05",
+      "company_id": "c025",
+      "product_id": "p001",
+      "statement": "필드큐어의 전기장 암 치료기기 'iMET'가 식품의약품안전처로부터 혁신의료기기로 지정됨.",
+      "source_ids": [
+        "c025:clinical:src05",
+        "c025:clinical:src24",
+        "c025:clinical:src03",
+        "c025:clinical:src13"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c025:clinical:ev06",
+      "company_id": "c025",
+      "product_id": "p001",
+      "statement": "Tumor Treating Fields modulate apoptotic and immune programs in T-cell acute lymphoblastic leukemia cell lines.",
+      "source_ids": [
+        "c025:clinical:src62"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c025:clinical:ev07",
+      "company_id": "c025",
+      "product_id": "p001",
+      "statement": "Intensity- and time-dependent anticancer effects of alternating electric fields in non-small cell lung cancer cell lines.",
+      "source_ids": [
+        "c025:clinical:src63"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c025:clinical:fd01",
+      "category": "regulatory",
+      "claim": "온코필드 [KR] certification · active / 사용 목적: \"AI 기반 치료계획 소프트웨어\"",
+      "evidence_ids": [
+        "c025:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c025:clinical:fd02",
+      "category": "regulatory",
+      "claim": "전기장 암 치료기 [KR] approval · active (제허 25-152) / 사용 목적: \"고주파 자극기\"",
+      "evidence_ids": [
+        "c025:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c025:clinical:fd03",
+      "category": "regulatory",
+      "claim": "전기장 암 치료기 [KR] notification · active (수신 25-1424) / 사용 목적: \"비멸균 의료용 겔\"",
+      "evidence_ids": [
+        "c025:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c025:clinical:fd04",
+      "category": "regulatory",
+      "claim": "전기장 암 치료기 [KR] approval · active (제허 25-612) / 사용 목적: \"의료용 고주파 온열기\"",
+      "evidence_ids": [
+        "c025:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c025:clinical:fd05",
+      "category": "regulatory",
+      "claim": "아이멧 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c025:clinical:fd06",
+      "category": "regulatory",
+      "claim": "딥필드 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c025:clinical:fd07",
+      "category": "designation",
+      "claim": "전기장 암 치료기 [KR] 혁신의료기기 지정 · active / 범위: 전기장 암 치료기기",
+      "evidence_ids": [
+        "c025:clinical:ev05"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c025:clinical:fd08",
+      "category": "clinical_evidence",
+      "claim": "전기장 암 치료기: 임상 근거 L0, C1 없음 (unknown), 연구 2건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 2건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c025:clinical:fd09",
+      "category": "clinical_evidence",
+      "claim": "온코필드: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c025:clinical:fd10",
+      "category": "clinical_evidence",
+      "claim": "아이멧: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c025:clinical:fd11",
+      "category": "clinical_evidence",
+      "claim": "딥필드: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c025:clinical:fd12",
+      "category": "claim",
+      "claim": "주장 \"딥필드-A460은 심부 종양에 고주파 열을 전달하는 온열치료 장비다. 전극 하부 피부나 피하지방에는 열 집중을 최소화하고, 종양 부위에는 약 42℃ 이상의 치료 유효 온도를 유지·전달할 수 있다.\" → unknown: 딥필드-A460에 대한 허가 기록이 없으며, 관련 근거를 찾지 못했다.",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c025:clinical:mi01",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c025:clinical:mi02",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 2건 점수 제외)"
+    },
+    {
+      "item_id": "c025:clinical:mi03",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c025:clinical:mi04",
+      "field": "products[p003].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c025:clinical:mi05",
+      "field": "products[p003].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c025:clinical:mi06",
+      "field": "regulatory_records[p003][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 필드큐어, 아이멧, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c025:clinical:mi07",
+      "field": "criteria_inputs.C1[p003]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c025:clinical:mi08",
+      "field": "regulatory_records[p004][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 필드큐어, 딥필드, 딥필드-A460, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c025:clinical:mi09",
+      "field": "criteria_inputs.C1[p004]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c025:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "전기장 암 치료기로, 의료기기로 분류될 수 있으며, 사용 목적이 암 치료에 해당한다."
+    },
+    {
+      "coverage_id": "c025:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "AI 기반 치료계획 소프트웨어로, 암 치료를 위한 효능 주장을 포함하고 있으며, 의료기관에서 사용된다."
+    },
+    {
+      "coverage_id": "c025:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "전기장 치료 시스템으로, 의료기기로 분류될 수 있으며, 사용 목적이 암 치료에 해당한다."
+    },
+    {
+      "coverage_id": "c025:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "고주파 온열암 치료기로, 암 치료를 위한 효능 주장을 포함하고 있으며, 의료기관에서 사용된다."
+    },
+    {
+      "coverage_id": "c025:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "필드큐어",
+          "전기장 암 치료기"
+        ],
+        "queries": [
+          "필드큐어 전기장 암 치료기 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "필드큐어",
+          "온코필드"
+        ],
+        "queries": [
+          "필드큐어 온코필드 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv07",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "필드큐어",
+          "아이멧"
+        ],
+        "queries": [
+          "필드큐어 아이멧 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c025:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "필드큐어",
+          "딥필드",
+          "딥필드-A460"
+        ],
+        "queries": [
+          "필드큐어 딥필드 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c025:clinical:cv09",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "전기장 암 치료기 혁신의료기술 평가",
+          "전기장 암 치료기 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "전기장 암 치료기 혁신의료기술 평가",
+          "전기장 암 치료기 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv11",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "온코필드 혁신의료기술 평가",
+          "온코필드 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "온코필드 혁신의료기술 평가",
+          "온코필드 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv13",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "아이멧 혁신의료기술 평가",
+          "아이멧 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv14",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "아이멧 혁신의료기술 평가",
+          "아이멧 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv15",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "딥필드 혁신의료기술 평가",
+          "딥필드 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "필드큐어 혁신의료기기 지정",
+          "딥필드 혁신의료기술 평가",
+          "딥필드 비급여 등재 고시",
+          "필드큐어 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv17",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"FieldCure\"[Affiliation]",
+          "필드큐어 전기장 암 치료기 임상 연구 논문",
+          "전기장 암 치료기 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv18",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"FieldCure\"[Affiliation]",
+          "필드큐어 온코필드 임상 연구 논문",
+          "온코필드 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv19",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"FieldCure\"[Affiliation]",
+          "필드큐어 아이멧 임상 연구 논문",
+          "아이멧 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv20",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"FieldCure\"[Affiliation]",
+          "필드큐어 딥필드 임상 연구 논문",
+          "딥필드 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv21",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c025:clinical:cv22",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c025:clinical:cv23",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c025:clinical:cv24",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

@@ -1,0 +1,219 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c005",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c005:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 닷 (c005) | 기준일 2026-09-30\n- p001 점자 스마트워치: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 없음 (not_applicable)",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "not_applicable",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c005:clinical:reg01": "c005:clinical:fd01",
+      "finding|clinical_evidence|p001": "c005:clinical:fd02"
+    },
+    "collected_profile": {
+      "legal_name": "닷",
+      "english_name": null,
+      "homepage": null,
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "점자 스마트워치",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.tradingkey.com/kr/analysis/stocks/us-stocks/261789775-chatgpt-starbucks-ai-sbux-tradingkey",
+          "https://tradingkey.com/kr/analysis/stocks/us-stocks/261789775-chatgpt-starbucks-ai-sbux-tradingkey",
+          "https://kr.investing.com/equities/lg-uplus"
+        ],
+        "dropped_claims_not_in_page": [
+          "점자 스마트워치는 시각장애인을 위한 스마트워치로, 점자와 음성으로 정보를 제공합니다.",
+          "이 제품은 시각장애인들이 일상생활에서 필요한 정보를 쉽게 얻을 수 있도록 돕습니다.",
+          "점자 스마트워치는 사용자가 손목에서 직접 정보를 확인할 수 있는 기능을 제공합니다.",
+          "이 스마트워치는 시각장애인들이 독립적으로 생활할 수 있도록 설계되었습니다.",
+          "점자 스마트워치는 다양한 기능을 통해 시각장애인들의 삶의 질을 향상시킵니다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [],
+  "evidence": [],
+  "findings": [
+    {
+      "finding_id": "c005:clinical:fd01",
+      "category": "regulatory",
+      "claim": "점자 스마트워치 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c005:clinical:fd02",
+      "category": "clinical_evidence",
+      "claim": "점자 스마트워치: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c005:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "점자 스마트워치는 질병 진단·치료·예측과 관련된 사용 목적이 명시되어 있지 않으며, 회사의 주장이나 제품 설명에서도 의료기기 관련 내용이 확인되지 않음."
+    },
+    {
+      "coverage_id": "c005:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c005:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c005:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c005:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c005:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    }
+  ],
+  "review_responses": []
+}

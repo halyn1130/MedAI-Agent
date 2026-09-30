@@ -1,0 +1,217 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c032",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c032:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 백스다임 (c032) | 기준일 2026-09-30\n- p001 합성항원백신: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 없음 (not_applicable)",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "not_applicable",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c032:clinical:reg01": "c032:clinical:fd01",
+      "finding|clinical_evidence|p001": "c032:clinical:fd02"
+    },
+    "collected_profile": {
+      "legal_name": "백스다임",
+      "english_name": "Vaxdigm",
+      "homepage": "https://www.vaxdigm.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "합성항원백신",
+          "model": null,
+          "intended_use": "미생물 시스템 기반 합성항원백신",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.vaxdigm.com",
+          "https://www.venturesquare.net/854616",
+          "https://www.pharmnews.com/news/articleView.html?idxno=203828",
+          "https://www.innoforest.co.kr/company/CP00011154/%EB%B0%B1%EC%8A%A4%EB%8B%A4%EC%9E%84",
+          "http://m.yakup.com/news/index.html?mode=view&nid=282939"
+        ],
+        "dropped_claims_not_in_page": [
+          "김성재 백스다임 대표는 “항원백신제조 원천기술은 COVID-19 백신뿐만 아니라 현재 사용되는 백신인 일본 뇌염 백신, A형 간염 백신 및 미래"
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [],
+  "evidence": [],
+  "findings": [
+    {
+      "finding_id": "c032:clinical:fd01",
+      "category": "regulatory",
+      "claim": "합성항원백신 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c032:clinical:fd02",
+      "category": "clinical_evidence",
+      "claim": "합성항원백신: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c032:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "합성항원백신은 의료기기나 체외진단 제품으로 분류되지 않으며, 질병 진단·치료·예측 등의 효능 주장이 없다."
+    },
+    {
+      "coverage_id": "c032:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c032:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c032:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c032:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c032:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    }
+  ],
+  "review_responses": []
+}

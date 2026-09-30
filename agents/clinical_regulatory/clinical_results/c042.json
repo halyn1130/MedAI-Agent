@@ -1,0 +1,583 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c042",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c042:clinical:ev01",
+          "c042:clinical:ev02",
+          "c042:clinical:ev03"
+        ]
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c042:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "notification",
+        "record_number": "제신 24-816",
+        "permitted_use": "보행 분석계",
+        "status": "active",
+        "effective_at": "2024-07-01",
+        "valid_until": null,
+        "evidence_ids": [
+          "c042:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c042:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "notification",
+        "record_number": "제신 24-1587",
+        "permitted_use": "보행 분석계",
+        "status": "active",
+        "effective_at": "2024-12-19",
+        "valid_until": null,
+        "evidence_ids": [
+          "c042:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c042:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "notification",
+        "record_number": "제신 26-205",
+        "permitted_use": "보행 분석계",
+        "status": "active",
+        "effective_at": "2026-02-11",
+        "valid_until": null,
+        "evidence_ids": [
+          "c042:clinical:ev03"
+        ]
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c042:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신제품 지정제도",
+        "status": "active",
+        "scope": "공공서비스 개선에 기여할 수 있는 기술혁신 제품",
+        "effective_at": null,
+        "evidence_ids": [
+          "c042:clinical:ev04"
+        ]
+      }
+    ],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c042:clinical:st01",
+        "product_id": "p001",
+        "design": "null",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "정확도 검증",
+        "result": "95% 이상의 정확도를 검증받았다.",
+        "limitations": "null",
+        "evidence_ids": [
+          "c042:clinical:ev05"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c042:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "기존 장비 대비 90% 이상의 비용 절감과 약 95% 정확도를 확보한 것이 특징이다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c042:p001:cl02",
+        "product_id": "p001",
+        "original_claim": "메디스텝은 단일 카메라로 유사 수준의 계측 정확도를 구현해 검사 비용을 90% 이상 낮춘 것이 특징이다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c042:p001:cl03",
+        "product_id": "p001",
+        "original_claim": "한국생산기술연구원 시험에서 약 95% 정확도를 입증했고, 이를 기반으로 국내 의료기기 신고와 유럽 CE MDR 인증을 완료했으며, 산업통상부 'NET 신기술 인증'도 취득했다.",
+        "status": "supported",
+        "comparison_reason": "95% 정확도에 대한 연구 결과와 일치",
+        "evidence_ids": [
+          "c042:clinical:ev05"
+        ]
+      },
+      {
+        "claim_id": "c042:p001:cl04",
+        "product_id": "p001",
+        "original_claim": "메디스텝 M Pro는 서울아산병원을 포함한 국내 주요 대학병원 6곳 이상에 도입돼 임상 연구와 재활 평가에 활용되고 있으며, 메디스텝 M은 서울시 약자동행 네트워크를 통해 성동·강남구 복지관 등에서 시니어 보행 검진과 낙상 위험 관리에 쓰이고 있다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 에이트스튜디오 (c042) | 기준일 2026-09-30\n- p001 메디스텝: hardware/in_scope | 공식 상태: KR notification·active(\"보행 분석계\"); KR notification·active(\"보행 분석계\"); KR notification·active(\"보행 분석계\") | 제도: 혁신제품 지정제도·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 3, supported 1 | 평가 상태 complete\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c042:clinical:reg01": "c042:clinical:fd01",
+      "finding|regulatory|c042:clinical:reg02": "c042:clinical:fd02",
+      "finding|regulatory|c042:clinical:reg03": "c042:clinical:fd03",
+      "finding|designation|c042:clinical:des01": "c042:clinical:fd04",
+      "finding|clinical_evidence|p001": "c042:clinical:fd05",
+      "finding|claim|c042:p001:cl01": "c042:clinical:fd06",
+      "finding|claim|c042:p001:cl02": "c042:clinical:fd07",
+      "finding|claim|c042:p001:cl04": "c042:clinical:fd08"
+    },
+    "collected_profile": {
+      "legal_name": "에이트스튜디오(주)",
+      "english_name": "AIT STUDIO",
+      "homepage": "https://aitstudio.co.kr",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "메디스텝",
+          "model": null,
+          "intended_use": "보행 분석계",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "기존 장비 대비 90% 이상의 비용 절감과 약 95% 정확도를 확보한 것이 특징이다.",
+              "url": "https://aitstudio.co.kr",
+              "claimed_at": "2026-03-19"
+            },
+            {
+              "text": "메디스텝은 단일 카메라로 유사 수준의 계측 정확도를 구현해 검사 비용을 90% 이상 낮춘 것이 특징이다.",
+              "url": "https://www.investnews.co.kr/news/articleView.html?idxno=3002408",
+              "claimed_at": "2026-03-24"
+            },
+            {
+              "text": "한국생산기술연구원 시험에서 약 95% 정확도를 입증했고, 이를 기반으로 국내 의료기기 신고와 유럽 CE MDR 인증을 완료했으며, 산업통상부 'NET 신기술 인증'도 취득했다.",
+              "url": "https://www.investnews.co.kr/news/articleView.html?idxno=3002408",
+              "claimed_at": "2026-03-24"
+            },
+            {
+              "text": "메디스텝 M Pro는 서울아산병원을 포함한 국내 주요 대학병원 6곳 이상에 도입돼 임상 연구와 재활 평가에 활용되고 있으며, 메디스텝 M은 서울시 약자동행 네트워크를 통해 성동·강남구 복지관 등에서 시니어 보행 검진과 낙상 위험 관리에 쓰이고 있다.",
+              "url": "https://www.investnews.co.kr/news/articleView.html?idxno=3002408",
+              "claimed_at": "2026-03-24"
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://aitstudio.co.kr",
+          "https://www.investnews.co.kr/news/articleView.html?idxno=3002408",
+          "https://thevc.kr/aitstudio",
+          "https://kr.aving.net/news/articleView.html?idxno=1807359",
+          "https://groupby.kr/startups/1831"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c042:clinical:src02",
+      "title": "메디스텝 - AIT Studio - 에이트스튜디오",
+      "url": "https://aitstudio.co.kr",
+      "publisher": "aitstudio.co.kr",
+      "source_type": "company",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c042:clinical:src03",
+      "title": "[시리즈] 고가 장비 대신 태블릿 한 대… iPad 기반 보행분석 '메디스텝' 개발사 에이트스튜디오, 프리 시리즈A 유치 < 투자 < 스타트업+ < 기사본문 - 인베스트 | invest",
+      "url": "https://www.investnews.co.kr/news/articleView.html?idxno=3002408",
+      "publisher": "www.investnews.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c042:clinical:src05",
+      "title": "[혁신제품 특집 인터뷰] 에이트스튜디오, AI 보행분석 의료 ...",
+      "url": "https://kr.aving.net/news/articleView.html?idxno=1807359",
+      "publisher": "kr.aving.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c042:clinical:src10",
+      "title": "iPad 기반 보행분석 '메디스텝' 개발사 에이트스튜디오, 시드 ...",
+      "url": "https://wowtale.net/2025/08/04/244864",
+      "publisher": "wowtale.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c042:clinical:src14",
+      "title": "식약처 의료기기 품목허가 조회: 에이트스튜디오(주)",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EC%97%90%EC%9D%B4%ED%8A%B8%EC%8A%A4%ED%8A%9C%EB%94%94%EC%98%A4%28%EC%A3%BC%29",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c042:clinical:src15",
+      "title": "에이트스튜디오, AI 기반 시니어 보행분석 솔루션 ‘메디스텝’ 혁신제품으로 지정 - 뉴스와이어",
+      "url": "https://www.newswire.co.kr/newsRead.php?no=1023408",
+      "publisher": "www.newswire.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c042:clinical:ev01",
+      "company_id": "c042",
+      "product_id": "p001",
+      "statement": "에이트스튜디오 메디스텝 식약처 notification 기록 (제신 24-816)",
+      "source_ids": [
+        "c042:clinical:src14"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-07-01",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c042:clinical:ev02",
+      "company_id": "c042",
+      "product_id": "p001",
+      "statement": "에이트스튜디오 메디스텝 식약처 notification 기록 (제신 24-1587)",
+      "source_ids": [
+        "c042:clinical:src14"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-12-19",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c042:clinical:ev03",
+      "company_id": "c042",
+      "product_id": "p001",
+      "statement": "에이트스튜디오 메디스텝 식약처 notification 기록 (제신 26-205)",
+      "source_ids": [
+        "c042:clinical:src14"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2026-02-11",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c042:clinical:ev04",
+      "company_id": "c042",
+      "product_id": "p001",
+      "statement": "에이트스튜디오의 메디스텝이 혁신성과 공공성까지 인정받아 혁신제품으로 지정되었다.",
+      "source_ids": [
+        "c042:clinical:src15",
+        "c042:clinical:src05"
+      ],
+      "locator": null,
+      "excerpt": "이번 혁신제품 지정은 메디스텝의 기술력뿐 아니라 공공적 가치까지 공식적으로 인정받은 의미 있는 성과",
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c042:clinical:ev05",
+      "company_id": "c042",
+      "product_id": "p001",
+      "statement": "메디스텝은 95% 이상의 정확도를 확보한 보행 분석계이다.",
+      "source_ids": [
+        "c042:clinical:src02",
+        "c042:clinical:src03",
+        "c042:clinical:src10"
+      ],
+      "locator": null,
+      "excerpt": "메디스텝은 모바일 카메라 기반 마커리스 보행분석 솔루션으로, 별도 센서 없이 전신 관절을 분석하고 1분 내 40개 이상의 보행 지표를 산출한다.",
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c042:clinical:fd01",
+      "category": "regulatory",
+      "claim": "메디스텝 [KR] notification · active (제신 24-816) / 사용 목적: \"보행 분석계\"",
+      "evidence_ids": [
+        "c042:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c042:clinical:fd02",
+      "category": "regulatory",
+      "claim": "메디스텝 [KR] notification · active (제신 24-1587) / 사용 목적: \"보행 분석계\"",
+      "evidence_ids": [
+        "c042:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c042:clinical:fd03",
+      "category": "regulatory",
+      "claim": "메디스텝 [KR] notification · active (제신 26-205) / 사용 목적: \"보행 분석계\"",
+      "evidence_ids": [
+        "c042:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c042:clinical:fd04",
+      "category": "designation",
+      "claim": "메디스텝 [KR] 혁신제품 지정제도 · active / 범위: 공공서비스 개선에 기여할 수 있는 기술혁신 제품",
+      "evidence_ids": [
+        "c042:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c042:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "메디스텝: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c042:clinical:fd06",
+      "category": "claim",
+      "claim": "주장 \"기존 장비 대비 90% 이상의 비용 절감과 약 95% 정확도를 확보한 것이 특징이다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c042:clinical:fd07",
+      "category": "claim",
+      "claim": "주장 \"메디스텝은 단일 카메라로 유사 수준의 계측 정확도를 구현해 검사 비용을 90% 이상 낮춘 것이 특징이다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c042:clinical:fd08",
+      "category": "claim",
+      "claim": "주장 \"메디스텝 M Pro는 서울아산병원을 포함한 국내 주요 대학병원 6곳 이상에 도입돼 임상 연구와 재활 평가에 활용되고 있으며, 메디스텝 M은 서울시 약자동행 네트워크를 통해 성동·강남구 복지관 등에서 시니어 보행 검진과 낙상 위험 관리에 쓰이고 있다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c042:clinical:mi01",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c042:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "메디스텝은 보행 분석계로, 한국생산기술연구원 시험에서 약 95% 정확도를 입증했고, 이를 기반으로 국내 의료기기 신고와 유럽 CE MDR 인증을 완료했으며, 산업통상부 'NET 신기술 인증'도 취득했다. 이러한 정보는 제품이 의료기기 규제 대상임을 나타낸다."
+    },
+    {
+      "coverage_id": "c042:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "에이트스튜디오(주)",
+          "메디스텝"
+        ],
+        "queries": [
+          "에이트스튜디오 메디스텝 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c042:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이트스튜디오 혁신의료기기 지정",
+          "메디스텝 혁신의료기술 평가",
+          "메디스텝 비급여 등재 고시",
+          "에이트스튜디오 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c042:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이트스튜디오 혁신의료기기 지정",
+          "메디스텝 혁신의료기술 평가",
+          "메디스텝 비급여 등재 고시",
+          "에이트스튜디오 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c042:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AIT STUDIO\"[Affiliation]",
+          "에이트스튜디오 메디스텝 임상 연구 논문",
+          "메디스텝 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c042:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

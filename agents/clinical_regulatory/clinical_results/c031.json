@@ -1,0 +1,546 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c031",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "complete",
+        "evidence_level": "L2",
+        "clinical_score": 2.0,
+        "score_status": "scored",
+        "evidence_ids": [
+          "c031:clinical:ev04",
+          "c031:clinical:ev01",
+          "c031:clinical:ev02"
+        ]
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c031:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 21-720",
+        "permitted_use": "AI 기반 뇌질환 진단 솔루션",
+        "status": "active",
+        "effective_at": "2021-08-26",
+        "valid_until": null,
+        "evidence_ids": [
+          "c031:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c031:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 24-61",
+        "permitted_use": "AI 기반 뇌질환 진단 솔루션",
+        "status": "active",
+        "effective_at": "2024-01-23",
+        "valid_until": null,
+        "evidence_ids": [
+          "c031:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c031:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 25-5",
+        "permitted_use": "AI 기반 뇌질환 진단 솔루션",
+        "status": "active",
+        "effective_at": "2025-07-29",
+        "valid_until": null,
+        "evidence_ids": [
+          "c031:clinical:ev02"
+        ]
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c031:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "보건복지부 혁신 의료기술",
+        "status": "active",
+        "scope": "AI 기반 뇌출혈 진단 솔루션",
+        "effective_at": null,
+        "evidence_ids": [
+          "c031:clinical:ev03"
+        ]
+      }
+    ],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c031:clinical:st01",
+        "product_id": "p001",
+        "design": "Multicenter Study, Randomized Controlled Trial, Validation Study",
+        "prospective": null,
+        "multicenter": true,
+        "external_validation": true,
+        "sample_size": 917,
+        "comparator": "AI-assisted vs AI-unassisted interpretation",
+        "endpoint": "Diagnostic accuracy in detecting acute ischemic stroke",
+        "result": "AI-assisted brain CT interpretation showed higher diagnostic accuracy than AI-unassisted interpretation (75.63% vs. 72.03%, p < 0.001)",
+        "limitations": "None / 제품명 미기재 간접 근거로 L2 상한 적용",
+        "evidence_ids": [
+          "c031:clinical:ev04"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c031:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "AUC (0.9864)",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 퍼플에이아이 (c031) | 기준일 2026-09-30\n- p001 AI 기반 뇌질환 진단 솔루션: ai_software/in_scope | 공식 상태: KR approval·active(\"AI 기반 뇌질환 진단 솔루션\"); KR approval·active(\"AI 기반 뇌질환 진단 솔루션\"); KR approval·active(\"AI 기반 뇌질환 진단 솔루션\") | 제도: 보건복지부 혁신 의료기술·active | 임상 근거 L2, C1 2.0 (scored) | 주장 대조: unknown 1 | 평가 상태 complete\n- C1 잠정 집계: 2.0 (scored)",
+    "criteria_inputs": {
+      "C1": {
+        "score": 2.0,
+        "score_status": "scored",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": 2.0,
+            "score_status": "scored",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [
+          "c031:clinical:ev04"
+        ],
+        "rationale": "제품별 점수의 scope_weight 가중평균 (잠정, 심사 p.4 규칙으로 재집계)"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c031:clinical:reg01": "c031:clinical:fd01",
+      "finding|regulatory|c031:clinical:reg02": "c031:clinical:fd02",
+      "finding|regulatory|c031:clinical:reg03": "c031:clinical:fd03",
+      "finding|designation|c031:clinical:des01": "c031:clinical:fd04",
+      "finding|clinical_evidence|p001": "c031:clinical:fd05",
+      "finding|claim|c031:p001:cl01": "c031:clinical:fd06"
+    },
+    "collected_profile": {
+      "legal_name": "퍼플에이아이",
+      "english_name": "Purple AI",
+      "homepage": "https://www.purple-ai.co",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "AI 기반 뇌질환 진단 솔루션",
+          "model": null,
+          "intended_use": "AI 기반 뇌질환 진단 솔루션",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "AUC (0.9864)",
+              "url": "https://www.purple-ai.co",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.purple-ai.co",
+          "https://thevc.kr/purpleai",
+          "https://dbr.donga.com/kfocus/view/article_no/659",
+          "https://www.etnews.com/20260611000314",
+          "https://www.mashupventures.co/portfolio/purple-ai"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c031:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 퍼플에이아이",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%ED%8D%BC%ED%94%8C%EC%97%90%EC%9D%B4%EC%95%84%EC%9D%B4",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src03",
+      "title": "퍼플에이아이, 뇌졸중 진단 ‘3종 인공지능’ 포트폴리오 완성 [헬스케어 소식] | DBR",
+      "url": "https://dbr.donga.com/kfocus/view/article_no/659",
+      "publisher": "dbr.donga.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src04",
+      "title": "퍼플에이아이, 뇌경색 진단 AI 임상 연구 국제 학술지 게재 - 전자신문",
+      "url": "https://www.etnews.com/20260611000314",
+      "publisher": "www.etnews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src05",
+      "title": "퍼플에이아이 - 매쉬업벤처스 포트폴리오",
+      "url": "https://www.mashupventures.co/portfolio/purple-ai",
+      "publisher": "www.mashupventures.co",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src10",
+      "title": "퍼플에이아이, ‘뇌출혈 진단 AI 솔루션’ 美 화이트록메디컬센터 적용 < 헬스케어·AI < 기사본문 - 더바이오",
+      "url": "https://www.thebionews.net/news/articleView.html?idxno=25762",
+      "publisher": "www.thebionews.net",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src15",
+      "title": "퍼플에이아이, 뇌졸중 진단 '3종 인공지능' 포트폴리오 완성 ...",
+      "url": "https://v.daum.net/v/9FohbnqF3C",
+      "publisher": "v.daum.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src16",
+      "title": "\"뇌동맥류 조기 진단\"…퍼플AI 솔루션, 식약처서 의료기기 허가",
+      "url": "https://www.unicornfactory.co.kr/article/2025081910540681862",
+      "publisher": "www.unicornfactory.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src33",
+      "title": "Deep learning algorithm for automatic detection of acute ischemic stroke on noncontrast brain CT.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42225843/",
+      "publisher": "Sci Rep",
+      "source_type": "research",
+      "published_at": "2026-05-31",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src34",
+      "title": "퍼플에이아이, 뇌경색 진단 AI 연구 논문 국제 학술지 게재…의사 오진 줄이는 안전망 역할 - beSUCCESS",
+      "url": "https://besuccess.com?p=183783",
+      "publisher": "besuccess.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c031:clinical:src35",
+      "title": "\"퍼플에이아이 뇌경색 진단 AI, 판독의 진단 정확도 높여\" < 의료기기 < 기업 < 기사본문 - 히트뉴스",
+      "url": "https://www.hitnews.co.kr/news/articleView.html?idxno=76793",
+      "publisher": "www.hitnews.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c031:clinical:ev01",
+      "company_id": "c031",
+      "product_id": "p001",
+      "statement": "AI 기반 뇌질환 진단 솔루션",
+      "source_ids": [
+        "c031:clinical:src01",
+        "c031:clinical:src15",
+        "c031:clinical:src16",
+        "c031:clinical:src05"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2021-08-26",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c031:clinical:ev02",
+      "company_id": "c031",
+      "product_id": "p001",
+      "statement": "AI 기반 뇌질환 진단 솔루션",
+      "source_ids": [
+        "c031:clinical:src01",
+        "c031:clinical:src16"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-01-23",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c031:clinical:ev03",
+      "company_id": "c031",
+      "product_id": "p001",
+      "statement": "퍼플에이아이의 뇌출혈 AI는 ‘보건복지부 혁신 의료기술’로 지정된 솔루션이다.",
+      "source_ids": [
+        "c031:clinical:src10",
+        "c031:clinical:src03"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c031:clinical:ev04",
+      "company_id": "c031",
+      "product_id": "p001",
+      "statement": "This study aimed to evaluate the diagnostic performance of a deep learning-based algorithm for detecting acute ischemic stroke (AIS), including small infarcts, on non-contrast computed tomography (NCCT).",
+      "source_ids": [
+        "c031:clinical:src33",
+        "c031:clinical:src04",
+        "c031:clinical:src34",
+        "c031:clinical:src35"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2026-05-31",
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c031:clinical:fd01",
+      "category": "regulatory",
+      "claim": "AI 기반 뇌질환 진단 솔루션 [KR] approval · active (제허 21-720) / 사용 목적: \"AI 기반 뇌질환 진단 솔루션\"",
+      "evidence_ids": [
+        "c031:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c031:clinical:fd02",
+      "category": "regulatory",
+      "claim": "AI 기반 뇌질환 진단 솔루션 [KR] approval · active (제허 24-61) / 사용 목적: \"AI 기반 뇌질환 진단 솔루션\"",
+      "evidence_ids": [
+        "c031:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c031:clinical:fd03",
+      "category": "regulatory",
+      "claim": "AI 기반 뇌질환 진단 솔루션 [KR] approval · active (제허 25-5) / 사용 목적: \"AI 기반 뇌질환 진단 솔루션\"",
+      "evidence_ids": [
+        "c031:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c031:clinical:fd04",
+      "category": "designation",
+      "claim": "AI 기반 뇌질환 진단 솔루션 [KR] 보건복지부 혁신 의료기술 · active / 범위: AI 기반 뇌출혈 진단 솔루션",
+      "evidence_ids": [
+        "c031:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c031:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "AI 기반 뇌질환 진단 솔루션: 임상 근거 L2, C1 2 (scored), 연구 1건",
+      "evidence_ids": [
+        "c031:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c031:clinical:fd06",
+      "category": "claim",
+      "claim": "주장 \"AUC (0.9864)\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c031:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "AI 기반 뇌질환 진단 솔루션은 질병 진단을 목적으로 하며, AUC (0.9864)라는 효능 주장을 포함하고 있어 'in_scope'로 분류된다."
+    },
+    {
+      "coverage_id": "c031:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "퍼플에이아이",
+          "AI 기반 뇌질환 진단 솔루션"
+        ],
+        "queries": [
+          "퍼플에이아이 AI 기반 뇌질환 진단 솔루션 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c031:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "퍼플에이아이 혁신의료기기 지정",
+          "AI 기반 뇌질환 진단 솔루션 혁신의료기술 평가",
+          "AI 기반 뇌질환 진단 솔루션 비급여 등재 고시",
+          "퍼플에이아이 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c031:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "퍼플에이아이 혁신의료기기 지정",
+          "AI 기반 뇌질환 진단 솔루션 혁신의료기술 평가",
+          "AI 기반 뇌질환 진단 솔루션 비급여 등재 고시",
+          "퍼플에이아이 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c031:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Purple AI\"[Affiliation]",
+          "퍼플에이아이 AI 기반 뇌질환 진단 솔루션 임상 연구 논문",
+          "AI 기반 뇌질환 진단 솔루션 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c031:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

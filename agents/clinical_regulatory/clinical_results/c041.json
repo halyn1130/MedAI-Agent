@@ -1,0 +1,380 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c041",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c041:clinical:ev01",
+          "c041:clinical:ev02"
+        ]
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c041:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "certification",
+        "record_number": "제인 23-5136",
+        "permitted_use": "리프팅 의료기기",
+        "status": "active",
+        "effective_at": "2023-10-04",
+        "valid_until": null,
+        "evidence_ids": [
+          "c041:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c041:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "certification",
+        "record_number": "제인 24-927",
+        "permitted_use": "리프팅 의료기기",
+        "status": "active",
+        "effective_at": "2024-10-11",
+        "valid_until": null,
+        "evidence_ids": [
+          "c041:clinical:ev02"
+        ]
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [
+      {
+        "claim_id": "c041:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "올타이트의 핵심 경쟁력은 국제 특허 출원된 DLTD(Dermis Layer Target Dielectric heating system) 기술로, 기존 암 치료와 재활 치료에 사용되던 유전 가열 원리를 미용 의료기기에 최초로 적용했다.",
+        "status": "supported",
+        "comparison_reason": "주장과 동일한 내용이 확인된 공식 기록이 있음.",
+        "evidence_ids": [
+          "c041:clinical:ev01",
+          "c041:clinical:ev02"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 이노서스 (c041) | 기준일 2026-09-30\n- p001 올타이트: hardware/in_scope | 공식 상태: KR certification·active(\"리프팅 의료기기\"); KR certification·active(\"리프팅 의료기기\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 1 | 평가 상태 complete\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c041:clinical:reg01": "c041:clinical:fd01",
+      "finding|regulatory|c041:clinical:reg02": "c041:clinical:fd02",
+      "finding|clinical_evidence|p001": "c041:clinical:fd03"
+    },
+    "collected_profile": {
+      "legal_name": "이노서스",
+      "english_name": "Innoxus",
+      "homepage": "https://thevc.kr/innoxus",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "올타이트",
+          "model": null,
+          "intended_use": "리프팅 의료기기",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "올타이트의 핵심 경쟁력은 국제 특허 출원된 DLTD(Dermis Layer Target Dielectric heating system) 기술로, 기존 암 치료와 재활 치료에 사용되던 유전 가열 원리를 미용 의료기기에 최초로 적용했다.",
+              "url": "https://v.daum.net/v/FQXGwCrNyQ",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://thevc.kr/innoxus",
+          "https://v.daum.net/v/FQXGwCrNyQ",
+          "https://byline.network/2026/01/20_alltite",
+          "https://www.jeonmin.co.kr/news/articleView.html?idxno=436559",
+          "http://www.medisobizanews.com/news/articleView.html?idxno=120158"
+        ],
+        "dropped_claims_not_in_page": [
+          "올타이트는 B2B 모델을 채택하여 의료진 및 미용 관련 업계에 유전 가열 기술 기반의 리프팅 미용 의료기기를 제공하는 회사입니다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c041:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 이노서스",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EC%9D%B4%EB%85%B8%EC%84%9C%EC%8A%A4",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c041:clinical:src03",
+      "title": "올타이트 개발기업 '이노서스', 알토스벤처스 등으로부터 총 ...",
+      "url": "https://byline.network/2026/01/20_alltite",
+      "publisher": "byline.network",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c041:clinical:src19",
+      "title": "Alltite — MADMEDBOOK",
+      "url": "https://madmedbook.com/products/alltite",
+      "publisher": "madmedbook.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c041:clinical:src20",
+      "title": "‘올타이트’ 개발 기업 이노서스, 142억 원 규모 시리즈 A 투자 유치... “글로벌 미용 의료기기 시장 공략 본격화” < 헬스케어 < 산업 < 기사본문 - 에이빙(AVING)",
+      "url": "https://kr.aving.net/news/articleView.html?idxno=1808079",
+      "publisher": "kr.aving.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c041:clinical:ev01",
+      "company_id": "c041",
+      "product_id": "p001",
+      "statement": "올타이트의 핵심 경쟁력은 국제 특허 출원된 DLTD(Dermis Layer Target Dielectric heating system) 기술로, 기존 암 치료와 재활 치료에 사용되던 유전 가열 원리를 미용 의료기기에 최초로 적용했다.",
+      "source_ids": [
+        "c041:clinical:src01",
+        "c041:clinical:src19",
+        "c041:clinical:src20",
+        "c041:clinical:src03"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-10-04",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c041:clinical:ev02",
+      "company_id": "c041",
+      "product_id": "p001",
+      "statement": "올타이트의 핵심 경쟁력은 국제 특허 출원된 DLTD(Dermis Layer Target Dielectric heating system) 기술로, 기존 암 치료와 재활 치료에 사용되던 유전 가열 원리를 미용 의료기기에 최초로 적용했다.",
+      "source_ids": [
+        "c041:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-10-11",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c041:clinical:fd01",
+      "category": "regulatory",
+      "claim": "올타이트 [KR] certification · active (제인 23-5136) / 사용 목적: \"리프팅 의료기기\"",
+      "evidence_ids": [
+        "c041:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c041:clinical:fd02",
+      "category": "regulatory",
+      "claim": "올타이트 [KR] certification · active (제인 24-927) / 사용 목적: \"리프팅 의료기기\"",
+      "evidence_ids": [
+        "c041:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c041:clinical:fd03",
+      "category": "clinical_evidence",
+      "claim": "올타이트: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c041:clinical:mi01",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c041:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "올타이트는 리프팅 의료기기로, 의료기기 범주에 해당하며, 회사의 주장에 따르면 유전 가열 원리를 미용 의료기기에 적용한 기술을 사용하고 있다. 따라서 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c041:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "이노서스",
+          "올타이트"
+        ],
+        "queries": [
+          "이노서스 올타이트 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c041:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "이노서스 혁신의료기기 지정",
+          "올타이트 혁신의료기술 평가",
+          "올타이트 비급여 등재 고시",
+          "이노서스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c041:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "이노서스 혁신의료기기 지정",
+          "올타이트 혁신의료기술 평가",
+          "올타이트 비급여 등재 고시",
+          "이노서스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c041:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Innoxus\"[Affiliation]",
+          "이노서스 올타이트 임상 연구 논문",
+          "올타이트 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c041:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

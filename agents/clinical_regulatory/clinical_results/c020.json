@@ -1,0 +1,371 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c020",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c020:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c020:clinical:st01",
+        "product_id": "p001",
+        "design": "비임상 환경에서의 심장음 분류 연구",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "심장질환 관련 환자 분류",
+        "result": "딥 러닝 알고리즘을 통한 심장음 분석으로 심장질환 환자 분류 가능성 확인",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c020:clinical:ev01"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      },
+      {
+        "study_id": "c020:clinical:st02",
+        "product_id": "p001",
+        "design": "심전도를 사용한 대동맥판막협착증 진단 연구",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": 10000,
+        "comparator": null,
+        "endpoint": "딥러닝 알고리즘의 정확도 검증",
+        "result": "AUC 88.4%로 높은 정확도 확인",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c020:clinical:ev02"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 딥메트릭스 (c020) | 기준일 2026-09-30\n- p001 AI기반 심장판막 질환 분류 모델: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c020:clinical:reg01": "c020:clinical:fd01",
+      "finding|clinical_evidence|p001": "c020:clinical:fd02"
+    },
+    "collected_profile": {
+      "legal_name": "딥메트릭스",
+      "english_name": "DeepMetrics",
+      "homepage": "https://deepmetrics.co",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "AI기반 심장판막 질환 분류 모델",
+          "model": null,
+          "intended_use": "맥파(PPG)로부터 동맥혈압(ABP)을 추정하여 심장판막 질환을 분류하는 솔루션",
+          "target_disease": "심장판막 질환",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "소프트웨어",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://deepmetrics.co",
+          "https://thevc.kr/deepmetrics/products",
+          "https://platum.kr/archives/167114",
+          "https://www.startuptoday.kr/news/articleView.html?idxno=42668",
+          "https://view.asiae.co.kr/article/2021072009232188340"
+        ],
+        "dropped_claims_not_in_page": [
+          "송 대표는 “딥메트릭스는 대량의 데이터에 존재하는 패턴을 알고리즘적 머신러닝, 최적화, 수리통계적 분석을 통해 해석하고 응용해 문제를 해결하고자"
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c020:clinical:src47",
+      "title": "[보고서]딥 러닝 알고리즘에 기반, 비임상 환경에서의 심장음 ...",
+      "url": "https://scienceon.kisti.re.kr/srch/selectPORSrchReport.do?cn=TRKO201700000126",
+      "publisher": "scienceon.kisti.re.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c020:clinical:src48",
+      "title": "메디플렉스 세종병원, 심전도로 판막질환 진단 딥러닝 알고리즘 개발 < 학술 < 기사본문 - 라포르시안",
+      "url": "https://www.rapportian.com/news/articleView.html?idxno=124605",
+      "publisher": "www.rapportian.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c020:clinical:ev01",
+      "company_id": "c020",
+      "product_id": "p001",
+      "statement": "딥 러닝 알고리즘에 기반한 심장음 분석 연구",
+      "source_ids": [
+        "c020:clinical:src47"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    },
+    {
+      "evidence_id": "c020:clinical:ev02",
+      "company_id": "c020",
+      "product_id": "p001",
+      "statement": "심전도를 통한 대동맥판막협착증 진단 연구",
+      "source_ids": [
+        "c020:clinical:src48"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c020:clinical:fd01",
+      "category": "regulatory",
+      "claim": "AI기반 심장판막 질환 분류 모델 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c020:clinical:fd02",
+      "category": "clinical_evidence",
+      "claim": "AI기반 심장판막 질환 분류 모델: 임상 근거 L0, C1 없음 (unknown), 연구 2건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 2건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c020:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c020:clinical:mi02",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c020:clinical:mi03",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 딥메트릭스, AI기반 심장판막 질환 분류 모델, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c020:clinical:mi04",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 2건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c020:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "심장판막 질환을 분류하는 솔루션으로, 질병 진단에 사용되며, 의료기관에서 사용된다."
+    },
+    {
+      "coverage_id": "c020:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "딥메트릭스",
+          "AI기반 심장판막 질환 분류 모델"
+        ],
+        "queries": [
+          "딥메트릭스 AI기반 심장판막 질환 분류 모델 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c020:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "딥메트릭스 혁신의료기기 지정",
+          "AI기반 심장판막 질환 분류 모델 혁신의료기술 평가",
+          "AI기반 심장판막 질환 분류 모델 비급여 등재 고시",
+          "딥메트릭스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c020:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "딥메트릭스 혁신의료기기 지정",
+          "AI기반 심장판막 질환 분류 모델 혁신의료기술 평가",
+          "AI기반 심장판막 질환 분류 모델 비급여 등재 고시",
+          "딥메트릭스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c020:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"DeepMetrics\"[Affiliation]",
+          "딥메트릭스 AI기반 심장판막 질환 분류 모델 임상 연구 논문",
+          "AI기반 심장판막 질환 분류 모델 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c020:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}

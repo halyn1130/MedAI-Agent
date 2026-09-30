@@ -1,0 +1,646 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c036",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "unknown",
+        "product_type": "other",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c036:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c036:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c036:clinical:st01",
+        "product_id": "p001",
+        "design": "Randomized Controlled Trial",
+        "prospective": true,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": 63,
+        "comparator": "Three CDSS explanation methods",
+        "endpoint": "Acceptance, trust, satisfaction and usability of explanatory methods among clinicians",
+        "result": "Providing a clinical explanation enhances clinicians' acceptance compared to 'results only' or 'results with SHAP'.",
+        "limitations": "제품명 미기재 간접 근거로 L2 상한 적용",
+        "evidence_ids": [
+          "c036:clinical:ev01"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c036:clinical:st02",
+        "product_id": "p001",
+        "design": "Randomized Controlled Trial",
+        "prospective": true,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "Influence of AI-generated diagnostic suggestions on diagnostic patterns and decision-making",
+        "result": "Evaluates the correlation between clinicians' adoption and diagnosis accuracy.",
+        "limitations": "",
+        "evidence_ids": [
+          "c036:clinical:ev02"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "unclear",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c036:clinical:st03",
+        "product_id": "p001",
+        "design": "Validation Study",
+        "prospective": true,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": 7843,
+        "comparator": "Calculated Maximum Surgical Blood Ordering Schedule (MSBOS)",
+        "endpoint": "Predicting RBC requirements through root mean square error and adjusted R2",
+        "result": "The pMSBOS-TS model showed statistically significant lower root mean square error compared to the calculated MSBOS.",
+        "limitations": "",
+        "evidence_ids": [
+          "c036:clinical:ev03"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c036:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "아보엠디, 1000만 달러 투자 유치…EHR 기반 임상 AI로 미국 의료 ‘AX 전환’ 가속",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 아보엠디 (c036) | 기준일 2026-09-30\n- p001 AI 기반 의료 솔루션: other/unknown | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 에이보: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 1 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001], regulatory_records[p002][KR], criteria_inputs.C1[p002]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c036:clinical:reg01": "c036:clinical:fd01",
+      "finding|regulatory|c036:clinical:reg02": "c036:clinical:fd02",
+      "finding|clinical_evidence|p001": "c036:clinical:fd03",
+      "finding|clinical_evidence|p002": "c036:clinical:fd04",
+      "finding|claim|c036:p002:cl01": "c036:clinical:fd05"
+    },
+    "collected_profile": {
+      "legal_name": "아보엠디",
+      "english_name": "AvoMD",
+      "homepage": "https://thevc.kr/avomd",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "AI 기반 의료 솔루션",
+          "model": null,
+          "intended_use": "AI 기반 의료 솔루션",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "에이보",
+          "model": null,
+          "intended_use": "전자의무기록(EHR)을 기반으로 의료진의 진료 업무를 통합 지원하는 임상 AI 플랫폼",
+          "target_disease": null,
+          "users": "의료진",
+          "environment": "병원",
+          "modality": "소프트웨어",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "아보엠디, 1000만 달러 투자 유치…EHR 기반 임상 AI로 미국 의료 ‘AX 전환’ 가속",
+              "url": "http://m.yakup.com/news/index.html?mode=view&nid=326163",
+              "claimed_at": "2026-04-17"
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://thevc.kr/avomd",
+          "http://m.yakup.com/news/index.html?mode=view&nid=326163",
+          "https://www.tech42.co.kr/%ED%95%9C%EA%B5%AD%EA%B3%84-%E7%BE%8E-%EC%9D%98%EB%A3%8C-ai-%EC%8A%A4%ED%83%80%ED%8A%B8%EC%97%85-%EC%95%84%EB%B3%B4%EC%97%A0%EB%94%94-%ED%98%84%EC%A7%80-%ED%88%AC%EC%9E%90%EA%B8%88-1000%EB%A7%8C",
+          "https://platum.kr/archives/285442",
+          "https://www.unicornfactory.co.kr/article/2026041709201559032"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c036:clinical:src45",
+      "title": "Comparison of SHAP and clinician friendly explanations reveals effects on clinical decision behaviour.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41006498/",
+      "publisher": "NPJ Digit Med",
+      "source_type": "research",
+      "published_at": "2025-09-26",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c036:clinical:src46",
+      "title": "Impact of an Evidence-Based Large Language Model (LLM) Diagnostic Decision Support System: A Randomised Controlled Trial.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40775862/",
+      "publisher": "Stud Health Technol Inform",
+      "source_type": "research",
+      "published_at": "2025-08-07",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c036:clinical:src48",
+      "title": "Development, validation, and usability evaluation of machine learning algorithms for predicting personalized red blood cell demand among thoracic surgery patients.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39084087/",
+      "publisher": "Int J Med Inform",
+      "source_type": "research",
+      "published_at": "2024-11-01",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c036:clinical:ev01",
+      "company_id": "c036",
+      "product_id": "p001",
+      "statement": "The study suggests best practices for the strategic application of the XAI-CDSS in the medical field.",
+      "source_ids": [
+        "c036:clinical:src45"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-09-26",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c036:clinical:ev02",
+      "company_id": "c036",
+      "product_id": "p001",
+      "statement": "The study aims to evaluate the influence of AI on clinical decision-making.",
+      "source_ids": [
+        "c036:clinical:src46"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-08-07",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c036:clinical:ev03",
+      "company_id": "c036",
+      "product_id": "p001",
+      "statement": "The study developed and validated a machine learning algorithm for personalized RBC predictions.",
+      "source_ids": [
+        "c036:clinical:src48"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024",
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c036:clinical:fd01",
+      "category": "regulatory",
+      "claim": "AI 기반 의료 솔루션 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c036:clinical:fd02",
+      "category": "regulatory",
+      "claim": "에이보 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c036:clinical:fd03",
+      "category": "clinical_evidence",
+      "claim": "AI 기반 의료 솔루션: 임상 근거 L0, C1 없음 (unknown), 연구 3건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외; 제품명 미기재 및 비소속 연구로 2건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c036:clinical:fd04",
+      "category": "clinical_evidence",
+      "claim": "에이보: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c036:clinical:fd05",
+      "category": "claim",
+      "claim": "주장 \"아보엠디, 1000만 달러 투자 유치…EHR 기반 임상 AI로 미국 의료 ‘AX 전환’ 가속\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c036:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c036:clinical:mi02",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c036:clinical:mi03",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아보엠디, AI 기반 의료 솔루션, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c036:clinical:mi04",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외; 제품명 미기재 및 비소속 연구로 2건 점수 제외)"
+    },
+    {
+      "item_id": "c036:clinical:mi05",
+      "field": "products[p002].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c036:clinical:mi06",
+      "field": "regulatory_records[p002][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아보엠디, 에이보, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c036:clinical:mi07",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c036:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품의 사용 목적이 명확하지 않으며, 회사의 주장이나 공식 기록이 부족하여 규제 적용 여부를 판단할 수 없다."
+    },
+    {
+      "coverage_id": "c036:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "전자의무기록(EHR)을 기반으로 의료진의 진료 업무를 지원하는 임상 AI 플랫폼으로, 의료진을 대상으로 하며, 효능 주장이 포함되어 있다."
+    },
+    {
+      "coverage_id": "c036:clinical:cv03",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아보엠디",
+          "AI 기반 의료 솔루션"
+        ],
+        "queries": [
+          "아보엠디 AI 기반 의료 솔루션 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c036:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아보엠디",
+          "에이보"
+        ],
+        "queries": [
+          "아보엠디 에이보 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c036:clinical:cv05",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아보엠디 혁신의료기기 지정",
+          "AI 기반 의료 솔루션 혁신의료기술 평가",
+          "AI 기반 의료 솔루션 비급여 등재 고시",
+          "아보엠디 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c036:clinical:cv06",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아보엠디 혁신의료기기 지정",
+          "AI 기반 의료 솔루션 혁신의료기술 평가",
+          "AI 기반 의료 솔루션 비급여 등재 고시",
+          "아보엠디 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c036:clinical:cv07",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아보엠디 혁신의료기기 지정",
+          "에이보 혁신의료기술 평가",
+          "에이보 비급여 등재 고시",
+          "아보엠디 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c036:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아보엠디 혁신의료기기 지정",
+          "에이보 혁신의료기술 평가",
+          "에이보 비급여 등재 고시",
+          "아보엠디 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c036:clinical:cv09",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AvoMD\"[Affiliation]",
+          "아보엠디 AI 기반 의료 솔루션 임상 연구 논문",
+          "AI 기반 의료 솔루션 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c036:clinical:cv10",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AvoMD\"[Affiliation]",
+          "아보엠디 에이보 임상 연구 논문",
+          "에이보 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c036:clinical:cv11",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c036:clinical:cv12",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

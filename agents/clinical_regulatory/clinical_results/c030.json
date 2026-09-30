@@ -1,0 +1,218 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c030",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c030:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 아스테로모프 (c030) | 기준일 2026-09-30\n- p001 Spacer: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 없음 (not_applicable)",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "not_applicable",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c030:clinical:reg01": "c030:clinical:fd01",
+      "finding|clinical_evidence|p001": "c030:clinical:fd02"
+    },
+    "collected_profile": {
+      "legal_name": "아스테로모프",
+      "english_name": "Asteromorph",
+      "homepage": "https://asteromorph.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "Spacer",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://asteromorph.com",
+          "https://wowtale.net/2026/05/29/259343",
+          "https://www.mk.co.kr/news/it/11405032",
+          "https://www.innoforest.co.kr/company/CP00021616/%EC%95%84%EC%8A%A4%ED%85%8C%EB%A1%9C%EB%AA%A8%ED%94%84",
+          "https://www.nextunicorn.kr/company/194ea9b1c848d645"
+        ],
+        "dropped_claims_not_in_page": [
+          "과학 AI 연구소 아스테로모프(Asteromorph)가 과학 초지능 구축을 위해 총 3,140만 달러(약 470억 원) 규모의 시드 펀딩을 유치",
+          "대규모로 마무리된 이번 투자는 본엔젤스벤처파트너스가 주도했으며, 퓨처플레이, 미래에셋벤처투자 등이 참여했다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [],
+  "evidence": [],
+  "findings": [
+    {
+      "finding_id": "c030:clinical:fd01",
+      "category": "regulatory",
+      "claim": "Spacer [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c030:clinical:fd02",
+      "category": "clinical_evidence",
+      "claim": "Spacer: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c030:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품의 사용 목적이나 효능에 대한 정보가 부족하여 규제 적용 범위를 판단할 수 없음."
+    },
+    {
+      "coverage_id": "c030:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c030:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c030:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c030:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c030:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    }
+  ],
+  "review_responses": []
+}

@@ -1,0 +1,1253 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c017",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ivd",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c017:clinical:ev01",
+          "c017:clinical:ev02"
+        ]
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ivd",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ivd",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ivd",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c017:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "notification",
+        "record_number": "체외 제신 22-324",
+        "permitted_use": null,
+        "status": "active",
+        "effective_at": "2022-03-16",
+        "valid_until": null,
+        "evidence_ids": [
+          "c017:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c017:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": "체외 제허 23-14",
+        "permitted_use": null,
+        "status": "active",
+        "effective_at": "2023-01-09",
+        "valid_until": null,
+        "evidence_ids": [
+          "c017:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c017:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": "체외 제허 24-57",
+        "permitted_use": null,
+        "status": "active",
+        "effective_at": "2024-01-23",
+        "valid_until": null,
+        "evidence_ids": [
+          "c017:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c017:clinical:reg04",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": "체외 제허 24-590",
+        "permitted_use": null,
+        "status": "expired",
+        "effective_at": "2024-08-29",
+        "valid_until": "2025-09-08",
+        "evidence_ids": [
+          "c017:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c017:clinical:reg05",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": "체외 제허 25-599",
+        "permitted_use": null,
+        "status": "active",
+        "effective_at": "2025-09-01",
+        "valid_until": null,
+        "evidence_ids": [
+          "c017:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c017:clinical:reg06",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c017:clinical:reg07",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c017:clinical:reg08",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c017:clinical:st01",
+        "product_id": "p001",
+        "design": "전향적",
+        "prospective": true,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "유전자 변이의 변화 모니터링",
+        "result": "진단의 민감도를 끌어올림",
+        "limitations": "정상군의 혈액검체도 본 연구에 활용하고 있음 / 제품명 미기재 간접 근거로 L2 상한 적용 / 임상 결과 미발표 또는 진행 중(점수 제외)",
+        "evidence_ids": [
+          "c017:clinical:ev03"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "unclear",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c017:clinical:st02",
+        "product_id": "p001",
+        "design": "null",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "민감도 및 특이도 향상",
+        "result": "상용화 기반 확보",
+        "limitations": "null",
+        "evidence_ids": [
+          "c017:clinical:ev04"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c017:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "정상 DNA 선제 제거로 민감도 20배 향상·비용 10분의 1 절감 - 35만원대 다중암 검사·CT 대비 8개월 앞선 재발 감지 데이터 확보",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c017:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "단일 염기까지 잡아낸다…진씨커, ‘뮤트시크’ 암 조기진단·재발 모니터링 혁신",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c017:p003:cl01",
+        "product_id": "p003",
+        "original_claim": "CRISPR 유전자가위 기반 암진단 키트",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c017:p003:cl02",
+        "product_id": "p003",
+        "original_claim": "액체 생검 진단을 위한 표준화된 크리스핀셋",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 진씨커 (c017) | 기준일 2026-09-30\n- p001 CRISPR 기반 암 조기진단 키트: ivd/in_scope | 공식 상태: KR notification·active; KR approval·active; KR approval·active; KR approval·expired; KR approval·active | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 MUTE-Seq: ivd/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 2 | 평가 상태 partial\n- p003 CRISPincette™: ivd/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 2 | 평가 상태 partial\n- p004 CRISmono™: ivd/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], regulatory_records[p002][KR], criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003], regulatory_records[p004][KR], criteria_inputs.C1[p004]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c017:clinical:reg01": "c017:clinical:fd01",
+      "finding|regulatory|c017:clinical:reg02": "c017:clinical:fd02",
+      "finding|regulatory|c017:clinical:reg03": "c017:clinical:fd03",
+      "finding|regulatory|c017:clinical:reg04": "c017:clinical:fd04",
+      "finding|regulatory|c017:clinical:reg05": "c017:clinical:fd05",
+      "finding|regulatory|c017:clinical:reg06": "c017:clinical:fd06",
+      "finding|regulatory|c017:clinical:reg07": "c017:clinical:fd07",
+      "finding|regulatory|c017:clinical:reg08": "c017:clinical:fd08",
+      "finding|clinical_evidence|p001": "c017:clinical:fd09",
+      "finding|clinical_evidence|p002": "c017:clinical:fd10",
+      "finding|clinical_evidence|p003": "c017:clinical:fd11",
+      "finding|clinical_evidence|p004": "c017:clinical:fd12",
+      "finding|claim|c017:p002:cl01": "c017:clinical:fd13",
+      "finding|claim|c017:p002:cl02": "c017:clinical:fd14",
+      "finding|claim|c017:p003:cl01": "c017:clinical:fd15",
+      "finding|claim|c017:p003:cl02": "c017:clinical:fd16"
+    },
+    "collected_profile": {
+      "legal_name": "진씨커",
+      "english_name": "GeneCker",
+      "homepage": "http://genecker.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "CRISPR 기반 암 조기진단 키트",
+          "model": null,
+          "intended_use": "CRISPR 기반 암 조기진단 키트",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "MUTE-Seq",
+          "model": null,
+          "intended_use": "CRISPR 기반 암 조기진단 키트",
+          "target_disease": "암",
+          "users": "의료기관",
+          "environment": "체외 진단",
+          "modality": "액체 생검",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "정상 DNA 선제 제거로 민감도 20배 향상·비용 10분의 1 절감 - 35만원대 다중암 검사·CT 대비 8개월 앞선 재발 감지 데이터 확보",
+              "url": "https://www.thebionews.net/news/articleView.html?idxno=18236",
+              "claimed_at": "2025-09-22"
+            },
+            {
+              "text": "단일 염기까지 잡아낸다…진씨커, ‘뮤트시크’ 암 조기진단·재발 모니터링 혁신",
+              "url": "https://www.thebionews.net/news/articleView.html?idxno=18236",
+              "claimed_at": "2025-09-22"
+            }
+          ]
+        },
+        {
+          "product_id": "p003",
+          "name": "CRISPincette™",
+          "model": null,
+          "intended_use": "액체 생검 진단을 위한 표준화된 크리스핀셋",
+          "target_disease": "암",
+          "users": "의료기관",
+          "environment": "체외 진단",
+          "modality": "액체 생검",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "CRISPR 유전자가위 기반 암진단 키트",
+              "url": "http://genecker.com",
+              "claimed_at": null
+            },
+            {
+              "text": "액체 생검 진단을 위한 표준화된 크리스핀셋",
+              "url": "http://genecker.com",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p004",
+          "name": "CRISmono™",
+          "model": null,
+          "intended_use": "유전자 변이를 증폭하는 크리스모노",
+          "target_disease": "암",
+          "users": "의료기관",
+          "environment": "체외 진단",
+          "modality": "액체 생검",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "http://genecker.com",
+          "https://thevc.kr/genecker",
+          "https://www.thebionews.net/news/articleView.html?idxno=18236",
+          "https://www.news2day.co.kr/article/20250829500117",
+          "https://blog.naver.com/techkibo/223828777679"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c017:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 진씨커",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EC%A7%84%EC%94%A8%EC%BB%A4",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c017:clinical:src03",
+      "title": "단일 염기까지 잡아낸다…진씨커, ‘뮤트시크’ 암 조기진단·재발 모니터링 혁신 < The interview < ENGLISH NEWS < 기사본문 - 더바이오",
+      "url": "https://www.thebionews.net/news/articleView.html?idxno=18236",
+      "publisher": "www.thebionews.net",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c017:clinical:src06",
+      "title": "범부처전주기의료기기연구개발사업단 뉴스레터",
+      "url": "https://www.kmdf.org/_newsletter/15_2212/sub5_01.html",
+      "publisher": "www.kmdf.org",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c017:clinical:src70",
+      "title": "GeneCker",
+      "url": "https://genecker.com/support/notice.php?mNum=5&sNum=1&boardid=notce_news&mode=view&idx=16",
+      "publisher": "genecker.com",
+      "source_type": "company",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c017:clinical:src71",
+      "title": "[GeneCker] 영상 한계 넘는다…진씨커, 췌장 낭종 '분자지표 진단' 가능성 제시 - 주식회사 에버템",
+      "url": "https://evertem.com/news/genecker-%EC%98%81%EC%83%81-%ED%95%9C%EA%B3%84-%EB%84%98%EB%8A%94%EB%8B%A4%EC%A7%84%EC%94%A8%EC%BB%A4-%EC%B7%8C%EC%9E%A5-%EB%82%AD%EC%A2%85-%EB%B6%84%EC%9E%90%EC%A7%80%ED%91%9C-%EC%A7%84",
+      "publisher": "evertem.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c017:clinical:ev01",
+      "company_id": "c017",
+      "product_id": "p001",
+      "statement": "주식회사 진씨커의 기타분자유전검사시약Ⅰ",
+      "source_ids": [
+        "c017:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2022-03-16",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c017:clinical:ev02",
+      "company_id": "c017",
+      "product_id": "p001",
+      "statement": "주식회사 진씨커의 종양관련유전자검사시약",
+      "source_ids": [
+        "c017:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-01-09",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c017:clinical:ev03",
+      "company_id": "c017",
+      "product_id": "p001",
+      "statement": "진씨커의 개발 제품을 이용한 임상연구를 진행 중이다.",
+      "source_ids": [
+        "c017:clinical:src06",
+        "c017:clinical:src70"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c017:clinical:ev04",
+      "company_id": "c017",
+      "product_id": "p001",
+      "statement": "CRISPR 기반의 액체생검 기술로 암 조기진단과 재발 모니터링의 새로운 지평을 열고 있다.",
+      "source_ids": [
+        "c017:clinical:src03",
+        "c017:clinical:src71"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c017:clinical:fd01",
+      "category": "regulatory",
+      "claim": "CRISPR 기반 암 조기진단 키트 [KR] notification · active (체외 제신 22-324)",
+      "evidence_ids": [
+        "c017:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd02",
+      "category": "regulatory",
+      "claim": "CRISPR 기반 암 조기진단 키트 [KR] approval · active (체외 제허 23-14)",
+      "evidence_ids": [
+        "c017:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd03",
+      "category": "regulatory",
+      "claim": "CRISPR 기반 암 조기진단 키트 [KR] approval · active (체외 제허 24-57)",
+      "evidence_ids": [
+        "c017:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd04",
+      "category": "regulatory",
+      "claim": "CRISPR 기반 암 조기진단 키트 [KR] approval · expired (체외 제허 24-590)",
+      "evidence_ids": [
+        "c017:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd05",
+      "category": "regulatory",
+      "claim": "CRISPR 기반 암 조기진단 키트 [KR] approval · active (체외 제허 25-599)",
+      "evidence_ids": [
+        "c017:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd06",
+      "category": "regulatory",
+      "claim": "MUTE-Seq [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd07",
+      "category": "regulatory",
+      "claim": "CRISPincette™ [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd08",
+      "category": "regulatory",
+      "claim": "CRISmono™ [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c017:clinical:fd09",
+      "category": "clinical_evidence",
+      "claim": "CRISPR 기반 암 조기진단 키트: 임상 근거 L0, C1 없음 (unknown), 연구 2건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외; 발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c017:clinical:fd10",
+      "category": "clinical_evidence",
+      "claim": "MUTE-Seq: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c017:clinical:fd11",
+      "category": "clinical_evidence",
+      "claim": "CRISPincette™: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c017:clinical:fd12",
+      "category": "clinical_evidence",
+      "claim": "CRISmono™: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c017:clinical:fd13",
+      "category": "claim",
+      "claim": "주장 \"정상 DNA 선제 제거로 민감도 20배 향상·비용 10분의 1 절감 - 35만원대 다중암 검사·CT 대비 8개월 앞선 재발 감지 데이터 확보\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c017:clinical:fd14",
+      "category": "claim",
+      "claim": "주장 \"단일 염기까지 잡아낸다…진씨커, ‘뮤트시크’ 암 조기진단·재발 모니터링 혁신\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c017:clinical:fd15",
+      "category": "claim",
+      "claim": "주장 \"CRISPR 유전자가위 기반 암진단 키트\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c017:clinical:fd16",
+      "category": "claim",
+      "claim": "주장 \"액체 생검 진단을 위한 표준화된 크리스핀셋\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c017:clinical:mi01",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c017:clinical:mi02",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외; 발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c017:clinical:mi03",
+      "field": "products[p002].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c017:clinical:mi04",
+      "field": "regulatory_records[p002][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 진씨커, MUTE-Seq, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c017:clinical:mi05",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c017:clinical:mi06",
+      "field": "products[p003].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c017:clinical:mi07",
+      "field": "regulatory_records[p003][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 진씨커, CRISPincette™, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c017:clinical:mi08",
+      "field": "criteria_inputs.C1[p003]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c017:clinical:mi09",
+      "field": "products[p004].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c017:clinical:mi10",
+      "field": "products[p004].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c017:clinical:mi11",
+      "field": "regulatory_records[p004][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 진씨커, CRISmono™, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c017:clinical:mi12",
+      "field": "criteria_inputs.C1[p004]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c017:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "CRISPR 기반 암 조기진단 키트는 체외 진단을 목적으로 하며, 암 진단에 사용되므로 의료기기 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c017:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "MUTE-Seq는 체외 진단을 위한 암 조기진단 키트로, 의료기관에서 사용되며, 여러 효능 주장을 포함하고 있어 의료기기 규제 대상이다."
+    },
+    {
+      "coverage_id": "c017:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "CRISPincette™는 액체 생검 진단을 위한 표준화된 기기로, 암 진단에 사용되며, 효능 주장을 포함하고 있어 의료기기 규제 대상이다."
+    },
+    {
+      "coverage_id": "c017:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "CRISmono™는 유전자 변이를 증폭하는 체외 진단 기기로, 암 진단에 사용되므로 의료기기 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c017:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "진씨커",
+          "CRISPR 기반 암 조기진단 키트"
+        ],
+        "queries": [
+          "진씨커 CRISPR 기반 암 조기진단 키트 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "진씨커",
+          "MUTE-Seq"
+        ],
+        "queries": [
+          "진씨커 MUTE-Seq 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c017:clinical:cv07",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "진씨커",
+          "CRISPincette™"
+        ],
+        "queries": [
+          "진씨커 CRISPincette™ 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c017:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "진씨커",
+          "CRISmono™"
+        ],
+        "queries": [
+          "진씨커 CRISmono™ 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c017:clinical:cv09",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "CRISPR 기반 암 조기진단 키트 혁신의료기술 평가",
+          "CRISPR 기반 암 조기진단 키트 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "CRISPR 기반 암 조기진단 키트 혁신의료기술 평가",
+          "CRISPR 기반 암 조기진단 키트 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv11",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "MUTE-Seq 혁신의료기술 평가",
+          "MUTE-Seq 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "MUTE-Seq 혁신의료기술 평가",
+          "MUTE-Seq 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv13",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "CRISPincette™ 혁신의료기술 평가",
+          "CRISPincette™ 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv14",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "CRISPincette™ 혁신의료기술 평가",
+          "CRISPincette™ 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv15",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "CRISmono™ 혁신의료기술 평가",
+          "CRISmono™ 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "진씨커 혁신의료기기 지정",
+          "CRISmono™ 혁신의료기술 평가",
+          "CRISmono™ 비급여 등재 고시",
+          "진씨커 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv17",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"GeneCker\"[Affiliation]",
+          "진씨커 CRISPR 기반 암 조기진단 키트 임상 연구 논문",
+          "CRISPR 기반 암 조기진단 키트 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv18",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"MUTE-Seq\"[Title/Abstract]",
+          "\"GeneCker\"[Affiliation]",
+          "진씨커 MUTE-Seq 임상 연구 논문",
+          "MUTE-Seq clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv19",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"GeneCker\"[Affiliation]",
+          "진씨커 CRISPincette™ 임상 연구 논문",
+          "CRISPincette™ clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv20",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"GeneCker\"[Affiliation]",
+          "진씨커 CRISmono™ 임상 연구 논문",
+          "CRISmono™ clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv21",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c017:clinical:cv22",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv23",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c017:clinical:cv24",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}
