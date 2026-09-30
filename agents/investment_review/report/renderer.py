@@ -5,9 +5,10 @@
 """
 from __future__ import annotations
 
+from collections import Counter
 from typing import Optional
-from urllib.parse import unquote
 
+from .citations import format_reference, pmid
 from .context_builder import CRITERION_NAME, STATUS_KO
 
 POLICY_KO = {"zero_fill": "미확인 항목 0점 처리", "partial": "부분 판정(채점 가중치 50% 이상)", "strict": "설계서 기준"}
@@ -44,17 +45,46 @@ def _metric(m: dict) -> str:
     return f"{text} ({scope}){_refs(m['refs'])}"
 
 
+def _highlight(c: dict) -> str:
+    """선정 기업 한 줄 요점: 분야 · 인허가 · 실적 · 미확인 항목. 보고서 데이터에 있는 값만."""
+    parts = [c.get("category") or c.get("product") or ""]
+    active = [r for r in c["clinical"]["regulatory"] if r.get("status") == "active"]
+    if active:
+        parts.append(f"{active[0]['authority']} 인허가 확인")
+    tr = c["traction"]
+    if tr.get("revenue_cagr") is not None:
+        parts.append(f"매출 연평균 성장률 {tr['revenue_cagr']:.1%}")
+    elif tr.get("stage") in STAGE_KO:
+        parts.append(STAGE_KO[tr["stage"]])
+    if c["zero_filled"]:
+        parts.append(f"미확인: {', '.join(c['zero_filled'])}")
+    return " · ".join(p for p in parts if p)
+
+
 def summary_text(ctx: dict) -> str:
-    """LLM이 없거나 검증에 실패했을 때 쓰는 SUMMARY 본문."""
+    """LLM이 없거나 검증에 실패했을 때 쓰는 SUMMARY (개조식)."""
     m, s = ctx["meta"], ctx["meta"]["status"]
-    names = ", ".join(f"{c['name']}({_num(c['total'])}점)" for c in ctx["selected"]) or "없음"
-    zero = ", ".join(f"{c} {n}개" for c, n in ctx["zero_filled_counts"].items() if n)
-    return (f"기준일 {m['as_of']} 기준 Healthcare AI 후보 {m['candidates']}개 기업을 임상·시장·실적·운영 4개 분야로 분석하고 "
-            f"평가 기준 {m['criteria_version']}({POLICY_KO.get(m.get('policy'), m.get('policy'))})으로 판정했다. "
-            f"적격 {s['eligible']}개, 부적격 {s['ineligible']}개, 판단불가 {s['undetermined']}개이며 "
-            f"적격 기업 중 최대 {m['k']}개 선정 기준에 따라 {names}를 선정했다. "
-            f"공개자료로 확인하지 못한 항목은 0점으로 처리했다({zero}). "
-            f"따라서 점수는 기업의 실제 수준보다 공개 근거의 양을 크게 반영하며, 선정 기업도 추가 실사가 필요하다.")
+    lines = [f"- **분석 개요**: 기준일 {m['as_of']} · Healthcare AI 후보 {m['candidates']}개 · 임상·시장·실적·운영 4개 분야 · "
+             f"평가 기준 {m['criteria_version']}({POLICY_KO.get(m.get('policy'), m.get('policy'))})",
+             f"- **판정 결과**: 적격 {s['eligible']}개 · 부적격 {s['ineligible']}개 · 판단불가 {s['undetermined']}개 → "
+             f"적격 기업 중 최대 {m['k']}개 기준으로 {len(ctx['selected'])}개 선정"]
+    if ctx["selected"]:
+        lines.append("- **선정 기업**")
+        lines += [f"  - {c['name']}({_num(c['total'])}점): {_highlight(c)}" for c in ctx["selected"]]
+    reasons = Counter(code for o in ctx["others"] for code in o["reasons"])
+    fails = [f"총점 60점 미만 {reasons['SCORE_BELOW_60']}개"] if reasons["SCORE_BELOW_60"] else []
+    fails += [f"2점 미만 항목 {reasons['CRITERION_BELOW_2']}개"] if reasons["CRITERION_BELOW_2"] else []
+    fails += [f"공식 규제 차단·운영 중단 확인 {reasons['G01'] + reasons['G02']}개"] if reasons["G01"] + reasons["G02"] else []
+    if fails:
+        lines.append(f"- **부적격 주요 사유**: {' · '.join(fails)} (중복 포함)")
+    undetermined = [o["name"] for o in ctx["others"] if o["status"] == "undetermined"]
+    if undetermined:
+        lines.append(f"- **판단불가**: {', '.join(undetermined)} — 판정에 필요한 조사를 하지 못함 (3장 참고)")
+    zero = sorted(ctx["zero_filled_counts"].items(), key=lambda x: -x[1])
+    zero = ", ".join(f"{name} {n}개" for name, n in zero if n)
+    lines.append(f"- **한계**: 공개자료로 확인하지 못한 항목은 0점 처리({zero} 기업) → 점수는 공개 근거의 양을 크게 반영")
+    lines.append("- **다음 단계**: 선정 기업도 수익 구조·계약 조건·임상 근거·운영 리스크를 추가 실사로 확인 (5장 질문)")
+    return "\n".join(lines)
 
 
 def _company(c: dict, narrative: Optional[dict]) -> list[str]:
@@ -89,6 +119,10 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
     for a in rk["areas"]:
         obs = "; ".join(f"{o['statement']}{' ⚠' if o['signal'] else ''}{_refs(o['refs'])}" for o in a["observations"])
         out.append(f"- {AREA_KO.get(a['category'], a['category'])}: {obs or '관찰 없음'}")
+    out += [f"#### 평가 근거 (총점 {_num(c['total'])}점)"]
+    for s in c.get("score_reasons") or []:
+        score = "0점(미확인)" if s["zero_filled"] else f"{_num(s['score'])}/5점"
+        out.append(f"- **{s['name']}** {score}, 가중치 {s['weight']}%: {s['reason']}")
     out.append("")
     return out
 
@@ -96,12 +130,12 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
 def _score_table(selected: list[dict]) -> list[str]:
     """선정 기업 C1~C6 평가표 (항목 × 기업). 항목별 근거는 final_reviews.json의 rationale."""
     head = "| 항목 | 가중치 | " + " | ".join(c["name"] for c in selected) + " |"
-    out = ["#### 선정 기업 C1~C6 평가표 (`0*` = 공개자료로 확인하지 못해 0점 처리)", "", head,
+    out = ["#### 선정 기업 평가표 (`0*` = 공개자료로 확인하지 못해 0점 처리)", "", head,
            "|---|---:|" + "---:|" * len(selected)]
     for i, r in enumerate(selected[0]["criteria"]):
         cells = ["0*" if c["criteria"][i]["zero_filled"] else _num(c["criteria"][i]["score"]) for c in selected]
-        out.append(f"| {r['id']} {r['name']} | {r['weight']} | " + " | ".join(cells) + " |")
-    out.append("| **총점** | 100 | " + " | ".join(f"**{_num(c['total'])}**" for c in selected) + " |")
+        out.append(f"| {r['name']} | {r['weight']}% | " + " | ".join(cells) + " |")
+    out.append("| **총점** | 100% | " + " | ".join(f"**{_num(c['total'])}**" for c in selected) + " |")
     return out + [""]
 
 
@@ -122,23 +156,24 @@ def render(ctx: dict, narrative: Optional[dict] = None) -> str:
         lines += _score_table(ctx["selected"])
 
     lines += ["## 3. 전체 후보 판정", "", "`0*` 표시는 공개자료로 확인하지 못해 0점으로 처리한 항목이다.", "",
-              "| 기업 | 판정 | 총점 | 사유 | 0점 처리 |", "|---|---|---:|---|---|"]
+              "| 기업 | 판정 | 총점 | 판정 사유 | 0점 처리 |", "|---|---|---:|---|---|"]
     for c in ctx["selected"]:
-        lines.append(f"| {c['name']} | 적격·선정 {c['rank']}위 | {_num(c['total'])} | - | {', '.join(c['zero_filled']) or '-'} |")
+        lines.append(f"| {c['name']} | 적격·선정 {c['rank']}위 | {_num(c['total'])} | 총점 60점 이상, 채점 항목 모두 2점 이상 | "
+                     f"{', '.join(c['zero_filled']) or '-'} |")
     for o in ctx["others"]:
         state = STATUS_KO[o["status"]] + (f" {o['rank']}위(K 초과)" if o.get("rank") else "")
-        lines.append(f"| {o['name']} | {state} | {_num(o['total'])} | {', '.join(o['reasons']) or '-'} | "
+        lines.append(f"| {o['name']} | {state} | {_num(o['total'])} | {o.get('explanation') or ', '.join(o['reasons']) or '-'} | "
                      f"{', '.join(o['zero_filled']) or '-'} |")
 
     rv = ctx["review"]
-    zero = ", ".join(f"{c} {n}" for c, n in ctx["zero_filled_counts"].items() if n)
+    zero = ", ".join(f"{c} {n}개" for c, n in ctx["zero_filled_counts"].items() if n)
     lines += ["", "## 4. 보완 이력·한계", "",
-              f"- 보완 요청(기업당 1회): " + (", ".join(f"{a} {n}건" for a, n in sorted(rv["requests"].items())) or "없음")
+              f"- 분석 담당에게 보낸 보완 요청(기업당 1회): " + (", ".join(f"{a} {n}건" for a, n in sorted(rv["requests"].items())) or "없음")
               + f" · 응답 {rv['responses']}건",
-              f"- 0점 처리 기업 수(항목별): {zero or '없음'}",
-              "- C2는 세부시장 CAGR이 없으면 03이 찾은 상위 시장 CAGR 중앙값으로 채점했다(세부시장과 다를 수 있음).",
-              "- C3·C4는 확인된 체크 수로 채점했고, 미확인 체크는 점수에 넣지 않았다.",
-              "- C6는 운영 위험 신호 수로 채점했다(06 자체 규칙). 자료 없음은 위험 없음을 뜻하지 않는다.",
+              f"- 항목별로 공개자료로 확인하지 못해 0점 처리한 기업 수: {zero or '없음'}",
+              "- 시장 성장: 세부시장 연평균 성장률이 없으면 상위 시장(헬스케어 AI 등) 성장률 중앙값으로 평가했다. 세부시장과 다를 수 있다.",
+              "- 고객 수요·도입, 수익화: 체크 항목 중 공개자료로 충족이 확인된 개수로 평가했고, 확인하지 못한 체크는 점수에 넣지 않았다.",
+              "- 운영 대비: 운영 위험 신호 수로 평가했다(위험 신호 0건 5점, 1건 3점, 2건 이상 1점). 자료가 없다는 것이 위험이 없다는 뜻은 아니다.",
               "- 운영 리스크 관찰은 출처만 연결됐고 사실 검증 전이다. 회사 주장과 확인된 사실을 구분해 실사로 확인해야 한다.",
               "", "## 5. 추가 실사 질문", ""]
     for c in ctx["selected"]:
@@ -147,10 +182,9 @@ def render(ctx: dict, narrative: Optional[dict] = None) -> str:
         lines.append("")
 
     lines += ["## REFERENCE", ""]
+    pubmed = ctx.get("pubmed") or {}
     for i, r in enumerate(ctx["references"], start=1):
-        meta = ", ".join(x for x in (r.get("publisher"), r.get("published_at")) if x)
-        title = (r.get("title") or "(제목 없음)").rstrip(".")[:80]
-        lines.append(f"{i}. {title}" + (f". {meta}" if meta else "") + f". {unquote(r.get('url') or '')}")
+        lines.append(f"{i}. {format_reference(r, pubmed.get(pmid(r.get('url'))))}")
     if not ctx["references"]:
         lines.append("선정 기업 서술에 인용한 출처 없음.")
     return "\n".join(lines) + "\n"

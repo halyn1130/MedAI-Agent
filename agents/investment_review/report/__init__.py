@@ -4,18 +4,23 @@
 """
 from __future__ import annotations
 
-from typing import Any
+from pathlib import Path
+from typing import Any, Callable, Optional
 
 from .checker import check_narrative, check_report
+from .citations import fetch_pubmed, pubmed_metadata
 from .context_builder import build_context
 from .renderer import render
 from .writer import write
 
 
 def generate_report(reviews: list[dict], analyses: dict[str, dict], companies: dict[str, dict], meta: dict,
-                    llm: Any = None) -> tuple[str, dict]:
-    """(Markdown, 검증 결과). llm=None이면 템플릿 문장만, "auto"면 환경변수 모델 사용."""
+                    llm: Any = None, pubmed_cache: Optional[Path] = None,
+                    fetch: Optional[Callable[[list[str]], dict]] = fetch_pubmed) -> tuple[str, dict]:
+    """(Markdown, 검증 결과). llm=None이면 템플릿 문장만, "auto"면 환경변수 모델 사용.
+    논문 서지 정보는 PubMed에서 조회하고 pubmed_cache에 저장한다 (fetch=None이면 캐시만 사용)."""
     ctx = build_context(reviews, analyses, companies, meta)
+    ctx["pubmed"] = pubmed_metadata(ctx["references"], pubmed_cache, fetch or (lambda _ids: {}))
     narrative, notes = None, []
     if llm is not None:
         raw = write(ctx, llm)

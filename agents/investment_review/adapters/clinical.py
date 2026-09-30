@@ -19,13 +19,13 @@ REVIEWED = {"reviewed", "no_relevant_evidence_found"}
 
 def _g01(env: dict) -> GateResult:
     if env.get("analysis_status") == "failed":
-        return GateResult(code="G01", status=GateStatus.NOT_CHECKED, reason="임상 분석 실패")
+        return GateResult(code="G01", status=GateStatus.NOT_CHECKED, reason="임상·인허가 분석 실패")
     regulatory = [c for c in env.get("coverage") or [] if c.get("area") == "regulatory"]
     if not regulatory or any(c.get("status") not in REVIEWED for c in regulatory):
         return GateResult(code="G01", status=GateStatus.NOT_CHECKED, reason="공식 규제 기록 조사 미완료")
     cl02 = [f for f in env["data"].get("red_flags") or [] if f.get("code") == "CL02" and f.get("status") in CL02_TO_G01]
     if not cl02:
-        return GateResult(code="G01", status=GateStatus.CLEAR, reason="CL02 미발견. 안전의 증명 아님")
+        return GateResult(code="G01", status=GateStatus.CLEAR, reason="공식 규제 차단 근거 미발견. 안전의 증명 아님")
     status = GateStatus.CONFIRMED if any(f["status"] == "confirmed" for f in cl02) else GateStatus.UNRESOLVED
     return GateResult(code="G01", status=status, reason="; ".join(f.get("description", "") for f in cl02),
                       evidence_ids=sorted({i for f in cl02 for i in f.get("evidence_ids") or []}))

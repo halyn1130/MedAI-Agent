@@ -17,6 +17,7 @@ from ._common import failure_issue
 
 AGENT = "risk"
 RAN = {"complete", "partial"}
+NOT_RUN_TEXT = {"no_evidence": "운영 리스크 분석에 쓸 공개 자료가 없음", "failed": "운영 리스크 분석 실패"}
 
 
 def _signals(area: dict) -> list[dict]:
@@ -47,7 +48,7 @@ def c6_from_areas(risk: dict) -> CriterionResult:
 def g02_from_status(risk: dict) -> GateResult:
     if risk.get("analysis_status") not in RAN:
         return GateResult(code="G02", status=GateStatus.NOT_CHECKED,
-                          reason=f"Risk 분석 상태 {risk.get('analysis_status')} → 운영 중단 조사 불가")
+                          reason=NOT_RUN_TEXT.get(risk.get("analysis_status"), "운영 리스크 분석 결과 없음"))
     return GateResult(code="G02", status=GateStatus.CLEAR,
                       reason="Risk 분석에서 현재 중단을 확정하는 근거 없음. 안전의 증명 아님")
 

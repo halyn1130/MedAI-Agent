@@ -6,17 +6,18 @@
 """
 from __future__ import annotations
 
+import re
 from collections import Counter
 from typing import Optional
 
 from ..contract import InvestmentReview
 from ..policy import CRITERIA, CRITERION_OWNER, WEIGHTS
 
-CRITERION_NAME = {"C1": "임상 근거", "C2": "시장 성장", "C3": "수요·도입", "C4": "수익화", "C5": "실적·성장", "C6": "운영 대비"}
+CRITERION_NAME = {"C1": "임상 근거", "C2": "시장 성장", "C3": "고객 수요·도입", "C4": "수익화", "C5": "실적·성장", "C6": "운영 대비"}
 STATUS_KO = {"eligible": "적격", "ineligible": "부적격", "undetermined": "판단불가"}
 MAX_QUESTIONS = 4
 MAX_ITEMS = 2          # 기업별 시장 수치·인허가·연구·계약 개수 (5쪽 제한)
-NOT_FOUND = {"not_found", "unknown", None}
+NOT_FOUND = {"not_found", "unknown", "not_applicable", None}
 
 
 class References:
@@ -31,7 +32,7 @@ class References:
             return None
         key = source.get("url") or source.get("source_id")
         if key not in self._by_key:
-            self.items.append({k: source.get(k) for k in ("title", "publisher", "published_at", "url")})
+            self.items.append({k: source.get(k) for k in ("title", "publisher", "published_at", "url", "source_type")})
             self._by_key[key] = len(self.items)
         return self._by_key[key]
 
@@ -98,7 +99,7 @@ def _clinical(env: dict, ev, src, refs) -> dict:
     products = [p.get("name") for p in (data.get("collected_profile") or {}).get("products") or [] if p.get("name")]
     return {"products": products[:2], "regulatory": _shown(regs, MAX_ITEMS, ev, src, refs),
             "studies": _shown(studies, MAX_ITEMS, ev, src, refs),
-            "red_flags": [f"{f['code']} {f.get('description', '')}" for f in data.get("red_flags") or []
+            "red_flags": [f.get("description", "") for f in data.get("red_flags") or []
                           if f.get("status") != "resolved"]}
 
 
@@ -118,7 +119,7 @@ def _traction(env: dict, ev, src, refs) -> dict:
             "revenue": _shown(revenue, len(revenue), ev, src, refs), "revenue_cagr": data.get("revenue_cagr"),
             "growth_tier": data.get("growth_tier"), "headcount_trend": data.get("headcount_trend"),
             "contracts": _shown(contracts, MAX_ITEMS, ev, src, refs),
-            "red_flags": [f"{r['code']} {r.get('reason', '')}" for r in data.get("red_flags") or []]}
+            "red_flags": [r.get("reason", "") for r in data.get("red_flags") or []]}
 
 
 def _risk(risk: dict, src, refs) -> dict:
@@ -133,6 +134,86 @@ def _risk(risk: dict, src, refs) -> dict:
     return {"areas": areas}
 
 
+LEVEL_TEXT = {"L1": "회사 자체 발표만 있어 방법·결과를 독립적으로 확인하기 어려움",
+              "L2": "제품 관련 관찰·성능 연구의 방법·기관·표본·주요 지표를 확인함",
+              "L3": "전향적 다기관 연구 또는 독립 외부 검증을 확인함",
+              "L4": "사전 정의한 평가변수와 비교설계를 갖춘 확증 연구를 확인함"}
+SCORE_LEVEL = {1.0: "L1", 2.0: "L2", 4.0: "L3", 5.0: "L4"}
+CAGR_BAND = {0: "0% 미만", 1: "0~5%", 2: "5~10%", 3: "10~15%", 4: "15~20%", 5: "20% 이상"}
+STAGE_TEXT = {"A": "최근 36개월 매출 확인", "B": "유료 계약 확인", "C": "실증 확인", "D": "MOU·수상만 확인"}
+DIM_KO = {"demand": "고객 수요", "commercialization": "도입·상용화", "monetization": "수익화"}
+AREA_TEXT = {"external_dependency": "외부 의존", "key_person_continuity": "핵심 인력", "operational_incidents": "운영 사건"}
+ZERO = " → 확인하지 못해 0점 처리"
+
+
+def _checks(dims: dict, name: str) -> str:
+    checks = (dims.get(name) or {}).get("checks") or []
+    if not checks:
+        return f"{DIM_KO[name]} 체크 결과 없음"
+    n = Counter(c.get("status") for c in checks)
+    if n["yes"] + n["no"] == 0:
+        return f"{DIM_KO[name]} 체크 {len(checks)}개 모두 확인 불가"
+    return f"{DIM_KO[name]} 체크 {len(checks)}개 중 충족 {n['yes']}개" + (f"·미충족 {n['no']}개" if n["no"] else "") + \
+        (f"·확인 불가 {len(checks) - n['yes'] - n['no']}개" if len(checks) - n["yes"] - n["no"] else "")
+
+
+def _reason(cid: str, c, a: dict) -> str:
+    """항목별 점수의 이유. 02~05 결과에 있는 값만 쓴다."""
+    zero = ZERO if c.zero_filled else ""
+    if cid == "C1":
+        data = (a.get("clinical_analysis") or {}).get("data") or {}
+        if c.zero_filled or c.score is None:
+            na = (data.get("criteria_inputs") or {}).get("C1", {}).get("score_status") == "not_applicable"
+            return ("임상 분석에서 평가 대상 제품이 없다고 판단함" if na else "평가 가능한 제품 임상 근거를 공개자료에서 찾지 못함") + zero
+        level = SCORE_LEVEL.get(c.score)  # 설계서: 1=L1, 2=L2, 4=L3, 5=L4. 소수는 제품별 가중평균
+        if not level:
+            levels = sorted({p.get("evidence_level") for p in data.get("product_assessments") or []
+                             if p.get("evidence_level") in LEVEL_TEXT})
+            level = levels[-1] if levels else None
+        text = LEVEL_TEXT[level] if level else "제품별 임상 근거 수준의 가중평균"
+        return text + \
+            (" · 근거를 판단할 수 없는 제품은 평가에서 제외" if "판단불가 제품 제외" in c.rationale else "")
+    if cid == "C2":
+        if c.score is None or c.zero_filled:
+            return "시장 성장률 수치를 찾지 못함" + zero
+        band = CAGR_BAND.get(int(c.score), "")
+        m = re.search(r"중앙값 ([\d.]+%)", c.rationale)
+        if m:
+            return f"세부시장 성장률 근거가 없어 시장·사업성 분석이 찾은 상위 시장 연평균 성장률 중앙값 {m.group(1)}로 평가 ({band} 구간)"
+        return f"세부시장 연평균 성장률 기준 {band} 구간"
+    if cid in ("C3", "C4"):
+        dims = ((a.get("market_analysis") or {}).get("data") or {}).get("dimensions") or {}
+        names = ("demand", "commercialization") if cid == "C3" else ("monetization",)
+        text = ", ".join(_checks(dims, n) for n in names)
+        if cid == "C3" and "확인된 영역만으로" in c.rationale:
+            text += " → 확인된 영역만으로 평가"
+        return text + zero
+    if cid == "C5":
+        data = (a.get("traction_analysis") or {}).get("data") or {}
+        if c.zero_filled or c.score is None:
+            return "최근 36개월 인정 가능한 매출·유료 계약·실증 근거를 찾지 못함" + zero
+        c5 = (data.get("criteria_inputs") or {}).get("C5") or {}
+        text = f"{STAGE_TEXT.get(data.get('commercial_stage'), '상업화 단계 확인')}(상업화 {c5.get('commercial_score')}점)"
+        if c5.get("growth_score") is not None and data.get("revenue_cagr") is not None:
+            return text + f", 매출 연평균 성장률 {data['revenue_cagr']:.1%}(성장 {c5['growth_score']}점) → 상업화 70%·성장 30% 반영"
+        return text + ", 3개년 매출 비교가 불가해 상업화 단계만 반영"
+    if cid == "C6":
+        areas = ((a.get("risk_analysis") or {}).get("areas")) or []
+        seen = [f"{AREA_TEXT[x['category']]} 관찰 {len(x['observations'])}건·위험 신호 "
+                f"{sum(o.get('kind') == 'risk_signal' for o in x['observations'])}건" for x in areas if x.get("observations")]
+        if c.zero_filled or c.score is None or not seen:
+            return "운영 관련 공개 관찰이 없어 판단하지 못함" + zero
+        empty = [AREA_TEXT[x["category"]] for x in areas if not x.get("observations")]
+        return ", ".join(seen) + (f" ({'·'.join(empty)}: 관찰 없음)" if empty else "") + " → 위험 신호 0건 5점·1건 3점·2건 이상 1점의 평균"
+    return c.rationale
+
+
+def score_reasons(review: InvestmentReview, analyses: dict) -> list[dict]:
+    return [{"name": CRITERION_NAME[c.criterion_id], "weight": WEIGHTS[c.criterion_id], "score": c.score,
+             "zero_filled": c.zero_filled, "reason": _reason(c.criterion_id, c, analyses)}
+            for c in review.criterion_results]
+
+
 def _criteria_rows(review: InvestmentReview) -> list[dict]:
     rows = []
     for c in review.criterion_results:
@@ -140,6 +221,43 @@ def _criteria_rows(review: InvestmentReview) -> list[dict]:
                      "owner": CRITERION_OWNER[c.criterion_id], "score": c.score, "zero_filled": c.zero_filled,
                      "status": c.score_status.value, "rationale": c.rationale})
     return rows
+
+
+GATE_TEXT = {"G01": "핵심 제품의 목표국 운영을 막는 공식 조치", "G02": "핵심 사업 운영의 현재 중단"}
+GATE_SHORT = {"G01": "공식 규제 차단", "G02": "운영 중단"}
+AGENT_KO = {"clinical": "임상·인허가", "market": "시장·사업성", "traction": "실적·성장성", "risk": "운영 리스크"}
+
+
+def explain(r: InvestmentReview, min_total: float = 60.0, min_criterion: float = 2.0) -> str:
+    """판정 사유 코드 → 사람이 읽는 설명. 판정 결과에 있는 값만 쓴다."""
+    out = []
+    codes = {c.value for c in r.reason_codes}
+    for g in r.gate_results:
+        if g.code in codes:
+            out.append(f"{GATE_TEXT[g.code]}가 확인되어 총점과 무관하게 부적격" + (f"({g.reason})" if g.reason else ""))
+    if "SCORE_BELOW_60" in codes:
+        out.append(f"총점 {r.total_score:g}점으로 적격 기준 {min_total:g}점 미만")
+    if "CRITERION_BELOW_2" in codes:
+        low = [f"{CRITERION_NAME[c.criterion_id]} {c.score:g}점" for c in r.criterion_results
+               if c.score is not None and not c.zero_filled and c.score < min_criterion]
+        out.append(f"{', '.join(low)}으로 항목별 최소 기준 {min_criterion:g}점 미만")
+    for g in r.gate_results:
+        if g.status.value in ("not_checked", "unresolved") and g.code not in codes:
+            state = "조사하지 못함" if g.status.value == "not_checked" else "의심 근거가 있으나 확인되지 않음"
+            out.append(f"{GATE_TEXT[g.code]} 여부를 {state}" + (f"({g.reason})" if g.reason else ""))
+    for u in r.remaining_unknowns:
+        m = re.match(r"^[^:]+:(\w+):failed: (.*)$", u)
+        if m:
+            out.append(f"{AGENT_KO.get(m.group(1), m.group(1))} 분석 실패")
+        elif re.match(r"^[^:]+:\w+:(as_of_mismatch|company_mismatch|unknown_evidence|no_evidence)", u):
+            out.append(u.split(": ", 1)[-1])
+    if "UNRESOLVED_CONFLICT" in codes and not out:
+        out.append("주요 근거 충돌이 해소되지 않음")
+    if "MISSING_EVIDENCE" in codes and not out:
+        missing = [CRITERION_NAME[c.criterion_id] for c in r.criterion_results
+                   if c.score_status.value == "unknown"]
+        out.append("판정에 필요한 점수를 확인하지 못함" + (f"({', '.join(missing)})" if missing else ""))
+    return "; ".join(dict.fromkeys(out)) or "-"
 
 
 def _dedupe(items: list[str], limit: int) -> list[str]:
@@ -159,21 +277,21 @@ def build_context(reviews: list[dict], analyses: dict[str, dict], companies: dic
             "company_id": r.company_id, "name": p.get("company_name", r.company_id), "category": p.get("대분류"),
             "product": p.get("주요 제품/서비스"), "technology": p.get("핵심 기술"),
             "rank": r.selection.rank, "total": r.total_score, "basis": r.score_basis,
-            "criteria": _criteria_rows(r),
+            "criteria": _criteria_rows(r), "score_reasons": score_reasons(r, a),
             "market": _market(a.get("market_analysis") or {}, ev, src, refs),
             "clinical": _clinical(a.get("clinical_analysis") or {}, ev, src, refs),
             "traction": _traction(a.get("traction_analysis") or {}, ev, src, refs),
             "risk": _risk(a.get("risk_analysis") or {}, src, refs),
             "concerns": _dedupe(r.report.concerns, 4),
             "questions": _dedupe(r.report.due_diligence_questions, MAX_QUESTIONS),
-            "zero_filled": [c.criterion_id for c in r.criterion_results if c.zero_filled],
+            "zero_filled": [CRITERION_NAME[c.criterion_id] for c in r.criterion_results if c.zero_filled],
             "review_requests": r.review_request_ids, "review_responses": len(r.review_response_ids),
         })
 
     others = [{"company_id": r.company_id, "name": companies.get(r.company_id, {}).get("company_name", r.company_id),
                "status": r.final_status.value, "total": r.total_score, "rank": r.selection.rank,
-               "reasons": [c.value for c in r.reason_codes],
-               "zero_filled": [c.criterion_id for c in r.criterion_results if c.zero_filled]}
+               "reasons": [c.value for c in r.reason_codes], "explanation": explain(r),
+               "zero_filled": [CRITERION_NAME[c.criterion_id] for c in r.criterion_results if c.zero_filled]}
               for r in reviews_m if not r.selection.selected]
 
     status = Counter(r.final_status.value for r in reviews_m)
@@ -184,7 +302,7 @@ def build_context(reviews: list[dict], analyses: dict[str, dict], companies: dic
                  "status": {k: status.get(k, 0) for k in STATUS_KO}},
         "selected": selected,
         "others": others,
-        "zero_filled_counts": {c: zero.get(c, 0) for c in CRITERIA},
-        "review": {"requests": dict(requests), "responses": sum(len(r.review_response_ids) for r in reviews_m)},
+        "zero_filled_counts": {CRITERION_NAME[c]: zero.get(c, 0) for c in CRITERIA},
+        "review": {"requests": {AGENT_KO.get(a, a): n for a, n in requests.items()}, "responses": sum(len(r.review_response_ids) for r in reviews_m)},
         "references": refs.items,
     }

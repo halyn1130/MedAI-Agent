@@ -5,10 +5,11 @@ from ..contract import AgentResult, CriterionResult, GateResult
 from ..policy import CRITERION_OWNER
 
 GATE_OWNER = {"G01": "clinical", "G02": "risk"}
+AGENT_KO = {"clinical": "임상·인허가", "market": "시장·사업성", "traction": "실적·성장성", "risk": "운영 리스크"}
 
 
 def not_run(agent: str, company_id: str) -> AgentResult:
-    reason = f"{agent} 결과 없음"
+    reason = f"{AGENT_KO.get(agent, agent)} 분석 결과 없음"
     return AgentResult(
         agent=agent, company_id=company_id, analysis_status="not_run",
         criteria=[CriterionResult(criterion_id=c, source_agent=agent, rationale=reason)

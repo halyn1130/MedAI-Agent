@@ -22,7 +22,7 @@ class CompanyPoint(BaseModel):
 
 
 class Narrative(BaseModel):
-    summary: str = Field(description="전체 결과 요약 4~5문장")
+    summary: str = Field(description="개조식 전체 요약 (Markdown 목록)")
     points: list[CompanyPoint] = Field(default_factory=list)
 
 
