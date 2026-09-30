@@ -35,4 +35,14 @@ investment_review/
 | 05 Risk | `risk_analysis`, `references` | `risk-company-3` (`areas`, `passages`) | `review_requests["risk"]` dict, `attempt=1` |
 | 02 임상, 03 시장 | — | 코드 없음 → stub | 미정 |
 
-`review_requests`는 04가 list, 05가 dict로 사용해 상위 State 하나에 함께 둘 수 없습니다. 팀원 코드는 바꾸지 않고, 06의 `nodes.py`가 Agent를 호출하기 직전에 해당 Agent 형식으로 변환해 전달합니다.
+## 판정 규칙 구현 메모
+
+- 게이트(G01·G02)가 입력에 없으면 `not_checked`로 보고 판단불가 처리합니다. 02 임상 결과가 없으면 G01을 조사하지 못한 것이므로, 현재는 모든 기업이 undetermined가 되는 것이 정상입니다.
+- 모집단에서 적용 항목인데 기업별로 `not_applicable`이 오면 `unknown`으로 바꿉니다. 불리한 항목을 빼고 재가중하지 않기 위해서입니다.
+- 총점은 소수 6자리로 반올림해 60점 경계가 부동소수 오차로 흔들리지 않게 합니다.
+
+## 테스트
+
+```bash
+python -m unittest discover -s agents/investment_review/tests -t . -v
+```
