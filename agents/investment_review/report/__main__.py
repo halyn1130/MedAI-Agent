@@ -35,7 +35,7 @@ def load_run(run_dir: Path) -> tuple[list[dict], dict[str, dict], dict]:
 
 
 def write_report(run_dir: Path, reviews, analyses, companies: dict, meta: dict, llm=None, pdf: bool = True) -> dict:
-    markdown, check = generate_report(reviews, analyses, companies, meta, llm)
+    markdown, check = generate_report(reviews, analyses, companies, meta, llm, pubmed_cache=run_dir / "pubmed_cache.json")
     (run_dir / "final_report.md").write_text(markdown, encoding="utf-8")
     if pdf:
         try:
