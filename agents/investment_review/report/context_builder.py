@@ -15,7 +15,7 @@ from ..policy import CRITERIA, CRITERION_OWNER, WEIGHTS
 
 CRITERION_NAME = {"C1": "임상 근거", "C2": "시장 성장", "C3": "고객 수요·도입", "C4": "수익화", "C5": "실적·성장", "C6": "운영 대비"}
 STATUS_KO = {"eligible": "적격", "ineligible": "부적격", "undetermined": "판단불가"}
-MAX_QUESTIONS = 4
+MAX_QUESTIONS = 2
 MAX_ITEMS = 2          # 기업별 시장 수치·인허가·연구·계약 개수 (5쪽 제한)
 NOT_FOUND = {"not_found", "unknown", "not_applicable", None}
 
@@ -81,7 +81,7 @@ def _market(env: dict, ev, src, refs) -> dict:
                if m.get("metric_type") in ("market_size", "cagr") and (m.get("value") or 0) > 0]
     metrics.sort(key=lambda m: m["type"] != "cagr")
     return {k: scope.get(k) for k in ("segment", "target_customer", "buyer", "core_problem", "business_model")} | {
-        "metrics": _shown(metrics, MAX_ITEMS, ev, src, refs),
+        "metrics": _shown(metrics, 1, ev, src, refs),
         "concerns": list(data.get("business_concerns") or [])[:2]}
 
 
@@ -228,36 +228,45 @@ GATE_SHORT = {"G01": "공식 규제 차단", "G02": "운영 중단"}
 AGENT_KO = {"clinical": "임상·인허가", "market": "시장·사업성", "traction": "실적·성장성", "risk": "운영 리스크"}
 
 
+EASY_SHORT = {"C1": "임상 연구", "C2": "시장 성장성", "C3": "병원·고객 도입 수요", "C4": "매출을 내는 구조",
+              "C5": "매출·계약 실적", "C6": "운영 위험 대비"}
+
+
+def _josa(word: str, pair: tuple[str, str] = ("을", "를")) -> str:
+    """마지막 글자 받침 유무로 을/를 선택."""
+    ch = word[-1] if word else ""
+    return pair[0] if "가" <= ch <= "힣" and (ord(ch) - 0xAC00) % 28 else pair[1]
+
+
 def explain(r: InvestmentReview, min_total: float = 60.0, min_criterion: float = 2.0) -> str:
-    """판정 사유 코드 → 사람이 읽는 설명. 판정 결과에 있는 값만 쓴다."""
-    out = []
+    """부적격·판단불가 사유 (prompts/writer.md 4번 규칙을 코드로 구현). ① 결과 ② 0점 처리 이유."""
     codes = {c.value for c in r.reason_codes}
+    first = []
     for g in r.gate_results:
         if g.code in codes:
-            out.append(f"{GATE_TEXT[g.code]}가 확인되어 총점과 무관하게 부적격" + (f"({g.reason})" if g.reason else ""))
+            first.append(f"{GATE_TEXT[g.code]}가 확인되어 총점과 관계없이 부적격이다" + (f"({g.reason})" if g.reason else ""))
     if "SCORE_BELOW_60" in codes:
-        out.append(f"총점 {r.total_score:g}점으로 적격 기준 {min_total:g}점 미만")
+        first.append(f"총점 {r.total_score:g}점(100점 만점)으로 적격 기준인 {min_total:g}점에 못 미쳤다")
     if "CRITERION_BELOW_2" in codes:
-        low = [f"{CRITERION_NAME[c.criterion_id]} {c.score:g}점" for c in r.criterion_results
+        low = [EASY_SHORT[c.criterion_id] for c in r.criterion_results
                if c.score is not None and not c.zero_filled and c.score < min_criterion]
-        out.append(f"{', '.join(low)}으로 항목별 최소 기준 {min_criterion:g}점 미만")
-    for g in r.gate_results:
-        if g.status.value in ("not_checked", "unresolved") and g.code not in codes:
-            state = "조사하지 못함" if g.status.value == "not_checked" else "의심 근거가 있으나 확인되지 않음"
-            out.append(f"{GATE_TEXT[g.code]} 여부를 {state}" + (f"({g.reason})" if g.reason else ""))
-    for u in r.remaining_unknowns:
-        m = re.match(r"^[^:]+:(\w+):failed: (.*)$", u)
-        if m:
-            out.append(f"{AGENT_KO.get(m.group(1), m.group(1))} 분석 실패")
-        elif re.match(r"^[^:]+:\w+:(as_of_mismatch|company_mismatch|unknown_evidence|no_evidence)", u):
-            out.append(u.split(": ", 1)[-1])
-    if "UNRESOLVED_CONFLICT" in codes and not out:
-        out.append("주요 근거 충돌이 해소되지 않음")
-    if "MISSING_EVIDENCE" in codes and not out:
-        missing = [CRITERION_NAME[c.criterion_id] for c in r.criterion_results
-                   if c.score_status.value == "unknown"]
-        out.append("판정에 필요한 점수를 확인하지 못함" + (f"({', '.join(missing)})" if missing else ""))
-    return "; ".join(dict.fromkeys(out)) or "-"
+        first.append(f"{', '.join(low) or '일부 필수 항목'} 점수가 최소 기준({min_criterion:g}점)에 못 미쳤다")
+    if r.final_status.value == "undetermined":
+        causes = [g.reason for g in r.gate_results if g.status.value in ("not_checked", "unresolved") and g.reason]
+        causes += [u.split(": ", 1)[-1] for u in r.remaining_unknowns
+                   if re.match(r"^[^:]+:\w+:(as_of_mismatch|company_mismatch|unknown_evidence|no_evidence)", u)]
+        first.append("판단에 필요한 공개자료가 부족해 판정하지 못했다" + (f"({'; '.join(dict.fromkeys(causes))})" if causes else ""))
+    sentences = [". ".join(first) + "." if first else ""]
+    zero = [c.criterion_id for c in r.criterion_results if c.zero_filled]
+    if zero:
+        if len(zero) >= 4:
+            rest = [EASY_SHORT[c.criterion_id] for c in r.criterion_results if not c.zero_filled]
+            head = f"{', '.join(rest)}{_josa(rest[-1], ('을', '를'))} 제외한 " if rest else ""
+            sentences.append(f"{head}{len(zero)}개 항목의 공개자료를 찾지 못해 0점 처리됐다.")
+        else:
+            names = [EASY_SHORT[c] for c in zero]
+            sentences.append(f"{', '.join(names)}{_josa(names[-1])} 보여주는 공개자료를 찾지 못해 0점 처리됐다.")
+    return " ".join(x for x in sentences if x) or "-"
 
 
 def _dedupe(items: list[str], limit: int) -> list[str]:
@@ -285,13 +294,18 @@ def build_context(reviews: list[dict], analyses: dict[str, dict], companies: dic
             "concerns": _dedupe(r.report.concerns, 4),
             "questions": _dedupe(r.report.due_diligence_questions, MAX_QUESTIONS),
             "zero_filled": [CRITERION_NAME[c.criterion_id] for c in r.criterion_results if c.zero_filled],
+            "zero_filled_ids": [c.criterion_id for c in r.criterion_results if c.zero_filled],
+            "red_flag_codes": [f.get("code") for f in ((a.get("traction_analysis") or {}).get("data") or {}).get("red_flags") or []],
             "review_requests": r.review_request_ids, "review_responses": len(r.review_response_ids),
         })
 
     others = [{"company_id": r.company_id, "name": companies.get(r.company_id, {}).get("company_name", r.company_id),
                "status": r.final_status.value, "total": r.total_score, "rank": r.selection.rank,
                "reasons": [c.value for c in r.reason_codes], "explanation": explain(r),
-               "zero_filled": [CRITERION_NAME[c.criterion_id] for c in r.criterion_results if c.zero_filled]}
+               "zero_filled": [CRITERION_NAME[c.criterion_id] for c in r.criterion_results if c.zero_filled],
+               "zero_filled_ids": [c.criterion_id for c in r.criterion_results if c.zero_filled],
+               "low_criteria": [c.criterion_id for c in r.criterion_results
+                                if c.score is not None and not c.zero_filled and c.score < 2]}
               for r in reviews_m if not r.selection.selected]
 
     status = Counter(r.final_status.value for r in reviews_m)
@@ -303,6 +317,8 @@ def build_context(reviews: list[dict], analyses: dict[str, dict], companies: dic
         "selected": selected,
         "others": others,
         "zero_filled_counts": {CRITERION_NAME[c]: zero.get(c, 0) for c in CRITERIA},
+        "zero_filled_counts_by_id": {c: zero.get(c, 0) for c in CRITERIA},
+        "reason_counts": dict(Counter(code.value for r in reviews_m for code in r.reason_codes)),
         "review": {"requests": {AGENT_KO.get(a, a): n for a, n in requests.items()}, "responses": sum(len(r.review_response_ids) for r in reviews_m)},
         "references": refs.items,
     }

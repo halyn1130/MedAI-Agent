@@ -91,8 +91,10 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
     mk, cl, tr, rk = c["market"], c["clinical"], c["traction"], c["risk"]
     out = [f"### {c['rank']}. {c['name']} — {_num(c['total'])}점",
            f"- 분야: {c.get('category') or '-'} · 대표 제품: {c.get('product') or '-'} · 핵심 기술: {c.get('technology') or '-'}"]
-    point = (narrative or {}).get(c["company_id"])
-    if point:
+    narrative = narrative or {}
+    if reason := narrative.get(f"select:{c['company_id']}"):
+        out.append(f"- **선정 이유**: {reason}")
+    if point := narrative.get(f"points:{c['company_id']}"):
         out.append(f"- **핵심 검토 논점**: {point}")
     out += ["#### 고객 문제·시장",
             f"- 목표 고객 {mk.get('target_customer') or '-'} / 구매자 {mk.get('buyer') or '-'} / 사업모델 {mk.get('business_model') or '-'}",
@@ -116,9 +118,13 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
     out += [f"- 계약: {x['counterparty']}{' (유상)' if x.get('paid') else ''}{_refs(x['refs'])}" for x in tr["contracts"]]
     out += [f"- 실적 경고: {f}" for f in tr["red_flags"]]
     out += ["#### 운영 리스크 (공개자료 관찰, 사실 검증 전)"]
+    empty = [AREA_KO.get(a["category"], a["category"]) for a in rk["areas"] if not a["observations"]]
     for a in rk["areas"]:
-        obs = "; ".join(f"{o['statement']}{' ⚠' if o['signal'] else ''}{_refs(o['refs'])}" for o in a["observations"])
-        out.append(f"- {AREA_KO.get(a['category'], a['category'])}: {obs or '관찰 없음'}")
+        if a["observations"]:
+            obs = "; ".join(f"{o['statement']}{' ⚠' if o['signal'] else ''}{_refs(o['refs'])}" for o in a["observations"])
+            out.append(f"- {AREA_KO.get(a['category'], a['category'])}: {obs}")
+    if empty:
+        out.append(f"- 관찰 없음: {', '.join(empty)}")
     out += [f"#### 평가 근거 (총점 {_num(c['total'])}점)"]
     for s in c.get("score_reasons") or []:
         score = "0점(미확인)" if s["zero_filled"] else f"{_num(s['score'])}/5점"
@@ -155,15 +161,17 @@ def render(ctx: dict, narrative: Optional[dict] = None) -> str:
     if ctx["selected"]:
         lines += _score_table(ctx["selected"])
 
-    lines += ["## 3. 전체 후보 판정", "", "`0*` 표시는 공개자료로 확인하지 못해 0점으로 처리한 항목이다.", "",
-              "| 기업 | 판정 | 총점 | 판정 사유 | 0점 처리 |", "|---|---|---:|---|---|"]
+    guide = narrative.get("criteria_guide") or ("6개 항목을 100점 만점으로 합산해 총점 60점 이상이면서 채점된 항목이 모두 2점 이상이면 "
+                                                "적격이다. 공개자료로 확인하지 못한 항목은 0점으로 처리했다.")
+    lines += ["## 3. 전체 후보 판정", "", guide, "",
+              "| 기업 | 판정 | 총점 | 판정 사유 |", "|---|---|---:|---|"]
     for c in ctx["selected"]:
-        lines.append(f"| {c['name']} | 적격·선정 {c['rank']}위 | {_num(c['total'])} | 총점 60점 이상, 채점 항목 모두 2점 이상 | "
-                     f"{', '.join(c['zero_filled']) or '-'} |")
+        zero = f" (0점 처리: {', '.join(c['zero_filled'])})" if c["zero_filled"] else ""
+        lines.append(f"| {c['name']} | 적격·선정 {c['rank']}위 | {_num(c['total'])} | 총점 60점 이상, 채점 항목 모두 2점 이상{zero} |")
     for o in ctx["others"]:
         state = STATUS_KO[o["status"]] + (f" {o['rank']}위(K 초과)" if o.get("rank") else "")
-        lines.append(f"| {o['name']} | {state} | {_num(o['total'])} | {o.get('explanation') or ', '.join(o['reasons']) or '-'} | "
-                     f"{', '.join(o['zero_filled']) or '-'} |")
+        reason = o.get("explanation") or ", ".join(o["reasons"]) or "-"
+        lines.append(f"| {o['name']} | {state} | {_num(o['total'])} | {reason} |")
 
     rv = ctx["review"]
     zero = ", ".join(f"{c} {n}개" for c, n in ctx["zero_filled_counts"].items() if n)
@@ -184,7 +192,8 @@ def render(ctx: dict, narrative: Optional[dict] = None) -> str:
     lines += ["## REFERENCE", ""]
     pubmed = ctx.get("pubmed") or {}
     for i, r in enumerate(ctx["references"], start=1):
-        lines.append(f"{i}. {format_reference(r, pubmed.get(pmid(r.get('url'))))}")
+        text = narrative.get(f"ref:{i}") or format_reference(r, pubmed.get(pmid(r.get("url"))))
+        lines.append(f"{i}. {text}")
     if not ctx["references"]:
         lines.append("선정 기업 서술에 인용한 출처 없음.")
     return "\n".join(lines) + "\n"

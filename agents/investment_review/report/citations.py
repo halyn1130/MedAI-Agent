@@ -109,6 +109,9 @@ def format_reference(ref: dict, meta: Optional[dict] = None) -> str:
         return f"{_authors(m.get('authors') or [])}({year}). {(m.get('title') or title).rstrip('.')}. {', '.join(parts)}."
     if k == "report":
         publisher = ref.get("publisher") or _site(url) or "발행기관 미상"
+        audit = re.match(r"^(.+?)\s+((?:연결)?감사보고서.*)$", title)
+        if "dart.fss.or.kr" in url and audit:  # DART 감사보고서: 발행기관 = 기업명
+            publisher, title = audit.groups()
         return f"{publisher}({date[:4] or '연도 미상'}). *{title}*. {url}"
     title, org = _web_title(title)
     publisher = (ref.get("publisher") or "").removeprefix("www.")

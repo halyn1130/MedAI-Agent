@@ -26,7 +26,7 @@ PDF는 설치된 Google Chrome을 사용합니다. Chrome이 없으면 `python -
 | `MARKET_MODEL` | 03 | 예: `gpt-4o-mini` |
 | `RISK_MODEL` | 05 | **비어 있으면 05 보완이 실패합니다.** 예: `gpt-4.1-nano` |
 | `MARKET_RAG_DATA_DIR` | 03 RAG | PDF와 `metadata.csv`가 있는 폴더. 압축을 `data/market_rag/market_rag_dataset/`에 풀었다면 그 경로로 지정합니다 |
-| `REPORT_MODEL` | 06 보고서 LLM 서술 (선택) | 없으면 `MARKET_MODEL` |
+| `REPORT_MODEL` | 06 보고서 문장 작성 | 없으면 `gpt-4.1` |
 
 ### 3. Git에 없는 데이터
 
@@ -195,16 +195,24 @@ python -m agents.investment_review --market-json m.json --traction-json t.json -
 ```
 
 ```bash
-python -m agents.investment_review.report --run-dir outputs/investment_review          # 템플릿 문장 (기본)
-python -m agents.investment_review.report --run-dir outputs/investment_review --llm    # SUMMARY·핵심 검토 논점 LLM 서술
+python -m agents.investment_review.report --run-dir outputs/investment_review            # 프롬프트(LLM) 문장 (기본)
+python -m agents.investment_review.report --run-dir outputs/investment_review --no-llm   # 템플릿 문장만
 ```
 
-- 표·수치는 템플릿으로 직접 렌더링하고, LLM은 SUMMARY와 선정 기업별 핵심 검토 논점만 씁니다 (`REPORT_MODEL`, 없으면 `MARKET_MODEL`).
-- `checker.py`가 분량(5쪽·SUMMARY 1/2쪽, 줄 너비 기준 추정), 인용 번호 ↔ REFERENCE 일치, 전체 후보 포함을 검사해 `report_check.json`에 남깁니다.
-- LLM 문장에 보고서 데이터에 없는 숫자가 있으면 그 문장은 버리고 템플릿 문장을 씁니다. **의미 오류(예: "미발견"을 "없음 확인"으로 쓰기)는 잡지 못하므로 LLM 서술은 선택 기능입니다.**
-- 전체 실행(`python -m agents.investment_review`)도 끝에 보고서를 만듭니다 (`--no-report`, `--llm-report`).
-- **PDF**: `final_report.pdf`(A4)도 함께 만듭니다 (`report/pdf.py`, `--no-pdf`로 생략). Markdown → HTML(`markdown-it-py`) → Playwright로 Chrome 인쇄. 설치된 Google Chrome을 먼저 쓰고, 없으면 `python -m playwright install chromium`이 필요합니다. PDF를 만들면 5쪽 검사는 실제 쪽수(`pypdf`)로 합니다.
-- `markdown-it-py`는 현재 다른 패키지(rich)의 의존성으로 설치돼 있습니다. 루트 `requirements.txt`에 명시하는 것을 권장합니다.
+문장은 [report/prompts/writer.md](report/prompts/writer.md) 프롬프트를 따릅니다. 틀리기 쉬운 부분은 프롬프트 규칙을 코드로 구현했습니다.
+
+| 보고서 부분 | 작성 | 비고 |
+|---|---|---|
+| SUMMARY (6~7문장), 평가 기준 안내문, 선정 이유, 핵심 검토 논점 | LLM (`REPORT_MODEL`, 기본 `gpt-4.1`) | 검증 실패 시 사유를 알려 1회 재요청, 그래도 실패하면 템플릿 문장 |
+| 부적격·판단불가 사유 | 코드 (프롬프트 4번 규칙) | LLM은 38개 목록을 끝까지 쓰지 못하고 0점 항목 수를 잘못 셈 |
+| REFERENCE | 코드 (프롬프트 5번 규칙) | LLM은 발행연도·사이트명·URL을 자주 틀림. 논문 서지는 PubMed 조회 |
+| 표·수치·평가 근거 | 코드 | |
+
+- LLM 입력에는 매출(억 원), 부적격 사유별 기업 수, 0점 처리 항목의 쉬운 이름·개수 등을 미리 계산해 넣습니다. 사실 검증 전인 운영 관찰은 넣지 않습니다.
+- 검증(`checker.check_narrative`): 입력에 없는 숫자(프롬프트 기준값 100·60·2 예외), 6자리 이상 날것 숫자, 코드·변수명, 요약의 선정 기업 이름 누락.
+- **숫자·코드로 잡을 수 없는 의미 오류는 남을 수 있습니다** (예: 같은 점수의 3·4위를 "공동 3위"로 씀). 제출 전 사람이 읽어 확인합니다. `gpt-4o-mini`는 이런 오류가 많아 기본값으로 쓰지 않습니다.
+- **PDF**: `final_report.pdf`(A4)도 함께 만듭니다 (`report/pdf.py`, `--no-pdf`로 생략). Markdown → HTML(`markdown-it-py`) → Playwright로 Chrome 인쇄. 5쪽을 넘으면 인쇄 배율을 95%·90%로 줄여 다시 만들고, 5쪽 검사는 실제 쪽수(`pypdf`)로 합니다. 설치된 Google Chrome을 먼저 쓰고, 없으면 `python -m playwright install chromium`이 필요합니다.
+- 전체 실행(`python -m agents.investment_review`)도 끝에 보고서를 만듭니다 (`--no-report`, `--no-llm-report`).
 
 ## 테스트
 

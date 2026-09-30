@@ -57,18 +57,56 @@ def _allowed_numbers(ctx: dict) -> set[str]:
     return {n.rstrip("0").rstrip(".") if "." in n else n for n in out} | out
 
 
+PROMPT_NUMBERS = {"100", "60", "2", "20", "1"}   # 프롬프트가 허용한 기준값 (100점 만점·60점·2점, 고용 20%, 최근 2년·1년)
+CODES = re.compile(r"SCORE_BELOW|CRITERION_BELOW|MISSING_EVIDENCE|UNRESOLVED_CONFLICT|ANALYSIS_FAILED|"
+                   r"\bRF\d\b|\bG0\d\b|\bCL0\d\b|zero_filled|criterion|not_applicable")
+ITEM_NUMBER = re.compile(r"\bC[1-6]\b")
+RAW_NUMBER = re.compile(r"\d{6,}")  # 3.9억 원이 아니라 392858405 같은 날것 숫자
+
+
 def check_narrative(narrative: dict, ctx: dict) -> tuple[dict, list[str]]:
-    """데이터에 없는 숫자를 쓴 LLM 문장을 제거한다."""
-    allowed = _allowed_numbers(ctx)
-    ids = {c["company_id"] for c in ctx["selected"]}
+    """LLM 문장을 항목별로 검증하고 통과한 것만 남긴다. 실패한 항목은 템플릿 문장을 쓴다.
+
+    - 모든 문장: 입력에 없는 숫자 금지(프롬프트 기준값 예외), 코드·변수명 금지
+    - 부적격 사유(reason:*): 항목 번호(C1~C6)도 금지
+    - 참고문헌(ref:n): 번호가 출처 범위 안, 기관 보고서·웹페이지는 원문 URL 포함
+    """
+    from urllib.parse import unquote
+
+    from .citations import kind
+    allowed = _allowed_numbers(ctx) | PROMPT_NUMBERS
+    selected = {c["company_id"] for c in ctx["selected"]}
+    others = {o["company_id"] for o in ctx["others"]}
+    refs = ctx["references"]
     clean, issues = {}, []
     for key, text in (narrative or {}).items():
-        if key != "summary" and key not in ids:
-            issues.append(f"narrative: 선정 기업이 아닌 키 {key} 제거")
+        kind_, _, target = key.partition(":")
+        valid_key = (key in ("summary", "criteria_guide") or (kind_ in ("select", "points") and target in selected)
+                     or (kind_ == "reason" and target in others)
+                     or (kind_ == "ref" and target.isdigit() and 1 <= int(target) <= len(refs)))
+        if not valid_key:
+            issues.append(f"{key}: 보고서 대상이 아닌 항목 제거")
             continue
-        bad = [n for n in NUMBER.findall(text or "") if n not in allowed and n.replace(",", "") not in allowed]
+        body = text or ""
+        if kind_ == "ref":
+            ref = refs[int(target) - 1]
+            url = ref.get("url") or ""
+            if kind(ref) != "paper" and url and url not in body and unquote(url) not in body:
+                issues.append(f"{key}: 원문 URL 누락·변경 → 코드 서식 사용")
+                continue
+            body = body.replace(url, "").replace(unquote(url), "")  # URL 안 숫자는 검사 제외
+        bad = [n for n in NUMBER.findall(body) if n not in allowed and n.replace(",", "") not in allowed]
         if bad:
-            issues.append(f"narrative[{key}]: 데이터에 없는 숫자 {bad[:5]} → 템플릿 문장 사용")
+            issues.append(f"{key}: 데이터에 없는 숫자 {bad[:5]} → 템플릿 사용")
+            continue
+        if CODES.search(body) or (kind_ == "reason" and ITEM_NUMBER.search(body)):
+            issues.append(f"{key}: 코드·항목 번호 포함 → 템플릿 사용")
+            continue
+        if RAW_NUMBER.search(body):
+            issues.append(f"{key}: 읽기 어려운 날것 숫자 → 템플릿 사용")
+            continue
+        if key == "summary" and (missing := [c["name"] for c in ctx["selected"] if c["name"] not in body]):
+            issues.append(f"summary: 선정 기업 {missing} 누락 → 템플릿 사용")
             continue
         clean[key] = text
     return clean, issues
