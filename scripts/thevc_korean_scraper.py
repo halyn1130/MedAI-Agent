@@ -21,7 +21,7 @@ import argparse
 import csv
 import os
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from playwright.sync_api import sync_playwright
 

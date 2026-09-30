@@ -4,8 +4,8 @@ Healthcare AI 스타트업의 공개 자료를 모아 **임상·인허가, 시�
 
 가상 VC의 심사역을 주요 사용자로 설정합니다. 기업마다 흩어진 자료를 같은 기준으로 정리해 초기 검토 시간을 줄이고, 추가 실사에서 확인해야 할 질문을 제시하는 것이 목표입니다.
 
-> **현재 팀 구현:** Risk 에이전트의 단독 실행, 입력 예제, 테스트.
-> **현재 이 브랜치 추가:** 시장·사업성 Agent, BAAI/bge-m3 기반 dense RAG, 로컬 Chroma index builder, 입력 예제와 테스트.
+> **현재 이 브랜치 구현:** Risk 에이전트, 실적·성장성 에이전트, 시장·사업성 Agent와 BAAI/bge-m3 기반 dense RAG.
+> **시장 분석 구성:** 로컬 Chroma index builder, 입력 예제, 단위 테스트와 페이지 단위 근거 추적.
 > **통합 예정:** 상위 LangGraph, 전문 Agent와 투자심사 Agent의 최종 공통 계약, 최종 보고서 생성.
 > 공통 State와 평가 정책은 팀 검토 단계이며, 시장 Agent는 다른 Agent의 인터페이스를 변경하지 않고 독립 노드로 연결됩니다.
 
@@ -278,26 +278,17 @@ CLI 결과 JSON은 `market_analysis`와 선택적인 `review_response`를 최상
 
 입력 예시는 [examples/market](examples/market), 상세 실행 방식과 반환 구조는 [시장 Agent 문서](docs/market_agent.md)를 참고하세요.
 
-### 기존 Risk 단독 실행
+### 고정 데이터로 Risk 분석
 
-Risk 코드가 포함된 통합 브랜치에서는 기존 실행 방식을 그대로 사용합니다.
+Risk Agent는 LangGraph의 `데이터 확인 → 근거 선택 → 분석 → 검토 → 보완 또는 반환` 흐름으로 실행합니다. 기존 수집본 42개 기업을 `agents/risk/data/frozen_manifest.json`에 등록했으며, 파일 해시가 달라지면 실행을 중단합니다. 데이터와 manifest는 Git에 포함되지 않으므로 새 환경에는 별도로 전달해야 합니다.
 
-```bash
-python -m agents.risk \
-  --input examples/risk/input.json \
-  --output outputs/risk_demo.json \
-  --demo
-```
-
-Risk 라이브 분석에는 `OPENAI_API_KEY`, `RISK_MODEL`, `TAVILY_API_KEY`가 필요합니다.
+로컬 `.env`에 `OPENAI_API_KEY`, `RISK_MODEL`을 설정합니다. 이 Agent는 웹검색을 하지 않으므로 Tavily 키가 필요하지 않습니다.
 
 ```bash
-python -m agents.risk \
-  --input examples/risk/input.json \
-  --output outputs/risk_result.json
+python -m agents.risk --company-id <manifest에_등록된_company_id> --output outputs/risk_result.json
 ```
 
-Risk 입력·보완 예시와 상세 반환 구조는 통합 브랜치의 `examples/risk`, `agents/risk/README.md`를 따릅니다.
+출력은 `risk_analysis`와 `references`를 담은 dict입니다. 외부 재검색 없이 고정 자료 안에서 최대 1회 보완하며, 같은 입력은 기존 모델 응답 캐시를 재사용합니다. 기본 실행당 GPT 호출은 최대 2회입니다. 기존 `--input`, `--demo`, `--max-search-calls` 옵션은 제거되었습니다. 상세 연결 방법은 [Risk README](agents/risk/README.md)를 참고하세요.
 
 ### 기존 후보 수집 도구
 
@@ -308,6 +299,7 @@ Risk 입력·보완 예시와 상세 반환 구조는 통합 브랜치의 `examp
 ```bash
 python -m pytest tests/test_market_agent.py tests/test_market_rag.py -q
 python -m unittest discover -s tests -v
+python -m unittest agents.risk.test_graph agents.risk.test_company_analysis agents.risk.test_output_contract agents.risk.collection.test_collect agents.risk.collection.test_quality -v
 ```
 
 Market 테스트는 조건부 Web Search, 4개 분석 결과의 분리, 페이지 근거 추적, `unknown` 처리, 선택 영역 보완과 1회 제한을 검증합니다. Risk 테스트는 통합 브랜치의 기존 unittest 명령을 유지합니다.
@@ -316,11 +308,12 @@ Market 테스트는 조건부 Web Search, 4개 분석 결과의 분리, 페이�
 
 ```text
 agents/market/       # 시장·사업성 Agent, State·스키마·점수 계산
-agents/risk/         # 통합 시 기존 Risk 분석 코드·스키마·프롬프트
+agents/risk/         # Risk 분석 코드·스키마·프롬프트
+agents/traction_growth/ # 실적·성장성 Agent 코드·스키마·평가 기준
 rag/market/          # PDF loader, chunker, bge-m3, Chroma, dense retriever
 data/market_rag/     # 별도 전달할 시장 RAG 데이터셋 위치 (PDF Git 제외)
+data/startup_list.csv # 고정 후보 기업 데이터
 examples/market/     # Market 입력 예시
-examples/risk/       # 통합 시 기존 Risk 입력·보완 예시
 tests/               # Market 및 통합 브랜치 Agent 테스트
 scripts/             # 이전 후보 수집 도구 (현재 흐름 미사용)
 docs/diagrams/       # 흐름도와 편집 소스
@@ -683,7 +676,9 @@ C5의 성장 자료처럼 명시적인 대체 규칙이 있는 정보는 그 부
 - [x] Risk 단독 구현·입력 예제·테스트 작성
 - [ ] 제공 데이터셋 로딩·정규화와 공통 입력 계약 확정 (추가 수집 없음)
 - [ ] 평가 가중치·임계값·미확인 처리 규칙 팀 검토
-- [ ] 임상·시장·실적 에이전트별 직접 자료 수집·분석 및 시장 RAG 구현
+- [x] 시장·사업성 에이전트와 시장 RAG 구현
+- [x] 실적·성장성 에이전트 구현
+- [ ] 임상·인허가 에이전트 구현
 - [ ] Risk를 공통 State·보완 계약에 연결하고 운영 대비 체크 추가
 - [ ] LangGraph 병렬 분석·결과 취합·보완 루프·종료 처리 구현
 - [ ] Python 채점·최종 판정·기업 선정 구현
