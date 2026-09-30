@@ -1,0 +1,980 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c039",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p005",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p006",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c039:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c039:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c039:clinical:reg03",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c039:clinical:reg04",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c039:clinical:reg05",
+        "product_id": "p005",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c039:clinical:reg06",
+        "product_id": "p006",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 케어링 (c039) | 기준일 2026-09-30\n- p001 방문요양·시니어케어 서비스: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p002 방문요양 서비스: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p003 주간보호 서비스: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p004 방문목욕 서비스: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p005 방문간호 서비스: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p006 복지용구 서비스: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 없음 (not_applicable)",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "not_applicable",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p005",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p006",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c039:clinical:reg01": "c039:clinical:fd01",
+      "finding|regulatory|c039:clinical:reg02": "c039:clinical:fd02",
+      "finding|regulatory|c039:clinical:reg03": "c039:clinical:fd03",
+      "finding|regulatory|c039:clinical:reg04": "c039:clinical:fd04",
+      "finding|regulatory|c039:clinical:reg05": "c039:clinical:fd05",
+      "finding|regulatory|c039:clinical:reg06": "c039:clinical:fd06",
+      "finding|clinical_evidence|p001": "c039:clinical:fd07",
+      "finding|clinical_evidence|p002": "c039:clinical:fd08",
+      "finding|clinical_evidence|p003": "c039:clinical:fd09",
+      "finding|clinical_evidence|p004": "c039:clinical:fd10",
+      "finding|clinical_evidence|p005": "c039:clinical:fd11",
+      "finding|clinical_evidence|p006": "c039:clinical:fd12"
+    },
+    "collected_profile": {
+      "legal_name": "케어링",
+      "english_name": "Caring",
+      "homepage": "https://caring.co.kr",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "방문요양·시니어케어 서비스",
+          "model": null,
+          "intended_use": "방문요양·시니어케어 서비스",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "방문요양 서비스",
+          "model": null,
+          "intended_use": "돌봄이 필요한 노인을 대상으로 하는 방문요양 서비스",
+          "target_disease": null,
+          "users": "어르신",
+          "environment": "가정",
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p003",
+          "name": "주간보호 서비스",
+          "model": null,
+          "intended_use": "어르신을 위한 주간보호 서비스",
+          "target_disease": null,
+          "users": "어르신",
+          "environment": "센터",
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p004",
+          "name": "방문목욕 서비스",
+          "model": null,
+          "intended_use": "어르신을 위한 방문목욕 서비스",
+          "target_disease": null,
+          "users": "어르신",
+          "environment": "가정",
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p005",
+          "name": "방문간호 서비스",
+          "model": null,
+          "intended_use": "어르신을 위한 방문간호 서비스",
+          "target_disease": null,
+          "users": "어르신",
+          "environment": "가정",
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p006",
+          "name": "복지용구 서비스",
+          "model": null,
+          "intended_use": "어르신을 위한 복지용구 제공 서비스",
+          "target_disease": null,
+          "users": "어르신",
+          "environment": "가정",
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://caring.co.kr",
+          "https://recruit.caring.co.kr",
+          "https://nextround.kr/startup/detail/3334",
+          "https://biz.chosun.com/stock/stock_general/2023/11/22/GVJI6HJIZZESTGKAQVRPYZU3D4",
+          "https://bravo.etoday.co.kr/view/atc_view/19695"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [],
+  "evidence": [],
+  "findings": [
+    {
+      "finding_id": "c039:clinical:fd01",
+      "category": "regulatory",
+      "claim": "방문요양·시니어케어 서비스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c039:clinical:fd02",
+      "category": "regulatory",
+      "claim": "방문요양 서비스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c039:clinical:fd03",
+      "category": "regulatory",
+      "claim": "주간보호 서비스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c039:clinical:fd04",
+      "category": "regulatory",
+      "claim": "방문목욕 서비스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c039:clinical:fd05",
+      "category": "regulatory",
+      "claim": "방문간호 서비스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c039:clinical:fd06",
+      "category": "regulatory",
+      "claim": "복지용구 서비스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c039:clinical:fd07",
+      "category": "clinical_evidence",
+      "claim": "방문요양·시니어케어 서비스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c039:clinical:fd08",
+      "category": "clinical_evidence",
+      "claim": "방문요양 서비스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c039:clinical:fd09",
+      "category": "clinical_evidence",
+      "claim": "주간보호 서비스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c039:clinical:fd10",
+      "category": "clinical_evidence",
+      "claim": "방문목욕 서비스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c039:clinical:fd11",
+      "category": "clinical_evidence",
+      "claim": "방문간호 서비스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c039:clinical:fd12",
+      "category": "clinical_evidence",
+      "claim": "복지용구 서비스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c039:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "방문요양·시니어케어 서비스는 질병을 진단·치료하는 목적이 아닌 돌봄 서비스로 확인됨."
+    },
+    {
+      "coverage_id": "c039:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "돌봄이 필요한 노인을 대상으로 하는 방문요양 서비스는 질병을 진단·치료하는 목적이 아닌 돌봄 서비스로 확인됨."
+    },
+    {
+      "coverage_id": "c039:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "어르신을 위한 주간보호 서비스는 질병을 진단·치료하는 목적이 아닌 돌봄 서비스로 확인됨."
+    },
+    {
+      "coverage_id": "c039:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "어르신을 위한 방문목욕 서비스는 질병을 진단·치료하는 목적이 아닌 돌봄 서비스로 확인됨."
+    },
+    {
+      "coverage_id": "c039:clinical:cv05",
+      "area": "classification",
+      "product_id": "p005",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "어르신을 위한 방문간호 서비스는 질병을 진단·치료하는 목적이 아닌 돌봄 서비스로 확인됨."
+    },
+    {
+      "coverage_id": "c039:clinical:cv06",
+      "area": "classification",
+      "product_id": "p006",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "어르신을 위한 복지용구 제공 서비스는 질병을 진단·치료하는 목적이 아닌 돌봄 서비스로 확인됨."
+    },
+    {
+      "coverage_id": "c039:clinical:cv07",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv09",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv10",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv11",
+      "area": "regulatory",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv12",
+      "area": "regulatory",
+      "product_id": "p006",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv13",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv14",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv15",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv17",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv18",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv19",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv20",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv21",
+      "area": "designation",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv22",
+      "area": "reimbursement",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv23",
+      "area": "designation",
+      "product_id": "p006",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv24",
+      "area": "reimbursement",
+      "product_id": "p006",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv25",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv26",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv27",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv28",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv29",
+      "area": "clinical_studies",
+      "product_id": "p005",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv30",
+      "area": "clinical_studies",
+      "product_id": "p006",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv31",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv32",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv33",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv34",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv35",
+      "area": "claim_check",
+      "product_id": "p005",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c039:clinical:cv36",
+      "area": "claim_check",
+      "product_id": "p006",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    }
+  ],
+  "review_responses": []
+}

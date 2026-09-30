@@ -1,0 +1,545 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c007",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c007:clinical:ev01",
+          "c007:clinical:ev02",
+          "c007:clinical:ev03"
+        ]
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c007:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": "제허 18-360",
+        "permitted_use": "AI 의료영상 진단 보조 서비스",
+        "status": "active",
+        "effective_at": "2018-05-16",
+        "valid_until": null,
+        "evidence_ids": [
+          "c007:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c007:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "certification",
+        "record_number": "제인 22-4354",
+        "permitted_use": "AI 의료영상 진단 보조 서비스",
+        "status": "active",
+        "effective_at": "2022-05-04",
+        "valid_until": null,
+        "evidence_ids": [
+          "c007:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c007:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "notification",
+        "record_number": "제신 22-1629",
+        "permitted_use": "AI 의료영상 진단 보조 서비스",
+        "status": "active",
+        "effective_at": "2022-11-17",
+        "valid_until": null,
+        "evidence_ids": [
+          "c007:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c007:clinical:reg04",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "certification",
+        "record_number": "제인 23-5025",
+        "permitted_use": "AI 의료영상 진단 보조 서비스",
+        "status": "active",
+        "effective_at": "2023-08-18",
+        "valid_until": null,
+        "evidence_ids": [
+          "c007:clinical:ev03"
+        ]
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [
+      {
+        "record_id": "c007:clinical:rmb01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신의료기술 평가",
+        "status": "pending",
+        "scope": "AI 의료영상 진단 보조 서비스",
+        "effective_at": null,
+        "evidence_ids": [
+          "c007:clinical:ev04"
+        ]
+      }
+    ],
+    "clinical_studies": [
+      {
+        "study_id": "c007:clinical:st01",
+        "product_id": "p001",
+        "design": "관찰 연구",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "AI 의료영상 진단 보조 서비스의 효용성",
+        "result": "AI 기반 의료 진단 보조 솔루션의 통합 및 활용성 향상",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c007:clinical:ev05"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c007:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "마이허브는 AI 의료영상 진단 보조 서비스 플랫폼 ‘maiLink(마이링크)’를 통해 의료진이 의료현장에서 필요로 하는 AI 서비스를 직접 선택하고 사용할 수 있도록 돕는 고객 맞춤형 AI 진단 보조 솔루션을 제공한다.",
+        "status": "supported",
+        "comparison_reason": "회사가 주장한 내용과 동일한 내용이 확인됨.",
+        "evidence_ids": [
+          "c007:clinical:ev05"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 마이허브 (c007) | 기준일 2026-09-30\n- p001 마이링크: ai_software/in_scope | 공식 상태: KR approval·active(\"AI 의료영상 진단 보조 서비스\"); KR certification·active(\"AI 의료영상 진단 보조 서비스\"); KR notification·active(\"AI 의료영상 진단 보조 서비스\"); KR certification·active(\"AI 의료영상 진단 보조 서비스\") | 제도: 혁신의료기술 평가·pending | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 1 | 평가 상태 complete\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c007:clinical:reg01": "c007:clinical:fd01",
+      "finding|regulatory|c007:clinical:reg02": "c007:clinical:fd02",
+      "finding|regulatory|c007:clinical:reg03": "c007:clinical:fd03",
+      "finding|regulatory|c007:clinical:reg04": "c007:clinical:fd04",
+      "finding|reimbursement|c007:clinical:rmb01": "c007:clinical:fd05",
+      "finding|clinical_evidence|p001": "c007:clinical:fd06"
+    },
+    "collected_profile": {
+      "legal_name": "마이허브",
+      "english_name": "maihub Corp.",
+      "homepage": "https://thevc.kr/maihub",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "마이링크",
+          "model": null,
+          "intended_use": "AI 의료영상 진단 보조 서비스",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "마이허브는 AI 의료영상 진단 보조 서비스 플랫폼 ‘maiLink(마이링크)’를 통해 의료진이 의료현장에서 필요로 하는 AI 서비스를 직접 선택하고 사용할 수 있도록 돕는 고객 맞춤형 AI 진단 보조 솔루션을 제공한다.",
+              "url": "https://www.nextunicorn.kr/company/ec1bce0462f7fca9",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://thevc.kr/maihub",
+          "https://www.nextunicorn.kr/company/ec1bce0462f7fca9"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c007:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 마이허브",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EB%A7%88%EC%9D%B4%ED%97%88%EB%B8%8C",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c007:clinical:src19",
+      "title": "마이허브, 의료 AI 플랫폼 '마이링크' 美 FDA 승인 획득 < 의료기기 < 메디시안 < 기사본문 - 메디파나뉴스",
+      "url": "https://www.medipana.com/news/articleView.html?idxno=405029",
+      "publisher": "www.medipana.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c007:clinical:src20",
+      "title": "마이허브, 의료 AI 플랫폼 '마이링크' 美 FDA 승인 획득 - 전자신문",
+      "url": "https://www.etnews.com/20260107000139",
+      "publisher": "www.etnews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c007:clinical:src22",
+      "title": "마이허브, 의료 AI 플랫폼 '마이링크' 美 FDA 510(k) 승인 획득",
+      "url": "https://www.biotimes.co.kr/news/articleView.html?idxno=26319",
+      "publisher": "www.biotimes.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c007:clinical:src23",
+      "title": "KU Startup 고려대학교 창업종합포털",
+      "url": "https://kustartup.korea.ac.kr/m/news/news_view.do?seq=235",
+      "publisher": "kustartup.korea.ac.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c007:clinical:src27",
+      "title": "[2024 고려대 초창패] 마이허브 “마이링크를 이용하면 의료 AI 솔루션 도입이 수월합니다”",
+      "url": "https://it.donga.com/105140",
+      "publisher": "it.donga.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c007:clinical:src38",
+      "title": "[기업탐방] “의료 AI를 더 쉽고 빠르게 연결하다” - 마이허브, 의료 AI 통합 플랫폼 기업 < 인터뷰 < 사람들 < 기사본문 - 한국도시환경헤럴드",
+      "url": "http://www.kueherald.co.kr/news/articleView.html?idxno=58200",
+      "publisher": "www.kueherald.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c007:clinical:ev01",
+      "company_id": "c007",
+      "product_id": "p001",
+      "statement": "주식회사 마이허브(maihub Corp.)의 의료영상 분석 소프트웨어",
+      "source_ids": [
+        "c007:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2018-05-16",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c007:clinical:ev02",
+      "company_id": "c007",
+      "product_id": "p001",
+      "statement": "주식회사 마이허브(maihub Corp.)의 1등급 의료영상 전송장치 소프트웨어",
+      "source_ids": [
+        "c007:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2022-11-17",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c007:clinical:ev03",
+      "company_id": "c007",
+      "product_id": "p001",
+      "statement": "주식회사 마이허브(maihub Corp.)의 2등급 의료영상 전송장치 소프트웨어",
+      "source_ids": [
+        "c007:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-08-18",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c007:clinical:ev04",
+      "company_id": "c007",
+      "product_id": "p001",
+      "statement": "마이링크가 혁신의료기술 평가를 신청 중임.",
+      "source_ids": [
+        "c007:clinical:src27"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "unverified"
+    },
+    {
+      "evidence_id": "c007:clinical:ev05",
+      "company_id": "c007",
+      "product_id": "p001",
+      "statement": "마이허브의 AI 의료영상 진단 보조 서비스 플랫폼 ‘마이링크’는 의료진이 필요로 하는 AI 서비스를 직접 선택하고 사용할 수 있도록 돕는 고객 맞춤형 솔루션을 제공한다.",
+      "source_ids": [
+        "c007:clinical:src22",
+        "c007:clinical:src38",
+        "c007:clinical:src19",
+        "c007:clinical:src20",
+        "c007:clinical:src23"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c007:clinical:fd01",
+      "category": "regulatory",
+      "claim": "마이링크 [KR] approval · active (제허 18-360) / 사용 목적: \"AI 의료영상 진단 보조 서비스\"",
+      "evidence_ids": [
+        "c007:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c007:clinical:fd02",
+      "category": "regulatory",
+      "claim": "마이링크 [KR] certification · active (제인 22-4354) / 사용 목적: \"AI 의료영상 진단 보조 서비스\"",
+      "evidence_ids": [
+        "c007:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c007:clinical:fd03",
+      "category": "regulatory",
+      "claim": "마이링크 [KR] notification · active (제신 22-1629) / 사용 목적: \"AI 의료영상 진단 보조 서비스\"",
+      "evidence_ids": [
+        "c007:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c007:clinical:fd04",
+      "category": "regulatory",
+      "claim": "마이링크 [KR] certification · active (제인 23-5025) / 사용 목적: \"AI 의료영상 진단 보조 서비스\"",
+      "evidence_ids": [
+        "c007:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c007:clinical:fd05",
+      "category": "reimbursement",
+      "claim": "마이링크 [KR] 혁신의료기술 평가 · pending / 범위: AI 의료영상 진단 보조 서비스",
+      "evidence_ids": [
+        "c007:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c007:clinical:fd06",
+      "category": "clinical_evidence",
+      "claim": "마이링크: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c007:clinical:mi01",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c007:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "'AI 의료영상 진단 보조 서비스'라는 사용 목적이 의료기기 규제 대상에 해당하며, 회사의 주장에 'AI 진단 보조 솔루션'을 제공한다고 명시되어 있어 효능 주장이 확인됨."
+    },
+    {
+      "coverage_id": "c007:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "마이허브",
+          "마이링크"
+        ],
+        "queries": [
+          "마이허브 마이링크 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c007:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "마이허브 혁신의료기기 지정",
+          "마이링크 혁신의료기술 평가",
+          "마이링크 비급여 등재 고시",
+          "마이허브 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c007:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "마이허브 혁신의료기기 지정",
+          "마이링크 혁신의료기술 평가",
+          "마이링크 비급여 등재 고시",
+          "마이허브 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c007:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"maihub Corp.\"[Affiliation]",
+          "마이허브 마이링크 임상 연구 논문",
+          "마이링크 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c007:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

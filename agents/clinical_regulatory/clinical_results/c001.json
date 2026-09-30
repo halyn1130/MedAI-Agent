@@ -1,0 +1,373 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c001",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c001:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c001:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 레모넥스 (c001) | 기준일 2026-09-30\n- p001 면역항암제: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p002 BALLkine-2: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 없음 (not_applicable)",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "not_applicable",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c001:clinical:reg01": "c001:clinical:fd01",
+      "finding|regulatory|c001:clinical:reg02": "c001:clinical:fd02",
+      "finding|clinical_evidence|p001": "c001:clinical:fd03",
+      "finding|clinical_evidence|p002": "c001:clinical:fd04"
+    },
+    "collected_profile": {
+      "legal_name": "레모넥스",
+      "english_name": "Lemonex",
+      "homepage": null,
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "면역항암제",
+          "model": null,
+          "intended_use": "면역항암제",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "BALLkine-2",
+          "model": null,
+          "intended_use": "국소투여용 면역항암제",
+          "target_disease": "고형암, 비대흉터, 켈로이드",
+          "users": "제약사 및 연구기관",
+          "environment": "O2O",
+          "modality": "서방형 약물전달 기술 DegradaBALL",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.jobkorea.co.kr/starter/companyreport/view?Inside_No=20305&schCtgr=0&schGrpCtgr=0&Page=1",
+          "https://thevc.kr/lemonex",
+          "https://www.thebell.co.kr/front/newsview.asp?key=202010261448279040108917",
+          "https://www.thebionews.net/news/articleView.html?idxno=26862",
+          "https://www.ivi.int/ko/lemonex-ivi-exchange-mou-on-joint-vaccine-development"
+        ],
+        "dropped_claims_not_in_page": [
+          "레모넥스는 바이오/의료 산업에서 면역항암제를 개발하는 스타트업으로, 서방형 약물전달 기술인 DegradaBALL을 활용하여 mRNA 백신 및 R",
+          "기술 수출 및 임상 시험 결과에 따른 라이센스 수익을 통해 수익을 창출할 것으로 예상됩니다.",
+          "매출액은 6.1억원에서 20.1억원, 그리고 76.1억원으로 급격히 증가하며 233%와 277.9%의 성장률을 기록했습니다.",
+          "레모넥스는 면역 항암제 연구개발을 하고 있습니다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [],
+  "evidence": [],
+  "findings": [
+    {
+      "finding_id": "c001:clinical:fd01",
+      "category": "regulatory",
+      "claim": "면역항암제 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c001:clinical:fd02",
+      "category": "regulatory",
+      "claim": "BALLkine-2 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c001:clinical:fd03",
+      "category": "clinical_evidence",
+      "claim": "면역항암제: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c001:clinical:fd04",
+      "category": "clinical_evidence",
+      "claim": "BALLkine-2: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c001:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "면역항암제로서 의료기기가 아닌 약물로 분류되며, 질병 진단·치료 목적이 아닌 일반적인 약물로 사용됨."
+    },
+    {
+      "coverage_id": "c001:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "국소투여용 면역항암제로서 의료기기가 아닌 약물로 분류되며, 질병 진단·치료 목적이 아닌 일반적인 약물로 사용됨."
+    },
+    {
+      "coverage_id": "c001:clinical:cv03",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv05",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv06",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv07",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv09",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv10",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv11",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c001:clinical:cv12",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    }
+  ],
+  "review_responses": []
+}

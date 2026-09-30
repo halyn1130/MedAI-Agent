@@ -1,0 +1,617 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c026",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "service",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "wellness",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "wellness",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c026:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c026:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c026:clinical:reg03",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c026:clinical:st01",
+        "product_id": "p002",
+        "design": "null",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "개인 맞춤형 건강기능식품 추천 서비스",
+        "result": "약사와의 1:1 상담을 통해 개인별 최적화된 건강기능식품을 추천한다.",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c026:clinical:ev01"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c026:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "4,000편의 논문을 통해 만들어진 알고리즘과 전문 약사와의 상담으로 직접 조합하는 나만의 맞춤 1팩 영양제를 매월 간편하게 구독하세요.",
+        "status": "partially_supported",
+        "comparison_reason": "주장과 근거 모두 4,000편의 논문을 기반으로 한 개인 맞춤형 건강기능식품 추천 서비스에 대한 내용이지만, 근거는 약사와의 상담을 통한 추천에 한정되어 있어 주장과 완전히 일치하지 않음.",
+        "evidence_ids": [
+          "c026:clinical:ev01"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 킥더허들 (c026) | 기준일 2026-09-30\n- p001 맞춤형 건강·영양 서비스: service/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p002 핏타민: wellness/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: partially_supported 1 | 평가 상태 complete\n- p003 피토틱스: wellness/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 없음 (unknown)",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c026:clinical:reg01": "c026:clinical:fd01",
+      "finding|regulatory|c026:clinical:reg02": "c026:clinical:fd02",
+      "finding|regulatory|c026:clinical:reg03": "c026:clinical:fd03",
+      "finding|clinical_evidence|p001": "c026:clinical:fd04",
+      "finding|clinical_evidence|p002": "c026:clinical:fd05",
+      "finding|clinical_evidence|p003": "c026:clinical:fd06",
+      "finding|claim|c026:p002:cl01": "c026:clinical:fd07"
+    },
+    "collected_profile": {
+      "legal_name": "킥더허들",
+      "english_name": null,
+      "homepage": "https://www.kthd.co.kr",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "맞춤형 건강·영양 서비스",
+          "model": null,
+          "intended_use": "맞춤형 건강·영양 서비스",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "핏타민",
+          "model": null,
+          "intended_use": "개인 맞춤형 건강기능식품 구독 서비스",
+          "target_disease": null,
+          "users": "일반 소비자",
+          "environment": "비대면 헬스케어 플랫폼",
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "4,000편의 논문을 통해 만들어진 알고리즘과 전문 약사와의 상담으로 직접 조합하는 나만의 맞춤 1팩 영양제를 매월 간편하게 구독하세요.",
+              "url": "https://www.kthd.co.kr",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p003",
+          "name": "피토틱스",
+          "model": null,
+          "intended_use": "건강기능식품 브랜드",
+          "target_disease": null,
+          "users": "일반 소비자",
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.kthd.co.kr",
+          "https://v.daum.net/v/FmAVeZxpSr?f=p",
+          "http://www.kglobaltimes.com/news/articleView.html?idxno=25824",
+          "https://medifonews.com/news/article.html?no=174852",
+          "https://m.mbn.co.kr/news-amp/4899126"
+        ],
+        "dropped_claims_not_in_page": [
+          "AI 기술 도입은 '전문성과 편의성의 동시 실현'이라는 목표 달성을 위한 중요한 이정표입니다.",
+          "고객은 더욱 정교한 맞춤형 영양/예방 솔루션을 추천받고, 의료 전문가는 AI 기반 의사결정 지원으로 더 효율적이고 전문적인 상담이 가능해집니다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c026:clinical:src17",
+      "title": "한계에 도전하며 새로운 시장 열어가는 개인맞춤형 건강기능식품 전문기업 ㈜빅썸 < 산업·무역 < 경제 < 기사본문 - 월간인물(Monthly People)",
+      "url": "https://www.monthlypeople.com/news/articleView.html?idxno=270003",
+      "publisher": "www.monthlypeople.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c026:clinical:src18",
+      "title": "맞춤형 영양제 관리 '핏타민', 론칭 9개월만에 누적 사용자 18 ...",
+      "url": "https://wowtale.net/2022/05/24/40587",
+      "publisher": "wowtale.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c026:clinical:ev01",
+      "company_id": "c026",
+      "product_id": "p002",
+      "statement": "핏타민은 4,000여 편의 SCI 논문을 기반으로 설계된 알고리즘을 활용하여 개인 맞춤형 건강기능식품을 추천하는 서비스이다.",
+      "source_ids": [
+        "c026:clinical:src17",
+        "c026:clinical:src18"
+      ],
+      "locator": null,
+      "excerpt": "핏타민은 건강기능식품 소분·판매 규제 특례 대상 사업자로 선정되어 개인 맞춤형 건강기능식품을 제공한다.",
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c026:clinical:fd01",
+      "category": "regulatory",
+      "claim": "맞춤형 건강·영양 서비스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c026:clinical:fd02",
+      "category": "regulatory",
+      "claim": "핏타민 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c026:clinical:fd03",
+      "category": "regulatory",
+      "claim": "피토틱스 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c026:clinical:fd04",
+      "category": "clinical_evidence",
+      "claim": "맞춤형 건강·영양 서비스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c026:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "핏타민: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c026:clinical:fd06",
+      "category": "clinical_evidence",
+      "claim": "피토틱스: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c026:clinical:fd07",
+      "category": "claim",
+      "claim": "주장 \"4,000편의 논문을 통해 만들어진 알고리즘과 전문 약사와의 상담으로 직접 조합하는 나만의 맞춤 1팩 영양제를 매월 간편하게 구독하세요.\" → partially_supported: 주장과 근거 모두 4,000편의 논문을 기반으로 한 개인 맞춤형 건강기능식품 추천 서비스에 대한 내용이지만, 근거는 약사와의 상담을 통한 추천에 한정되어 있어 주장과 완전히 일치하지 않음.",
+      "evidence_ids": [
+        "c026:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c026:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "서비스로서 질병을 진단·치료하지 않음."
+    },
+    {
+      "coverage_id": "c026:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "건강기능식품 구독 서비스로, 질병 진단·치료 목적이 아님. 그러나 알고리즘과 상담을 통한 맞춤 영양제 제공 주장은 효능 주장으로 확인됨."
+    },
+    {
+      "coverage_id": "c026:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "건강기능식품 브랜드로, 질병 진단·치료 목적이 아님."
+    },
+    {
+      "coverage_id": "c026:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv07",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv09",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv11",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv13",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv14",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv15",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "킥더허들 핏타민 임상 연구 논문",
+          "핏타민 clinical validation study"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c026:clinical:cv16",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c026:clinical:cv17",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c026:clinical:cv18",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    }
+  ],
+  "review_responses": []
+}

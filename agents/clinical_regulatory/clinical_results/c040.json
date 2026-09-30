@@ -1,0 +1,388 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c040",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "unknown",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c040:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c040:clinical:st01",
+        "product_id": "p001",
+        "design": "관찰 연구",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "암세포의 행동 예측 및 임상정보 리포트 제공",
+        "result": "정확한 암 진단 및 예측 가능성 향상",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c040:clinical:ev01"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c040:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "시장에서 수용되는 ML 예측정확도 70% 수준을 상회하는 95% 예측 정확도(독립 데이터로 검증 완료)를 보여주는 ML 개발 기술을 보유하고 있다.",
+        "status": "partially_supported",
+        "comparison_reason": "주장하는 95% 예측 정확도에 대한 직접적인 근거는 없으나, 관련된 머신러닝 기술 개발에 대한 언급이 있음.",
+        "evidence_ids": [
+          "c040:clinical:ev01"
+        ]
+      },
+      {
+        "claim_id": "c040:p001:cl02",
+        "product_id": "p001",
+        "original_claim": "의사들의 치료 전략 수립에 필요한 Cell type, Cancer subtype, Grade, Cell composition 등의 종합적인 임상정보 예측 역량을 갖췄다.",
+        "status": "partially_supported",
+        "comparison_reason": "의사들의 치료 전략 수립에 필요한 정보 예측 역량에 대한 직접적인 근거는 없으나, 암 세부타입 및 세포 조성 정보 제공에 대한 언급이 있음.",
+        "evidence_ids": [
+          "c040:clinical:ev01"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 위트젠바이오테크놀로지 (c040) | 기준일 2026-09-30\n- p001 암 진단 솔루션: ai_software/unknown | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: partially_supported 2 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c040:clinical:reg01": "c040:clinical:fd01",
+      "finding|clinical_evidence|p001": "c040:clinical:fd02",
+      "finding|claim|c040:p001:cl01": "c040:clinical:fd03",
+      "finding|claim|c040:p001:cl02": "c040:clinical:fd04"
+    },
+    "collected_profile": {
+      "legal_name": "위트젠바이오테크놀로지",
+      "english_name": "WittGen Biotechnologies",
+      "homepage": "https://thevc.kr/wittgenbiotechnologies",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "암 진단 솔루션",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "시장에서 수용되는 ML 예측정확도 70% 수준을 상회하는 95% 예측 정확도(독립 데이터로 검증 완료)를 보여주는 ML 개발 기술을 보유하고 있다.",
+              "url": "https://sssf.seoultech.ac.kr/community/promotion/press?do=commonview&searchtext=&searchtype=-1&nowpage=1&bnum=57920&bidx=541639&cate=23&profboardidx=",
+              "claimed_at": "2023-12-13"
+            },
+            {
+              "text": "의사들의 치료 전략 수립에 필요한 Cell type, Cancer subtype, Grade, Cell composition 등의 종합적인 임상정보 예측 역량을 갖췄다.",
+              "url": "https://sssf.seoultech.ac.kr/community/promotion/press?do=commonview&searchtext=&searchtype=-1&nowpage=1&bnum=57920&bidx=541639&cate=23&profboardidx=",
+              "claimed_at": "2023-12-13"
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://thevc.kr/wittgenbiotechnologies",
+          "https://sssf.seoultech.ac.kr/community/promotion/press?do=commonview&searchtext=&searchtype=-1&nowpage=1&bnum=57920&bidx=541639&cate=23&profboardidx=",
+          "https://plus.hankyung.com/apps/newsinside.view?aid=202312132145d&category=&sns=y",
+          "https://it.donga.com/103608",
+          "http://www.casenews.co.kr/news/articleView.html?idxno=13220"
+        ],
+        "dropped_claims_not_in_page": [
+          "위트젠은 최초 암진단을 받은 환자들의 암조직내 단일세포(싱글셀)를 머신러닝으로 분석 테스트해 1차 항암 치료를 위해 필요한 초정밀 암진단 솔루션"
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c040:clinical:src02",
+      "title": "창업지원단",
+      "url": "https://sssf.seoultech.ac.kr/community/promotion/press?do=commonview&searchtext=&searchtype=-1&nowpage=1&bnum=57920&bidx=541639&cate=23&profboardidx=",
+      "publisher": "sssf.seoultech.ac.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c040:clinical:src30",
+      "title": "2023 서울과학기술대학교 스타트업 CEO 유전체분석 서비스 인공지능 기반 소프트웨어를 개발하는 위트젠바이오테크놀로지 │ 한경매거진&북",
+      "url": "https://magazine.hankyung.com/job-joy/article/202312132145d",
+      "publisher": "magazine.hankyung.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c040:clinical:ev01",
+      "company_id": "c040",
+      "product_id": "p001",
+      "statement": "위트젠은 암환자의 종양 단일세포 전사체 염기서열 데이터를 머신러닝으로 분석하여 암 세부타입, 위험도, 조직내 세포 조성 등의 정보를 제공하는 솔루션을 개발하고 있다.",
+      "source_ids": [
+        "c040:clinical:src30",
+        "c040:clinical:src02"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c040:clinical:fd01",
+      "category": "regulatory",
+      "claim": "암 진단 솔루션 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c040:clinical:fd02",
+      "category": "clinical_evidence",
+      "claim": "암 진단 솔루션: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c040:clinical:fd03",
+      "category": "claim",
+      "claim": "주장 \"시장에서 수용되는 ML 예측정확도 70% 수준을 상회하는 95% 예측 정확도(독립 데이터로 검증 완료)를 보여주는 ML 개발 기술을 보유하고 있다.\" → partially_supported: 주장하는 95% 예측 정확도에 대한 직접적인 근거는 없으나, 관련된 머신러닝 기술 개발에 대한 언급이 있음.",
+      "evidence_ids": [
+        "c040:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c040:clinical:fd04",
+      "category": "claim",
+      "claim": "주장 \"의사들의 치료 전략 수립에 필요한 Cell type, Cancer subtype, Grade, Cell composition 등의 종합적인 임상정보 예측 역량을 갖췄다.\" → partially_supported: 의사들의 치료 전략 수립에 필요한 정보 예측 역량에 대한 직접적인 근거는 없으나, 암 세부타입 및 세포 조성 정보 제공에 대한 언급이 있음.",
+      "evidence_ids": [
+        "c040:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c040:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c040:clinical:mi02",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 위트젠바이오테크놀로지, 암 진단 솔루션, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c040:clinical:mi03",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c040:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사가 주장하는 예측 정확도와 임상정보 예측 역량이 질병 진단에 관련된 효능을 포함하고 있으나, 제품의 사용 목적이나 규제 적용 여부에 대한 정보가 부족하여 regulatory_applicability는 unknown으로 판단."
+    },
+    {
+      "coverage_id": "c040:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "위트젠바이오테크놀로지",
+          "암 진단 솔루션"
+        ],
+        "queries": [
+          "위트젠바이오테크놀로지 암 진단 솔루션 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c040:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "위트젠바이오테크놀로지 혁신의료기기 지정",
+          "암 진단 솔루션 혁신의료기술 평가",
+          "암 진단 솔루션 비급여 등재 고시",
+          "위트젠바이오테크놀로지 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c040:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "위트젠바이오테크놀로지 혁신의료기기 지정",
+          "암 진단 솔루션 혁신의료기술 평가",
+          "암 진단 솔루션 비급여 등재 고시",
+          "위트젠바이오테크놀로지 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c040:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"WittGen Biotechnologies\"[Affiliation]",
+          "위트젠바이오테크놀로지 암 진단 솔루션 임상 연구 논문",
+          "암 진단 솔루션 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c040:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

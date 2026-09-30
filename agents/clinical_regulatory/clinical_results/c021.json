@@ -1,0 +1,433 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c021",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c021:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [
+      {
+        "record_id": "c021:clinical:rmb01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "자4 주사제 무균 조제료",
+        "status": "active",
+        "scope": "항암제 등 고위험 약제의 무균조제와 관련된 재료비용",
+        "effective_at": null,
+        "evidence_ids": [
+          "c021:clinical:ev01"
+        ]
+      }
+    ],
+    "clinical_studies": [
+      {
+        "study_id": "c021:clinical:st01",
+        "product_id": "p001",
+        "design": "비교연구",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": "일반적인 조제법",
+        "endpoint": "항암제 조제 시 외부 노출 차단 효과",
+        "result": "CSTD 사용 시 조제자의 노출량과 주변 오염이 감소함을 확인",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c021:clinical:ev02"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c021:clinical:st02",
+        "product_id": "p001",
+        "design": "관찰 연구",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": 134,
+        "comparator": "일반적인 조제법",
+        "endpoint": "항암제 조제 시 외부 노출 차단 효과",
+        "result": "CSTD 사용 시 조제자의 노출량과 주변 오염이 감소함을 확인",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c021:clinical:ev03"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c021:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "에스티에스바이오의 이번 지원은 생활치료센터에서의 코로나19 항체 치료제 조제와 투여를 안전하게 지원하기 위한 것이다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 상호기입 (c021) | 기준일 2026-09-30\n- p001 폐쇄형 약물전달장치: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 자4 주사제 무균 조제료·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 1 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c021:clinical:reg01": "c021:clinical:fd01",
+      "finding|reimbursement|c021:clinical:rmb01": "c021:clinical:fd02",
+      "finding|clinical_evidence|p001": "c021:clinical:fd03",
+      "finding|claim|c021:p001:cl01": "c021:clinical:fd04"
+    },
+    "collected_profile": {
+      "legal_name": "상호기입",
+      "english_name": null,
+      "homepage": null,
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "폐쇄형 약물전달장치",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "에스티에스바이오의 이번 지원은 생활치료센터에서의 코로나19 항체 치료제 조제와 투여를 안전하게 지원하기 위한 것이다.",
+              "url": "https://www.kihoilbo.co.kr/news/articleView.html?idxno=962163",
+              "claimed_at": "2022-01-05"
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.kihoilbo.co.kr/news/articleView.html?idxno=962163",
+          "https://www.incheontoday.com/news/articleView.html?idxno=204583",
+          "https://www.kpanews.co.kr/news/articleView.html?idxno=237381",
+          "https://www.bosa.co.kr/news/articleView.html?idxno=2207563",
+          "https://www.startuptoday.kr/news/articleView.html?idxno=40770"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c021:clinical:src03",
+      "title": "안전한 약물 조제 위한 폐쇄형약물전달장치 \"별도 지원 어렵다\"",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=237381",
+      "publisher": "www.kpanews.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c021:clinical:src04",
+      "title": "항암제 독성 노출 막는 '폐쇄형 약물 전달장치' 수가 절실",
+      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=2207563",
+      "publisher": "www.bosa.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c021:clinical:src39",
+      "title": "[논문]폐쇄형 약물 전달 장치의 효과 평가를 위한 비교연구",
+      "url": "https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=DIKO0016927389",
+      "publisher": "scienceon.kisti.re.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c021:clinical:ev01",
+      "company_id": "c021",
+      "product_id": "p001",
+      "statement": "폐쇄형약물전달장치는 건강보험에서 급여로 보상하고 있다.",
+      "source_ids": [
+        "c021:clinical:src03"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c021:clinical:ev02",
+      "company_id": "c021",
+      "product_id": "p001",
+      "statement": "폐쇄형 약물 전달 장치의 효과 평가를 위한 비교연구",
+      "source_ids": [
+        "c021:clinical:src39"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c021:clinical:ev03",
+      "company_id": "c021",
+      "product_id": "p001",
+      "statement": "CSTD의 사용이 항암제에 대한 직접 노출을 감소시킨다는 점은 여러 연구들을 통해 입증됐다.",
+      "source_ids": [
+        "c021:clinical:src04"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c021:clinical:fd01",
+      "category": "regulatory",
+      "claim": "폐쇄형 약물전달장치 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c021:clinical:fd02",
+      "category": "reimbursement",
+      "claim": "폐쇄형 약물전달장치 [KR] 자4 주사제 무균 조제료 · active / 범위: 항암제 등 고위험 약제의 무균조제와 관련된 재료비용",
+      "evidence_ids": [
+        "c021:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c021:clinical:fd03",
+      "category": "clinical_evidence",
+      "claim": "폐쇄형 약물전달장치: 임상 근거 L0, C1 없음 (unknown), 연구 2건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 2건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c021:clinical:fd04",
+      "category": "claim",
+      "claim": "주장 \"에스티에스바이오의 이번 지원은 생활치료센터에서의 코로나19 항체 치료제 조제와 투여를 안전하게 지원하기 위한 것이다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c021:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c021:clinical:mi02",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 상호기입, 폐쇄형 약물전달장치, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c021:clinical:mi03",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 2건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c021:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "폐쇄형 약물전달장치는 식약처 1~4등급 의료기기로 분류되며, 회사의 주장에 따르면 코로나19 항체 치료제 조제와 투여를 안전하게 지원하기 위한 목적으로 사용된다."
+    },
+    {
+      "coverage_id": "c021:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "상호기입",
+          "폐쇄형 약물전달장치"
+        ],
+        "queries": [
+          "상호기입 폐쇄형 약물전달장치 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c021:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "상호기입 혁신의료기기 지정",
+          "폐쇄형 약물전달장치 혁신의료기술 평가",
+          "폐쇄형 약물전달장치 비급여 등재 고시",
+          "상호기입 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c021:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "상호기입 혁신의료기기 지정",
+          "폐쇄형 약물전달장치 혁신의료기술 평가",
+          "폐쇄형 약물전달장치 비급여 등재 고시",
+          "상호기입 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c021:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "상호기입 폐쇄형 약물전달장치 임상 연구 논문",
+          "폐쇄형 약물전달장치 clinical validation study"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c021:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

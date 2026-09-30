@@ -1,0 +1,278 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c019",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ivd",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c019:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 알로스타 (c019) | 기준일 2026-09-30\n- p001 지연성 알러지 검사 키트: ivd/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c019:clinical:reg01": "c019:clinical:fd01",
+      "finding|clinical_evidence|p001": "c019:clinical:fd02"
+    },
+    "collected_profile": {
+      "legal_name": "알로스타",
+      "english_name": null,
+      "homepage": "https://allosta.co.kr",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "지연성 알러지 검사 키트",
+          "model": null,
+          "intended_use": "지연성 알러지 검사",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://allosta.co.kr",
+          "https://thevc.kr/allosta",
+          "https://www.news1.kr/bio/healthcare/3974164",
+          "https://marketbz.com/companyDetail/4318602657",
+          "https://m.mediple.kr/CompanyBrand/Details/20697"
+        ],
+        "dropped_claims_not_in_page": [
+          "AI 맞춤 코칭 + 챌린지 지속 가능한 건강 라이프 스타일"
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [],
+  "evidence": [],
+  "findings": [
+    {
+      "finding_id": "c019:clinical:fd01",
+      "category": "regulatory",
+      "claim": "지연성 알러지 검사 키트 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c019:clinical:fd02",
+      "category": "clinical_evidence",
+      "claim": "지연성 알러지 검사 키트: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c019:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c019:clinical:mi02",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c019:clinical:mi03",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 알로스타, 지연성 알러지 검사 키트, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c019:clinical:mi04",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c019:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품의 의도된 사용이 '지연성 알러지 검사'로 명시되어 있어, 질병 진단 목적이 확인됨. 따라서 의료기기 규제 대상에 해당."
+    },
+    {
+      "coverage_id": "c019:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "알로스타",
+          "지연성 알러지 검사 키트"
+        ],
+        "queries": [
+          "알로스타 지연성 알러지 검사 키트 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c019:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "알로스타 혁신의료기기 지정",
+          "지연성 알러지 검사 키트 혁신의료기술 평가",
+          "지연성 알러지 검사 키트 비급여 등재 고시",
+          "알로스타 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c019:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "알로스타 혁신의료기기 지정",
+          "지연성 알러지 검사 키트 혁신의료기술 평가",
+          "지연성 알러지 검사 키트 비급여 등재 고시",
+          "알로스타 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c019:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "알로스타 지연성 알러지 검사 키트 임상 연구 논문",
+          "지연성 알러지 검사 키트 clinical validation study"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c019:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}

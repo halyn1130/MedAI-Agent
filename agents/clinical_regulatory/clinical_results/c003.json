@@ -1,0 +1,832 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c003",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c003:clinical:ev01"
+        ]
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c003:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": null,
+        "permitted_use": "차세대 인공와우용 신경자극 집적회로",
+        "status": "pending",
+        "effective_at": "2024-05-03",
+        "valid_until": null,
+        "evidence_ids": [
+          "c003:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c003:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c003:clinical:reg03",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c003:clinical:reg04",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [
+      {
+        "claim_id": "c003:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "우리나라는 인공와우 장치 전량을 해외 수입에 의존해 왔으나, 서울대와 뉴로바이오시스의 산학협력을 통해 값싸고 성능이 뛰어난 국내 최초의 다채널 인공와우를 개발한 바 있다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c003:p001:cl02",
+        "product_id": "p001",
+        "original_claim": "정밀도 역시 사람의 청각에 비해 떨어질 수밖에 없다. 1만5000개의 유모세포를 겨우 16~22개의 전극으로 대신하기 때문이다. 하지만 재활 훈련을 충분히 거치면 예민한 음감을 느끼긴 다소 무리지만 일상생활에 필요한 소리는 평균적으로 약 80%의 놀라운 인지 성능을 보인다.",
+        "status": "partially_supported",
+        "comparison_reason": "정확한 인지 성능 수치는 확인되지 않음",
+        "evidence_ids": [
+          "c003:clinical:ev01"
+        ]
+      },
+      {
+        "claim_id": "c003:p001:cl03",
+        "product_id": "p001",
+        "original_claim": "이 연구성과는 재료 분야의 세계적인 저널인 ‘어드밴스드 펑셔널 머티리얼스(Advanced Functional Materials)’ 11월호 표지 논문으로 실렸다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 토닥 (c003) | 기준일 2026-09-30\n- p001 차세대 인공와우용 신경자극 집적회로: hardware/in_scope | 공식 상태: KR approval·pending(\"차세대 인공와우용 신경자극 집적회로\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 2, partially_supported 1 | 평가 상태 complete\n- p002 의료용가이드: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p003 의료용 패커: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p004 의료용 측정자: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c003:clinical:reg01": "c003:clinical:fd01",
+      "finding|regulatory|c003:clinical:reg02": "c003:clinical:fd02",
+      "finding|regulatory|c003:clinical:reg03": "c003:clinical:fd03",
+      "finding|regulatory|c003:clinical:reg04": "c003:clinical:fd04",
+      "finding|clinical_evidence|p001": "c003:clinical:fd05",
+      "finding|clinical_evidence|p002": "c003:clinical:fd06",
+      "finding|clinical_evidence|p003": "c003:clinical:fd07",
+      "finding|clinical_evidence|p004": "c003:clinical:fd08",
+      "finding|claim|c003:p001:cl01": "c003:clinical:fd09",
+      "finding|claim|c003:p001:cl02": "c003:clinical:fd10",
+      "finding|claim|c003:p001:cl03": "c003:clinical:fd11"
+    },
+    "collected_profile": {
+      "legal_name": "토닥",
+      "english_name": null,
+      "homepage": null,
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "차세대 인공와우용 신경자극 집적회로",
+          "model": null,
+          "intended_use": "차세대 인공와우용 신경자극 집적회로",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "우리나라는 인공와우 장치 전량을 해외 수입에 의존해 왔으나, 서울대와 뉴로바이오시스의 산학협력을 통해 값싸고 성능이 뛰어난 국내 최초의 다채널 인공와우를 개발한 바 있다.",
+              "url": "https://www.dongascience.com/ko/news/5802",
+              "claimed_at": null
+            },
+            {
+              "text": "정밀도 역시 사람의 청각에 비해 떨어질 수밖에 없다. 1만5000개의 유모세포를 겨우 16~22개의 전극으로 대신하기 때문이다. 하지만 재활 훈련을 충분히 거치면 예민한 음감을 느끼긴 다소 무리지만 일상생활에 필요한 소리는 평균적으로 약 80%의 놀라운 인지 성능을 보인다.",
+              "url": "https://www.dongascience.com/ko/news/5802",
+              "claimed_at": null
+            },
+            {
+              "text": "이 연구성과는 재료 분야의 세계적인 저널인 ‘어드밴스드 펑셔널 머티리얼스(Advanced Functional Materials)’ 11월호 표지 논문으로 실렸다.",
+              "url": "https://www.dongascience.com/ko/news/5802",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p002",
+          "name": "의료용가이드",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p003",
+          "name": "의료용 패커",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p004",
+          "name": "의료용 측정자",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://thevc.kr/rnd/2344617e7a5ca7405e5e99f2",
+          "https://www.dongascience.com/ko/news/5802",
+          "https://synapse.koreamed.org/upload/synapsedata/pdfdata/0119jkma/jkma-50-825.pdf",
+          "http://kjorl.org/upload/pdf/0012002078.pdf",
+          "https://www.youtube.com/watch?v=sqozuz1rglo"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c003:clinical:src25",
+      "title": "[메드테크, 우리가 국대다]③ 반도체 공정이 귀로 들어왔다, 첫 국산 인공와우 - 조선비즈",
+      "url": "https://biz.chosun.com/science-chosun/medicine-health/2024/06/09/4TUWWG6IMVFEBLMVXBJ3AKQJVQ",
+      "publisher": "biz.chosun.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c003:clinical:src26",
+      "title": "토닥, 인공와우 국산화 기술로 IPO 도전장…주관사는 하나증권",
+      "url": "https://v.daum.net/v/20260914095351955?f=p",
+      "publisher": "v.daum.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c003:clinical:ev01",
+      "company_id": "c003",
+      "product_id": "p001",
+      "statement": "전극이 많으면 그만큼 소리를 복원하는 데 유리하다. 전극이 있는 곳에서 청각세포가 손상됐다면 아무리 전류를 흘려보내도 듣지 못하는 구간이 생긴다. 하지만 전극이 많으면 그만큼 자극할 수 있는 범위가 넓어진다. 일부 전극이 청각세포가 손상된 곳에 있어도 다른 전극이 보완할 수 있기 때문이다.",
+      "source_ids": [
+        "c003:clinical:src25",
+        "c003:clinical:src26"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-05-03",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c003:clinical:fd01",
+      "category": "regulatory",
+      "claim": "차세대 인공와우용 신경자극 집적회로 [KR] approval · pending / 사용 목적: \"차세대 인공와우용 신경자극 집적회로\"",
+      "evidence_ids": [
+        "c003:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c003:clinical:fd02",
+      "category": "regulatory",
+      "claim": "의료용가이드 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c003:clinical:fd03",
+      "category": "regulatory",
+      "claim": "의료용 패커 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c003:clinical:fd04",
+      "category": "regulatory",
+      "claim": "의료용 측정자 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c003:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "차세대 인공와우용 신경자극 집적회로: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c003:clinical:fd06",
+      "category": "clinical_evidence",
+      "claim": "의료용가이드: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c003:clinical:fd07",
+      "category": "clinical_evidence",
+      "claim": "의료용 패커: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c003:clinical:fd08",
+      "category": "clinical_evidence",
+      "claim": "의료용 측정자: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c003:clinical:fd09",
+      "category": "claim",
+      "claim": "주장 \"우리나라는 인공와우 장치 전량을 해외 수입에 의존해 왔으나, 서울대와 뉴로바이오시스의 산학협력을 통해 값싸고 성능이 뛰어난 국내 최초의 다채널 인공와우를 개발한 바 있다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c003:clinical:fd10",
+      "category": "claim",
+      "claim": "주장 \"정밀도 역시 사람의 청각에 비해 떨어질 수밖에 없다. 1만5000개의 유모세포를 겨우 16~22개의 전극으로 대신하기 때문이다. 하지만 재활 훈련을 충분히 거치면 예민한 음감을 느끼긴 다소 무리지만 일상생활에 필요한 소리는 평균적으로 약 80%의 놀라운 인지 성능을 보인다.\" → partially_supported: 정확한 인지 성능 수치는 확인되지 않음",
+      "evidence_ids": [
+        "c003:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c003:clinical:fd11",
+      "category": "claim",
+      "claim": "주장 \"이 연구성과는 재료 분야의 세계적인 저널인 ‘어드밴스드 펑셔널 머티리얼스(Advanced Functional Materials)’ 11월호 표지 논문으로 실렸다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c003:clinical:mi01",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c003:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "차세대 인공와우용 신경자극 집적회로는 인공와우 장치로, 치료기기에 해당하며, 회사의 주장에 '일상생활에 필요한 소리는 평균적으로 약 80%의 놀라운 인지 성능을 보인다'는 효능 주장이 포함되어 있어 'in_scope'로 분류됨."
+    },
+    {
+      "coverage_id": "c003:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의료용가이드는 구체적인 사용 목적이나 효능 주장이 없으며, 따라서 'out_of_scope'로 분류됨."
+    },
+    {
+      "coverage_id": "c003:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의료용 패커는 구체적인 사용 목적이나 효능 주장이 없으며, 따라서 'out_of_scope'로 분류됨."
+    },
+    {
+      "coverage_id": "c003:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의료용 측정자는 구체적인 사용 목적이나 효능 주장이 없으며, 따라서 'out_of_scope'로 분류됨."
+    },
+    {
+      "coverage_id": "c003:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "토닥",
+          "차세대 인공와우용 신경자극 집적회로"
+        ],
+        "queries": [
+          "토닥 차세대 인공와우용 신경자극 집적회로 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c003:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv07",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv09",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "토닥 혁신의료기기 지정",
+          "차세대 인공와우용 신경자극 집적회로 혁신의료기술 평가",
+          "차세대 인공와우용 신경자극 집적회로 비급여 등재 고시",
+          "토닥 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c003:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "토닥 혁신의료기기 지정",
+          "차세대 인공와우용 신경자극 집적회로 혁신의료기술 평가",
+          "차세대 인공와우용 신경자극 집적회로 비급여 등재 고시",
+          "토닥 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c003:clinical:cv11",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv13",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv14",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv15",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv17",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv18",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv19",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv20",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "토닥 차세대 인공와우용 신경자극 집적회로 임상 연구 논문",
+          "차세대 인공와우용 신경자극 집적회로 clinical validation study"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c003:clinical:cv21",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c003:clinical:cv22",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv23",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c003:clinical:cv24",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    }
+  ],
+  "review_responses": []
+}

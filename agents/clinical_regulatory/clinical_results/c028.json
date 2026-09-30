@@ -1,0 +1,678 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c028",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c028:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c028:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c028:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신의료기기",
+        "status": "active",
+        "scope": "뇌질환 치료용 초음파 장비",
+        "effective_at": null,
+        "evidence_ids": [
+          "c028:clinical:ev01"
+        ]
+      }
+    ],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c028:clinical:st01",
+        "product_id": "p001",
+        "design": "전향적",
+        "prospective": true,
+        "multicenter": false,
+        "external_validation": false,
+        "sample_size": 35,
+        "comparator": "비교군 없음",
+        "endpoint": "혈뇌장벽 투과성 및 독소루비신 전달 평가",
+        "result": "FUS + BBBD 프로토콜에서 신호 강도 및 투과성(Ktrans) 유의미한 증가",
+        "limitations": "동물 모델 연구로, 인간 대상 연구 필요",
+        "evidence_ids": [
+          "c028:clinical:ev02"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c028:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "뉴머스가 식품의약품안전처(식약처)로부터 혁신의료기기지정을 받았다.",
+        "status": "unknown",
+        "comparison_reason": "주장에 대한 근거가 없음",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c028:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "NMS-01은 BBB를 통과하지 못해 치료에 효과가 있음에도 활용되지 못했던 의약품을 위해 개발되고 있는 의료기기다.",
+        "status": "unknown",
+        "comparison_reason": "주장에 대한 근거가 없음",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 뉴머스 (c028) | 기준일 2026-09-30\n- p001 뇌질환 치료용 초음파 장비: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 혁신의료기기·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 NMS-01: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 2 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001], regulatory_records[p002][KR], criteria_inputs.C1[p002]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c028:clinical:reg01": "c028:clinical:fd01",
+      "finding|regulatory|c028:clinical:reg02": "c028:clinical:fd02",
+      "finding|designation|c028:clinical:des01": "c028:clinical:fd03",
+      "finding|clinical_evidence|p001": "c028:clinical:fd04",
+      "finding|clinical_evidence|p002": "c028:clinical:fd05",
+      "finding|claim|c028:p002:cl01": "c028:clinical:fd06",
+      "finding|claim|c028:p002:cl02": "c028:clinical:fd07"
+    },
+    "collected_profile": {
+      "legal_name": "뉴머스",
+      "english_name": "Neumous",
+      "homepage": "https://www.innoforest.co.kr/company/CP00018066/%EB%89%B4%EB%A8%B8%EC%8A%A4",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "뇌질환 치료용 초음파 장비",
+          "model": null,
+          "intended_use": "뇌질환 치료용 초음파 장비",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "NMS-01",
+          "model": null,
+          "intended_use": "뇌질환 치료용 초음파 장비",
+          "target_disease": "뇌종양, 알츠하이머",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "초음파",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "뉴머스가 식품의약품안전처(식약처)로부터 혁신의료기기지정을 받았다.",
+              "url": "https://www.medicopharma.co.kr/news/articleView.html?idxno=63322",
+              "claimed_at": "2024-12-09"
+            },
+            {
+              "text": "NMS-01은 BBB를 통과하지 못해 치료에 효과가 있음에도 활용되지 못했던 의약품을 위해 개발되고 있는 의료기기다.",
+              "url": "https://www.medicopharma.co.kr/news/articleView.html?idxno=63322",
+              "claimed_at": "2024-12-09"
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.innoforest.co.kr/company/CP00018066/%EB%89%B4%EB%A8%B8%EC%8A%A4",
+          "https://www.medicopharma.co.kr/news/articleView.html?idxno=63322",
+          "https://www.sedaily.com/article/14029396",
+          "https://www.donga.com/news/It/article/all/20250703/131934386/1",
+          "https://www.biospectator.com/news/view/29229"
+        ],
+        "dropped_claims_not_in_page": [
+          "NMS-01은 뇌로 약물이 침투하지 못해 고통을 받고 있는 뇌질환 환자들에게 새로운 치료법을 제시할 수 있다.",
+          "비임상 결과를 기반으로 식약처로부터 혁신의료기기 지정을 받았다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c028:clinical:src02",
+      "title": "뉴머스, 뇌혈관장벽 조절 기술 'NMS-01'… 식약처 '혁신의료기기' 지정 < Company < 기사본문 - 메디코파마",
+      "url": "https://www.medicopharma.co.kr/news/articleView.html?idxno=63322",
+      "publisher": "www.medicopharma.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c028:clinical:src03",
+      "title": "\"초음파 기술로 수술없이 뇌질환 치료\" [제이랩스가 주목한 바이오텍] | 서울경제",
+      "url": "https://www.sedaily.com/article/14029396",
+      "publisher": "www.sedaily.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c028:clinical:src11",
+      "title": "2025 KIMCo Communication 6월호 > KIMCo Commnuication | 한국혁신의약품컨소시엄 KIMCo",
+      "url": "https://www.kimc.or.kr/newsletter/224",
+      "publisher": "www.kimc.or.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c028:clinical:src12",
+      "title": "[fn이사람] \"곧 초음파로 뇌종양 치료하는 시대 옵니다\" - 파이낸셜뉴스",
+      "url": "https://www.fnnews.com/news/202502251814582365",
+      "publisher": "www.fnnews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c028:clinical:src13",
+      "title": "\"암 환자의 마지막 희망\" 수술 없이 초음파로 암 정복하겠다는 '이 기업'",
+      "url": "https://v.daum.net/v/UXLYQzbYTd?f=p",
+      "publisher": "v.daum.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c028:clinical:src32",
+      "title": "Evaluation of blood-tumor barrier permeability and doxorubicin delivery in rat brain tumor models using additional focused ultrasound stimulation.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39994241/",
+      "publisher": "Sci Rep",
+      "source_type": "research",
+      "published_at": "2025-02-24",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c028:clinical:ev01",
+      "company_id": "c028",
+      "product_id": "p001",
+      "statement": "뉴머스는 비임상 결과를 기반으로 식약처로부터 혁신의료기기 지정을 받았다.",
+      "source_ids": [
+        "c028:clinical:src02",
+        "c028:clinical:src13",
+        "c028:clinical:src03",
+        "c028:clinical:src11",
+        "c028:clinical:src12"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c028:clinical:ev02",
+      "company_id": "c028",
+      "product_id": "p001",
+      "statement": "집속초음파를 이용한 혈뇌장벽 개방 기술의 효과를 평가한 연구",
+      "source_ids": [
+        "c028:clinical:src32"
+      ],
+      "locator": null,
+      "excerpt": "Focused ultrasound (FUS) has emerged as a promising technique for temporarily disrupting the blood-brain barrier (BBB) and blood-tumor barrier (BTB) to enhance the delivery of therapeutic agents.",
+      "event_date": "2025-02-24",
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c028:clinical:fd01",
+      "category": "regulatory",
+      "claim": "뇌질환 치료용 초음파 장비 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c028:clinical:fd02",
+      "category": "regulatory",
+      "claim": "NMS-01 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c028:clinical:fd03",
+      "category": "designation",
+      "claim": "뇌질환 치료용 초음파 장비 [KR] 혁신의료기기 · active / 범위: 뇌질환 치료용 초음파 장비",
+      "evidence_ids": [
+        "c028:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c028:clinical:fd04",
+      "category": "clinical_evidence",
+      "claim": "뇌질환 치료용 초음파 장비: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c028:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "NMS-01: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c028:clinical:fd06",
+      "category": "claim",
+      "claim": "주장 \"뉴머스가 식품의약품안전처(식약처)로부터 혁신의료기기지정을 받았다.\" → unknown: 주장에 대한 근거가 없음",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c028:clinical:fd07",
+      "category": "claim",
+      "claim": "주장 \"NMS-01은 BBB를 통과하지 못해 치료에 효과가 있음에도 활용되지 못했던 의약품을 위해 개발되고 있는 의료기기다.\" → unknown: 주장에 대한 근거가 없음",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c028:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c028:clinical:mi02",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c028:clinical:mi03",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 뉴머스, 뇌질환 치료용 초음파 장비, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c028:clinical:mi04",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c028:clinical:mi05",
+      "field": "products[p002].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c028:clinical:mi06",
+      "field": "regulatory_records[p002][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 뉴머스, NMS-01, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c028:clinical:mi07",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c028:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "뇌질환 치료용 초음파 장비는 치료기기로 분류되며, 식약처의 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c028:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "NMS-01은 뇌질환 치료를 목적으로 하며, 식약처로부터 혁신의료기기 지정을 받았고, 치료 효과에 대한 주장을 포함하고 있다."
+    },
+    {
+      "coverage_id": "c028:clinical:cv03",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "뉴머스",
+          "뇌질환 치료용 초음파 장비"
+        ],
+        "queries": [
+          "뉴머스 뇌질환 치료용 초음파 장비 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c028:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "뉴머스",
+          "NMS-01"
+        ],
+        "queries": [
+          "뉴머스 NMS-01 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c028:clinical:cv05",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴머스 혁신의료기기 지정",
+          "뇌질환 치료용 초음파 장비 혁신의료기술 평가",
+          "뇌질환 치료용 초음파 장비 비급여 등재 고시",
+          "뉴머스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c028:clinical:cv06",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴머스 혁신의료기기 지정",
+          "뇌질환 치료용 초음파 장비 혁신의료기술 평가",
+          "뇌질환 치료용 초음파 장비 비급여 등재 고시",
+          "뉴머스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c028:clinical:cv07",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴머스 혁신의료기기 지정",
+          "NMS-01 혁신의료기술 평가",
+          "NMS-01 비급여 등재 고시",
+          "뉴머스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c028:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴머스 혁신의료기기 지정",
+          "NMS-01 혁신의료기술 평가",
+          "NMS-01 비급여 등재 고시",
+          "뉴머스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c028:clinical:cv09",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Neumous\"[Affiliation]",
+          "뉴머스 뇌질환 치료용 초음파 장비 임상 연구 논문",
+          "뇌질환 치료용 초음파 장비 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c028:clinical:cv10",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"NMS-01\"[Title/Abstract]",
+          "\"Neumous\"[Affiliation]",
+          "뉴머스 NMS-01 임상 연구 논문",
+          "NMS-01 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c028:clinical:cv11",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c028:clinical:cv12",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

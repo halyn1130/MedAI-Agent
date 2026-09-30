@@ -1,0 +1,719 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c016",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "unknown",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c016:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c016:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c016:clinical:st01",
+        "product_id": "p001",
+        "design": "공동연구",
+        "prospective": true,
+        "multicenter": true,
+        "external_validation": true,
+        "sample_size": 120,
+        "comparator": null,
+        "endpoint": "AI 영상 바이오마커 기술의 임상적 유용성과 적용 가능성 검증",
+        "result": "임상 검증을 위한 데이터 공유 및 분석 진행 중",
+        "limitations": "구체적인 성능 지표나 관련 논문은 아직 공개되지 않음. / 제품명 미기재 간접 근거로 L2 상한 적용 / 임상 결과 미발표 또는 진행 중(점수 제외)",
+        "evidence_ids": [
+          "c016:clinical:ev01"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "unclear",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c016:clinical:st02",
+        "product_id": "p002",
+        "design": "공동연구",
+        "prospective": true,
+        "multicenter": true,
+        "external_validation": true,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "AI 기반 알츠하이머병 정밀 치료 가이드라인 수립",
+        "result": "임상 검증을 위한 데이터 공유 및 분석 진행 중",
+        "limitations": "구체적인 성능 지표나 관련 논문은 아직 공개되지 않음. / 제품명 미기재 간접 근거로 L2 상한 적용 / 임상 결과 미발표 또는 진행 중(점수 제외)",
+        "evidence_ids": [
+          "c016:clinical:ev02"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "unclear",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c016:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "뉴로엑스티는 자기공명영상(MRI)만으로 알츠하이머병 관련 병리와 치료 반응성을 예측하는 AI 기반 영상 바이오마커 기술을 개발하고 있다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c016:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "환자별 최적의 치료 시점을 제시하는 정밀의료 솔루션을 통해 알츠하이머병 치료의 새로운 기준을 만들어가고 있다.",
+        "status": "partially_supported",
+        "comparison_reason": "일부 근거가 있으나 구체적인 성능 지표나 관련 논문은 아직 공개되지 않음",
+        "evidence_ids": [
+          "c016:clinical:ev02"
+        ]
+      },
+      {
+        "claim_id": "c016:p002:cl03",
+        "product_id": "p002",
+        "original_claim": "이를 통해 MRI 기반 AI 기술을 활용한 알츠하이머병 영상 바이오마커 예측 기술의 유효성을 확인했다.",
+        "status": "partially_supported",
+        "comparison_reason": "일부 근거가 있으나 구체적인 성능 지표나 관련 논문은 아직 공개되지 않음",
+        "evidence_ids": [
+          "c016:clinical:ev02"
+        ]
+      },
+      {
+        "claim_id": "c016:p002:cl04",
+        "product_id": "p002",
+        "original_claim": "양 기관은 임상 및 연구 역량을 결합해 AI 기반 알츠하이머병 정밀치료 분야 혁신을 가속화할 계획이다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 뉴로엑스티 (c016) | 기준일 2026-09-30\n- p001 알츠하이머 진단·치료 AI: ai_software/unknown | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 NEXT-ATN: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 2, partially_supported 2 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001], regulatory_records[p002][KR], criteria_inputs.C1[p002]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c016:clinical:reg01": "c016:clinical:fd01",
+      "finding|regulatory|c016:clinical:reg02": "c016:clinical:fd02",
+      "finding|clinical_evidence|p001": "c016:clinical:fd03",
+      "finding|clinical_evidence|p002": "c016:clinical:fd04",
+      "finding|claim|c016:p002:cl01": "c016:clinical:fd05",
+      "finding|claim|c016:p002:cl02": "c016:clinical:fd06",
+      "finding|claim|c016:p002:cl03": "c016:clinical:fd07",
+      "finding|claim|c016:p002:cl04": "c016:clinical:fd08"
+    },
+    "collected_profile": {
+      "legal_name": "뉴로엑스티",
+      "english_name": "NeuroXT",
+      "homepage": "https://www.neuroxt.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "알츠하이머 진단·치료 AI",
+          "model": null,
+          "intended_use": "알츠하이머 진단·치료 AI",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "NEXT-ATN",
+          "model": null,
+          "intended_use": "알츠하이머 진단 보조 소프트웨어",
+          "target_disease": "알츠하이머병",
+          "users": "의료진",
+          "environment": "병원",
+          "modality": "MRI",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "뉴로엑스티는 자기공명영상(MRI)만으로 알츠하이머병 관련 병리와 치료 반응성을 예측하는 AI 기반 영상 바이오마커 기술을 개발하고 있다.",
+              "url": "https://thepharmanews.net/article/neuroxt-harvard-ai-alzheimer",
+              "claimed_at": null
+            },
+            {
+              "text": "환자별 최적의 치료 시점을 제시하는 정밀의료 솔루션을 통해 알츠하이머병 치료의 새로운 기준을 만들어가고 있다.",
+              "url": "https://thepharmanews.net/article/neuroxt-harvard-ai-alzheimer",
+              "claimed_at": null
+            },
+            {
+              "text": "이를 통해 MRI 기반 AI 기술을 활용한 알츠하이머병 영상 바이오마커 예측 기술의 유효성을 확인했다.",
+              "url": "https://thepharmanews.net/article/neuroxt-harvard-ai-alzheimer",
+              "claimed_at": null
+            },
+            {
+              "text": "양 기관은 임상 및 연구 역량을 결합해 AI 기반 알츠하이머병 정밀치료 분야 혁신을 가속화할 계획이다.",
+              "url": "https://thepharmanews.net/article/neuroxt-harvard-ai-alzheimer",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.neuroxt.com",
+          "https://thepharmanews.net/article/neuroxt-harvard-ai-alzheimer",
+          "https://view.asiae.co.kr/article/2024082614584755215",
+          "https://www.biospectator.com/news/view/22890",
+          "https://www.biotimes.co.kr/news/articleView.html?idxno=20589"
+        ],
+        "dropped_claims_not_in_page": [
+          "이번 연구를 통해 알츠하이머병 환자 개개인에게 보다 적합한 치료 전략을 제시할 수 있는 정밀의료 기반을 마련해 나가겠다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c016:clinical:src01",
+      "title": "뉴로엑스티, 美 하버드 BIDMC와 알츠하이머병 AI 정밀치료 연구 협력 확대 | 더파마뉴스",
+      "url": "https://thepharmanews.net/article/neuroxt-harvard-ai-alzheimer",
+      "publisher": "thepharmanews.net",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c016:clinical:src02",
+      "title": "AI의료 스타트업 뉴로엑스티, 하버드대 병원과 알츠하이머 치료 공동 연구",
+      "url": "https://view.asiae.co.kr/article/2024082614584755215",
+      "publisher": "view.asiae.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c016:clinical:src03",
+      "title": "뉴로엑스티, 하버드의대병원과 ‘AI’ AD치료예측 연구 - 바이오스펙테이터",
+      "url": "https://www.biospectator.com/news/view/22890",
+      "publisher": "www.biospectator.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c016:clinical:src04",
+      "title": "뉴로엑스티-존스홉킨스 의과대학, 알츠하이머 정밀 치료 위한 전략적 공동 연구 계약 체결 < 기업 < Bio News < 기사본문 - 바이오타임즈",
+      "url": "https://www.biotimes.co.kr/news/articleView.html?idxno=20589",
+      "publisher": "www.biotimes.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c016:clinical:src05",
+      "title": "㈜뉴로엑스티 | 고려대학교 산학협력 기술사업화 플랫폼",
+      "url": "https://tlo.korea.ac.kr/partnership/1255",
+      "publisher": "tlo.korea.ac.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c016:clinical:ev01",
+      "company_id": "c016",
+      "product_id": "p001",
+      "statement": "AI 기반 알츠하이머병 정밀치료 연구 협력 확대",
+      "source_ids": [
+        "c016:clinical:src01",
+        "c016:clinical:src02",
+        "c016:clinical:src03",
+        "c016:clinical:src04"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    },
+    {
+      "evidence_id": "c016:clinical:ev02",
+      "company_id": "c016",
+      "product_id": "p002",
+      "statement": "AI 기반 알츠하이머병 정밀 치료 연구 협력 확대",
+      "source_ids": [
+        "c016:clinical:src04",
+        "c016:clinical:src05"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c016:clinical:fd01",
+      "category": "regulatory",
+      "claim": "알츠하이머 진단·치료 AI [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c016:clinical:fd02",
+      "category": "regulatory",
+      "claim": "NEXT-ATN [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c016:clinical:fd03",
+      "category": "clinical_evidence",
+      "claim": "알츠하이머 진단·치료 AI: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c016:clinical:fd04",
+      "category": "clinical_evidence",
+      "claim": "NEXT-ATN: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c016:clinical:fd05",
+      "category": "claim",
+      "claim": "주장 \"뉴로엑스티는 자기공명영상(MRI)만으로 알츠하이머병 관련 병리와 치료 반응성을 예측하는 AI 기반 영상 바이오마커 기술을 개발하고 있다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c016:clinical:fd06",
+      "category": "claim",
+      "claim": "주장 \"환자별 최적의 치료 시점을 제시하는 정밀의료 솔루션을 통해 알츠하이머병 치료의 새로운 기준을 만들어가고 있다.\" → partially_supported: 일부 근거가 있으나 구체적인 성능 지표나 관련 논문은 아직 공개되지 않음",
+      "evidence_ids": [
+        "c016:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c016:clinical:fd07",
+      "category": "claim",
+      "claim": "주장 \"이를 통해 MRI 기반 AI 기술을 활용한 알츠하이머병 영상 바이오마커 예측 기술의 유효성을 확인했다.\" → partially_supported: 일부 근거가 있으나 구체적인 성능 지표나 관련 논문은 아직 공개되지 않음",
+      "evidence_ids": [
+        "c016:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c016:clinical:fd08",
+      "category": "claim",
+      "claim": "주장 \"양 기관은 임상 및 연구 역량을 결합해 AI 기반 알츠하이머병 정밀치료 분야 혁신을 가속화할 계획이다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c016:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c016:clinical:mi02",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c016:clinical:mi03",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 뉴로엑스티, 알츠하이머 진단·치료 AI, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c016:clinical:mi04",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c016:clinical:mi05",
+      "field": "products[p002].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c016:clinical:mi06",
+      "field": "regulatory_records[p002][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 뉴로엑스티, NEXT-ATN, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c016:clinical:mi07",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c016:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품의 사용 목적이 '알츠하이머 진단·치료 AI'로 명시되어 있으나, 구체적인 효능 주장이나 규제 적용 여부에 대한 정보가 부족하여 판단할 수 없음."
+    },
+    {
+      "coverage_id": "c016:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "'알츠하이머 진단 보조 소프트웨어'로 의료진이 사용하며, MRI 기반 AI 기술을 활용한 알츠하이머병 영상 바이오마커 예측 기술의 유효성을 주장하고 있어 규제 대상에 해당함."
+    },
+    {
+      "coverage_id": "c016:clinical:cv03",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "뉴로엑스티",
+          "알츠하이머 진단·치료 AI"
+        ],
+        "queries": [
+          "뉴로엑스티 알츠하이머 진단·치료 AI 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c016:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "뉴로엑스티",
+          "NEXT-ATN"
+        ],
+        "queries": [
+          "뉴로엑스티 NEXT-ATN 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c016:clinical:cv05",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴로엑스티 혁신의료기기 지정",
+          "알츠하이머 진단·치료 AI 혁신의료기술 평가",
+          "알츠하이머 진단·치료 AI 비급여 등재 고시",
+          "뉴로엑스티 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c016:clinical:cv06",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴로엑스티 혁신의료기기 지정",
+          "알츠하이머 진단·치료 AI 혁신의료기술 평가",
+          "알츠하이머 진단·치료 AI 비급여 등재 고시",
+          "뉴로엑스티 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c016:clinical:cv07",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴로엑스티 혁신의료기기 지정",
+          "NEXT-ATN 혁신의료기술 평가",
+          "NEXT-ATN 비급여 등재 고시",
+          "뉴로엑스티 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c016:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "뉴로엑스티 혁신의료기기 지정",
+          "NEXT-ATN 혁신의료기술 평가",
+          "NEXT-ATN 비급여 등재 고시",
+          "뉴로엑스티 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c016:clinical:cv09",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"NeuroXT\"[Affiliation]",
+          "뉴로엑스티 알츠하이머 진단·치료 AI 임상 연구 논문",
+          "알츠하이머 진단·치료 AI clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c016:clinical:cv10",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"NEXT-ATN\"[Title/Abstract]",
+          "\"NeuroXT\"[Affiliation]",
+          "뉴로엑스티 NEXT-ATN 임상 연구 논문",
+          "NEXT-ATN clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c016:clinical:cv11",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c016:clinical:cv12",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

@@ -1,0 +1,933 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c013",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c013:clinical:ev01",
+          "c013:clinical:ev02",
+          "c013:clinical:ev03"
+        ]
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "unknown",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c013:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "certification",
+        "record_number": "제인 20-4608",
+        "permitted_use": "증강현실 의료영상",
+        "status": "active",
+        "effective_at": "2020-07-09",
+        "valid_until": null,
+        "evidence_ids": [
+          "c013:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c013:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "certification",
+        "record_number": "제인 24-474",
+        "permitted_use": "2등급 의료영상 전송장치 소프트웨어",
+        "status": "active",
+        "effective_at": "2024-05-14",
+        "valid_until": null,
+        "evidence_ids": [
+          "c013:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c013:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "certification",
+        "record_number": "제인 25-4011",
+        "permitted_use": null,
+        "status": "active",
+        "effective_at": "2025-04-04",
+        "valid_until": null,
+        "evidence_ids": [
+          "c013:clinical:ev03"
+        ]
+      },
+      {
+        "record_id": "c013:clinical:reg04",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c013:clinical:reg05",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c013:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신의료기기 지정",
+        "status": "active",
+        "scope": "증강현실 의료영상",
+        "effective_at": "2020-08-03",
+        "evidence_ids": [
+          "c013:clinical:ev04"
+        ]
+      }
+    ],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c013:clinical:st01",
+        "product_id": "p001",
+        "design": "prospective",
+        "prospective": true,
+        "multicenter": false,
+        "external_validation": false,
+        "sample_size": 20,
+        "comparator": "기존 수술 방식",
+        "endpoint": "수술의 정확성 및 안전성",
+        "result": "비열등성 입증",
+        "limitations": "소규모 임상, 단일 기관 연구 / 제품명 미기재 간접 근거로 L2 상한 적용",
+        "evidence_ids": [
+          "c013:clinical:ev05"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c013:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "지난해 스키아의 MARS는 식품의약품안전처가 혁신의료 기기로 선정한 바 있다.",
+        "status": "supported",
+        "comparison_reason": "스키아의 MARS가 혁신의료기기로 지정된 사실이 확인됨.",
+        "evidence_ids": [
+          "c013:clinical:ev04"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 스키아 (c013) | 기준일 2026-09-30\n- p001 증강현실 의료영상: ai_software/in_scope | 공식 상태: KR certification·active(\"증강현실 의료영상\"); KR certification·active(\"2등급 의료영상 전송장치 소프트웨어\"); KR certification·active | 제도: 혁신의료기기 지정·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 MARS: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 1 | 평가 상태 partial\n- p003 스키아 헤드: ai_software/unknown | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], regulatory_records[p002][KR], criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c013:clinical:reg01": "c013:clinical:fd01",
+      "finding|regulatory|c013:clinical:reg02": "c013:clinical:fd02",
+      "finding|regulatory|c013:clinical:reg03": "c013:clinical:fd03",
+      "finding|regulatory|c013:clinical:reg04": "c013:clinical:fd04",
+      "finding|regulatory|c013:clinical:reg05": "c013:clinical:fd05",
+      "finding|designation|c013:clinical:des01": "c013:clinical:fd06",
+      "finding|clinical_evidence|p001": "c013:clinical:fd07",
+      "finding|clinical_evidence|p002": "c013:clinical:fd08",
+      "finding|clinical_evidence|p003": "c013:clinical:fd09"
+    },
+    "collected_profile": {
+      "legal_name": "스키아",
+      "english_name": "SKIA",
+      "homepage": "https://thevc.kr/skia",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "증강현실 의료영상",
+          "model": null,
+          "intended_use": "증강현실 의료영상",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "MARS",
+          "model": null,
+          "intended_use": "의료영상 기반 증강현실 솔루션",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "지난해 스키아의 MARS는 식품의약품안전처가 혁신의료 기기로 선정한 바 있다.",
+              "url": "https://platum.kr/archives/157403",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p003",
+          "name": "스키아 헤드",
+          "model": null,
+          "intended_use": "두경부 수술용 솔루션",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://thevc.kr/skia",
+          "https://platum.kr/archives/157403",
+          "https://www.newswire.co.kr/newsRead.php?no=1002543",
+          "https://www.biotimes.co.kr/news/articleView.html?idxno=23561",
+          "https://www.etnews.com/20260302000083"
+        ],
+        "dropped_claims_not_in_page": [
+          "스키아는 현재 FDA 승인을 위한 사전 신청 (Pre-Submission)을 한 상태이다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c013:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 스키아",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EC%8A%A4%ED%82%A4%EC%95%84",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c013:clinical:src16",
+      "title": "혁신의료기기 및 혁신형기업 연구개발정보>기술정보>전문정보-의료기기산업정보 종합정보시스템",
+      "url": "https://www.khidi.or.kr/mdtis/entInfo/entInfoView?menuId=MENU03491&ent_no=11&ent_id=YnkHwm8",
+      "publisher": "www.khidi.or.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c013:clinical:src24",
+      "title": "AR 의료영상 '스키아', 20억원 투자유치 - 와우테일",
+      "url": "https://wowtale.net/2021/02/04/22496",
+      "publisher": "wowtale.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c013:clinical:src27",
+      "title": "[ET 뉴스 픽!]국산 AR 수술 의료기기, 첫 임상 성공",
+      "url": "https://www.skia.kr/post/et-%EB%89%B4%EC%8A%A4-%ED%94%BD-%EA%B5%AD%EC%82%B0-ar-%EC%88%98%EC%88%A0-%EC%9D%98%EB%A3%8C%EA%B8%B0%EA%B8%B0-%EC%B2%AB-%EC%9E%84%EC%83%81-%EC%84%B1%EA%B3%B5",
+      "publisher": "www.skia.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c013:clinical:src30",
+      "title": "혁신의료기기 지정 현황('25.8.20)",
+      "url": "https://www.kmdf.org/industry-trend/file_down/id/13539",
+      "publisher": "www.kmdf.org",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c013:clinical:ev01",
+      "company_id": "c013",
+      "product_id": "p001",
+      "statement": "증강현실 의료영상",
+      "source_ids": [
+        "c013:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2020-07-09",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c013:clinical:ev02",
+      "company_id": "c013",
+      "product_id": "p001",
+      "statement": "2등급 의료영상 전송장치 소프트웨어",
+      "source_ids": [
+        "c013:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-05-14",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c013:clinical:ev03",
+      "company_id": "c013",
+      "product_id": "p001",
+      "statement": "스키아 증강현실 의료영상 식약처 certification 기록 (제인 25-4011)",
+      "source_ids": [
+        "c013:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-04-04",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c013:clinical:ev04",
+      "company_id": "c013",
+      "product_id": "p001",
+      "statement": "스키아의 증강현실 의료영상이 혁신의료기기로 지정됨.",
+      "source_ids": [
+        "c013:clinical:src30",
+        "c013:clinical:src16"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2020-08-03",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c013:clinical:ev05",
+      "company_id": "c013",
+      "product_id": "p001",
+      "statement": "증강현실 기술을 활용한 수술 보조 기기가 임상에서 비열등성을 입증하였다.",
+      "source_ids": [
+        "c013:clinical:src27",
+        "c013:clinical:src24"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-05-13",
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c013:clinical:fd01",
+      "category": "regulatory",
+      "claim": "증강현실 의료영상 [KR] certification · active (제인 20-4608) / 사용 목적: \"증강현실 의료영상\"",
+      "evidence_ids": [
+        "c013:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c013:clinical:fd02",
+      "category": "regulatory",
+      "claim": "증강현실 의료영상 [KR] certification · active (제인 24-474) / 사용 목적: \"2등급 의료영상 전송장치 소프트웨어\"",
+      "evidence_ids": [
+        "c013:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c013:clinical:fd03",
+      "category": "regulatory",
+      "claim": "증강현실 의료영상 [KR] certification · active (제인 25-4011)",
+      "evidence_ids": [
+        "c013:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c013:clinical:fd04",
+      "category": "regulatory",
+      "claim": "MARS [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c013:clinical:fd05",
+      "category": "regulatory",
+      "claim": "스키아 헤드 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c013:clinical:fd06",
+      "category": "designation",
+      "claim": "증강현실 의료영상 [KR] 혁신의료기기 지정 · active / 범위: 증강현실 의료영상",
+      "evidence_ids": [
+        "c013:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c013:clinical:fd07",
+      "category": "clinical_evidence",
+      "claim": "증강현실 의료영상: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c013:clinical:fd08",
+      "category": "clinical_evidence",
+      "claim": "MARS: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c013:clinical:fd09",
+      "category": "clinical_evidence",
+      "claim": "스키아 헤드: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c013:clinical:mi01",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c013:clinical:mi02",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c013:clinical:mi03",
+      "field": "products[p002].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c013:clinical:mi04",
+      "field": "regulatory_records[p002][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 스키아, MARS, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c013:clinical:mi05",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c013:clinical:mi06",
+      "field": "products[p003].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c013:clinical:mi07",
+      "field": "products[p003].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c013:clinical:mi08",
+      "field": "regulatory_records[p003][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 스키아, 스키아 헤드, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c013:clinical:mi09",
+      "field": "criteria_inputs.C1[p003]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c013:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의료영상에 대한 구체적인 사용 목적이나 효능 주장이 없어 규제 적용 여부를 판단할 수 없다."
+    },
+    {
+      "coverage_id": "c013:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "식품의약품안전처가 혁신의료 기기로 선정한 바 있어 규제 적용 대상이며, 의료영상 기반 증강현실 솔루션으로 효능 주장이 있다."
+    },
+    {
+      "coverage_id": "c013:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "두경부 수술용 솔루션에 대한 구체적인 사용 목적이나 효능 주장이 없어 규제 적용 여부를 판단할 수 없다."
+    },
+    {
+      "coverage_id": "c013:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "스키아",
+          "증강현실 의료영상"
+        ],
+        "queries": [
+          "스키아 증강현실 의료영상 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "스키아",
+          "MARS"
+        ],
+        "queries": [
+          "스키아 MARS 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c013:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "스키아",
+          "스키아 헤드"
+        ],
+        "queries": [
+          "스키아 스키아 헤드 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c013:clinical:cv07",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "스키아 혁신의료기기 지정",
+          "증강현실 의료영상 혁신의료기술 평가",
+          "증강현실 의료영상 비급여 등재 고시",
+          "스키아 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "스키아 혁신의료기기 지정",
+          "증강현실 의료영상 혁신의료기술 평가",
+          "증강현실 의료영상 비급여 등재 고시",
+          "스키아 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv09",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "스키아 혁신의료기기 지정",
+          "MARS 혁신의료기술 평가",
+          "MARS 비급여 등재 고시",
+          "스키아 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "스키아 혁신의료기기 지정",
+          "MARS 혁신의료기술 평가",
+          "MARS 비급여 등재 고시",
+          "스키아 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv11",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "스키아 혁신의료기기 지정",
+          "스키아 헤드 혁신의료기술 평가",
+          "스키아 헤드 비급여 등재 고시",
+          "스키아 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "스키아 혁신의료기기 지정",
+          "스키아 헤드 혁신의료기술 평가",
+          "스키아 헤드 비급여 등재 고시",
+          "스키아 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv13",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"SKIA\"[Affiliation]",
+          "스키아 증강현실 의료영상 임상 연구 논문",
+          "증강현실 의료영상 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv14",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"MARS\"[Title/Abstract]",
+          "\"SKIA\"[Affiliation]",
+          "스키아 MARS 임상 연구 논문",
+          "MARS clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv15",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"SKIA\"[Affiliation]",
+          "스키아 스키아 헤드 임상 연구 논문",
+          "스키아 헤드 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv16",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c013:clinical:cv17",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c013:clinical:cv18",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}

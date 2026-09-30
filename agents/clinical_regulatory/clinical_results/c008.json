@@ -1,0 +1,703 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c008",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "unknown",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c008:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c008:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c008:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신의료기기 지정",
+        "status": "active",
+        "scope": "안과영상검출·진단보조 소프트웨어",
+        "effective_at": null,
+        "evidence_ids": [
+          "c008:clinical:ev01"
+        ]
+      }
+    ],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c008:clinical:st01",
+        "product_id": "p001",
+        "design": "null",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "AI 분석을 통한 실명 질환 및 만성질환 위험 감지",
+        "result": "AI를 통해 실명 질환의 위험을 감지하고 만성질환 관리 영역을 확장하는 기술",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c008:clinical:ev02"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c008:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "**식약처 3등급**의료기기 허가",
+        "status": "unknown",
+        "comparison_reason": "주장에 대한 근거가 없음",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c008:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "**혁신의료기기**통합 제40호",
+        "status": "partially_supported",
+        "comparison_reason": "혁신의료기기 지정은 확인되었으나, 제품에 대한 허가 기록은 없음",
+        "evidence_ids": [
+          "c008:clinical:ev01"
+        ]
+      },
+      {
+        "claim_id": "c008:p002:cl03",
+        "product_id": "p002",
+        "original_claim": "* 당뇨병성 망막병증·황반변성·녹내장 AI 솔루션 S/W 식약처 3등급 허가",
+        "status": "unknown",
+        "comparison_reason": "주장에 대한 근거가 없음",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 아크 (c008) | 기준일 2026-09-30\n- p001 안저 영상 AI 판독·만성질환 관리 플랫폼: ai_software/unknown | 공식 상태: KR unknown·not_found | 제도: 혁신의료기기 지정·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 AI Fundus Analysis Platform: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 2, partially_supported 1 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001], regulatory_records[p002][KR], criteria_inputs.C1[p002]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c008:clinical:reg01": "c008:clinical:fd01",
+      "finding|regulatory|c008:clinical:reg02": "c008:clinical:fd02",
+      "finding|designation|c008:clinical:des01": "c008:clinical:fd03",
+      "finding|clinical_evidence|p001": "c008:clinical:fd04",
+      "finding|clinical_evidence|p002": "c008:clinical:fd05",
+      "finding|claim|c008:p002:cl01": "c008:clinical:fd06",
+      "finding|claim|c008:p002:cl02": "c008:clinical:fd07",
+      "finding|claim|c008:p002:cl03": "c008:clinical:fd08"
+    },
+    "collected_profile": {
+      "legal_name": "아크",
+      "english_name": "ARK INC.",
+      "homepage": "https://aiark.io/",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "안저 영상 AI 판독·만성질환 관리 플랫폼",
+          "model": null,
+          "intended_use": "안저 영상 AI 판독·만성질환 관리 플랫폼",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "AI Fundus Analysis Platform",
+          "model": null,
+          "intended_use": "안저 영상 AI 판독·만성질환 관리 플랫폼",
+          "target_disease": "실명질환, 심혈관 질환, 신장 질환",
+          "users": "의료기관",
+          "environment": "병원, 클리닉",
+          "modality": "안저 영상",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "**식약처 3등급**의료기기 허가",
+              "url": "https://aiark.io/",
+              "claimed_at": null
+            },
+            {
+              "text": "**혁신의료기기**통합 제40호",
+              "url": "https://aiark.io/",
+              "claimed_at": null
+            },
+            {
+              "text": "* 당뇨병성 망막병증·황반변성·녹내장 AI 솔루션 S/W 식약처 3등급 허가",
+              "url": "https://aiark.io/",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://aiark.io/",
+          "https://aiark.io"
+        ],
+        "dropped_claims_not_in_page": [
+          "3대 실명질환 AI 분석 정확도\n\n95%+"
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c008:clinical:src02",
+      "title": "아크 ARK INC. | 조기 발견에서 지속관리까지, AI 헬스케어 플랫폼",
+      "url": "https://aiark.io",
+      "publisher": "aiark.io",
+      "source_type": "company",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c008:clinical:src17",
+      "title": "\"눈만 봐도 심장, 신장 위험 안다\"…부산발 AI 의료 혁명 '아크' ...",
+      "url": "https://kormedi.com/2796018",
+      "publisher": "kormedi.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c008:clinical:src19",
+      "title": "부산대발 AI 의료기기 기업 ‘아크’, 코스닥 상장 시동-국민일보",
+      "url": "https://www.kmib.co.kr/article/view.asp?arcid=0028857020",
+      "publisher": "www.kmib.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c008:clinical:src25",
+      "title": "안저 검사 데이터 AI로 판독 … 심장·신장 건강 한번에 분석 - 매일경제",
+      "url": "https://www.mk.co.kr/news/it/11487766",
+      "publisher": "www.mk.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c008:clinical:src31",
+      "title": "아크, NH투자증권과 기술특례상장 주관사 계약 체결 < IT·의료기기 < 뉴스 < 기사본문 - 매경헬스",
+      "url": "https://www.mkhealth.co.kr/news/articleView.html?idxno=75663",
+      "publisher": "www.mkhealth.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c008:clinical:src32",
+      "title": "제목 망막질환 진단보조 소프트웨어 혁신의료기기 지정",
+      "url": "https://www.aiark.io/default/news/01.php?com_board_basic=read_form&com_board_idx=33&com_board_search_code=&com_board_search_value1=&com_board_search_value2=&com_board_page=4&com_board_id=7&com_board_id=7",
+      "publisher": "www.aiark.io",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c008:clinical:ev01",
+      "company_id": "c008",
+      "product_id": "p001",
+      "statement": "아크의 'WISKY'는 혁신의료기기로 지정되었다.",
+      "source_ids": [
+        "c008:clinical:src02",
+        "c008:clinical:src31",
+        "c008:clinical:src19",
+        "c008:clinical:src32"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c008:clinical:ev02",
+      "company_id": "c008",
+      "product_id": "p001",
+      "statement": "아크의 AI 판독 엔진은 안저 영상을 분석하여 실명 질환 및 만성질환의 위험을 감지하는 기술을 보유하고 있다.",
+      "source_ids": [
+        "c008:clinical:src25",
+        "c008:clinical:src02",
+        "c008:clinical:src17"
+      ],
+      "locator": null,
+      "excerpt": "아크는 눈(안저) 촬영 데이터를 AI로 분석해 실명 질환의 위험을 감지하고, 나아가 전신 만성질환 관리까지 영역을 확장하고 있다.",
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c008:clinical:fd01",
+      "category": "regulatory",
+      "claim": "안저 영상 AI 판독·만성질환 관리 플랫폼 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c008:clinical:fd02",
+      "category": "regulatory",
+      "claim": "AI Fundus Analysis Platform [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c008:clinical:fd03",
+      "category": "designation",
+      "claim": "안저 영상 AI 판독·만성질환 관리 플랫폼 [KR] 혁신의료기기 지정 · active / 범위: 안과영상검출·진단보조 소프트웨어",
+      "evidence_ids": [
+        "c008:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c008:clinical:fd04",
+      "category": "clinical_evidence",
+      "claim": "안저 영상 AI 판독·만성질환 관리 플랫폼: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c008:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "AI Fundus Analysis Platform: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c008:clinical:fd06",
+      "category": "claim",
+      "claim": "주장 \"**식약처 3등급**의료기기 허가\" → unknown: 주장에 대한 근거가 없음",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c008:clinical:fd07",
+      "category": "claim",
+      "claim": "주장 \"**혁신의료기기**통합 제40호\" → partially_supported: 혁신의료기기 지정은 확인되었으나, 제품에 대한 허가 기록은 없음",
+      "evidence_ids": [
+        "c008:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c008:clinical:fd08",
+      "category": "claim",
+      "claim": "주장 \"* 당뇨병성 망막병증·황반변성·녹내장 AI 솔루션 S/W 식약처 3등급 허가\" → unknown: 주장에 대한 근거가 없음",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c008:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c008:clinical:mi02",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c008:clinical:mi03",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아크, 안저 영상 AI 판독·만성질환 관리 플랫폼, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c008:clinical:mi04",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c008:clinical:mi05",
+      "field": "products[p002].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c008:clinical:mi06",
+      "field": "regulatory_records[p002][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아크, AI Fundus Analysis Platform, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c008:clinical:mi07",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c008:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품의 사용 목적이 명확하지 않으며, 회사의 주장이나 공식 기록이 부족하여 규제 적용 여부를 판단할 수 없다."
+    },
+    {
+      "coverage_id": "c008:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "식약처 3등급 의료기기 허가 및 혁신의료기기 통합 제40호에 대한 주장이 있어 규제 적용 대상이며, 실명질환, 심혈관 질환, 신장 질환에 대한 효능 주장이 포함되어 있다."
+    },
+    {
+      "coverage_id": "c008:clinical:cv03",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아크",
+          "안저 영상 AI 판독·만성질환 관리 플랫폼"
+        ],
+        "queries": [
+          "아크 안저 영상 AI 판독·만성질환 관리 플랫폼 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c008:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아크",
+          "AI Fundus Analysis Platform"
+        ],
+        "queries": [
+          "아크 AI Fundus Analysis Platform 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c008:clinical:cv05",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아크 혁신의료기기 지정",
+          "안저 영상 AI 판독·만성질환 관리 플랫폼 혁신의료기술 평가",
+          "안저 영상 AI 판독·만성질환 관리 플랫폼 비급여 등재 고시",
+          "아크 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c008:clinical:cv06",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아크 혁신의료기기 지정",
+          "안저 영상 AI 판독·만성질환 관리 플랫폼 혁신의료기술 평가",
+          "안저 영상 AI 판독·만성질환 관리 플랫폼 비급여 등재 고시",
+          "아크 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c008:clinical:cv07",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아크 혁신의료기기 지정",
+          "AI Fundus Analysis Platform 혁신의료기술 평가",
+          "AI Fundus Analysis Platform 비급여 등재 고시",
+          "아크 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c008:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아크 혁신의료기기 지정",
+          "AI Fundus Analysis Platform 혁신의료기술 평가",
+          "AI Fundus Analysis Platform 비급여 등재 고시",
+          "아크 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c008:clinical:cv09",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"ARK INC.\"[Affiliation]",
+          "아크 안저 영상 AI 판독·만성질환 관리 플랫폼 임상 연구 논문",
+          "안저 영상 AI 판독·만성질환 관리 플랫폼 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c008:clinical:cv10",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AI Fundus Analysis Platform\"[Title/Abstract]",
+          "\"ARK INC.\"[Affiliation]",
+          "아크 AI Fundus Analysis Platform 임상 연구 논문",
+          "AI Fundus Analysis Platform clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c008:clinical:cv11",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c008:clinical:cv12",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}
