@@ -1,0 +1,969 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c038",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "hardware",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "other",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c038:clinical:ev01"
+        ]
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "unknown",
+        "product_type": "other",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "unknown",
+        "product_type": "other",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c038:clinical:reg01",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "notification",
+        "record_number": "체외 제신 23-65",
+        "permitted_use": "혈액검체처리기",
+        "status": "active",
+        "effective_at": "2023-01-18",
+        "valid_until": null,
+        "evidence_ids": [
+          "c038:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c038:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c038:clinical:reg03",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c038:clinical:reg04",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c038:clinical:st01",
+        "product_id": "p002",
+        "design": "Observational study",
+        "prospective": null,
+        "multicenter": null,
+        "external_validation": null,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "Gender representation in health sector leadership",
+        "result": "Notable disparities in gender representation based on role and level of seniority",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c038:clinical:ev02"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "unclear",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 에이블랩스 (c038) | 기준일 2026-09-30\n- p001 바이오 실험실 자동화 로봇: hardware/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p002 NOTABLE: other/in_scope | 공식 상태: KR notification·active(\"혈액검체처리기\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p003 NOTABLE96: other/unknown | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p004 SUITABLE: other/unknown | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003], regulatory_records[p004][KR], criteria_inputs.C1[p004]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c038:clinical:reg01": "c038:clinical:fd01",
+      "finding|regulatory|c038:clinical:reg02": "c038:clinical:fd02",
+      "finding|regulatory|c038:clinical:reg03": "c038:clinical:fd03",
+      "finding|regulatory|c038:clinical:reg04": "c038:clinical:fd04",
+      "finding|clinical_evidence|p001": "c038:clinical:fd05",
+      "finding|clinical_evidence|p002": "c038:clinical:fd06",
+      "finding|clinical_evidence|p003": "c038:clinical:fd07",
+      "finding|clinical_evidence|p004": "c038:clinical:fd08"
+    },
+    "collected_profile": {
+      "legal_name": "에이블랩스",
+      "english_name": "ABLE Labs",
+      "homepage": "https://ablelabsinc.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "바이오 실험실 자동화 로봇",
+          "model": null,
+          "intended_use": "바이오 실험실 자동화 로봇",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "NOTABLE",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p003",
+          "name": "NOTABLE96",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p004",
+          "name": "SUITABLE",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://ablelabsinc.com",
+          "https://www.irobotnews.com/news/articleView.html?idxno=48221",
+          "https://www.etnews.com/20260901000022",
+          "https://thevc.kr/ablelabs",
+          "https://www.innoforest.co.kr/company/CP00010324/%EC%97%90%EC%9D%B4%EB%B8%94%EB%9E%A9%EC%8A%A4"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c038:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 에이블랩스",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EC%97%90%EC%9D%B4%EB%B8%94%EB%9E%A9%EC%8A%A4",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c038:clinical:src58",
+      "title": "Towards gender parity: An analysis of leadership management teams in Tanzania's health sector.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42809577/",
+      "publisher": "PLOS Glob Public Health",
+      "source_type": "research",
+      "published_at": "2026-09-29",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c038:clinical:src59",
+      "title": "Vaping during pregnancy and maternal, fetal, and infant health outcomes: A scoping review of human and animal studies.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42809573/",
+      "publisher": "PLoS One",
+      "source_type": "research",
+      "published_at": "2026-09-29",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c038:clinical:src60",
+      "title": "Role of Macrophages in Epimorphic Tissue Regeneration.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42809491/",
+      "publisher": "Cells Tissues Organs",
+      "source_type": "research",
+      "published_at": "2026-09-29",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c038:clinical:src61",
+      "title": "Beyond Known Objects: Prompting 6D Pose Estimator to Learn Novel Objects Continually.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42809465/",
+      "publisher": "IEEE Trans Image Process",
+      "source_type": "research",
+      "published_at": "2026-09-29",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c038:clinical:src62",
+      "title": "Real-time Robust Semantic Segmentation via Low-Resolution Ensemble.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42809461/",
+      "publisher": "IEEE Trans Image Process",
+      "source_type": "research",
+      "published_at": "2026-09-29",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c038:clinical:ev01",
+      "company_id": "c038",
+      "product_id": "p002",
+      "statement": "(주)에이블랩스의 혈액검체처리기",
+      "source_ids": [
+        "c038:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-01-18",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c038:clinical:ev02",
+      "company_id": "c038",
+      "product_id": "p002",
+      "statement": "Analysis of gender representation in leadership across Tanzania's health sector.",
+      "source_ids": [
+        "c038:clinical:src58",
+        "c038:clinical:src59",
+        "c038:clinical:src60",
+        "c038:clinical:src61",
+        "c038:clinical:src62"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c038:clinical:fd01",
+      "category": "regulatory",
+      "claim": "NOTABLE [KR] notification · active (체외 제신 23-65) / 사용 목적: \"혈액검체처리기\"",
+      "evidence_ids": [
+        "c038:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c038:clinical:fd02",
+      "category": "regulatory",
+      "claim": "바이오 실험실 자동화 로봇 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c038:clinical:fd03",
+      "category": "regulatory",
+      "claim": "NOTABLE96 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c038:clinical:fd04",
+      "category": "regulatory",
+      "claim": "SUITABLE [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c038:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "바이오 실험실 자동화 로봇: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c038:clinical:fd06",
+      "category": "clinical_evidence",
+      "claim": "NOTABLE: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c038:clinical:fd07",
+      "category": "clinical_evidence",
+      "claim": "NOTABLE96: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c038:clinical:fd08",
+      "category": "clinical_evidence",
+      "claim": "SUITABLE: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c038:clinical:mi01",
+      "field": "products[p002].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c038:clinical:mi02",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c038:clinical:mi03",
+      "field": "products[p003].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c038:clinical:mi04",
+      "field": "products[p003].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c038:clinical:mi05",
+      "field": "regulatory_records[p003][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 에이블랩스, NOTABLE96, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c038:clinical:mi06",
+      "field": "criteria_inputs.C1[p003]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c038:clinical:mi07",
+      "field": "products[p004].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c038:clinical:mi08",
+      "field": "products[p004].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c038:clinical:mi09",
+      "field": "regulatory_records[p004][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 에이블랩스, SUITABLE, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c038:clinical:mi10",
+      "field": "criteria_inputs.C1[p004]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c038:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "바이오 실험실 자동화 로봇은 의료기기 규제 대상이 아니며, 질병 진단이나 치료와 관련된 효능 주장이 없다."
+    },
+    {
+      "coverage_id": "c038:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "NOTABLE의 사용 목적 및 효능에 대한 정보가 부족하여 판단할 수 없다."
+    },
+    {
+      "coverage_id": "c038:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "NOTABLE96의 사용 목적 및 효능에 대한 정보가 부족하여 판단할 수 없다."
+    },
+    {
+      "coverage_id": "c038:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "SUITABLE의 사용 목적 및 효능에 대한 정보가 부족하여 판단할 수 없다."
+    },
+    {
+      "coverage_id": "c038:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c038:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "에이블랩스",
+          "NOTABLE"
+        ],
+        "queries": [
+          "에이블랩스 NOTABLE 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv07",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "에이블랩스",
+          "NOTABLE96"
+        ],
+        "queries": [
+          "에이블랩스 NOTABLE96 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c038:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "에이블랩스",
+          "SUITABLE"
+        ],
+        "queries": [
+          "에이블랩스 SUITABLE 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c038:clinical:cv09",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c038:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c038:clinical:cv11",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이블랩스 혁신의료기기 지정",
+          "NOTABLE 혁신의료기술 평가",
+          "NOTABLE 비급여 등재 고시",
+          "에이블랩스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이블랩스 혁신의료기기 지정",
+          "NOTABLE 혁신의료기술 평가",
+          "NOTABLE 비급여 등재 고시",
+          "에이블랩스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv13",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이블랩스 혁신의료기기 지정",
+          "NOTABLE96 혁신의료기술 평가",
+          "NOTABLE96 비급여 등재 고시",
+          "에이블랩스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv14",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이블랩스 혁신의료기기 지정",
+          "NOTABLE96 혁신의료기술 평가",
+          "NOTABLE96 비급여 등재 고시",
+          "에이블랩스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv15",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이블랩스 혁신의료기기 지정",
+          "SUITABLE 혁신의료기술 평가",
+          "SUITABLE 비급여 등재 고시",
+          "에이블랩스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "에이블랩스 혁신의료기기 지정",
+          "SUITABLE 혁신의료기술 평가",
+          "SUITABLE 비급여 등재 고시",
+          "에이블랩스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv17",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c038:clinical:cv18",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"NOTABLE\"[Title/Abstract]",
+          "\"ABLE Labs\"[Affiliation]",
+          "에이블랩스 NOTABLE 임상 연구 논문",
+          "NOTABLE clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv19",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"NOTABLE96\"[Title/Abstract]",
+          "\"ABLE Labs\"[Affiliation]",
+          "에이블랩스 NOTABLE96 임상 연구 논문",
+          "NOTABLE96 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv20",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"SUITABLE\"[Title/Abstract]",
+          "\"ABLE Labs\"[Affiliation]",
+          "에이블랩스 SUITABLE 임상 연구 논문",
+          "SUITABLE clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c038:clinical:cv21",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c038:clinical:cv22",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c038:clinical:cv23",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c038:clinical:cv24",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}

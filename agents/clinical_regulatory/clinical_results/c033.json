@@ -1,0 +1,660 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c033",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "out_of_scope",
+        "product_type": "other",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "not_applicable",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c033:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c033:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c033:clinical:reg03",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "해당 없음",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_applicable",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [],
+    "claim_checks": [
+      {
+        "claim_id": "c033:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "퓨리오젠㈜가 개발한 Puriose® 제품군은 혁신적인 성능을 가지는 아가로오스 기반 크로마토그래피 레진으로서, 단백질 의약품 및 생체고분자의 생산을 위한 대규모 정제 공정에 사용되며, 국내외 다양한 바이오, 제약 관련 기업과 연구소에 공급되고 있습니다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c033:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "퓨리오젠은 임상을 진행함에 따라 레진 사용량의 증가로 부담을 느끼는 기업에게 낮은 단가로 Protein A 레진 및 바이오의약품 정제용 레진을 제공할 계획이다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c033:p002:cl03",
+        "product_id": "p002",
+        "original_claim": "이번 계약을 통해 젠마인디스는 중국 주요 바이오 제약 기업을 대상으로 퓨리오젠 ‘Puriose ProA HP’, ‘Puriose NexPurA’ 등 고성능 Protein A 레진을 포함한 이온교환수지, 소수성 상호작용 레진 등 다양한 고부가가치 바이오의약품 정제용 레진을 공급하게 된다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c033:p003:cl01",
+        "product_id": "p003",
+        "original_claim": "NexPurA는 높은 pH 조건에서도 뛰어난 회수율과 불순물 제거 성능을 입증한 최신형 레진으로, 중국 시장 내 고급 정제공정 수요에 최적화된 제품으로 평가받는다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c033:p003:cl02",
+        "product_id": "p003",
+        "original_claim": "이번 계약을 통해 젠마인디스는 중국 주요 바이오 제약 기업을 대상으로 퓨리오젠 ‘Puriose ProA HP’, ‘Puriose NexPurA’ 등 고성능 Protein A 레진을 포함한 이온교환수지, 소수성 상호작용 레진 등 다양한 고부가가치 바이오의약품 정제용 레진을 공급하게 된다.",
+        "status": "unknown",
+        "comparison_reason": "제품 효능 주장 아님",
+        "evidence_ids": []
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 퓨리오젠 (c033) | 기준일 2026-09-30\n- p001 바이오의약품 정제용 크로마토그래피 레진: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p002 Puriose ProA HP: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: unknown 3 | 평가 상태 complete\n- p003 Puriose NexPurA: other/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: unknown 2 | 평가 상태 complete\n- C1 잠정 집계: 없음 (not_applicable)",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "not_applicable",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "not_applicable",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c033:clinical:reg01": "c033:clinical:fd01",
+      "finding|regulatory|c033:clinical:reg02": "c033:clinical:fd02",
+      "finding|regulatory|c033:clinical:reg03": "c033:clinical:fd03",
+      "finding|clinical_evidence|p001": "c033:clinical:fd04",
+      "finding|clinical_evidence|p002": "c033:clinical:fd05",
+      "finding|clinical_evidence|p003": "c033:clinical:fd06",
+      "finding|claim|c033:p002:cl01": "c033:clinical:fd07",
+      "finding|claim|c033:p002:cl02": "c033:clinical:fd08",
+      "finding|claim|c033:p002:cl03": "c033:clinical:fd09",
+      "finding|claim|c033:p003:cl01": "c033:clinical:fd10",
+      "finding|claim|c033:p003:cl02": "c033:clinical:fd11"
+    },
+    "collected_profile": {
+      "legal_name": "퓨리오젠",
+      "english_name": "Puriogen",
+      "homepage": "https://www.puriogen.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "바이오의약품 정제용 크로마토그래피 레진",
+          "model": null,
+          "intended_use": "바이오의약품 정제용 크로마토그래피 레진",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "Puriose ProA HP",
+          "model": null,
+          "intended_use": "바이오의약품 정제용 크로마토그래피 레진",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "퓨리오젠㈜가 개발한 Puriose® 제품군은 혁신적인 성능을 가지는 아가로오스 기반 크로마토그래피 레진으로서, 단백질 의약품 및 생체고분자의 생산을 위한 대규모 정제 공정에 사용되며, 국내외 다양한 바이오, 제약 관련 기업과 연구소에 공급되고 있습니다.",
+              "url": "https://www.puriogen.com",
+              "claimed_at": null
+            },
+            {
+              "text": "퓨리오젠은 임상을 진행함에 따라 레진 사용량의 증가로 부담을 느끼는 기업에게 낮은 단가로 Protein A 레진 및 바이오의약품 정제용 레진을 제공할 계획이다.",
+              "url": "https://www.puriogen.com/myboard/IR/537766",
+              "claimed_at": null
+            },
+            {
+              "text": "이번 계약을 통해 젠마인디스는 중국 주요 바이오 제약 기업을 대상으로 퓨리오젠 ‘Puriose ProA HP’, ‘Puriose NexPurA’ 등 고성능 Protein A 레진을 포함한 이온교환수지, 소수성 상호작용 레진 등 다양한 고부가가치 바이오의약품 정제용 레진을 공급하게 된다.",
+              "url": "http://m.yakup.com/news/index.html?mode=view&nid=312952",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p003",
+          "name": "Puriose NexPurA",
+          "model": null,
+          "intended_use": "바이오의약품 정제용 크로마토그래피 레진",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "NexPurA는 높은 pH 조건에서도 뛰어난 회수율과 불순물 제거 성능을 입증한 최신형 레진으로, 중국 시장 내 고급 정제공정 수요에 최적화된 제품으로 평가받는다.",
+              "url": "http://m.yakup.com/news/index.html?mode=view&nid=312952",
+              "claimed_at": null
+            },
+            {
+              "text": "이번 계약을 통해 젠마인디스는 중국 주요 바이오 제약 기업을 대상으로 퓨리오젠 ‘Puriose ProA HP’, ‘Puriose NexPurA’ 등 고성능 Protein A 레진을 포함한 이온교환수지, 소수성 상호작용 레진 등 다양한 고부가가치 바이오의약품 정제용 레진을 공급하게 된다.",
+              "url": "http://m.yakup.com/news/index.html?mode=view&nid=312952",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.puriogen.com",
+          "http://m.yakup.com/news/index.html?mode=view&nid=312952",
+          "https://www.puriogen.com/myboard/IR/537766",
+          "https://medigatenews.com/news/3064359628",
+          "https://www.bosa.co.kr/news/articleView.html?idxno=2173960"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [],
+  "evidence": [],
+  "findings": [
+    {
+      "finding_id": "c033:clinical:fd01",
+      "category": "regulatory",
+      "claim": "바이오의약품 정제용 크로마토그래피 레진 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c033:clinical:fd02",
+      "category": "regulatory",
+      "claim": "Puriose ProA HP [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c033:clinical:fd03",
+      "category": "regulatory",
+      "claim": "Puriose NexPurA [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c033:clinical:fd04",
+      "category": "clinical_evidence",
+      "claim": "바이오의약품 정제용 크로마토그래피 레진: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c033:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "Puriose ProA HP: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c033:clinical:fd06",
+      "category": "clinical_evidence",
+      "claim": "Puriose NexPurA: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c033:clinical:fd07",
+      "category": "claim",
+      "claim": "주장 \"퓨리오젠㈜가 개발한 Puriose® 제품군은 혁신적인 성능을 가지는 아가로오스 기반 크로마토그래피 레진으로서, 단백질 의약품 및 생체고분자의 생산을 위한 대규모 정제 공정에 사용되며, 국내외 다양한 바이오, 제약 관련 기업과 연구소에 공급되고 있습니다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c033:clinical:fd08",
+      "category": "claim",
+      "claim": "주장 \"퓨리오젠은 임상을 진행함에 따라 레진 사용량의 증가로 부담을 느끼는 기업에게 낮은 단가로 Protein A 레진 및 바이오의약품 정제용 레진을 제공할 계획이다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c033:clinical:fd09",
+      "category": "claim",
+      "claim": "주장 \"이번 계약을 통해 젠마인디스는 중국 주요 바이오 제약 기업을 대상으로 퓨리오젠 ‘Puriose ProA HP’, ‘Puriose NexPurA’ 등 고성능 Protein A 레진을 포함한 이온교환수지, 소수성 상호작용 레진 등 다양한 고부가가치 바이오의약품 정제용 레진을 공급하게 된다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c033:clinical:fd10",
+      "category": "claim",
+      "claim": "주장 \"NexPurA는 높은 pH 조건에서도 뛰어난 회수율과 불순물 제거 성능을 입증한 최신형 레진으로, 중국 시장 내 고급 정제공정 수요에 최적화된 제품으로 평가받는다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c033:clinical:fd11",
+      "category": "claim",
+      "claim": "주장 \"이번 계약을 통해 젠마인디스는 중국 주요 바이오 제약 기업을 대상으로 퓨리오젠 ‘Puriose ProA HP’, ‘Puriose NexPurA’ 등 고성능 Protein A 레진을 포함한 이온교환수지, 소수성 상호작용 레진 등 다양한 고부가가치 바이오의약품 정제용 레진을 공급하게 된다.\" → unknown: 제품 효능 주장 아님",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [],
+  "coverage": [
+    {
+      "coverage_id": "c033:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품은 바이오의약품 정제용 크로마토그래피 레진으로, 의료기기나 진단 목적이 아닌 정제 공정에 사용되므로 규제 적용 범위에서 벗어난다."
+    },
+    {
+      "coverage_id": "c033:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품은 바이오의약품 정제용 크로마토그래피 레진으로, 의료기기나 진단 목적이 아닌 정제 공정에 사용되며, 회사의 주장에 효능이 포함되어 있다."
+    },
+    {
+      "coverage_id": "c033:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "제품은 바이오의약품 정제용 크로마토그래피 레진으로, 의료기기나 진단 목적이 아닌 정제 공정에 사용되며, 회사의 주장에 효능이 포함되어 있다."
+    },
+    {
+      "coverage_id": "c033:clinical:cv04",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 조회하지 않음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv07",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv08",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv09",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv11",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상으로 해당 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv13",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상이며 효능 주장 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv14",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Puriose ProA HP\"[Title/Abstract]",
+          "\"Puriogen\"[Affiliation]",
+          "퓨리오젠 Puriose ProA HP 임상 연구 논문",
+          "Puriose ProA HP clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c033:clinical:cv15",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Puriose NexPurA\"[Title/Abstract]",
+          "\"Puriogen\"[Affiliation]",
+          "퓨리오젠 Puriose NexPurA 임상 연구 논문",
+          "Puriose NexPurA clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c033:clinical:cv16",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+    },
+    {
+      "coverage_id": "c033:clinical:cv17",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c033:clinical:cv18",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

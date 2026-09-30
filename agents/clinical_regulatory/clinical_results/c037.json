@@ -1,0 +1,326 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c037",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c037:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c037:clinical:st01",
+        "product_id": "p001",
+        "design": "Single-Group, Pre-, and Posttest Study",
+        "prospective": true,
+        "multicenter": false,
+        "external_validation": false,
+        "sample_size": 23,
+        "comparator": null,
+        "endpoint": "Walking speed and functional performance",
+        "result": "Significant improvements in walking speed and functional performance at the end of the program compared with baseline.",
+        "limitations": "Small sample size, no control group.",
+        "evidence_ids": [
+          "c037:clinical:ev01"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 위로보틱스 (c037) | 기준일 2026-09-30\n- p001 WIM: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c037:clinical:reg01": "c037:clinical:fd01",
+      "finding|clinical_evidence|p001": "c037:clinical:fd02"
+    },
+    "collected_profile": {
+      "legal_name": "위로보틱스",
+      "english_name": "WIRobotics",
+      "homepage": "https://www.wirobotics.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "WIM",
+          "model": null,
+          "intended_use": "웨어러블 보행보조 로봇",
+          "target_disease": null,
+          "users": "고령자, 보행 약자, 재활이 필요한 사용자",
+          "environment": "일상 보행, 계단 이동, 오르막·내리막 보행, 등산, 트레킹",
+          "modality": "로봇",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.wirobotics.com",
+          "https://namu.wiki/w/%EC%9C%84%EB%A1%9C%EB%B3%B4%ED%8B%B1%EC%8A%A4",
+          "https://www.wirobotics.com/product/wimInfo",
+          "https://www.wirobotics.com/product/productDetail/axVJEUcw",
+          "https://www.wirobotics.com/trainingCenter/main"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c037:clinical:src44",
+      "title": "Feasibility and Effects of a Gait Assistance and Gait Resistance Training Program Using a Walking-Assist Wearable Robot for Community-Dwelling Older Adults: Single-Group, Pre-, and Posttest Study.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40418849/",
+      "publisher": "JMIR Mhealth Uhealth",
+      "source_type": "research",
+      "published_at": "2025-05-26",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c037:clinical:ev01",
+      "company_id": "c037",
+      "product_id": "p001",
+      "statement": "Feasibility and Effects of a Gait Assistance and Gait Resistance Training Program Using a Walking-Assist Wearable Robot for Community-Dwelling Older Adults.",
+      "source_ids": [
+        "c037:clinical:src44"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-05-26",
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c037:clinical:fd01",
+      "category": "regulatory",
+      "claim": "WIM [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c037:clinical:fd02",
+      "category": "clinical_evidence",
+      "claim": "WIM: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c037:clinical:mi01",
+      "field": "products[p001].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c037:clinical:mi02",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c037:clinical:mi03",
+      "field": "regulatory_records[p001][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 위로보틱스, WIM, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c037:clinical:mi04",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 1건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c037:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "웨어러블 보행보조 로봇으로, 보행을 지원하는 물리적 의료기기로 분류되며, 식약처 의료기기 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c037:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "위로보틱스",
+          "WIM"
+        ],
+        "queries": [
+          "위로보틱스 WIM 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c037:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "위로보틱스 혁신의료기기 지정",
+          "WIM 혁신의료기술 평가",
+          "WIM 비급여 등재 고시",
+          "위로보틱스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c037:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "위로보틱스 혁신의료기기 지정",
+          "WIM 혁신의료기술 평가",
+          "WIM 비급여 등재 고시",
+          "위로보틱스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c037:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"WIM\"[Title/Abstract]",
+          "\"WIRobotics\"[Affiliation]",
+          "위로보틱스 WIM 임상 연구 논문",
+          "WIM clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c037:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}

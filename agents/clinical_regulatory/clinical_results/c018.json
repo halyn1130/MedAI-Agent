@@ -1,0 +1,1396 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c018",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c018:clinical:ev01"
+        ]
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c018:clinical:ev02",
+          "c018:clinical:ev03"
+        ]
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p005",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c018:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": null,
+        "permitted_use": "심혈관용 생분해성 스텐트",
+        "status": "pending",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": [
+          "c018:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c018:clinical:reg02",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 21-569",
+        "permitted_use": "풍선 확장식 관상동맥 성형술용 카테터",
+        "status": "active",
+        "effective_at": "2021-07-06",
+        "valid_until": null,
+        "evidence_ids": [
+          "c018:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c018:clinical:reg03",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 21-570",
+        "permitted_use": "풍선 확장식 관상동맥 성형술용 카테터",
+        "status": "active",
+        "effective_at": "2021-07-06",
+        "valid_until": null,
+        "evidence_ids": [
+          "c018:clinical:ev03"
+        ]
+      },
+      {
+        "record_id": "c018:clinical:reg04",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c018:clinical:reg05",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c018:clinical:reg06",
+        "product_id": "p005",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c018:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신의료기기 지정",
+        "status": "active",
+        "scope": "생분해성 스텐트",
+        "effective_at": null,
+        "evidence_ids": [
+          "c018:clinical:ev04"
+        ]
+      }
+    ],
+    "reimbursement_records": [
+      {
+        "record_id": "c018:clinical:rmb01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "신의료기술 평가",
+        "status": "pending",
+        "scope": "생분해성 스텐트의 신의료기술 평가",
+        "effective_at": null,
+        "evidence_ids": [
+          "c018:clinical:ev05"
+        ]
+      }
+    ],
+    "clinical_studies": [
+      {
+        "study_id": "c018:clinical:st01",
+        "product_id": "p001",
+        "design": "확증 임상시험",
+        "prospective": true,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": 128,
+        "comparator": null,
+        "endpoint": "안전성과 유효성",
+        "result": "결과는 1년 후 추적 관찰 후 발표 예정",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구 / 임상 결과 미발표 또는 진행 중(점수 제외)",
+        "evidence_ids": [
+          "c018:clinical:ev06"
+        ],
+        "evidence_level": "L3",
+        "result_direction": "unclear",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c018:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "우리는 식약처로부터 임상시험 승인을 받았고 작년부터 국내 최초로 임상시험을 시작했다. 유럽에서도 임상시험 진행 예정이다.",
+        "status": "partially_supported",
+        "comparison_reason": "임상시험 승인은 확인되었으나, 구체적인 승인 날짜나 진행 상황은 확인되지 않음.",
+        "evidence_ids": [
+          "c018:clinical:ev06"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 도터 (c018) | 기준일 2026-09-30\n- p001 생분해성 스텐트: hardware/in_scope | 공식 상태: KR approval·pending(\"심혈관용 생분해성 스텐트\") | 제도: 혁신의료기기 지정·active; 신의료기술 평가·pending | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: partially_supported 1 | 평가 상태 complete\n- p002 풍선 확장식 관상동맥 성형술용 카테터: hardware/in_scope | 공식 상태: KR approval·active(\"풍선 확장식 관상동맥 성형술용 카테터\"); KR approval·active(\"풍선 확장식 관상동맥 성형술용 카테터\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p003 약물 방출 관상동맥용 스텐트: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p004 광섬유카테터: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p005 흡수성관상동맥용스텐트: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003], regulatory_records[p004][KR], criteria_inputs.C1[p004], regulatory_records[p005][KR], criteria_inputs.C1[p005]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p005",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c018:clinical:reg01": "c018:clinical:fd01",
+      "finding|regulatory|c018:clinical:reg02": "c018:clinical:fd02",
+      "finding|regulatory|c018:clinical:reg03": "c018:clinical:fd03",
+      "finding|regulatory|c018:clinical:reg04": "c018:clinical:fd04",
+      "finding|regulatory|c018:clinical:reg05": "c018:clinical:fd05",
+      "finding|regulatory|c018:clinical:reg06": "c018:clinical:fd06",
+      "finding|designation|c018:clinical:des01": "c018:clinical:fd07",
+      "finding|reimbursement|c018:clinical:rmb01": "c018:clinical:fd08",
+      "finding|clinical_evidence|p001": "c018:clinical:fd09",
+      "finding|clinical_evidence|p002": "c018:clinical:fd10",
+      "finding|clinical_evidence|p003": "c018:clinical:fd11",
+      "finding|clinical_evidence|p004": "c018:clinical:fd12",
+      "finding|clinical_evidence|p005": "c018:clinical:fd13",
+      "finding|claim|c018:p001:cl01": "c018:clinical:fd14"
+    },
+    "collected_profile": {
+      "legal_name": "도터",
+      "english_name": "Dotter",
+      "homepage": "https://dotter.com",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "생분해성 스텐트",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "우리는 식약처로부터 임상시험 승인을 받았고 작년부터 국내 최초로 임상시험을 시작했다. 유럽에서도 임상시험 진행 예정이다.",
+              "url": "https://dotter.com/2022/02/18/%EC%86%8C%EB%B6%80%EC%9E%A5-%EC%8A%A4%ED%83%80%ED%8A%B8%EC%97%85-%EB%8F%84%ED%84%B0-%EA%B8%80%EB%A1%9C%EB%B2%8C-%EC%9D%98%EB%A3%8C%EA%B8%B0%EC%97%85-%EB%8A%A5%EA%B0%80%ED%95%98%EB%8A%94-%EC%B0%A8",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p002",
+          "name": "풍선 확장식 관상동맥 성형술용 카테터",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p003",
+          "name": "약물 방출 관상동맥용 스텐트",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p004",
+          "name": "광섬유카테터",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p005",
+          "name": "흡수성관상동맥용스텐트",
+          "model": null,
+          "intended_use": null,
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://dotter.com",
+          "https://dotter.com/2022/02/18/%EC%86%8C%EB%B6%80%EC%9E%A5-%EC%8A%A4%ED%83%80%ED%8A%B8%EC%97%85-%EB%8F%84%ED%84%B0-%EA%B8%80%EB%A1%9C%EB%B2%8C-%EC%9D%98%EB%A3%8C%EA%B8%B0%EC%97%85-%EB%8A%A5%EA%B0%80%ED%95%98%EB%8A%94-%EC%B0%A8",
+          "http://thevc.kr/dotter",
+          "https://www.thevc.kr/dotter",
+          "https://it.donga.com/101784"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c018:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 도터",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EB%8F%84%ED%84%B0",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c018:clinical:src12",
+      "title": "도터, 생분해성 스텐트 BRS 혁신의료기기 지정",
+      "url": "https://www.monthlypeople.com/news/articleView.html?idxno=701570",
+      "publisher": "www.monthlypeople.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c018:clinical:src21",
+      "title": "도터, 생분해성스텐트(BRS) 임상 환자 모집 완료 - DOTTER",
+      "url": "https://dotter.com/ko/2024/04/04/brs2",
+      "publisher": "dotter.com",
+      "source_type": "company",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c018:clinical:src30",
+      "title": "의사 대신 의공학자 길 걷더니...생분해성 스텐트 국내 첫 허가 눈앞 - 머니투데이",
+      "url": "https://www.mt.co.kr/future/2026/03/10/2026022408280525610",
+      "publisher": "www.mt.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c018:clinical:src46",
+      "title": "혁신의료기기 지정 절차 및 방법 기준 등에 관한 안내(민원인안내서)",
+      "url": "https://www.bioin.or.kr/board/system/328269",
+      "publisher": "www.bioin.or.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c018:clinical:src47",
+      "title": "혁신의료기기 지정 공고(일반 제117호) < 전체>기관별 공지사항>알림마당-의료기기산업정보 종합정보시스템",
+      "url": "https://www.khidi.or.kr/board/view?pageNum=1&rowCnt=20&no1=7811&linkId=48937723&refMenuId=MENU01502&menuId=MENU01498&maxIndex=&minIndex=&schType=0&schText=&schStartDate=&schEndDate=&boardStyle=&categoryId=&continent=&country=",
+      "publisher": "www.khidi.or.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c018:clinical:src90",
+      "title": "도터, 생분해성 스텐트 임상 환자 모집 완료 | 연합뉴스",
+      "url": "https://www.yna.co.kr/view/AKR20240411095600017",
+      "publisher": "www.yna.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c018:clinical:ev01",
+      "company_id": "c018",
+      "product_id": "p001",
+      "statement": "도터의 생분해성 스텐트는 혈관을 지지한 후 몸속에서 자연스럽게 사라져 기존 금속 스텐트의 한계를 줄일 수 있다.",
+      "source_ids": [
+        "c018:clinical:src12",
+        "c018:clinical:src30"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "partial"
+    },
+    {
+      "evidence_id": "c018:clinical:ev02",
+      "company_id": "c018",
+      "product_id": "p002",
+      "statement": "도터 풍선 확장식 관상동맥 성형술용 카테터 식약처 approval 기록 (제허 21-569)",
+      "source_ids": [
+        "c018:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2021-07-06",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c018:clinical:ev03",
+      "company_id": "c018",
+      "product_id": "p002",
+      "statement": "도터 풍선 확장식 관상동맥 성형술용 카테터 식약처 approval 기록 (제허 21-570)",
+      "source_ids": [
+        "c018:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2021-07-06",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c018:clinical:ev04",
+      "company_id": "c018",
+      "product_id": "p001",
+      "statement": "도터의 생분해성 스텐트가 식약처로부터 혁신의료기기 제118호로 지정됨.",
+      "source_ids": [
+        "c018:clinical:src12",
+        "c018:clinical:src46",
+        "c018:clinical:src47"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c018:clinical:ev05",
+      "company_id": "c018",
+      "product_id": "p001",
+      "statement": "도터의 생분해성 스텐트가 신의료기술 평가를 신청 중임.",
+      "source_ids": [
+        "c018:clinical:src12"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c018:clinical:ev06",
+      "company_id": "c018",
+      "product_id": "p001",
+      "statement": "도터는 생분해성 스텐트의 확증 임상시험을 진행 중이다.",
+      "source_ids": [
+        "c018:clinical:src21",
+        "c018:clinical:src90"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-04-11",
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c018:clinical:fd01",
+      "category": "regulatory",
+      "claim": "생분해성 스텐트 [KR] approval · pending / 사용 목적: \"심혈관용 생분해성 스텐트\"",
+      "evidence_ids": [
+        "c018:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd02",
+      "category": "regulatory",
+      "claim": "풍선 확장식 관상동맥 성형술용 카테터 [KR] approval · active (제허 21-569) / 사용 목적: \"풍선 확장식 관상동맥 성형술용 카테터\"",
+      "evidence_ids": [
+        "c018:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd03",
+      "category": "regulatory",
+      "claim": "풍선 확장식 관상동맥 성형술용 카테터 [KR] approval · active (제허 21-570) / 사용 목적: \"풍선 확장식 관상동맥 성형술용 카테터\"",
+      "evidence_ids": [
+        "c018:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd04",
+      "category": "regulatory",
+      "claim": "약물 방출 관상동맥용 스텐트 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd05",
+      "category": "regulatory",
+      "claim": "광섬유카테터 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd06",
+      "category": "regulatory",
+      "claim": "흡수성관상동맥용스텐트 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd07",
+      "category": "designation",
+      "claim": "생분해성 스텐트 [KR] 혁신의료기기 지정 · active / 범위: 생분해성 스텐트",
+      "evidence_ids": [
+        "c018:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd08",
+      "category": "reimbursement",
+      "claim": "생분해성 스텐트 [KR] 신의료기술 평가 · pending / 범위: 생분해성 스텐트의 신의료기술 평가",
+      "evidence_ids": [
+        "c018:clinical:ev05"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c018:clinical:fd09",
+      "category": "clinical_evidence",
+      "claim": "생분해성 스텐트: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c018:clinical:fd10",
+      "category": "clinical_evidence",
+      "claim": "풍선 확장식 관상동맥 성형술용 카테터: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c018:clinical:fd11",
+      "category": "clinical_evidence",
+      "claim": "약물 방출 관상동맥용 스텐트: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c018:clinical:fd12",
+      "category": "clinical_evidence",
+      "claim": "광섬유카테터: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c018:clinical:fd13",
+      "category": "clinical_evidence",
+      "claim": "흡수성관상동맥용스텐트: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c018:clinical:fd14",
+      "category": "claim",
+      "claim": "주장 \"우리는 식약처로부터 임상시험 승인을 받았고 작년부터 국내 최초로 임상시험을 시작했다. 유럽에서도 임상시험 진행 예정이다.\" → partially_supported: 임상시험 승인은 확인되었으나, 구체적인 승인 날짜나 진행 상황은 확인되지 않음.",
+      "evidence_ids": [
+        "c018:clinical:ev06"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c018:clinical:mi01",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (결과 미발표/진행 중으로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c018:clinical:mi02",
+      "field": "products[p002].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c018:clinical:mi03",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c018:clinical:mi04",
+      "field": "products[p003].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c018:clinical:mi05",
+      "field": "products[p003].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c018:clinical:mi06",
+      "field": "regulatory_records[p003][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 도터, 약물 방출 관상동맥용 스텐트, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c018:clinical:mi07",
+      "field": "criteria_inputs.C1[p003]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c018:clinical:mi08",
+      "field": "products[p004].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c018:clinical:mi09",
+      "field": "products[p004].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c018:clinical:mi10",
+      "field": "regulatory_records[p004][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 도터, 광섬유카테터, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c018:clinical:mi11",
+      "field": "criteria_inputs.C1[p004]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c018:clinical:mi12",
+      "field": "products[p005].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c018:clinical:mi13",
+      "field": "products[p005].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c018:clinical:mi14",
+      "field": "regulatory_records[p005][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 도터, 흡수성관상동맥용스텐트, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c018:clinical:mi15",
+      "field": "criteria_inputs.C1[p005]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c018:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "생분해성 스텐트는 식약처로부터 임상시험 승인을 받았다는 주장이 있어 의료기기 규제 대상에 해당하며, 효능 주장이 포함되어 있다."
+    },
+    {
+      "coverage_id": "c018:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "풍선 확장식 관상동맥 성형술용 카테터는 의료기기로 분류되며, 사용 목적이 명확하지 않지만 일반적으로 의료기기 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c018:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "약물 방출 관상동맥용 스텐트는 의료기기로 분류되며, 사용 목적이 명확하지 않지만 일반적으로 의료기기 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c018:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "광섬유카테터는 의료기기로 분류되며, 사용 목적이 명확하지 않지만 일반적으로 의료기기 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c018:clinical:cv05",
+      "area": "classification",
+      "product_id": "p005",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "흡수성관상동맥용스텐트는 의료기기로 분류되며, 사용 목적이 명확하지 않지만 일반적으로 의료기기 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c018:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "도터",
+          "생분해성 스텐트"
+        ],
+        "queries": [
+          "도터 생분해성 스텐트 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv07",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "도터",
+          "풍선 확장식 관상동맥 성형술용 카테터"
+        ],
+        "queries": [
+          "도터 풍선 확장식 관상동맥 성형술용 카테터 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "도터",
+          "약물 방출 관상동맥용 스텐트"
+        ],
+        "queries": [
+          "도터 약물 방출 관상동맥용 스텐트 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c018:clinical:cv09",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "도터",
+          "광섬유카테터"
+        ],
+        "queries": [
+          "도터 광섬유카테터 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c018:clinical:cv10",
+      "area": "regulatory",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "도터",
+          "흡수성관상동맥용스텐트"
+        ],
+        "queries": [
+          "도터 흡수성관상동맥용스텐트 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c018:clinical:cv11",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "생분해성 스텐트 혁신의료기술 평가",
+          "생분해성 스텐트 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "생분해성 스텐트 혁신의료기술 평가",
+          "생분해성 스텐트 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv13",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "풍선 확장식 관상동맥 성형술용 카테터 혁신의료기술 평가",
+          "풍선 확장식 관상동맥 성형술용 카테터 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv14",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "풍선 확장식 관상동맥 성형술용 카테터 혁신의료기술 평가",
+          "풍선 확장식 관상동맥 성형술용 카테터 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv15",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "약물 방출 관상동맥용 스텐트 혁신의료기술 평가",
+          "약물 방출 관상동맥용 스텐트 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "약물 방출 관상동맥용 스텐트 혁신의료기술 평가",
+          "약물 방출 관상동맥용 스텐트 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv17",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "광섬유카테터 혁신의료기술 평가",
+          "광섬유카테터 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv18",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "광섬유카테터 혁신의료기술 평가",
+          "광섬유카테터 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv19",
+      "area": "designation",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "흡수성관상동맥용스텐트 혁신의료기술 평가",
+          "흡수성관상동맥용스텐트 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv20",
+      "area": "reimbursement",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "도터 혁신의료기기 지정",
+          "흡수성관상동맥용스텐트 혁신의료기술 평가",
+          "흡수성관상동맥용스텐트 비급여 등재 고시",
+          "도터 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv21",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Dotter\"[Affiliation]",
+          "도터 생분해성 스텐트 임상 연구 논문",
+          "생분해성 스텐트 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv22",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Dotter\"[Affiliation]",
+          "도터 풍선 확장식 관상동맥 성형술용 카테터 임상 연구 논문",
+          "풍선 확장식 관상동맥 성형술용 카테터 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv23",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Dotter\"[Affiliation]",
+          "도터 약물 방출 관상동맥용 스텐트 임상 연구 논문",
+          "약물 방출 관상동맥용 스텐트 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv24",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Dotter\"[Affiliation]",
+          "도터 광섬유카테터 임상 연구 논문",
+          "광섬유카테터 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv25",
+      "area": "clinical_studies",
+      "product_id": "p005",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Dotter\"[Affiliation]",
+          "도터 흡수성관상동맥용스텐트 임상 연구 논문",
+          "흡수성관상동맥용스텐트 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv26",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c018:clinical:cv27",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c018:clinical:cv28",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c018:clinical:cv29",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c018:clinical:cv30",
+      "area": "claim_check",
+      "product_id": "p005",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}

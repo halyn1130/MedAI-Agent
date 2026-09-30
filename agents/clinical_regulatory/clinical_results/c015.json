@@ -1,0 +1,2133 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c015",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c015:clinical:ev01",
+          "c015:clinical:ev02",
+          "c015:clinical:ev03",
+          "c015:clinical:ev04",
+          "c015:clinical:ev05",
+          "c015:clinical:ev06"
+        ]
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c015:clinical:ev07"
+        ]
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "unknown",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p005",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p006",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p007",
+        "regulatory_applicability": "in_scope",
+        "product_type": "hardware",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c015:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 20-87",
+        "permitted_use": "산부인과학 진료용 소프트웨어",
+        "status": "active",
+        "effective_at": "2022-02-04",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 22-376",
+        "permitted_use": "산부인과학 진료용 소프트웨어",
+        "status": "active",
+        "effective_at": "2022-06-09",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 23-130",
+        "permitted_use": "위암영상검출·진단보조소프트웨어",
+        "status": "active",
+        "effective_at": "2023-02-24",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg04",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "certification",
+        "record_number": "제인 23-4743",
+        "permitted_use": "의료영상저장전송분석장치",
+        "status": "active",
+        "effective_at": "2023-05-19",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev03"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg05",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "체외 제허 23-815",
+        "permitted_use": "암예후·예측검사소프트웨어",
+        "status": "active",
+        "effective_at": "2023-08-03",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev04"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg06",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 23-1052",
+        "permitted_use": "위암 영상 검출·진단보조 소프트웨어",
+        "status": "active",
+        "effective_at": "2023-11-10",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev05"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg07",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 25-25",
+        "permitted_use": "2등급 의료영상 검출·진단보조 소프트웨어",
+        "status": "active",
+        "effective_at": "2025-01-14",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev06"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg08",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": null,
+        "permitted_use": "자궁경부암 진단 보조 시스템",
+        "status": "active",
+        "effective_at": "2023-06-09",
+        "valid_until": null,
+        "evidence_ids": [
+          "c015:clinical:ev07"
+        ]
+      },
+      {
+        "record_id": "c015:clinical:reg09",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c015:clinical:reg10",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c015:clinical:reg11",
+        "product_id": "p005",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c015:clinical:reg12",
+        "product_id": "p006",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c015:clinical:reg13",
+        "product_id": "p007",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c015:clinical:des01",
+        "product_id": "p003",
+        "country": "KR",
+        "program": "혁신의료기기 지정",
+        "status": "active",
+        "scope": "요로결석 진단 분야",
+        "effective_at": null,
+        "evidence_ids": [
+          "c015:clinical:ev08"
+        ]
+      }
+    ],
+    "reimbursement_records": [],
+    "clinical_studies": [
+      {
+        "study_id": "c015:clinical:st01",
+        "product_id": "p001",
+        "design": "Retrospective study",
+        "prospective": false,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": 2964,
+        "comparator": null,
+        "endpoint": "Classification accuracy of tympanic membrane images into four OM categories",
+        "result": "The ConvNeXt model demonstrated an overall accuracy of 88.7%, with disease-specific F1-scores of 0.78 for AOM, 0.87 for OME, and 0.92 for COM.",
+        "limitations": "",
+        "evidence_ids": [
+          "c015:clinical:ev09"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c015:clinical:st02",
+        "product_id": "p001",
+        "design": "Retrospective study",
+        "prospective": false,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": 6659,
+        "comparator": null,
+        "endpoint": "Detection accuracy of urinary stones",
+        "result": "An accuracy of 0.9585 and an F1 score of 0.9605 were achieved using an ensemble model.",
+        "limitations": "",
+        "evidence_ids": [
+          "c015:clinical:ev10"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c015:clinical:st03",
+        "product_id": "p001",
+        "design": "Retrospective study",
+        "prospective": false,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "Segmentation accuracy of urinary system",
+        "result": "The average dice coefficient of best performing model in fivefold cross validation for whole urinary system was 0.8623.",
+        "limitations": "",
+        "evidence_ids": [
+          "c015:clinical:ev11"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c015:clinical:st04",
+        "product_id": "p001",
+        "design": "Research study",
+        "prospective": false,
+        "multicenter": false,
+        "external_validation": false,
+        "sample_size": null,
+        "comparator": null,
+        "endpoint": "Role of AI in cervical cancer screening",
+        "result": "AI assistance significantly increased sensitivity in cervical cancer screening.",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c015:clinical:ev12"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c015:p002:cl01",
+        "product_id": "p002",
+        "original_claim": "아이도트의 정재훈 대표는 “새로운 써비레이AI(Cerviray AI)는 혈액, 점액 등 영상 판단을 방해하는 요소를 효과적으로 필터링하고, 환자마다 고유한 형태학적 혈관 패턴을 종합적으로 분석해 진단의 민감도와 특이도를 크게 높였다”며 “이는 의료 인프라가 부족한 지역에서도 정확한 조기 진단을 가능하게 함으로써 자궁경부암 예방에 기여할 것”이라고 전했다.",
+        "status": "partially_supported",
+        "comparison_reason": "주장하는 진단의 민감도와 특이도 향상에 대한 연구 결과가 있으나, 제품명 미기재로 직접적인 연관성은 확인되지 않음.",
+        "evidence_ids": [
+          "c015:clinical:ev12"
+        ]
+      },
+      {
+        "claim_id": "c015:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "아이도트는 이번 기술 업그레이드를 바탕으로 2025년 내 미국 FDA 510(k) Class II 인허가 획득과 유럽 CE 인증 절차를 가속화할 계획이다.",
+        "status": "unknown",
+        "comparison_reason": "주장하는 FDA 510(k) Class II 인허가 획득 계획에 대한 근거가 없음.",
+        "evidence_ids": []
+      },
+      {
+        "claim_id": "c015:p003:cl01",
+        "product_id": "p003",
+        "original_claim": "아이도트 ‘유로닷에이아이’, 복지부 혁신의료기술 비급여 등재 의료 인공지능(AI) 전문기업 아이도트(AIDOT, 대표 정재훈)의 요로결석 진단 보조 AI 솔루션 ‘유로닷에이아이(URO dot AI)’가 보건복지부 고시 개정을 통해 건강보험 비급여 시장에 본격 진입하며 의료 현장 확산에 속도를 낸다.",
+        "status": "supported",
+        "comparison_reason": "‘유로닷에이아이’가 보건복지부 고시 개정을 통해 비급여 시장에 진입한 것이 확인됨.",
+        "evidence_ids": [
+          "c015:clinical:ev08"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 아이도트 (c015) | 기준일 2026-09-30\n- p001 써비레이 등 AI 진단시스템: ai_software/in_scope | 공식 상태: KR approval·active(\"산부인과학 진료용 소프트웨어\"); KR approval·active(\"산부인과학 진료용 소프트웨어\"); KR approval·active(\"위암영상검출·진단보조소프트웨어\"); KR certification·active(\"의료영상저장전송분석장치\"); KR approval·active(\"암예후·예측검사소프트웨어\"); KR approval·active(\"위암 영상 검출·진단보조 소프트웨어\"); KR approval·active(\"2등급 의료영상 검출·진단보조 소프트웨어\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 Cerviray AI: ai_software/in_scope | 공식 상태: KR approval·active(\"자궁경부암 진단 보조 시스템\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: partially_supported 1, unknown 1 | 평가 상태 complete\n- p003 URO dot AI: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 혁신의료기기 지정·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 1 | 평가 상태 partial\n- p004 ECHO dot AI: ai_software/unknown | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p005 체외형의료용카메라: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p006 콜포스코프: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p007 진료용 장갑: hardware/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003], regulatory_records[p004][KR], criteria_inputs.C1[p004], regulatory_records[p005][KR], criteria_inputs.C1[p005], regulatory_records[p006][KR], criteria_inputs.C1[p006], regulatory_records[p007][KR], criteria_inputs.C1[p007]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p005",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p006",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p007",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c015:clinical:reg01": "c015:clinical:fd01",
+      "finding|regulatory|c015:clinical:reg02": "c015:clinical:fd02",
+      "finding|regulatory|c015:clinical:reg03": "c015:clinical:fd03",
+      "finding|regulatory|c015:clinical:reg04": "c015:clinical:fd04",
+      "finding|regulatory|c015:clinical:reg05": "c015:clinical:fd05",
+      "finding|regulatory|c015:clinical:reg06": "c015:clinical:fd06",
+      "finding|regulatory|c015:clinical:reg07": "c015:clinical:fd07",
+      "finding|regulatory|c015:clinical:reg08": "c015:clinical:fd08",
+      "finding|regulatory|c015:clinical:reg09": "c015:clinical:fd09",
+      "finding|regulatory|c015:clinical:reg10": "c015:clinical:fd10",
+      "finding|regulatory|c015:clinical:reg11": "c015:clinical:fd11",
+      "finding|regulatory|c015:clinical:reg12": "c015:clinical:fd12",
+      "finding|regulatory|c015:clinical:reg13": "c015:clinical:fd13",
+      "finding|designation|c015:clinical:des01": "c015:clinical:fd14",
+      "finding|clinical_evidence|p001": "c015:clinical:fd15",
+      "finding|clinical_evidence|p002": "c015:clinical:fd16",
+      "finding|clinical_evidence|p003": "c015:clinical:fd17",
+      "finding|clinical_evidence|p004": "c015:clinical:fd18",
+      "finding|clinical_evidence|p005": "c015:clinical:fd19",
+      "finding|clinical_evidence|p006": "c015:clinical:fd20",
+      "finding|clinical_evidence|p007": "c015:clinical:fd21",
+      "finding|claim|c015:p002:cl01": "c015:clinical:fd22",
+      "finding|claim|c015:p002:cl02": "c015:clinical:fd23"
+    },
+    "collected_profile": {
+      "legal_name": "아이도트",
+      "english_name": "AIDOT",
+      "homepage": "https://www.aidot.ai",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "써비레이 등 AI 진단시스템",
+          "model": null,
+          "intended_use": "써비레이 등 AI 진단시스템",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "Cerviray AI",
+          "model": null,
+          "intended_use": "자궁경부암 진단 보조 시스템",
+          "target_disease": "자궁경부암",
+          "users": "의료진",
+          "environment": "병원",
+          "modality": "영상",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "아이도트의 정재훈 대표는 “새로운 써비레이AI(Cerviray AI)는 혈액, 점액 등 영상 판단을 방해하는 요소를 효과적으로 필터링하고, 환자마다 고유한 형태학적 혈관 패턴을 종합적으로 분석해 진단의 민감도와 특이도를 크게 높였다”며 “이는 의료 인프라가 부족한 지역에서도 정확한 조기 진단을 가능하게 함으로써 자궁경부암 예방에 기여할 것”이라고 전했다.",
+              "url": "http://kothea.or.kr/shanews?bmode=view&idx=162293171",
+              "claimed_at": "2025-04-22"
+            },
+            {
+              "text": "아이도트는 이번 기술 업그레이드를 바탕으로 2025년 내 미국 FDA 510(k) Class II 인허가 획득과 유럽 CE 인증 절차를 가속화할 계획이다.",
+              "url": "http://kothea.or.kr/shanews?bmode=view&idx=162293171",
+              "claimed_at": "2025-04-22"
+            }
+          ]
+        },
+        {
+          "product_id": "p003",
+          "name": "URO dot AI",
+          "model": null,
+          "intended_use": "요로결석 진단 보조 시스템",
+          "target_disease": "요로결석",
+          "users": "의료진",
+          "environment": "병원",
+          "modality": "영상",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "아이도트 ‘유로닷에이아이’, 복지부 혁신의료기술 비급여 등재 의료 인공지능(AI) 전문기업 아이도트(AIDOT, 대표 정재훈)의 요로결석 진단 보조 AI 솔루션 ‘유로닷에이아이(URO dot AI)’가 보건복지부 고시 개정을 통해 건강보험 비급여 시장에 본격 진입하며 의료 현장 확산에 속도를 낸다.",
+              "url": "https://www.aidot.ai",
+              "claimed_at": null
+            }
+          ]
+        },
+        {
+          "product_id": "p004",
+          "name": "ECHO dot AI",
+          "model": null,
+          "intended_use": "중이염 진단 보조 시스템",
+          "target_disease": "중이염",
+          "users": "의료진",
+          "environment": "병원",
+          "modality": "영상",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p005",
+          "name": "체외형의료용카메라",
+          "model": null,
+          "intended_use": "체외형 의료용 카메라",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p006",
+          "name": "콜포스코프",
+          "model": null,
+          "intended_use": "콜포스코프",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p007",
+          "name": "진료용 장갑",
+          "model": null,
+          "intended_use": "의료용 장갑",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.aidot.ai",
+          "http://kothea.or.kr/shanews?bmode=view&idx=162293171",
+          "https://thevc.kr/aidot",
+          "https://startups.koraia.org/company/329",
+          "https://www.innoforest.co.kr/company/CP00001548/%EC%95%84%EC%9D%B4%EB%8F%84%ED%8A%B8"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c015:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 아이도트",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EC%95%84%EC%9D%B4%EB%8F%84%ED%8A%B8",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src22",
+      "title": "아이도트 '써비레이 AI', 식약처로부터 3등급 의료기기 허가 승인 받아 < 히든챔피언 < 기사본문 - 데일리인베스트",
+      "url": "http://www.dailyinvest.kr/news/articleView.html?idxno=43401",
+      "publisher": "www.dailyinvest.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src23",
+      "title": "아이도트 ‘써비레이 A.I.’, 식약처 3등급 의료기기 허가 승인 < 의료기기 < 산업 < 기사본문 - 팜뉴스",
+      "url": "https://www.pharmnews.com/news/articleView.html?idxno=205343",
+      "publisher": "www.pharmnews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src38",
+      "title": "[아이도트] 아이도트, 요로결석 AI솔루션 혁신의료기기 지정",
+      "url": "http://kothea.or.kr/shanews?bmode=view&idx=134691238",
+      "publisher": "kothea.or.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src41",
+      "title": "아이도트, AI 의료영상 '써비레이A.I.' 산업부 혁신제품 지정…공공의료 확대 기대 - 코스미안뉴스",
+      "url": "https://www.cosmiannews.com/news/365252",
+      "publisher": "www.cosmiannews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src96",
+      "title": "Development and Validation of a CNN-Based Diagnostic Pipeline for the Diagnosis of Otitis Media.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41375875/",
+      "publisher": "J Clin Med",
+      "source_type": "research",
+      "published_at": "2025-12-03",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src97",
+      "title": "Automatic detection of urinary stones from non-contrast enhanced computed tomography images.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41359136/",
+      "publisher": "Urolithiasis",
+      "source_type": "research",
+      "published_at": "2025-12-08",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src99",
+      "title": "Kidney, ureter, and urinary bladder segmentation based on non-contrast enhanced computed tomography images using modified U-Net.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38961140/",
+      "publisher": "Sci Rep",
+      "source_type": "research",
+      "published_at": "2024-07-03",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c015:clinical:src101",
+      "title": "아이도트, SCI급 국제 학술지 'MDPI 헬스케어'에 써비레이 AI 논문 게재 < 의료기기 < 뉴스 < 기사본문 - 의료기기뉴스라인",
+      "url": "http://www.kmdianews.com/news/articleView.html?idxno=54193",
+      "publisher": "www.kmdianews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c015:clinical:ev01",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "산부인과학 진료용 소프트웨어",
+      "source_ids": [
+        "c015:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2022-02-04",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev02",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "위암영상검출·진단보조소프트웨어",
+      "source_ids": [
+        "c015:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-02-24",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev03",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "의료영상저장전송분석장치",
+      "source_ids": [
+        "c015:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-05-19",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev04",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "암예후·예측검사소프트웨어",
+      "source_ids": [
+        "c015:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-08-03",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev05",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "위암 영상 검출·진단보조 소프트웨어",
+      "source_ids": [
+        "c015:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-11-10",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev06",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "2등급 의료영상 검출·진단보조 소프트웨어",
+      "source_ids": [
+        "c015:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-01-14",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev07",
+      "company_id": "c015",
+      "product_id": "p002",
+      "statement": "자궁경부암 진단 보조 시스템",
+      "source_ids": [
+        "c015:clinical:src22",
+        "c015:clinical:src23"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-06-09",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev08",
+      "company_id": "c015",
+      "product_id": "p003",
+      "statement": "아이도트의 요로결석 진단보조 소프트웨어 URO dot AI는 첨단기술군 제 81호로 지정되며, 요로결석 진단 분야에서 기술력을 인정받았다.",
+      "source_ids": [
+        "c015:clinical:src38",
+        "c015:clinical:src41"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev09",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "Development and validation of a CNN-based diagnostic pipeline for the diagnosis of otitis media.",
+      "source_ids": [
+        "c015:clinical:src96"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-12-03",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev10",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "Automatic detection of urinary stones from non-contrast enhanced computed tomography images.",
+      "source_ids": [
+        "c015:clinical:src97"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-12-08",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev11",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "Kidney, ureter, and urinary bladder segmentation based on non-contrast enhanced computed tomography images using modified U-Net.",
+      "source_ids": [
+        "c015:clinical:src99"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-07-03",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c015:clinical:ev12",
+      "company_id": "c015",
+      "product_id": "p001",
+      "statement": "Role of Artificial Intelligence Interpretation of Colposcopic Images in Cervical Cancer Screening.",
+      "source_ids": [
+        "c015:clinical:src101"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c015:clinical:fd01",
+      "category": "regulatory",
+      "claim": "써비레이 등 AI 진단시스템 [KR] approval · active (제허 20-87) / 사용 목적: \"산부인과학 진료용 소프트웨어\"",
+      "evidence_ids": [
+        "c015:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd02",
+      "category": "regulatory",
+      "claim": "써비레이 등 AI 진단시스템 [KR] approval · active (제허 22-376) / 사용 목적: \"산부인과학 진료용 소프트웨어\"",
+      "evidence_ids": [
+        "c015:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd03",
+      "category": "regulatory",
+      "claim": "써비레이 등 AI 진단시스템 [KR] approval · active (제허 23-130) / 사용 목적: \"위암영상검출·진단보조소프트웨어\"",
+      "evidence_ids": [
+        "c015:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd04",
+      "category": "regulatory",
+      "claim": "써비레이 등 AI 진단시스템 [KR] certification · active (제인 23-4743) / 사용 목적: \"의료영상저장전송분석장치\"",
+      "evidence_ids": [
+        "c015:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd05",
+      "category": "regulatory",
+      "claim": "써비레이 등 AI 진단시스템 [KR] approval · active (체외 제허 23-815) / 사용 목적: \"암예후·예측검사소프트웨어\"",
+      "evidence_ids": [
+        "c015:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd06",
+      "category": "regulatory",
+      "claim": "써비레이 등 AI 진단시스템 [KR] approval · active (제허 23-1052) / 사용 목적: \"위암 영상 검출·진단보조 소프트웨어\"",
+      "evidence_ids": [
+        "c015:clinical:ev05"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd07",
+      "category": "regulatory",
+      "claim": "써비레이 등 AI 진단시스템 [KR] approval · active (제허 25-25) / 사용 목적: \"2등급 의료영상 검출·진단보조 소프트웨어\"",
+      "evidence_ids": [
+        "c015:clinical:ev06"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd08",
+      "category": "regulatory",
+      "claim": "Cerviray AI [KR] approval · active / 사용 목적: \"자궁경부암 진단 보조 시스템\"",
+      "evidence_ids": [
+        "c015:clinical:ev07"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd09",
+      "category": "regulatory",
+      "claim": "URO dot AI [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd10",
+      "category": "regulatory",
+      "claim": "ECHO dot AI [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd11",
+      "category": "regulatory",
+      "claim": "체외형의료용카메라 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd12",
+      "category": "regulatory",
+      "claim": "콜포스코프 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd13",
+      "category": "regulatory",
+      "claim": "진료용 장갑 [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd14",
+      "category": "designation",
+      "claim": "URO dot AI [KR] 혁신의료기기 지정 · active / 범위: 요로결석 진단 분야",
+      "evidence_ids": [
+        "c015:clinical:ev08"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c015:clinical:fd15",
+      "category": "clinical_evidence",
+      "claim": "써비레이 등 AI 진단시스템: 임상 근거 L0, C1 없음 (unknown), 연구 4건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 3건 점수 제외; 발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd16",
+      "category": "clinical_evidence",
+      "claim": "Cerviray AI: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd17",
+      "category": "clinical_evidence",
+      "claim": "URO dot AI: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd18",
+      "category": "clinical_evidence",
+      "claim": "ECHO dot AI: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd19",
+      "category": "clinical_evidence",
+      "claim": "체외형의료용카메라: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd20",
+      "category": "clinical_evidence",
+      "claim": "콜포스코프: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd21",
+      "category": "clinical_evidence",
+      "claim": "진료용 장갑: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd22",
+      "category": "claim",
+      "claim": "주장 \"아이도트의 정재훈 대표는 “새로운 써비레이AI(Cerviray AI)는 혈액, 점액 등 영상 판단을 방해하는 요소를 효과적으로 필터링하고, 환자마다 고유한 형태학적 혈관 패턴을 종합적으로 분석해 진단의 민감도와 특이도를 크게 높였다”며 “이는 의료 인프라가 부족한 지역에서도 정확한 조기 진단을 가능하게 함으로써 자궁경부암 예방에 기여할 것”이라고 전했다.\" → partially_supported: 주장하는 진단의 민감도와 특이도 향상에 대한 연구 결과가 있으나, 제품명 미기재로 직접적인 연관성은 확인되지 않음.",
+      "evidence_ids": [
+        "c015:clinical:ev12"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c015:clinical:fd23",
+      "category": "claim",
+      "claim": "주장 \"아이도트는 이번 기술 업그레이드를 바탕으로 2025년 내 미국 FDA 510(k) Class II 인허가 획득과 유럽 CE 인증 절차를 가속화할 계획이다.\" → unknown: 주장하는 FDA 510(k) Class II 인허가 획득 계획에 대한 근거가 없음.",
+      "evidence_ids": [],
+      "uncertainty": "근거 부족",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c015:clinical:mi01",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c015:clinical:mi02",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 3건 점수 제외; 발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c015:clinical:mi03",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c015:clinical:mi04",
+      "field": "products[p003].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c015:clinical:mi05",
+      "field": "regulatory_records[p003][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아이도트, URO dot AI, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c015:clinical:mi06",
+      "field": "criteria_inputs.C1[p003]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c015:clinical:mi07",
+      "field": "products[p004].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c015:clinical:mi08",
+      "field": "products[p004].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c015:clinical:mi09",
+      "field": "regulatory_records[p004][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아이도트, ECHO dot AI, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c015:clinical:mi10",
+      "field": "criteria_inputs.C1[p004]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c015:clinical:mi11",
+      "field": "products[p005].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c015:clinical:mi12",
+      "field": "products[p005].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c015:clinical:mi13",
+      "field": "regulatory_records[p005][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아이도트, 체외형의료용카메라, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c015:clinical:mi14",
+      "field": "criteria_inputs.C1[p005]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c015:clinical:mi15",
+      "field": "products[p006].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c015:clinical:mi16",
+      "field": "products[p006].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c015:clinical:mi17",
+      "field": "regulatory_records[p006][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아이도트, 콜포스코프, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c015:clinical:mi18",
+      "field": "criteria_inputs.C1[p006]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c015:clinical:mi19",
+      "field": "products[p007].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c015:clinical:mi20",
+      "field": "products[p007].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "low",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c015:clinical:mi21",
+      "field": "regulatory_records[p007][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 아이도트, 진료용 장갑, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c015:clinical:mi22",
+      "field": "criteria_inputs.C1[p007]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c015:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의도된 사용이 'AI 진단시스템'으로 구체적인 질병 진단이나 치료에 대한 정보가 부족하여 규제 적용 여부를 판단할 수 없음."
+    },
+    {
+      "coverage_id": "c015:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "자궁경부암 진단 보조 시스템으로, 회사의 주장에 '정확한 조기 진단을 가능하게 함으로써 자궁경부암 예방에 기여할 것'이라는 효능 주장이 포함되어 있어 규제 대상."
+    },
+    {
+      "coverage_id": "c015:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "요로결석 진단 보조 시스템으로, 보건복지부 고시 개정을 통해 비급여 시장에 진입하며 의료 현장 확산에 속도를 낸다는 주장이 있어 규제 대상."
+    },
+    {
+      "coverage_id": "c015:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "중이염 진단 보조 시스템으로, 구체적인 효능 주장이나 규제 적용 여부에 대한 정보가 부족하여 판단할 수 없음."
+    },
+    {
+      "coverage_id": "c015:clinical:cv05",
+      "area": "classification",
+      "product_id": "p005",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "체외형 의료용 카메라로, 의료기기 범주에 해당하여 규제 대상."
+    },
+    {
+      "coverage_id": "c015:clinical:cv06",
+      "area": "classification",
+      "product_id": "p006",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "콜포스코프는 의료기기로 분류되어 규제 대상."
+    },
+    {
+      "coverage_id": "c015:clinical:cv07",
+      "area": "classification",
+      "product_id": "p007",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의료용 장갑은 의료기기로 분류되어 규제 대상."
+    },
+    {
+      "coverage_id": "c015:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아이도트",
+          "써비레이 등 AI 진단시스템"
+        ],
+        "queries": [
+          "아이도트 써비레이 등 AI 진단시스템 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv09",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아이도트",
+          "Cerviray AI"
+        ],
+        "queries": [
+          "아이도트 Cerviray AI 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv10",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아이도트",
+          "URO dot AI"
+        ],
+        "queries": [
+          "아이도트 URO dot AI 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c015:clinical:cv11",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아이도트",
+          "ECHO dot AI"
+        ],
+        "queries": [
+          "아이도트 ECHO dot AI 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c015:clinical:cv12",
+      "area": "regulatory",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아이도트",
+          "체외형의료용카메라"
+        ],
+        "queries": [
+          "아이도트 체외형의료용카메라 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c015:clinical:cv13",
+      "area": "regulatory",
+      "product_id": "p006",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아이도트",
+          "콜포스코프"
+        ],
+        "queries": [
+          "아이도트 콜포스코프 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c015:clinical:cv14",
+      "area": "regulatory",
+      "product_id": "p007",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "아이도트",
+          "진료용 장갑"
+        ],
+        "queries": [
+          "아이도트 진료용 장갑 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c015:clinical:cv15",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "써비레이 등 AI 진단시스템 혁신의료기술 평가",
+          "써비레이 등 AI 진단시스템 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "써비레이 등 AI 진단시스템 혁신의료기술 평가",
+          "써비레이 등 AI 진단시스템 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv17",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "Cerviray AI 혁신의료기술 평가",
+          "Cerviray AI 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv18",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "Cerviray AI 혁신의료기술 평가",
+          "Cerviray AI 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv19",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "URO dot AI 혁신의료기술 평가",
+          "URO dot AI 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv20",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "URO dot AI 혁신의료기술 평가",
+          "URO dot AI 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv21",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "ECHO dot AI 혁신의료기술 평가",
+          "ECHO dot AI 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv22",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "ECHO dot AI 혁신의료기술 평가",
+          "ECHO dot AI 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv23",
+      "area": "designation",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "체외형의료용카메라 혁신의료기술 평가",
+          "체외형의료용카메라 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv24",
+      "area": "reimbursement",
+      "product_id": "p005",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "체외형의료용카메라 혁신의료기술 평가",
+          "체외형의료용카메라 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv25",
+      "area": "designation",
+      "product_id": "p006",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "콜포스코프 혁신의료기술 평가",
+          "콜포스코프 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv26",
+      "area": "reimbursement",
+      "product_id": "p006",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "콜포스코프 혁신의료기술 평가",
+          "콜포스코프 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv27",
+      "area": "designation",
+      "product_id": "p007",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "진료용 장갑 혁신의료기술 평가",
+          "진료용 장갑 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv28",
+      "area": "reimbursement",
+      "product_id": "p007",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "아이도트 혁신의료기기 지정",
+          "진료용 장갑 혁신의료기술 평가",
+          "진료용 장갑 비급여 등재 고시",
+          "아이도트 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv29",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AIDOT\"[Affiliation]",
+          "아이도트 써비레이 등 AI 진단시스템 임상 연구 논문",
+          "써비레이 등 AI 진단시스템 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv30",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Cerviray AI\"[Title/Abstract]",
+          "\"AIDOT\"[Affiliation]",
+          "아이도트 Cerviray AI 임상 연구 논문",
+          "Cerviray AI clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv31",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"URO dot AI\"[Title/Abstract]",
+          "\"AIDOT\"[Affiliation]",
+          "아이도트 URO dot AI 임상 연구 논문",
+          "URO dot AI clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv32",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"ECHO dot AI\"[Title/Abstract]",
+          "\"AIDOT\"[Affiliation]",
+          "아이도트 ECHO dot AI 임상 연구 논문",
+          "ECHO dot AI clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv33",
+      "area": "clinical_studies",
+      "product_id": "p005",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AIDOT\"[Affiliation]",
+          "아이도트 체외형의료용카메라 임상 연구 논문",
+          "체외형의료용카메라 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv34",
+      "area": "clinical_studies",
+      "product_id": "p006",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AIDOT\"[Affiliation]",
+          "아이도트 콜포스코프 임상 연구 논문",
+          "콜포스코프 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv35",
+      "area": "clinical_studies",
+      "product_id": "p007",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"AIDOT\"[Affiliation]",
+          "아이도트 진료용 장갑 임상 연구 논문",
+          "진료용 장갑 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv36",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c015:clinical:cv37",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv38",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c015:clinical:cv39",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c015:clinical:cv40",
+      "area": "claim_check",
+      "product_id": "p005",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c015:clinical:cv41",
+      "area": "claim_check",
+      "product_id": "p006",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c015:clinical:cv42",
+      "area": "claim_check",
+      "product_id": "p007",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}

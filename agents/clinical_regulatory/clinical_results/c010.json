@@ -1,0 +1,481 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c010",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "complete",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c010:clinical:ev01"
+        ]
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c010:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "approval",
+        "record_number": null,
+        "permitted_use": "AI 기반 폐기능 검사기",
+        "status": "active",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": [
+          "c010:clinical:ev01"
+        ]
+      }
+    ],
+    "designation_records": [],
+    "reimbursement_records": [
+      {
+        "record_id": "c010:clinical:rmb01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "신의료기술 평가",
+        "status": "pending",
+        "scope": "AI 기반 폐기능 검사기",
+        "effective_at": null,
+        "evidence_ids": [
+          "c010:clinical:ev02"
+        ]
+      }
+    ],
+    "clinical_studies": [
+      {
+        "study_id": "c010:clinical:st01",
+        "product_id": "p001",
+        "design": "임상시험",
+        "prospective": true,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": 900,
+        "comparator": "기존 폐 기능 진단기기",
+        "endpoint": "동시 타당도",
+        "result": "동일한 결과가 나오는 것을 확인",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c010:clinical:ev03"
+        ],
+        "evidence_level": "L3",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      }
+    ],
+    "claim_checks": [
+      {
+        "claim_id": "c010:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "더스피로킷은 피검사자의 호흡 패턴을 실시간으로 분석하고, 디지털 기반 자동판독 기능을 통해 만성폐쇄성폐질환(COPD) 및 천식 등 주요 호흡기 질환 진단을 보조하는 무선 핸디형 검사기다.",
+        "status": "supported",
+        "comparison_reason": "주장과 동일한 내용이 확인된 임상 근거가 있어 지원됨.",
+        "evidence_ids": [
+          "c010:clinical:ev01"
+        ]
+      },
+      {
+        "claim_id": "c010:p001:cl02",
+        "product_id": "p001",
+        "original_claim": "특히 주력 제품인 AI 기반 간편형 폐기능 및 호흡기 질환 검사기 '더 스피로킷'은 천식 및 만성폐쇄성폐질환(COPD) 진료에 어려움을 겪는 1, 2차 병원이 해당 질환을 정확하게 진단하도록 돕고, 적정 약물 처방까지 가이드하는 통합 솔루션을 제공한다.",
+        "status": "partially_supported",
+        "comparison_reason": "주장하는 '정확한 진단' 부분은 확인되지 않지만, '진단 보조'는 지원됨. 약물 처방 가이드는 근거 없음.",
+        "evidence_ids": [
+          "c010:clinical:ev01",
+          "c010:clinical:ev02"
+        ]
+      }
+    ],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 티알 (c010) | 기준일 2026-09-30\n- p001 더 스피로킷: ai_software/in_scope | 공식 상태: KR approval·active(\"AI 기반 폐기능 검사기\") | 제도: 신의료기술 평가·pending | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 1, partially_supported 1 | 평가 상태 complete\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c010:clinical:reg01": "c010:clinical:fd01",
+      "finding|reimbursement|c010:clinical:rmb01": "c010:clinical:fd02",
+      "finding|clinical_evidence|p001": "c010:clinical:fd03",
+      "finding|claim|c010:p001:cl02": "c010:clinical:fd04"
+    },
+    "collected_profile": {
+      "legal_name": "티알",
+      "english_name": "TR Corporation",
+      "homepage": "https://www.theresearcher.co.kr",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "더 스피로킷",
+          "model": null,
+          "intended_use": "AI 기반 폐기능 검사기",
+          "target_disease": "천식, 만성폐쇄성폐질환",
+          "users": "의료기관",
+          "environment": "병원, 검진센터",
+          "modality": "호흡기 검사",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": [
+            {
+              "text": "더스피로킷은 피검사자의 호흡 패턴을 실시간으로 분석하고, 디지털 기반 자동판독 기능을 통해 만성폐쇄성폐질환(COPD) 및 천식 등 주요 호흡기 질환 진단을 보조하는 무선 핸디형 검사기다.",
+              "url": "https://www.doctorsnews.co.kr/news/articleView.html?idxno=164738",
+              "claimed_at": null
+            },
+            {
+              "text": "특히 주력 제품인 AI 기반 간편형 폐기능 및 호흡기 질환 검사기 '더 스피로킷'은 천식 및 만성폐쇄성폐질환(COPD) 진료에 어려움을 겪는 1, 2차 병원이 해당 질환을 정확하게 진단하도록 돕고, 적정 약물 처방까지 가이드하는 통합 솔루션을 제공한다.",
+              "url": "https://www.investnews.co.kr/news/articleView.html?idxno=3002096",
+              "claimed_at": null
+            }
+          ]
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://www.theresearcher.co.kr",
+          "https://www.doctorsnews.co.kr/news/articleView.html?idxno=164738",
+          "https://www.investnews.co.kr/news/articleView.html?idxno=3002096",
+          "http://dcamp.kr/news/story/7319",
+          "https://www.hankyung.com/article/2025070245031"
+        ],
+        "dropped_claims_not_in_page": [],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c010:clinical:src03",
+      "title": "[시리즈] 디지털 헬스케어 스타트업 '티알', AI 기반 폐기능 검사기 '더 스피로킷' 앞세워 25억 투자 유치 < 투자 < 스타트업+ < 기사본문 - 인베스트 | invest",
+      "url": "https://www.investnews.co.kr/news/articleView.html?idxno=3002096",
+      "publisher": "www.investnews.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c010:clinical:src05",
+      "title": "5분 만에 진단…티알, 소형 폐 검진기",
+      "url": "https://www.hankyung.com/article/2025070245031",
+      "publisher": "www.hankyung.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c010:clinical:src18",
+      "title": "티알",
+      "url": "http://www.theresearcher.co.kr/html/sub4_1.jsp",
+      "publisher": "www.theresearcher.co.kr",
+      "source_type": "company",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c010:clinical:src21",
+      "title": "티알, '2024 대만 헬스케어 엑스포' 참가…AI기반 호흡기질환 ...",
+      "url": "https://www.k-health.com/news/articleView.html?idxno=76535",
+      "publisher": "www.k-health.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c010:clinical:src22",
+      "title": "더스피로킷 - 주식회사 티알",
+      "url": "https://linkonbiz.com/product/6950",
+      "publisher": "linkonbiz.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c010:clinical:src28",
+      "title": "티알, 시리즈A 25억 원 투자 유치…AI 폐 기능 검사기 ‘더 스피로킷’",
+      "url": "https://welaunch.kr/post/welaunch/t38zYoPcxomKlwo042mD",
+      "publisher": "welaunch.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c010:clinical:src38",
+      "title": "8살 천식 소년, 대학생 돼 SCI 논문 쓰고 호흡 힘든 사람들 위해 개발한 것",
+      "url": "https://www.chosun.com/economy/startup_story/2026/01/16/4AHLILHP55FFDI4WHUFRQLXQNE",
+      "publisher": "www.chosun.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c010:clinical:src39",
+      "title": "[인터뷰] 김병수 티알 대표 “특허받은 기술로 AI 기반 보급형 폐 기능 검사기를 개발했습니다” - 테크42",
+      "url": "https://www.tech42.co.kr/%EC%9D%B8%ED%84%B0%EB%B7%B0-%EA%B9%80%EB%B3%91%EC%88%98-%ED%8B%B0%EC%95%8C-%EB%8C%80%ED%91%9C-%ED%8A%B9%ED%97%88%EB%B0%9B%EC%9D%80-%EA%B8%B0%EC%88%A0%EB%A1%9C-ai-%EA%B8%B0%EB%B0%98",
+      "publisher": "www.tech42.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c010:clinical:ev01",
+      "company_id": "c010",
+      "product_id": "p001",
+      "statement": "더 스피로킷은 피검사자의 호흡 패턴을 실시간으로 분석하고, 디지털 기반 자동판독 기능을 통해 만성폐쇄성폐질환(COPD) 및 천식 등 주요 호흡기 질환 진단을 보조하는 무선 핸디형 검사기다.",
+      "source_ids": [
+        "c010:clinical:src21",
+        "c010:clinical:src18",
+        "c010:clinical:src03",
+        "c010:clinical:src22",
+        "c010:clinical:src05"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "partial"
+    },
+    {
+      "evidence_id": "c010:clinical:ev02",
+      "company_id": "c010",
+      "product_id": "p001",
+      "statement": "더 스피로킷은 신의료기술 평가를 받고 있다.",
+      "source_ids": [
+        "c010:clinical:src28"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "partial"
+    },
+    {
+      "evidence_id": "c010:clinical:ev03",
+      "company_id": "c010",
+      "product_id": "p001",
+      "statement": "더 스피로킷의 검사 결과를 기존 폐 기능 진단기기와 비교하는 임상시험을 수행했다.",
+      "source_ids": [
+        "c010:clinical:src38",
+        "c010:clinical:src39"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "confirmed"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c010:clinical:fd01",
+      "category": "regulatory",
+      "claim": "더 스피로킷 [KR] approval · active / 사용 목적: \"AI 기반 폐기능 검사기\"",
+      "evidence_ids": [
+        "c010:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c010:clinical:fd02",
+      "category": "reimbursement",
+      "claim": "더 스피로킷 [KR] 신의료기술 평가 · pending / 범위: AI 기반 폐기능 검사기",
+      "evidence_ids": [
+        "c010:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c010:clinical:fd03",
+      "category": "clinical_evidence",
+      "claim": "더 스피로킷: 임상 근거 L0, C1 없음 (unknown), 연구 1건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c010:clinical:fd04",
+      "category": "claim",
+      "claim": "주장 \"특히 주력 제품인 AI 기반 간편형 폐기능 및 호흡기 질환 검사기 '더 스피로킷'은 천식 및 만성폐쇄성폐질환(COPD) 진료에 어려움을 겪는 1, 2차 병원이 해당 질환을 정확하게 진단하도록 돕고, 적정 약물 처방까지 가이드하는 통합 솔루션을 제공한다.\" → partially_supported: 주장하는 '정확한 진단' 부분은 확인되지 않지만, '진단 보조'는 지원됨. 약물 처방 가이드는 근거 없음.",
+      "evidence_ids": [
+        "c010:clinical:ev01",
+        "c010:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c010:clinical:mi01",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c010:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "'더 스피로킷'은 호흡 패턴을 분석하고 호흡기 질환 진단을 보조하는 AI 기반 검사기로, 질병 진단에 사용되므로 'in_scope'로 분류된다. 또한, 제품의 주장에 질병 진단을 돕는다는 내용이 포함되어 있어 효능 주장이 확인된다."
+    },
+    {
+      "coverage_id": "c010:clinical:cv02",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "티알",
+          "더 스피로킷"
+        ],
+        "queries": [
+          "티알 더 스피로킷 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c010:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "티알 혁신의료기기 지정",
+          "더 스피로킷 혁신의료기술 평가",
+          "더 스피로킷 비급여 등재 고시",
+          "티알 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c010:clinical:cv04",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "티알 혁신의료기기 지정",
+          "더 스피로킷 혁신의료기술 평가",
+          "더 스피로킷 비급여 등재 고시",
+          "티알 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c010:clinical:cv05",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"TR Corporation\"[Affiliation]",
+          "티알 더 스피로킷 임상 연구 논문",
+          "더 스피로킷 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c010:clinical:cv06",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    }
+  ],
+  "review_responses": []
+}

@@ -1,0 +1,1374 @@
+{
+  "run_id": "run-2026-09-30",
+  "company_id": "c014",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "clinical",
+  "result_version": 1,
+  "analysis_status": "complete",
+  "data": {
+    "product_assessments": [
+      {
+        "product_id": "p001",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c014:clinical:ev01",
+          "c014:clinical:ev02",
+          "c014:clinical:ev03"
+        ]
+      },
+      {
+        "product_id": "p002",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": [
+          "c014:clinical:ev04"
+        ]
+      },
+      {
+        "product_id": "p003",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      },
+      {
+        "product_id": "p004",
+        "regulatory_applicability": "in_scope",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
+        "evidence_level": "L0",
+        "clinical_score": null,
+        "score_status": "unknown",
+        "evidence_ids": []
+      }
+    ],
+    "regulatory_records": [
+      {
+        "record_id": "c014:clinical:reg01",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": null,
+        "permitted_use": "폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.",
+        "status": "active",
+        "effective_at": "2020-07-27",
+        "valid_until": null,
+        "evidence_ids": [
+          "c014:clinical:ev01"
+        ]
+      },
+      {
+        "record_id": "c014:clinical:reg02",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "certification",
+        "record_number": "제인 22-4304",
+        "permitted_use": "폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.",
+        "status": "active",
+        "effective_at": "2022-04-19",
+        "valid_until": null,
+        "evidence_ids": [
+          "c014:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c014:clinical:reg03",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "certification",
+        "record_number": "제인 23-4085",
+        "permitted_use": "폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.",
+        "status": "active",
+        "effective_at": "2023-01-20",
+        "valid_until": null,
+        "evidence_ids": [
+          "c014:clinical:ev02"
+        ]
+      },
+      {
+        "record_id": "c014:clinical:reg04",
+        "product_id": "p001",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "certification",
+        "record_number": "제인 23-5095",
+        "permitted_use": "폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.",
+        "status": "active",
+        "effective_at": "2023-09-19",
+        "valid_until": null,
+        "evidence_ids": [
+          "c014:clinical:ev03"
+        ]
+      },
+      {
+        "record_id": "c014:clinical:reg05",
+        "product_id": "p002",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": "제허 20-602",
+        "permitted_use": "의료영상 분석 소프트웨어",
+        "status": "active",
+        "effective_at": "2020-07-27",
+        "valid_until": null,
+        "evidence_ids": [
+          "c014:clinical:ev04"
+        ]
+      },
+      {
+        "record_id": "c014:clinical:reg06",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      },
+      {
+        "record_id": "c014:clinical:reg07",
+        "product_id": "p004",
+        "country": "KR",
+        "authority": "식품의약품안전처",
+        "procedure_type": "unknown",
+        "record_number": null,
+        "permitted_use": null,
+        "status": "not_found",
+        "effective_at": null,
+        "valid_until": null,
+        "evidence_ids": []
+      }
+    ],
+    "designation_records": [
+      {
+        "record_id": "c014:clinical:des01",
+        "product_id": "p002",
+        "country": "KR",
+        "program": "혁신의료기기 지정",
+        "status": "active",
+        "scope": "3등급 의료영상검출‧진단보조소프트웨어",
+        "effective_at": "2023-02",
+        "evidence_ids": [
+          "c014:clinical:ev05"
+        ]
+      }
+    ],
+    "reimbursement_records": [
+      {
+        "record_id": "c014:clinical:rmb01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "신의료기술 평가 유예",
+        "status": "active",
+        "scope": "최대 5년간 비급여로 처방 가능",
+        "effective_at": "2023-04",
+        "evidence_ids": [
+          "c014:clinical:ev06"
+        ]
+      }
+    ],
+    "clinical_studies": [
+      {
+        "study_id": "c014:clinical:st01",
+        "product_id": "p001",
+        "design": "retrospective analysis",
+        "prospective": false,
+        "multicenter": false,
+        "external_validation": true,
+        "sample_size": 303,
+        "comparator": "RPN-only model",
+        "endpoint": "specificity, sensitivity, positive predictive value",
+        "result": "Modified Mask R-CNN exhibited significant improvement in terms of specificity. The false-positive rate per scan decreased by 31% in comparison to the RPN-only model. Positive Predictive Value significantly increased by 10.5%.",
+        "limitations": "",
+        "evidence_ids": [
+          "c014:clinical:ev07"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c014:clinical:st02",
+        "product_id": "p001",
+        "design": "retrospective analysis",
+        "prospective": false,
+        "multicenter": false,
+        "external_validation": false,
+        "sample_size": 65,
+        "comparator": "none",
+        "endpoint": "sensitivity, false-metastasis candidates per scan, positive predictive value",
+        "result": "The nodule-matching algorithm improves the diagnostic performance of DL-CAD for new pulmonary metastases, by lowering the number of false-metastasis candidates without compromising sensitivity.",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c014:clinical:ev08"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c014:clinical:st03",
+        "product_id": "p001",
+        "design": "observational study",
+        "prospective": false,
+        "multicenter": false,
+        "external_validation": false,
+        "sample_size": null,
+        "comparator": "none",
+        "endpoint": "detection of pulmonary nodules",
+        "result": "AI detected 98% of lung cancers that were missed by radiologists, with a low false positive rate.",
+        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "evidence_ids": [
+          "c014:clinical:ev09"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
+    "claim_checks": [],
+    "red_flags": [],
+    "clinical_summary": "[임상·인허가] 모니터코퍼레이션 (c014) | 기준일 2026-09-30\n- p001 루카스 의료영상 분석: ai_software/in_scope | 공식 상태: KR approval·active(\"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\"); KR certification·active(\"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\"); KR certification·active(\"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\"); KR certification·active(\"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\") | 제도: 신의료기술 평가 유예·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 LuCAS: ai_software/in_scope | 공식 상태: KR approval·active(\"의료영상 분석 소프트웨어\") | 제도: 혁신의료기기 지정·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p003 LuCAS-ABS: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p004 LuCAS-plus: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003], regulatory_records[p004][KR], criteria_inputs.C1[p004]",
+    "criteria_inputs": {
+      "C1": {
+        "score": null,
+        "score_status": "unknown",
+        "product_scores": [
+          {
+            "product_id": "p001",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p002",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p003",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          },
+          {
+            "product_id": "p004",
+            "score": null,
+            "score_status": "unknown",
+            "scope_weight": 1.0
+          }
+        ],
+        "evidence_ids": [],
+        "rationale": "점수화된 제품 없음"
+      }
+    },
+    "validation_issues": [],
+    "id_keys": {
+      "finding|regulatory|c014:clinical:reg01": "c014:clinical:fd01",
+      "finding|regulatory|c014:clinical:reg02": "c014:clinical:fd02",
+      "finding|regulatory|c014:clinical:reg03": "c014:clinical:fd03",
+      "finding|regulatory|c014:clinical:reg04": "c014:clinical:fd04",
+      "finding|regulatory|c014:clinical:reg05": "c014:clinical:fd05",
+      "finding|regulatory|c014:clinical:reg06": "c014:clinical:fd06",
+      "finding|regulatory|c014:clinical:reg07": "c014:clinical:fd07",
+      "finding|designation|c014:clinical:des01": "c014:clinical:fd08",
+      "finding|reimbursement|c014:clinical:rmb01": "c014:clinical:fd09",
+      "finding|clinical_evidence|p001": "c014:clinical:fd10",
+      "finding|clinical_evidence|p002": "c014:clinical:fd11",
+      "finding|clinical_evidence|p003": "c014:clinical:fd12",
+      "finding|clinical_evidence|p004": "c014:clinical:fd13"
+    },
+    "collected_profile": {
+      "legal_name": "모니터코퍼레이션",
+      "english_name": "Monitor Corporation",
+      "homepage": "https://thevc.kr/monitor",
+      "aliases": [],
+      "products": [
+        {
+          "product_id": "p001",
+          "name": "루카스 의료영상 분석",
+          "model": null,
+          "intended_use": "루카스 의료영상 분석",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p002",
+          "name": "LuCAS",
+          "model": null,
+          "intended_use": "의료영상 분석 소프트웨어",
+          "target_disease": "폐암",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "CT",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p003",
+          "name": "LuCAS-ABS",
+          "model": null,
+          "intended_use": "자동유방초음파장치용 유방암 검진 AI솔루션",
+          "target_disease": "유방암",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "초음파",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        },
+        {
+          "product_id": "p004",
+          "name": "LuCAS-plus",
+          "model": null,
+          "intended_use": "흉부 CT 영상 분석 및 진단 보조 소프트웨어",
+          "target_disease": "폐암",
+          "users": "의료기관",
+          "environment": "병원",
+          "modality": "CT",
+          "target_countries": [
+            "KR"
+          ],
+          "claims": []
+        }
+      ],
+      "collection_notes": {
+        "searched_pages": [
+          "https://thevc.kr/monitor",
+          "https://kr.aving.net/news/articleView.html?idxno=1773528",
+          "https://www.nextunicorn.kr/company/58ac806d00b21b79",
+          "https://www.aitimes.kr/news/articleView.html?idxno=26681",
+          "https://linkonbiz.com/seller/5204"
+        ],
+        "dropped_claims_not_in_page": [
+          "모니터코퍼레이션, KIMES BUSAN 2022서 AI 의료영상 분석 솔루션 공개… “폐와 유방 검사결과 분석 및 진단을 지원합니다.”",
+          "모니터코퍼레이션, 유방초음파 AI 싱가포르 첫 상용 공급...창이종합병원에 공급하여 유방암 검진을 지원합니다.",
+          "AI기반 흉부 CT 영상 분석 솔루션으로 폐암 진단을 지원합니다."
+        ],
+        "collected_at": "2026-09-30"
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "c014:clinical:src01",
+      "title": "식약처 의료기기 품목허가 조회: 모니터코퍼레이션",
+      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EB%AA%A8%EB%8B%88%ED%84%B0%EC%BD%94%ED%8D%BC%EB%A0%88%EC%9D%B4%EC%85%98",
+      "publisher": "식품의약품안전처",
+      "source_type": "official",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src06",
+      "title": "모니터코퍼레이션, AI 폐암 진단 솔루션 '평가유예 신의료기술' 선정 - 플래텀",
+      "url": "https://platum.kr/archives/255339",
+      "publisher": "platum.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src11",
+      "title": "MEDI:GATE NEWS 모니터코퍼레이션, AI 폐암 검진 솔루션 식약처 3등급 허가 획득",
+      "url": "https://medigatenews.com/news/2431599952",
+      "publisher": "medigatenews.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src12",
+      "title": "모니터코퍼레이션, ‘루카스’ 식약처 3등급 허가 획득 < 다국적제약/의료기기 < 단신 < 기사본문 - 의학신문",
+      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=2132227",
+      "publisher": "www.bosa.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src22",
+      "title": "모니터코퍼레이션, AI '흉부CT 진단보조' 식약처 3등급 허가 - 바이오스펙테이터",
+      "url": "https://www.biospectator.com/news/view/11065",
+      "publisher": "www.biospectator.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src23",
+      "title": "AI 폐암 검진 솔루션 ‘루카스’, 식약처 3등급 허가 획득 - ZDNet korea",
+      "url": "https://zdnet.co.kr/view?no=20200812091950",
+      "publisher": "zdnet.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src27",
+      "title": "모니터코퍼레이션 'LuCAS Plus', 혁신의료기기 지정 < 산업 < 기사본문 - 청년의사",
+      "url": "http://www.docdocdoc.co.kr/news/articleView.html?idxno=3014611",
+      "publisher": "www.docdocdoc.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src30",
+      "title": "의료 인공지능 기업 ‘모니터코퍼레이션’, 70억 규모 시리즈 B 투자 유치 - beSUCCESS",
+      "url": "https://besuccess.com/%EC%9D%98%EB%A3%8C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-%EA%B8%B0%EC%97%85-%EB%AA%A8%EB%8B%88%ED%84%B0%EC%BD%94%ED%8D%BC%EB%A0%88%EC%9D%B4%EC%85%98-70%EC%96%B5-%EA%B7%9C%EB%AA%A8",
+      "publisher": "besuccess.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src32",
+      "title": "모니터코퍼레이션, CT 폐암 조기 진단 ‘LuCAS’ 우수연구개발 혁신제품 선정 < 다국적제약/의료기기 < 단신 < 기사본문 - 의학신문",
+      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=2204208",
+      "publisher": "www.bosa.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src34",
+      "title": "모니터코퍼레이션, AI 폐암 진단 솔루션 '평가유예 신의료기술' 선정...비급여 적용 - 와우테일",
+      "url": "https://wowtale.net/2025/03/21/238773",
+      "publisher": "wowtale.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src35",
+      "title": "모니터코퍼레이션, AI 폐암 진단 솔루션 '평가유예 신의료기술' 선정",
+      "url": "https://www.newspim.com/news/view/20250321000136",
+      "publisher": "www.newspim.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src52",
+      "title": "AI-Based Pulmonary Embolism Detection: The Added Value of a False-Positive Reduction Module over a Region Proposal Network.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41750673/",
+      "publisher": "Diagnostics (Basel)",
+      "source_type": "research",
+      "published_at": "2026-02-09",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src54",
+      "title": "Usefulness of longitudinal nodule-matching algorithm in computer-aided diagnosis of new pulmonary metastases on cancer surveillance CT scans.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38415154/",
+      "publisher": "Quant Imaging Med Surg",
+      "source_type": "research",
+      "published_at": "2024-02-01",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c014:clinical:src57",
+      "title": "모니터코퍼레이션, \"AI가 전문의가 놓쳤던 폐암의 98% 찾아\" - 와우테일",
+      "url": "https://wowtale.net/2021/02/03/22468",
+      "publisher": "wowtale.net",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c014:clinical:ev01",
+      "company_id": "c014",
+      "product_id": "p001",
+      "statement": "3등급의료영상검출·진단보조소프트웨어",
+      "source_ids": [
+        "c014:clinical:src11",
+        "c014:clinical:src12",
+        "c014:clinical:src22",
+        "c014:clinical:src23"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2020-07-27",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev02",
+      "company_id": "c014",
+      "product_id": "p001",
+      "statement": "의료영상분석소프트웨어",
+      "source_ids": [
+        "c014:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2022-04-19",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev03",
+      "company_id": "c014",
+      "product_id": "p001",
+      "statement": "의료영상 분석 소프트웨어",
+      "source_ids": [
+        "c014:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2023-09-19",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev04",
+      "company_id": "c014",
+      "product_id": "p002",
+      "statement": "3등급의료영상검출·진단보조소프트웨어",
+      "source_ids": [
+        "c014:clinical:src01"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2020-07-27",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev05",
+      "company_id": "c014",
+      "product_id": "p002",
+      "statement": "모니터코퍼레이션의 LuCAS Plus는 기술집약도가 높고 혁신속도가 빠른 첨단기술 적용분야인 혁신의료기기-첨단기술군으로 지정됐다.",
+      "source_ids": [
+        "c014:clinical:src27",
+        "c014:clinical:src30",
+        "c014:clinical:src32"
+      ],
+      "locator": null,
+      "excerpt": "모니터코퍼레이션은 이번 혁신의료기기 지정을 통해 우선 심사 및 개발 단계별 신속 심사 등의 인허가 특례 지원을 받게 됐다.",
+      "event_date": "2023-02",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev06",
+      "company_id": "c014",
+      "product_id": "p001",
+      "statement": "모니터코퍼레이션의 ‘루카스 플러스’는 평가유예 신의료기술로 선정되어 비급여 항목으로 처방될 수 있다.",
+      "source_ids": [
+        "c014:clinical:src06",
+        "c014:clinical:src34",
+        "c014:clinical:src35"
+      ],
+      "locator": null,
+      "excerpt": "이번 선정으로 도입 병원이 더욱 확대될 것으로 기대된다.",
+      "event_date": "2023-04",
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev07",
+      "company_id": "c014",
+      "product_id": "p001",
+      "statement": "AI-Based Pulmonary Embolism Detection: The Added Value of a False-Positive Reduction Module over a Region Proposal Network.",
+      "source_ids": [
+        "c014:clinical:src52"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2026-02-09",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev08",
+      "company_id": "c014",
+      "product_id": "p001",
+      "statement": "Usefulness of longitudinal nodule-matching algorithm in computer-aided diagnosis of new pulmonary metastases on cancer surveillance CT scans.",
+      "source_ids": [
+        "c014:clinical:src54"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2024-02-01",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c014:clinical:ev09",
+      "company_id": "c014",
+      "product_id": "p001",
+      "statement": "AI가 전문의가 놓쳤던 폐암의 98% 찾아",
+      "source_ids": [
+        "c014:clinical:src57"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": null,
+      "evidence_status": "partial"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c014:clinical:fd01",
+      "category": "regulatory",
+      "claim": "루카스 의료영상 분석 [KR] approval · active / 사용 목적: \"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\"",
+      "evidence_ids": [
+        "c014:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd02",
+      "category": "regulatory",
+      "claim": "루카스 의료영상 분석 [KR] certification · active (제인 22-4304) / 사용 목적: \"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\"",
+      "evidence_ids": [
+        "c014:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd03",
+      "category": "regulatory",
+      "claim": "루카스 의료영상 분석 [KR] certification · active (제인 23-4085) / 사용 목적: \"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\"",
+      "evidence_ids": [
+        "c014:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd04",
+      "category": "regulatory",
+      "claim": "루카스 의료영상 분석 [KR] certification · active (제인 23-5095) / 사용 목적: \"폐결절의 ▲위치 ▲소속폐엽 ▲크기 ▲유형 ▲위험분류 정보를 제시한다.\"",
+      "evidence_ids": [
+        "c014:clinical:ev03"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd05",
+      "category": "regulatory",
+      "claim": "LuCAS [KR] approval · active (제허 20-602) / 사용 목적: \"의료영상 분석 소프트웨어\"",
+      "evidence_ids": [
+        "c014:clinical:ev04"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd06",
+      "category": "regulatory",
+      "claim": "LuCAS-ABS [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd07",
+      "category": "regulatory",
+      "claim": "LuCAS-plus [KR] unknown · not_found",
+      "evidence_ids": [],
+      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd08",
+      "category": "designation",
+      "claim": "LuCAS [KR] 혁신의료기기 지정 · active / 범위: 3등급 의료영상검출‧진단보조소프트웨어",
+      "evidence_ids": [
+        "c014:clinical:ev05"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd09",
+      "category": "reimbursement",
+      "claim": "루카스 의료영상 분석 [KR] 신의료기술 평가 유예 · active / 범위: 최대 5년간 비급여로 처방 가능",
+      "evidence_ids": [
+        "c014:clinical:ev06"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c014:clinical:fd10",
+      "category": "clinical_evidence",
+      "claim": "루카스 의료영상 분석: 임상 근거 L0, C1 없음 (unknown), 연구 3건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 2건 점수 제외; 발행일 미상·기준일 판단불가로 1건 점수 제외)",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c014:clinical:fd11",
+      "category": "clinical_evidence",
+      "claim": "LuCAS: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c014:clinical:fd12",
+      "category": "clinical_evidence",
+      "claim": "LuCAS-ABS: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    },
+    {
+      "finding_id": "c014:clinical:fd13",
+      "category": "clinical_evidence",
+      "claim": "LuCAS-plus: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "evidence_ids": [],
+      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c014:clinical:mi01",
+      "field": "products[p001].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c014:clinical:mi02",
+      "field": "criteria_inputs.C1[p001]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 2건 점수 제외; 발행일 미상·기준일 판단불가로 1건 점수 제외)"
+    },
+    {
+      "item_id": "c014:clinical:mi03",
+      "field": "products[p002].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c014:clinical:mi04",
+      "field": "criteria_inputs.C1[p002]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c014:clinical:mi05",
+      "field": "products[p003].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c014:clinical:mi06",
+      "field": "products[p003].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c014:clinical:mi07",
+      "field": "regulatory_records[p003][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 모니터코퍼레이션, LuCAS-ABS, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c014:clinical:mi08",
+      "field": "criteria_inputs.C1[p003]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    },
+    {
+      "item_id": "c014:clinical:mi09",
+      "field": "products[p004].model",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
+    },
+    {
+      "item_id": "c014:clinical:mi10",
+      "field": "products[p004].claims",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "medium",
+      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+    },
+    {
+      "item_id": "c014:clinical:mi11",
+      "field": "regulatory_records[p004][KR]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "조회 범위 내 미발견 (조회명: 모니터코퍼레이션, LuCAS-plus, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+    },
+    {
+      "item_id": "c014:clinical:mi12",
+      "field": "criteria_inputs.C1[p004]",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "high",
+      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+    }
+  ],
+  "coverage": [
+    {
+      "coverage_id": "c014:clinical:cv01",
+      "area": "classification",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의료영상 분석 소프트웨어로서의 사용 목적이 명시되어 있으나, 구체적인 규제 적용 여부에 대한 정보가 부족하다."
+    },
+    {
+      "coverage_id": "c014:clinical:cv02",
+      "area": "classification",
+      "product_id": "p002",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "의료영상 분석 소프트웨어로 폐암 진단에 사용되며, 의료기관에서 사용되는 점에서 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c014:clinical:cv03",
+      "area": "classification",
+      "product_id": "p003",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "자동유방초음파장치용 유방암 검진 AI솔루션으로, 의료기관에서 사용되며 질병 진단에 관련된 소프트웨어로 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c014:clinical:cv04",
+      "area": "classification",
+      "product_id": "p004",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "흉부 CT 영상 분석 및 진단 보조 소프트웨어로, 폐암 진단에 사용되며 의료기관에서 사용되는 점에서 규제 대상에 해당한다."
+    },
+    {
+      "coverage_id": "c014:clinical:cv05",
+      "area": "regulatory",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "모니터코퍼레이션",
+          "루카스 의료영상 분석"
+        ],
+        "queries": [
+          "모니터코퍼레이션 루카스 의료영상 분석 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv06",
+      "area": "regulatory",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "모니터코퍼레이션",
+          "LuCAS"
+        ],
+        "queries": [
+          "모니터코퍼레이션 LuCAS 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv07",
+      "area": "regulatory",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "모니터코퍼레이션",
+          "LuCAS-ABS"
+        ],
+        "queries": [
+          "모니터코퍼레이션 LuCAS-ABS 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c014:clinical:cv08",
+      "area": "regulatory",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [
+          "모니터코퍼레이션",
+          "LuCAS-plus"
+        ],
+        "queries": [
+          "모니터코퍼레이션 LuCAS-plus 식약처 허가 인증"
+        ],
+        "sources": [
+          "식약처 의료기기 품목허가",
+          "식약처 의료기기 품목정보",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
+    },
+    {
+      "coverage_id": "c014:clinical:cv09",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "루카스 의료영상 분석 혁신의료기술 평가",
+          "루카스 의료영상 분석 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv10",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "루카스 의료영상 분석 혁신의료기술 평가",
+          "루카스 의료영상 분석 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv11",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "LuCAS 혁신의료기술 평가",
+          "LuCAS 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv12",
+      "area": "reimbursement",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "LuCAS 혁신의료기술 평가",
+          "LuCAS 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv13",
+      "area": "designation",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "LuCAS-ABS 혁신의료기술 평가",
+          "LuCAS-ABS 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv14",
+      "area": "reimbursement",
+      "product_id": "p003",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "LuCAS-ABS 혁신의료기술 평가",
+          "LuCAS-ABS 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv15",
+      "area": "designation",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "LuCAS-plus 혁신의료기술 평가",
+          "LuCAS-plus 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv16",
+      "area": "reimbursement",
+      "product_id": "p004",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "모니터코퍼레이션 혁신의료기기 지정",
+          "LuCAS-plus 혁신의료기술 평가",
+          "LuCAS-plus 비급여 등재 고시",
+          "모니터코퍼레이션 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv17",
+      "area": "clinical_studies",
+      "product_id": "p001",
+      "country": null,
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"Monitor Corporation\"[Affiliation]",
+          "모니터코퍼레이션 루카스 의료영상 분석 임상 연구 논문",
+          "루카스 의료영상 분석 clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv18",
+      "area": "clinical_studies",
+      "product_id": "p002",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"LuCAS\"[Title/Abstract]",
+          "\"Monitor Corporation\"[Affiliation]",
+          "모니터코퍼레이션 LuCAS 임상 연구 논문",
+          "LuCAS clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv19",
+      "area": "clinical_studies",
+      "product_id": "p003",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"LuCAS-ABS\"[Title/Abstract]",
+          "\"Monitor Corporation\"[Affiliation]",
+          "모니터코퍼레이션 LuCAS-ABS 임상 연구 논문",
+          "LuCAS-ABS clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv20",
+      "area": "clinical_studies",
+      "product_id": "p004",
+      "country": null,
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "\"LuCAS-plus\"[Title/Abstract]",
+          "\"Monitor Corporation\"[Affiliation]",
+          "모니터코퍼레이션 LuCAS-plus 임상 연구 논문",
+          "LuCAS-plus clinical validation study"
+        ],
+        "sources": [
+          "PubMed",
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c014:clinical:cv21",
+      "area": "claim_check",
+      "product_id": "p001",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c014:clinical:cv22",
+      "area": "claim_check",
+      "product_id": "p002",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c014:clinical:cv23",
+      "area": "claim_check",
+      "product_id": "p003",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    },
+    {
+      "coverage_id": "c014:clinical:cv24",
+      "area": "claim_check",
+      "product_id": "p004",
+      "country": null,
+      "status": "insufficient_information",
+      "search_scope": {
+        "names": [],
+        "queries": [],
+        "sources": [],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": "회사 주장 원문을 찾지 못함"
+    }
+  ],
+  "review_responses": []
+}
