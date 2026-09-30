@@ -4,44 +4,151 @@
 
 ## 설치 및 실행
 
-아래는 현재 구현된 모듈의 개별 실행 방법입니다. 전체 후보부터 최종 보고서까지 한 번에 실행하는 통합 진입점은 아직 없습니다. Python 3.11 이상을 권장합니다.
+- 환경: Python 3.11 이상 권장, macOS·Linux 셸
+- 명령 실행 위치: 저장소 루트
+- 기준: main 브랜치 (`investment_review` 포함)
+- 입력·정규화: 투자 심사 진입점의 CSV 로딩 단계, 별도 Agent CLI 없음
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
+cp -n .env.example .env
+
+# 임상 검색·보고서 생성 추가 의존성
+python -m pip install tavily-python markdown-it-py
+
+# PDF 생성용 브라우저: 설치된 Chrome이 없는 환경
+python -m playwright install chromium
 ```
 
-### Risk 분석
+### 환경 설정
 
-로컬 `.env`에 `OPENAI_API_KEY`, `RISK_MODEL`을 설정합니다. 기본 Risk 실행은 웹검색을 하지 않으므로 Tavily 키가 필요하지 않습니다.
+`.env`에 사용할 모듈의 키·모델 설정.
+
+| 모듈 | 설정 |
+|---|---|
+| 임상·인허가 | `OPENAI_API_KEY`, `TAVILY_API_KEY`; 선택: `LLM_MODEL`, `NCBI_API_KEY` |
+| 시장·사업성 | `OPENAI_API_KEY`, `TAVILY_API_KEY`, `MARKET_MODEL` |
+| 실적·성장성 | 수집 경로별 `DART_API_KEY`, `TAVILY_API_KEY`, `DATA_GO_KR_API_KEY`; LLM 사용 시 `OPENAI_API_KEY`, 선택: `TRACTION_LLM_MODEL` |
+| Risk | `OPENAI_API_KEY`, `RISK_MODEL` |
+| 투자 심사 | 실행 대상 Agent의 설정·입력 데이터, 보고서 LLM 사용 시 `OPENAI_API_KEY` |
+
+### 02 · 임상·인허가 분석
 
 ```bash
+# CSV 앞 3개 기업 분석
+CLINICAL_RESULT_DIR=agents/clinical_regulatory/clinical_results \
+python -m agents.clinical_regulatory.agent data/startup_list.csv 3
+
+# 기업명 지정
+CLINICAL_RESULT_DIR=agents/clinical_regulatory/clinical_results \
+python -m agents.clinical_regulatory.agent data/startup_list.csv 1 레모넥스
+```
+
+- 입력: CSV 경로 → 최대 기업 수 → 기업명 필터(선택, 쉼표 구분)
+- 출력: `clinical_analysis.json`, `CLINICAL_RESULT_DIR`의 기업별 JSON
+- 재실행: 기존 결과 재사용, 기업명 지정 시 해당 기업 재분석
+- 전체 재분석: 명령 앞 `RERUN=1` 추가
+- 식약처 API 사용: `MFDS_API_KEY` 및 `MFDS_PERMIT_*`·`MFDS_ITEM_*` 조회 설정 필요
+- 기준일: 단독 CLI는 실행일 사용, `--as-of` 옵션 없음
+
+### 03 · 시장·사업성 분석
+
+```bash
+# RAG 인덱스 구축: data/market_rag/에 PDF 배치 후
+python -m rag.market.build_index
+
+# 분석
+python -m agents.market \
+  --input examples/market/input.json \
+  --output outputs/market_result.json
+
+# 외부 호출 없는 동작 확인
+python -m agents.market \
+  --input examples/market/input.json \
+  --output outputs/market_demo.json --demo
+```
+
+- 입력: 기업 프로필 또는 `company_profile` 포함 JSON, 기준일은 입력의 `as_of`
+- RAG: PDF 합계 기본 200쪽 이내, BGE-M3 모델 최초 다운로드 필요
+- 저장소: `data/vectorstore/market/`의 ChromaDB
+- 인덱스 재구축: `python -m rag.market.build_index --rebuild`
+- 인덱스 경로 변경: 셸 환경변수 `MARKET_RAG_DATA_DIR`, `MARKET_RAG_VECTORSTORE_DIR` 설정 (인덱스 CLI의 `.env` 자동 로딩 없음)
+- `--demo`: 웹검색·벡터 검색·LLM 호출 비활성화, 미확인 결과 반환
+
+### 04 · 실적·성장성 분석
+
+```bash
+# LLM 추출 없이 실행
+python -m agents.traction_growth.agent 레모넥스 --as-of 2026-09-30 --no-llm
+
+# LLM 추출 포함
+python -m agents.traction_growth.agent 레모넥스 --as-of 2026-09-30
+
+# 전체 후보 분석
+python -m agents.traction_growth.agent --all --as-of 2026-09-30 --no-llm
+```
+
+- 입력: `data/startup_list.csv`의 기업명, 기준일
+- `--no-llm`: 모델 추출만 생략, 외부 자료 조회 유지
+- `--refresh`: 기존 캐시 무시·갱신
+- 출력 위치: 실행 종료 시 `전체 결과` 또는 `요약` 경로 표시
+- [판단 기준](traction_growth.md)
+
+### 05 · Risk 분석
+
+```bash
+# 등록된_company_id를 manifest의 실제 ID로 변경
 python -m agents.risk \
-  --company-id <manifest에_등록된_company_id> \
+  --company-id "등록된_company_id" \
   --output outputs/risk_result.json
 ```
 
-`agents/risk/data/frozen_manifest.json`과 등록된 42개 기업의 원문 입력이 필요합니다. **데이터·manifest·모델 캐시는 Git에서 제외되므로 새 환경에는 별도로 전달해야 합니다.** 파일 해시가 다르면 실행을 중단합니다.
+- 필수 입력: `agents/risk/data/frozen_manifest.json` 및 등록 원문
+- 데이터·manifest·모델 캐시: Git 제외, 별도 확보 필요
+- `--manifest`: 기본 manifest 경로 변경
+- 입력 파일 해시 불일치: 실행 중단
+- 외부 재검색 없음, 내부 보완 최대 1회·모델 요청 최대 2회
+- [입력·출력 상세](risk.md)
 
-Risk는 `로딩 → 근거 선택 → 분석 → 검토 → 조건부 보완 → 반환`으로 실행합니다. 최초 원문 최대 8개, 내부 보완 시 최대 8개를 추가하며 모델에는 최대 40개 구간을 전달합니다. 내부 보완은 최대 1회, 실행당 모델 요청은 최대 2회입니다. 캐시 적중·근거 없음은 호출하지 않습니다. 상세 입력·출력과 상위 그래프 연결은 [Risk README](risk.md)를 참고하세요.
-
-### 실적·성장성 분석
+### 06 · 투자 심사·보고서
 
 ```bash
-python -m agents.traction_growth.agent --help
-python -m agents.traction_growth.agent 레모넥스 --as-of 2026-09-30 --no-llm
+# 전체 후보 분석·심사·보고서 생성
+python -m agents.investment_review --as-of 2026-09-30
+
+# 앞 3개 기업만 실행
+python -m agents.investment_review --as-of 2026-09-30 --limit 3
+
+# 저장된 결과로 보고서만 재생성
+python -m agents.investment_review.report --run-dir outputs/investment_review
 ```
 
-`--no-llm`은 모델 호출을 끄는 옵션이며 외부 자료 조회까지 끄지는 않습니다. 수집 경로에 따라 `DART_API_KEY`, `TAVILY_API_KEY`, `DATA_GO_KR_API_KEY` 등의 설정이 필요합니다. 모델 추출을 사용할 때는 `OPENAI_API_KEY`와 선택적으로 `TRACTION_LLM_MODEL`을 설정합니다. [실행 코드](../../agents/traction_growth/agent.py), [판단 기준](traction_growth.md), [스키마](../../agents/traction_growth/schema.py)를 참고하세요.
+- 전제: 각 분석 Agent의 설정·입력 준비
+- 저장된 임상·Risk 결과 재사용, 결과 미보유 Agent 및 심사 보완 시 실제 분석 호출
+- 입력 재사용: `--clinical-dir`, `--risk-run-dir`, `--market-json`, `--traction-json`
+- 대상 지정: `--only c001 c022`
+- 정책: 기본 `zero_fill`, 선택 `--policy strict`·`--policy partial`
+- 출력 경로: 기본 `outputs/investment_review/`, 변경 `--out`
+- 산출물: `final_reviews.json`, Agent별 JSON, `run_meta.json`, `final_report.md`, `final_report.pdf`, `report_check.json`
+- `--no-report`: 보고서 생성 생략
+- 보고서 LLM 작성: 기본 활성화, 통합 실행에서 `--no-llm-report`로 비활성화
+- 보고서 단독 실행: `--no-llm`으로 LLM 작성 비활성화, `--no-pdf`로 Markdown만 생성
+- PDF 생성 실패: Markdown 보존, `report_check.json`의 `pdf_error` 확인
 
 ### 테스트
 
 ```bash
+# 시장·RAG·Risk
 python -m pytest tests agents/risk -q
+
+# 투자 심사·보고서 (main 기준)
+python -m pytest agents/investment_review/tests -q
 ```
 
-Risk의 그래프 흐름·보완 한도·캐시·입력 해시·근거 연결·실패 처리를 가상 응답으로 확인합니다. 실제 기업 정보의 사실성 검증이나 전체 시스템 통합 테스트를 대신하지 않습니다.
+- 검증 범위: 모듈별 로직·계약·실패 처리
+- 실제 기업 정보의 사실성·전체 실서비스 실행 검증 별도
 
 ## 폴더 구조
 
@@ -66,7 +173,8 @@ docs/
     future_work.md       # 상세 개선 계획
     risk.md              # Risk 입력·출력
     traction_growth.md   # 실적·성장성 판단 기준
-    output_example.md    # 최종 산출물 예시
+    final_report.pdf     # 최종 산출물 예시
+    output_example.md    # 이전 예시 안내
   diagrams/              # 흐름도 원본·편집 소스
 tests/                   # 시장·RAG·Risk 테스트
 scripts/                 # 데이터 수집 도구
