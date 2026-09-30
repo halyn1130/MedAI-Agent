@@ -115,3 +115,43 @@ class NarrativeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _browser_available() -> bool:
+    try:
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as p:
+            for kwargs in ({"channel": "chrome"}, {}):
+                try:
+                    p.chromium.launch(**kwargs).close()
+                    return True
+                except Exception:  # noqa: BLE001
+                    continue
+    except Exception:  # noqa: BLE001
+        pass
+    return False
+
+
+class PdfTests(unittest.TestCase):
+    def setUp(self):
+        reviews, analyses, companies = run()
+        self.md = render(build_context(reviews, analyses, companies, META))
+
+    def test_html_has_tables_headings_and_reference_class(self):
+        from ..report.pdf import to_html
+        page = to_html(self.md)
+        self.assertIn("<table>", page)
+        self.assertIn("<h4>고객 문제·시장</h4>", page)
+        self.assertIn('<ol class="reference">', page)
+        self.assertIn('lang="ko"', page)
+
+    @unittest.skipUnless(_browser_available(), "PDF용 브라우저(Chrome/Chromium) 없음")
+    def test_pdf_written_and_page_count(self):
+        import tempfile
+        from pathlib import Path
+        from ..report.pdf import to_pdf
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "r.pdf"
+            pages = to_pdf(self.md, path)
+            self.assertTrue(path.read_bytes().startswith(b"%PDF"))
+            self.assertTrue(1 <= pages <= 5)

@@ -2,6 +2,79 @@
 
 네 분석 결과를 검증하고, 보완 요청·점수 계산·판정·선정·보고서 생성을 담당합니다. (담당: 김민솔)
 
+## 처음 실행
+
+### 1. 설치
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install tavily-python markdown-it-py   # 루트 requirements.txt에 없음 (02 임상 웹 검색, PDF 변환)
+```
+
+PDF는 설치된 Google Chrome을 사용합니다. Chrome이 없으면 `python -m playwright install chromium`을 실행합니다.
+
+### 2. `.env`
+
+| 변수 | 사용처 | 비고 |
+|---|---|---|
+| `OPENAI_API_KEY` | 02~05 | |
+| `TAVILY_API_KEY` | 02·03·04 웹 검색 | 요금제 사용 한도를 확인합니다. 전체 실행 중 한도를 넘으면 해당 검색이 실패합니다 |
+| `DART_API_KEY`, `DATA_GO_KR_API_KEY` | 04 공시·국민연금 | |
+| `MFDS_*` | 02 식약처 조회 | 02 설정을 따릅니다 |
+| `MARKET_MODEL` | 03 | 예: `gpt-4o-mini` |
+| `RISK_MODEL` | 05 | **비어 있으면 05 보완이 실패합니다.** 예: `gpt-4.1-nano` |
+| `MARKET_RAG_DATA_DIR` | 03 RAG | PDF와 `metadata.csv`가 있는 폴더. 압축을 `data/market_rag/market_rag_dataset/`에 풀었다면 그 경로로 지정합니다 |
+| `REPORT_MODEL` | 06 보고서 LLM 서술 (선택) | 없으면 `MARKET_MODEL` |
+
+### 3. Git에 없는 데이터
+
+| 데이터 | 위치 | 준비 |
+|---|---|---|
+| 05 Risk 고정 데이터 | `agents/risk/data/` (`frozen_manifest.json`, `full_*`) | 05 담당에게 받습니다 |
+| 03 시장 RAG 문서 | `MARKET_RAG_DATA_DIR` | 03 담당의 `market_rag_dataset.zip` |
+| 03 시장 RAG 인덱스 | `data/vectorstore/market/` | `python -m rag.market.build_index --rebuild` (BGE-M3 약 2GB 다운로드) |
+
+02 임상 결과(`agents/clinical_regulatory/clinical_results/`)는 Git에 포함되어 있습니다.
+
+### 4. 실행
+
+```bash
+# 기업 2곳으로 먼저 확인
+python -m agents.investment_review --as-of 2026-09-30 --only c001 c022
+
+# 전체 42개
+python -m agents.investment_review --as-of 2026-09-30
+
+# 이전 실행의 시장·실적 결과 재사용 → 06이 보완을 요청한 Agent만 호출
+python -m agents.investment_review --as-of 2026-09-30 \
+  --market-json outputs/investment_review/market_analysis.json \
+  --traction-json outputs/investment_review/traction_analysis.json
+```
+
+- 02 임상·05 Risk는 저장된 결과를 기본으로 재사용합니다. 03 시장·04 실적은 결과를 넘기지 않으면 42개 모두 새로 실행합니다.
+- 전체 실행은 보완 요청 100건 이상을 포함해 수십 분이 걸리고 OpenAI·Tavily 요금이 발생합니다.
+- 기업 ID는 `c001`부터 CSV 기업명 순서입니다 (02 임상과 같은 규칙).
+
+### 5. 결과
+
+`outputs/investment_review/` (`--out`으로 변경)
+
+| 파일 | 내용 |
+|---|---|
+| `final_report.pdf`, `final_report.md` | 투자 검토 보고서 |
+| `final_reviews.json` | 기업별 판정·점수·선정 |
+| `*_analysis.json` | 02~05 분석 결과 (다음 실행에서 재사용) |
+| `report_check.json` | 쪽수·인용 검증 결과 |
+| `clinical_results/` | 02 임상 보완 결과 |
+
+보고서만 다시 만들 때는 02~05를 호출하지 않습니다.
+
+```bash
+python -m agents.investment_review.report --run-dir outputs/investment_review
+```
+
 ## 구조
 
 ```text
@@ -130,6 +203,8 @@ python -m agents.investment_review.report --run-dir outputs/investment_review --
 - `checker.py`가 분량(5쪽·SUMMARY 1/2쪽, 줄 너비 기준 추정), 인용 번호 ↔ REFERENCE 일치, 전체 후보 포함을 검사해 `report_check.json`에 남깁니다.
 - LLM 문장에 보고서 데이터에 없는 숫자가 있으면 그 문장은 버리고 템플릿 문장을 씁니다. **의미 오류(예: "미발견"을 "없음 확인"으로 쓰기)는 잡지 못하므로 LLM 서술은 선택 기능입니다.**
 - 전체 실행(`python -m agents.investment_review`)도 끝에 보고서를 만듭니다 (`--no-report`, `--llm-report`).
+- **PDF**: `final_report.pdf`(A4)도 함께 만듭니다 (`report/pdf.py`, `--no-pdf`로 생략). Markdown → HTML(`markdown-it-py`) → Playwright로 Chrome 인쇄. 설치된 Google Chrome을 먼저 쓰고, 없으면 `python -m playwright install chromium`이 필요합니다. PDF를 만들면 5쪽 검사는 실제 쪽수(`pypdf`)로 합니다.
+- `markdown-it-py`는 현재 다른 패키지(rich)의 의존성으로 설치돼 있습니다. 루트 `requirements.txt`에 명시하는 것을 권장합니다.
 
 ## 테스트
 

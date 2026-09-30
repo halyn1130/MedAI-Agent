@@ -110,7 +110,7 @@ def _traction(env: dict, ev, src, refs) -> dict:
     for c in data.get("contract_records") or []:
         name = c.get("counterparty_name")
         key = (name or "").split("(")[0].strip()
-        if not name or key in seen or c.get("contract_status") == "cancelled":
+        if not name or key in ("미상", "unknown", "") or key in seen or c.get("contract_status") == "cancelled":
             continue
         seen.add(key)
         contracts.append({"counterparty": name, "paid": c.get("is_paid"), "_ids": c.get("evidence_ids")})

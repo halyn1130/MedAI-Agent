@@ -74,11 +74,12 @@ def check_narrative(narrative: dict, ctx: dict) -> tuple[dict, list[str]]:
     return clean, issues
 
 
-def check_report(markdown: str, ctx: dict) -> dict:
+def check_report(markdown: str, ctx: dict, pdf_pages: int | None = None) -> dict:
+    """pdf_pages가 있으면 실제 PDF 쪽수로, 없으면 줄 너비 추정으로 5쪽을 검사한다."""
     issues = []
-    pages = estimate_pages(markdown)
+    pages = pdf_pages if pdf_pages is not None else estimate_pages(markdown)
     if pages > MAX_PAGES:
-        issues.append(f"분량 {pages}쪽 추정 (> {MAX_PAGES}쪽)")
+        issues.append(f"분량 {pages}쪽{'' if pdf_pages is not None else ' 추정'} (> {MAX_PAGES}쪽)")
     summary_lines = estimate_lines(_section(markdown, "1. SUMMARY").strip())
     if summary_lines > SUMMARY_MAX_LINES:
         issues.append(f"SUMMARY {summary_lines}줄 추정 (> 1/2쪽 {SUMMARY_MAX_LINES}줄)")
@@ -95,4 +96,5 @@ def check_report(markdown: str, ctx: dict) -> dict:
     names = [c["name"] for c in ctx["selected"]] + [o["name"] for o in ctx["others"]]
     if absent := [n for n in names if f"| {n} |" not in table]:
         issues.append(f"판정 표에 없는 기업 {absent}")
-    return {"pages": pages, "summary_lines": summary_lines, "references": n_refs, "issues": issues, "ok": not issues}
+    return {"pages": pages, "pages_source": "pdf" if pdf_pages is not None else "estimate",
+            "summary_lines": summary_lines, "references": n_refs, "issues": issues, "ok": not issues}

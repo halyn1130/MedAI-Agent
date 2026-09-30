@@ -12,6 +12,9 @@ from pathlib import Path
 from ..inputs import load_companies
 from ..policy import DEFAULT_K
 from . import generate_report
+from .checker import check_report
+from .context_builder import build_context
+from .pdf import to_pdf
 
 
 def load_run(run_dir: Path) -> tuple[list[dict], dict[str, dict], dict]:
@@ -31,9 +34,16 @@ def load_run(run_dir: Path) -> tuple[list[dict], dict[str, dict], dict]:
     return reviews, analyses, meta
 
 
-def write_report(run_dir: Path, reviews, analyses, companies: dict, meta: dict, llm=None) -> dict:
+def write_report(run_dir: Path, reviews, analyses, companies: dict, meta: dict, llm=None, pdf: bool = True) -> dict:
     markdown, check = generate_report(reviews, analyses, companies, meta, llm)
     (run_dir / "final_report.md").write_text(markdown, encoding="utf-8")
+    if pdf:
+        try:
+            pages = to_pdf(markdown, run_dir / "final_report.pdf")
+            check = {**check_report(markdown, build_context(reviews, analyses, companies, meta), pages),
+                     "narrative": check["narrative"], "pdf": str(run_dir / "final_report.pdf")}
+        except Exception as e:  # noqa: BLE001 - PDF 실패해도 Markdown 보고서는 남긴다
+            check["pdf_error"] = f"{type(e).__name__}: {e}"[:300]
     (run_dir / "report_check.json").write_text(json.dumps(check, ensure_ascii=False, indent=2), encoding="utf-8")
     return check
 
@@ -45,6 +55,7 @@ def main() -> None:
     ap.add_argument("--as-of", help="run_meta.json이 없을 때 기준일")
     ap.add_argument("--policy", default="zero_fill")
     ap.add_argument("--k", type=int, default=DEFAULT_K)
+    ap.add_argument("--no-pdf", action="store_true", help="PDF 생성 생략 (Markdown만)")
     args = ap.parse_args()
 
     reviews, analyses, meta = load_run(args.run_dir)
@@ -52,9 +63,10 @@ def main() -> None:
     meta = {"as_of": as_of, "criteria_version": reviews[0]["criteria_version"] if reviews else "",
             "policy": args.policy, "k": args.k, **meta}
     companies = {c["company_id"]: c for c in load_companies()}
-    check = write_report(args.run_dir, reviews, analyses, companies, meta, "auto" if args.llm else None)
+    check = write_report(args.run_dir, reviews, analyses, companies, meta, "auto" if args.llm else None,
+                         pdf=not args.no_pdf)
     print(json.dumps(check, ensure_ascii=False, indent=2))
-    print(f"\n보고서: {args.run_dir / 'final_report.md'}")
+    print(f"\n보고서: {args.run_dir / 'final_report.md'}" + ("" if args.no_pdf else f" · {args.run_dir / 'final_report.pdf'}"))
 
 
 if __name__ == "__main__":

@@ -64,11 +64,11 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
     point = (narrative or {}).get(c["company_id"])
     if point:
         out.append(f"- **핵심 검토 논점**: {point}")
-    out += ["**고객 문제·시장**",
+    out += ["#### 고객 문제·시장",
             f"- 목표 고객 {mk.get('target_customer') or '-'} / 구매자 {mk.get('buyer') or '-'} / 사업모델 {mk.get('business_model') or '-'}",
             f"- 고객 문제: {mk.get('core_problem') or '-'}"]
     out += [f"- {_metric(m)}" for m in mk["metrics"]] or ["- 시장 규모·성장률 근거 없음"]
-    out += ["**기술·임상·인허가**"]
+    out += ["#### 기술·임상·인허가"]
     if cl["products"]:
         out.append(f"- 제품: {' / '.join(cl['products'])}")
     out += [f"- 인허가: {r['country']} {r['authority']} {r['procedure']}·{r['status']} — {r.get('use') or ''}{_refs(r['refs'])}"
@@ -76,7 +76,7 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
     out += [f"- 연구: {s.get('design') or '설계 미상'}{' · 전향적' if s.get('prospective') else ''}"
             f"{' · 다기관' if s.get('multicenter') else ''}{_refs(s['refs'])}" for s in cl["studies"]]
     out += [f"- 임상 경고: {f}" for f in cl["red_flags"]]
-    out += ["**사업모델·실적·성장**",
+    out += ["#### 사업모델·실적·성장",
             f"- 상업화 단계: {STAGE_KO.get(tr.get('stage'), tr.get('stage') or '-')} · 투자 단계: {tr.get('invest_stage') or '-'}"
             f" · 고용 추이: {tr.get('headcount_trend') or '-'}"]
     if tr["revenue"]:
@@ -85,7 +85,7 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
                                           for r in tr["revenue"]) + cagr)
     out += [f"- 계약: {x['counterparty']}{' (유상)' if x.get('paid') else ''}{_refs(x['refs'])}" for x in tr["contracts"]]
     out += [f"- 실적 경고: {f}" for f in tr["red_flags"]]
-    out += ["**운영 리스크** (공개자료 관찰, 사실 검증 전)"]
+    out += ["#### 운영 리스크 (공개자료 관찰, 사실 검증 전)"]
     for a in rk["areas"]:
         obs = "; ".join(f"{o['statement']}{' ⚠' if o['signal'] else ''}{_refs(o['refs'])}" for o in a["observations"])
         out.append(f"- {AREA_KO.get(a['category'], a['category'])}: {obs or '관찰 없음'}")
@@ -96,7 +96,7 @@ def _company(c: dict, narrative: Optional[dict]) -> list[str]:
 def _score_table(selected: list[dict]) -> list[str]:
     """선정 기업 C1~C6 평가표 (항목 × 기업). 항목별 근거는 final_reviews.json의 rationale."""
     head = "| 항목 | 가중치 | " + " | ".join(c["name"] for c in selected) + " |"
-    out = ["**선정 기업 C1~C6 평가표** (`0*` = 공개자료로 확인하지 못해 0점 처리)", "", head,
+    out = ["#### 선정 기업 C1~C6 평가표 (`0*` = 공개자료로 확인하지 못해 0점 처리)", "", head,
            "|---|---:|" + "---:|" * len(selected)]
     for i, r in enumerate(selected[0]["criteria"]):
         cells = ["0*" if c["criteria"][i]["zero_filled"] else _num(c["criteria"][i]["score"]) for c in selected]
