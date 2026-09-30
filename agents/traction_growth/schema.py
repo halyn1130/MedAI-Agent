@@ -43,6 +43,8 @@ TREND_BASE_GAP_MONTHS = (11, 13)  # 비교 기준값은 약 12개월 전(±1개�
 RF2_HEADCOUNT_DROP = -0.20        # RF2: 12개월 고용 감소율 ≤ -20%
 RF3_MIN_MOU = 2                   # RF3: 24개월 내 서로 다른 MOU ≥ 2
 INITIAL_MAX_CALLS = 40            # 최초 실행 기업당 외부 호출 예산 (4번 정의)
+BUDGET_SPLIT = {"dart": 10, "news": 16, "nps": 14}   # 병렬 수집 노드별 몫 (합 = INITIAL_MAX_CALLS)
+RF1_EXEMPT_WITH_DISCLOSED_REVENUE = True   # 24개월 내 공시 매출(> 0)이 있으면 RF1 면제 (4번 정의)
 NEWS_MAX_AGE_MONTHS = 48          # 이보다 오래된 기사는 LLM 추출 대상에서 제외 (4번 정의)
 
 C5_COMMERCIAL_SCORE = {"A": 5, "B": 4, "C": 2, "D": 1, "none": None}

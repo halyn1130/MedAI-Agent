@@ -91,7 +91,8 @@ def now_iso() -> str:
 
 def norm_name(s: str) -> str:
     """법인명 비교용: (주)·주식회사·공백·기호 제거, 소문자."""
-    s = re.sub(r"\(주\)|㈜|주식회사|\(유\)|유한회사|\(재\)|재단법인|co\.,?\s*ltd\.?|inc\.?|corp\.?", "", s or "", flags=re.I)
+    s = re.sub(r"\(주\)|㈜|주식회사|\(유\)|유한회사|\(재\)|재단법인|\bco\.,?\s*ltd\b\.?|\binc\b\.?|\bcorp\b\.?",
+               "", s or "", flags=re.I)
     return re.sub(r"[\s\W_]+", "", s).lower()
 
 
@@ -176,28 +177,57 @@ def _ttl_hours(url: str) -> float:
     return 24.0
 
 
+def _atomic_write(path: Path, data: bytes) -> None:
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
+    tmp.write_bytes(data)
+    os.replace(tmp, path)
+
+
+def _is_zip(r) -> bool:
+    return r.content[:2] == b"PK"
+
+
+def _dart_json_ok(r) -> bool:
+    try:
+        return r.json().get("status") in ("000", "013")
+    except ValueError:
+        return False
+
+
 class Http:
     def __init__(self, budget: Budget):
         self.budget = budget
         self.cache_hits = 0
 
-    def request(self, method: str, url: str, **kw):
-        """(응답, 오류). 캐시 적중은 호출 예산을 쓰지 않는다. 오류 문자열에는 URL·키를 넣지 않는다."""
+    def request(self, method: str, url: str, validate=None, **kw):
+        """(응답, 오류). 캐시 적중은 호출 예산을 쓰지 않는다. 오류 문자열에는 URL·키를 넣지 않는다.
+
+        validate(응답)->bool 을 통과한 응답만 디스크에 저장한다. DART·국민연금은 오류도 HTTP 200으로 오므로
+        (키 오류·호출 한도 초과 등) 검증 없이 저장하면 오류가 캐시 기간 내내 재사용된다."""
         key = _http_cache_key(method, url, kw)
         path = CACHE_DIR / "http" / key[:2] / f"{key}.bin"
         meta = path.with_suffix(".json")
         if cache_on() and not cache_refresh() and path.exists() and meta.exists():
-            m = json.loads(meta.read_text(encoding="utf-8"))
-            ttl = _ttl_hours(url)
-            if ttl < 0 or time.time() - m["ts"] < ttl * 3600:
-                self.cache_hits += 1
-                return CachedResponse(path.read_bytes(), m["status"], m["created_at"]), None
+            try:
+                m = json.loads(meta.read_text(encoding="utf-8"))
+                ttl = _ttl_hours(url)
+                if ttl < 0 or time.time() - m["ts"] < ttl * 3600:
+                    cached = CachedResponse(path.read_bytes(), m["status"], m["created_at"])
+                    if validate is None or validate(cached):
+                        self.cache_hits += 1
+                        return cached, None
+            except (OSError, ValueError, KeyError):
+                pass                                         # 깨진 캐시 → 미스로 보고 새로 받음
         r, err = self._fetch(method, url, **kw)
-        if r is not None and cache_on():
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(r.content)
-            meta.write_text(json.dumps({"url": url, "method": method, "status": r.status_code, "ts": time.time(),
-                                        "created_at": datetime.now().isoformat(timespec="seconds")}), encoding="utf-8")
+        if r is not None and cache_on() and (validate is None or validate(r)):
+            try:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                _atomic_write(path, r.content)
+                _atomic_write(meta, json.dumps({"url": url, "method": method, "status": r.status_code,
+                                                "ts": time.time(),
+                                                "created_at": datetime.now().isoformat(timespec="seconds")}).encode())
+            except OSError:
+                pass
         return r, err
 
     def _fetch(self, method: str, url: str, **kw) -> tuple[Optional[requests.Response], Optional[str]]:
@@ -247,12 +277,13 @@ class DartClient:
             path = CACHE_DIR / "CORPCODE.xml"
             err = None
             if not path.exists() or time.time() - path.stat().st_mtime > 7 * 86400:
-                r, err = self.http.request("GET", f"{self.BASE}/corpCode.xml", params={"crtfc_key": self.key})
+                r, err = self.http.request("GET", f"{self.BASE}/corpCode.xml", validate=_is_zip,
+                                           params={"crtfc_key": self.key})
                 if r is not None:
                     try:
                         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
                             CACHE_DIR.mkdir(exist_ok=True)
-                            path.write_bytes(z.read(z.namelist()[0]))
+                            _atomic_write(path, z.read(z.namelist()[0]))
                     except zipfile.BadZipFile:
                         err = "DART corpCode 응답이 zip 아님(키 확인)"
             if not path.exists():
@@ -277,7 +308,8 @@ class DartClient:
         return [], None
 
     def _json(self, endpoint: str, **params) -> tuple[Optional[dict], Optional[str]]:
-        r, err = self.http.request("GET", f"{self.BASE}/{endpoint}", params={"crtfc_key": self.key, **params})
+        r, err = self.http.request("GET", f"{self.BASE}/{endpoint}", validate=_dart_json_ok,
+                                   params={"crtfc_key": self.key, **params})
         if r is None:
             return None, err
         try:
@@ -300,7 +332,7 @@ class DartClient:
         return [x for x in j.get("list", []) if "감사보고서" in x.get("report_nm", "")], None
 
     def document(self, rcept_no: str) -> tuple[Optional[str], Optional[str]]:
-        r, err = self.http.request("GET", f"{self.BASE}/document.xml",
+        r, err = self.http.request("GET", f"{self.BASE}/document.xml", validate=_is_zip,
                                    params={"crtfc_key": self.key, "rcept_no": rcept_no})
         if r is None:
             return None, err
@@ -308,7 +340,10 @@ class DartClient:
             with zipfile.ZipFile(io.BytesIO(r.content)) as z:
                 return "\n".join(z.read(n).decode("utf-8", errors="ignore") for n in z.namelist()), None
         except zipfile.BadZipFile:
-            return None, "DART document 응답이 zip 아님"
+            try:
+                return None, f"DART status {r.json().get('status')}"     # 키 오류·호출 한도 등
+            except ValueError:
+                return None, "DART document 응답이 zip 아님"
 
 
 # DART 원본 XML 표: 과목명 <TD>, 금액 <TE>, 단위·헤더 <TU>/<TH> → 행(TR) 단위로 읽는다.
@@ -405,6 +440,33 @@ def extract_revenue(xml_text: str) -> Optional[dict]:
 # ─────────────────────────────────────────────
 # 뉴스 검색 (본문 크롤링 없이 검색 API가 주는 제목·요약만 사용)
 # ─────────────────────────────────────────────
+def _json_has(key: str):
+    def ok(r) -> bool:
+        try:
+            return isinstance(r.json().get(key), list)
+        except (ValueError, AttributeError):
+            return False
+    return ok
+
+
+def _parse_pub(s: Optional[str]) -> Optional[str]:
+    """ISO('2024-07-18…') 또는 RFC-2822('Thu, 18 Jul 2024 …') → 'YYYY-MM-DD'. 모르면 None."""
+    if not s:
+        return None
+    m = re.match(r"^\s*(\d{4}-\d{2}-\d{2})", s)
+    if m:
+        return m.group(1)
+    try:
+        return parsedate_to_datetime(s).date().isoformat()
+    except (TypeError, ValueError):
+        return None
+
+
+def _retrieved_at(r) -> str:
+    """검색 결과를 실제로 받은 날짜 (캐시 응답이면 처음 받은 날)."""
+    return (getattr(r, "created_at", None) or date.today().isoformat())[:10]
+
+
 def _strip_html(s: str) -> str:
     s = re.sub(r"<[^>]+>", "", s or "")
     for a, b in (("&quot;", '"'), ("&amp;", "&"), ("&lt;", "<"), ("&gt;", ">"), ("&#39;", "'"), ("&apos;", "'")):
@@ -420,7 +482,7 @@ class NaverNews:
         self.http = http
 
     def search(self, query: str, display: int = 20) -> tuple[Optional[list], Optional[str]]:
-        r, err = self.http.request("GET", self.URL, headers=self.headers,
+        r, err = self.http.request("GET", self.URL, headers=self.headers, validate=_json_has("items"),
                                    params={"query": query, "display": display, "sort": "sim"})
         if r is None:
             return None, err
@@ -432,7 +494,8 @@ class NaverNews:
             except Exception:
                 pub = None
             out.append({"url": url, "title": _strip_html(it.get("title")), "text": _strip_html(it.get("description")),
-                        "published_at": pub, "publisher": host_of(url), "tool": "naver"})
+                        "published_at": pub, "publisher": host_of(url), "tool": "naver",
+                        "retrieved_at": _retrieved_at(r)})
         return out, None
 
 
@@ -444,15 +507,16 @@ class Tavily:
         self.http = http
 
     def search(self, query: str, max_results: int = 5) -> tuple[Optional[list], Optional[str]]:
-        r, err = self.http.request("POST", self.URL, headers=self.headers,
+        r, err = self.http.request("POST", self.URL, headers=self.headers, validate=_json_has("results"),
                                    json={"query": query, "max_results": max_results, "search_depth": "basic"})
         if r is None:
             return None, err
         out = []
         for it in r.json().get("results", []):
-            pub = (it.get("published_date") or "")[:10] or None
+            pub = _parse_pub(it.get("published_date"))
             out.append({"url": it.get("url"), "title": _strip_html(it.get("title")), "text": _strip_html(it.get("content")),
-                        "published_at": pub, "publisher": host_of(it.get("url", "")), "tool": "tavily"})
+                        "published_at": pub, "publisher": host_of(it.get("url", "")), "tool": "tavily",
+                        "retrieved_at": _retrieved_at(r)})
         return out, None
 
 
@@ -509,13 +573,17 @@ class NpsSnapshots:
                 continue
             if norm_name(row[ix["name"]]) not in targets:
                 continue
-            if bizno6 and not row[ix["bizno"]].startswith(bizno6[:6]):
+            if bizno6 and not row[ix["bizno"]].startswith(re.sub(r"\D", "", bizno6)[:6]):
                 continue
             if row[ix["state"]].strip() not in ("1", ""):     # 1 = 가입 (탈퇴 사업장 제외)
                 continue
             rows.append({"ym": row[ix["ym"]], "name": row[ix["name"]], "bizno": row[ix["bizno"]][:6],
                          "count": int(float(row[ix["count"]] or 0))})
         return rows, None
+
+
+def _nps_ok(r) -> bool:
+    return b"<resultCode>00</resultCode>" in r.content or b"<resultCode>0</resultCode>" in r.content
 
 
 class NpsApi:
@@ -538,7 +606,7 @@ class NpsApi:
     MAX_PAGES = 10   # 사업장명 검색은 부분 일치 → 지점이 많은 기업은 여러 페이지 (예산 보호용 상한, 4번 정의)
 
     def _page(self, op: str, **params) -> tuple[Optional[list[dict]], Optional[str], int]:
-        r, err = self.http.request("GET", f"{self.base}/{self.OPS[op]}",
+        r, err = self.http.request("GET", f"{self.base}/{self.OPS[op]}", validate=_nps_ok,
                                    params={"serviceKey": self.key, "dataType": "xml", **params})
         if r is None:
             return None, err, 0
@@ -546,8 +614,12 @@ class NpsApi:
             root = ET.fromstring(r.content)
         except ET.ParseError:
             return None, "NPS 응답 XML 아님", 0
+        # data.go.kr 게이트웨이 오류(키·한도·서비스 없음)는 <OpenAPI_ServiceResponse><cmmMsgHeader> 형태
+        gw = root.findtext(".//returnReasonCode")
+        if gw not in (None, "", "00"):
+            return None, f"NPS 게이트웨이 {root.findtext('.//errMsg') or ''} ({gw})", 0
         code = root.findtext(".//resultCode")
-        if code not in (None, "00", "0"):
+        if code not in ("00", "0"):
             return None, f"NPS resultCode {code}", 0
         total = int(root.findtext(".//totalCount") or 0)
         return [{c.tag: (c.text or "").strip() for c in it} for it in root.iter("item")], None, total
@@ -582,7 +654,8 @@ class NpsApi:
         지점은 사업자등록번호가 달라 같은 법인인지 확정할 수 없으므로 합산하지 않고 개수만 알린다.
         반환 info: {"total": 전체 건수, "branches": 지점(부분 일치) 사업장 수, "truncated": 페이지 상한 도달}"""
         targets = {norm_name(n) for n in names}
-        queries = [{"bzowrRgstNo": bizno6[:6]}] if bizno6 else []
+        bizno6 = re.sub(r"\D", "", bizno6 or "")[:6] or None
+        queries = [{"bzowrRgstNo": bizno6}] if bizno6 else []
         queries += [{"wkplNm": v} for name in names for v in self.name_variants(name)]
         info = {"total": 0, "branches": 0, "truncated": False}
         for q in queries:
@@ -592,7 +665,7 @@ class NpsApi:
             if not items:
                 continue                                   # 표기만 바꿔 다시 검색
             hits = [i for i in items if norm_name(i.get("wkplNm", "")) in targets
-                    and (not bizno6 or i.get("bzowrRgstNo", "").startswith(bizno6[:6]))
+                    and (not bizno6 or i.get("bzowrRgstNo", "").startswith(bizno6))
                     and i.get("wkplJnngStcd", "1") == "1"]
             others = {(i.get("wkplNm"), i.get("bzowrRgstNo")) for i in items
                       if norm_name(i.get("wkplNm", "")) not in targets
@@ -799,11 +872,11 @@ def cagr(by_year: dict, report_values: Optional[dict] = None) -> tuple[Optional[
         return r, growth_tier(r), detail
     factors = []
     for y in need[1:]:
-        pairs = [rv for rv in report_values.values() if y in rv and y - 1 in rv and rv[y - 1] > 0]
+        pairs = [(k, rv) for k, rv in report_values.items() if y in rv and y - 1 in rv and rv[y - 1] > 0]
         if not pairs:
             detail["unavailable_reason"] = f"재작성 연도({restated}) 있음 + 같은 보고서 안의 {y - 1}→{y} 비교값 없음"
             return None, "G0", detail
-        rv = max(pairs, key=lambda x: max(x))           # 가장 최근 보고서의 비교 기준
+        rv = max(pairs, key=lambda kv: (max(kv[1]), kv[0]))[1]   # 최신 연도 → 같으면 최근 접수 보고서
         factors.append(rv[y] / rv[y - 1])
     if factors[0] * factors[1] < 0:
         detail["unavailable_reason"] = "연쇄 증가율 계산 불가(음수 매출)"
@@ -826,7 +899,7 @@ def trend(observations: list[tuple], as_of: date) -> tuple[str, dict]:
         d, _ = parse_date(ds)
         if d is not None and v is not None:
             obs.append((d, v, g, ids, ds))
-    lo = add_months(as_of, -S.TREND_LATEST_MAX_AGE_MONTHS)
+    lo = add_months(as_of, -S.TREND_LATEST_MAX_AGE_MONTHS).replace(day=1)   # 관측이 월초 날짜라 월 단위로 비교
     latest = [o for o in obs if lo <= o[0] <= as_of]
     if not latest:
         detail["unavailable_reason"] = f"최신 관측이 기준일 {S.TREND_LATEST_MAX_AGE_MONTHS}개월 이내에 없음"
@@ -860,6 +933,7 @@ def normalize_invest_stage(raw: Optional[str]) -> Optional[str]:
     if not raw:
         return None
     t = re.sub(r"[\s_]", "", str(raw)).lower().replace("시리즈", "series").replace("프리", "pre-")
+    t = re.sub(r"pre-?series-?", "pre-", t)          # 'Pre-Series A'·'프리시리즈A' → 'pre-a'
     if "ipo" in t:
         return "Pre-IPO"
     if re.search(r"pre-?seed", t):
@@ -895,8 +969,12 @@ def expectation(invest_stage: Optional[str], stage: str, none_reason: Optional[s
 def red_flags(as_of: date, contracts: list, activities: list, confirmed: set[str],
               tier: str, revenue_cagr: Optional[float], growth_ids: list[str],
               headcount_detail: dict, expectation_status: str, invest_stage: Optional[str],
-              stage: str, required: Optional[str], contract_search_ok: bool) -> tuple[list[dict], list[str]]:
-    """(flags[{code, reason, evidence_ids, status}], 날짜 경계 메모)."""
+              stage: str, required: Optional[str], contract_search_ok: bool,
+              disclosed_revenue: Optional[list] = None) -> tuple[list[dict], list[str]]:
+    """(flags[{code, reason, evidence_ids, status}], 날짜 경계 메모).
+
+    disclosed_revenue: 공시(DART) 매출 레코드. 24개월 안에 끝난 결산연도 매출(> 0)이 있으면 RF1 면제
+    — 공시 매출 자체가 유료 고객이 있다는 증거 (S.RF1_EXEMPT_WITH_DISCLOSED_REVENUE, 4번 정의)."""
     flags, notes = [], []
     start24 = add_months(as_of, -S.RF_WINDOW_MONTHS)
     period = f"{start24.isoformat()}~{as_of.isoformat()}"
@@ -908,7 +986,13 @@ def red_flags(as_of: date, contracts: list, activities: list, confirmed: set[str
         notes.append(f"{c.get('counterparty_name')} 계약({c.get('event_date')})이 24개월 경계에 걸림 → RF1 확정 보류")
 
     # RF1
-    if contract_search_ok and not paid_in and not paid_unc:
+    rev_in = [r for r in disclosed_revenue or []
+              if (r.get("value") or 0) > 0 and _ok(r.get("evidence_ids"), confirmed)
+              and in_window(r.get("period_end"), start24, as_of) == "in"]
+    exempt = S.RF1_EXEMPT_WITH_DISCLOSED_REVENUE and bool(rev_in)
+    if exempt and not paid_in:
+        notes.append(f"RF1 면제: 24개월 내 공시 매출({', '.join(str(r['fiscal_year']) for r in rev_in)}년) 확인")
+    if contract_search_ok and not paid_in and not paid_unc and not exempt:
         flags.append({"code": "RF1", "status": "needs_review", "evidence_ids": [],
                       "reason": f"기준일 직전 24개월({period})에 인정 신규 유료 계약을 찾지 못함 (계약 없음 확정 아님)"})
 
@@ -929,7 +1013,8 @@ def red_flags(as_of: date, contracts: list, activities: list, confirmed: set[str
     def in24(x, key):
         return in_window(x.get(key), start24, as_of) == "in"
     mous = [a for a in activities if a.get("type") == "mou" and _ok(a.get("evidence_ids"), confirmed) and in24(a, "date")]
-    distinct = {a.get("counterparty_id") or a.get("activity_id") for a in mous}
+    # 상대 기관이 없는 MOU 기사는 같은 달이면 같은 MOU로 본다 (기사 여러 건 = 협약 여러 건 아님)
+    distinct = {a.get("counterparty_id") or ("month", (a.get("date") or "")[:7]) for a in mous}
     pocs = [a for a in activities if a.get("type") == "poc" and _ok(a.get("evidence_ids"), confirmed) and in24(a, "date")]
     if len(distinct) >= S.RF3_MIN_MOU and not paid_in and not pocs:
         flags.append({"code": "RF3", "status": "needs_review",
@@ -1091,9 +1176,10 @@ def company_id_of(profile: dict) -> str:
 
 def profile_from_csv(name: str, csv_path: Path = ROOT / "data" / "startup_list.csv") -> Optional[dict]:
     with open(csv_path, encoding="utf-8-sig") as f:
-        for i, row in enumerate(csv.DictReader(f), start=1):
+        for row in csv.DictReader(f):
             if row.get("기업명") == name:
-                cid = f"c{i:03d}"
+                # 행 번호가 아닌 이름 기반 ID (CSV 행이 바뀌어도 유지). CSV에 company_id 열이 있으면 우선
+                cid = row.get("company_id") or company_id_of({"legal_name": name})
                 prod = (row.get("주요 제품/서비스") or "").strip()
                 return {"company_id": cid, "legal_name": name, "aliases": [],
                         "invest_stage": row.get("최근 투자단계"), "invest_stage_date": row.get("최근 투자일") or None,
@@ -1131,7 +1217,7 @@ class Ctx:
     mode: str = "initial"                     # initial | review
     request: Optional[dict] = None
     previous: Optional[dict] = None
-    budget: Optional[Budget] = None
+    budgets: dict = field(default_factory=dict)   # 수집 노드별 호출 예산 (dart·news·nps) — 병렬 노드끼리 경쟁 안 함
     dart: Optional[DartClient] = None
     naver: Optional[NaverNews] = None
     tavily: Optional[Tavily] = None
@@ -1213,8 +1299,10 @@ def make_collect_dart(ctx: Ctx):
             logs.append(search_log(query, "not_found", "dart", [corp_name]))
             return {"status": {"disclosure": "not_found"}, "search_log": logs, "notes": notes}
 
-        sep = [r for r in reps if not r["report_nm"].startswith("연결")]
-        con = [r for r in reps if r["report_nm"].startswith("연결")]
+        def is_con(rep: dict) -> bool:          # '[기재정정]연결감사보고서 (2024.12)' 도 연결
+            return re.sub(r"^\s*\[[^\]]*\]\s*", "", rep["report_nm"]).startswith("연결")
+        sep = [r for r in reps if not is_con(r)]
+        con = [r for r in reps if is_con(r)]
         groups = [(sep, "separate"), (con, "consolidated")] if ctx.dart_both_scopes else \
                  [(sep, "separate")] if sep else [(con, "consolidated")]
         picked: list[tuple[dict, str]] = []
@@ -1265,13 +1353,41 @@ def make_collect_dart(ctx: Ctx):
 # ─────────────────────────────────────────────
 # 수집 노드 2: 뉴스 (네이버 · Tavily) — 검색 API 요약문만 사용
 # ─────────────────────────────────────────────
+# 기업정보 집계 사이트: 회사 제출·추정 자료를 재가공 → 독립 확인 아님 (4번 정의)
+AGGREGATOR_HOSTS = ("saramin.co.kr", "jobkorea.co.kr", "wanted.co.kr", "jobplanet.co.kr", "catch.co.kr",
+                    "rocketpunch.com", "nicebizinfo.com", "kisline.com", "crunchbase.com")
+# 약관상 자동 수집·AI 활용 금지 (criteria.md 2-2) → 검색 결과에서 제외
+EXCLUDED_HOSTS = ("innoforest.co.kr", "thevc.kr")
+
+
+def _host_in(h: str, hosts: tuple) -> bool:
+    return any(h == x or h.endswith("." + x) for x in hosts)
+
+
 def _source_type(url: str, homepage_host: str) -> str:
     h = host_of(url)
     if homepage_host and (h == homepage_host or h.endswith("." + homepage_host)):
         return "company"
+    if _host_in(h, AGGREGATOR_HOSTS):
+        return "other"
     if h.endswith(".go.kr"):
         return "official"
     return "news"
+
+
+_PARTICLE = r"(?:$|[^가-힣A-Za-z0-9]|은|는|이|가|을|를|의|와|과|에|도|로|측|社)"
+
+
+def mentions(text: str, name: str) -> bool:
+    """본문에 기업명이 나오는지. 정규화 2글자 이하(예: '닷', '아크')는 단어 경계 + 조사까지만 허용
+    ('닷컴', '아크릴' 제외). 그보다 긴 이름은 공백·기호를 무시한 부분 일치."""
+    n = norm_name(name)
+    if not n:
+        return False
+    if len(n) > 2:
+        return n in norm_name(text)
+    core = re.sub(r"\(주\)|㈜|주식회사", "", name).strip()
+    return re.search(rf"(?<![가-힣A-Za-z0-9]){re.escape(core)}(?={_PARTICLE})", text or "", flags=re.I) is not None
 
 
 def make_collect_news(ctx: Ctx):
@@ -1306,8 +1422,10 @@ def make_collect_news(ctx: Ctx):
                 url = it.get("url")
                 if not url or url in seen:
                     continue
-                blob = norm_name((it.get("title") or "") + (it.get("text") or ""))
-                if not any(norm_name(n) in blob for n in names):
+                if _host_in(host_of(url), EXCLUDED_HOSTS):
+                    continue                               # 약관상 사용 제외 사이트
+                text = f"{it.get('title') or ''} {it.get('text') or ''}"
+                if not any(mentions(text, n) for n in names):
                     continue                               # 대상 기업 언급 없는 결과 제외
                 d, _ = parse_date(it.get("published_at"))
                 if d and (d > ctx.as_of or d < min_d):
@@ -1319,7 +1437,10 @@ def make_collect_news(ctx: Ctx):
                     continue
                 docs.append({**it, "source_type": _source_type(url, ctx.homepage_host)})
             logs.append(search_log(q, "found" if kept else "not_found", tool, names, urls=kept))
-        status = "failed" if results and n_err == len(results) else ("partial" if n_err else "ok")
+        if not results:
+            status = "not_reviewed"
+        else:
+            status = "failed" if n_err == len(results) else ("partial" if n_err else "ok")
         notes = [f"이미 찾은 원문 재발견 {rediscovered}건"] if rediscovered else []
         return {"status": {"news": status}, "search_log": logs, "docs": docs, "notes": notes}
     return node
@@ -1455,11 +1576,18 @@ def _unit_multiplier(unit: Optional[str]) -> Optional[int]:
     return None
 
 
-def item_to_fact(it, doc: dict) -> Optional[dict]:
+def item_to_fact(it, doc: dict, as_of: Optional[date] = None) -> Optional[dict]:
     independent = doc["source_type"] in ("official", "partner") or \
         (doc["source_type"] == "news" and not it.is_press_release_copy)
     verified = excerpt_in_doc(it, doc)
     status = "confirmed" if independent and verified else ("partial" if independent else "unverified")
+    if status == "confirmed" and not doc.get("published_at") and doc["source_type"] != "official":
+        # 게재일 미상: 기준일 이전(당일 포함)에 받은 결과면 기준일 당시 존재가 확인됨 → 인정.
+        # 기준일보다 나중에 받은 결과(과거 기준일로 다시 돌리는 경우)는 존재 확인 불가 → partial (schema.Source 규칙)
+        if not (as_of and doc.get("retrieved_at") and doc["retrieved_at"] <= as_of.isoformat()):
+            status = "partial"
+    if it.kind == "revenue" and doc["source_type"] != "official":
+        status = "unverified"       # 기사·홈페이지·집계 사이트 매출은 회사 제공 수치 → A 등급 근거 아님 (4번 정의)
     src = {k: doc.get(k) for k in ("url", "title", "publisher", "source_type", "published_at")}
     f = {"source": src, "statement": it.statement, "excerpt": it.excerpt if verified else None,
          "locator": None, "event_date": it.event_date, "status": status, "date_uncertainty": None}
@@ -1507,7 +1635,7 @@ def make_extract(ctx: Ctx):
                     "notes": [f"TRACTION_LLM_MODEL 미설정 → 문서 {len(docs)}건 근거 추출 생략"]}
         docs = [{**d, "doc_id": f"d{i + 1:03d}"} for i, d in enumerate(docs)]
         pairs, errs = extract_items(docs, ctx.names, ctx.llm)
-        facts = [f for it, doc in pairs if (f := item_to_fact(it, doc))]
+        facts = [f for it, doc in pairs if (f := item_to_fact(it, doc, ctx.as_of))]
         status = "failed" if errs and not pairs else ("partial" if errs else "ok")
         return {"facts": facts, "status": {"llm": status}, "notes": [f"LLM 추출 오류: {e}" for e in errs]}
     return node
@@ -1575,8 +1703,10 @@ class Builder:
         if kind == "revenue":
             return (r.get("fiscal_year"), r.get("accounting_scope"), r.get("product_id"))
         if kind == "contract":
+            # 유료 여부·독립 확인이 다른 기사끼리 합치면 '회사 주장 유료' + '독립 확인'이 섞여 B가 부풀려짐
             n = norm_name(r.get("counterparty_name") or "")
-            return None if not n or n == "미상" else (n, month(r.get("event_date")))
+            return None if not n or n == "미상" else (n, month(r.get("event_date")), r.get("is_paid"),
+                                                     bool(r.get("independent_confirmation")))
         if kind == "activity":
             return None if not r.get("counterparty_id") else (r.get("type"), r["counterparty_id"], month(r.get("date")))
         if kind == "customer":
@@ -1594,10 +1724,7 @@ class Builder:
                     continue
                 if eid not in r["evidence_ids"]:
                     r["evidence_ids"].append(eid)
-                if kind == "contract":
-                    r["independent_confirmation"] = bool(r.get("independent_confirmation") or rec["independent_confirmation"])
-                    if r.get("is_paid") is None:
-                        r["is_paid"] = rec.get("is_paid")
+                if kind == "contract":        # 키가 같으면 is_paid·independent도 같음 → 상태만 갱신
                     if rec["contract_status"] in EXCLUDED_CONTRACT or r.get("contract_status") in (None, "unknown"):
                         r["contract_status"] = rec["contract_status"]
                 if kind == "revenue" and r.get("value") != rec.get("value") and rec.get("accounting_scope") == "unknown":
@@ -1642,14 +1769,18 @@ def assemble(ctx: Ctx, state: dict) -> dict:
     prev_cov = {c["scope"]: c["status"] for c in (prev or {}).get("coverage", [])}
     fds = st.get("disclosure") or prev_data.get("financial_disclosure_status") or "not_reviewed"
 
-    # 뉴스·LLM 경로 상태: ok / failed / not_reviewed
+    # 뉴스·LLM 경로 상태: ok(전부 성공) / partial(일부 실패) / failed / not_reviewed
+    #  → RF1과 none_reason은 ok일 때만 "찾아봤는데 없음"으로 판정 (일부 실패면 조사 미완료)
     if "news" in st:
-        news_state = {"ok": "ok", "partial": "ok", "failed": "failed"}.get(st["news"], "not_reviewed")
-        if news_state == "ok" and st.get("llm") in ("not_reviewed", "failed"):
-            news_state = "not_reviewed" if st["llm"] == "not_reviewed" else "failed"
-    else:  # 보완 라운드에서 다시 돌리지 않음 → 이전 상태
+        news_state = {"ok": "ok", "partial": "partial", "failed": "failed"}.get(st["news"], "not_reviewed")
+        if news_state in ("ok", "partial") and st.get("llm") in ("not_reviewed", "failed", "partial"):
+            news_state = {"not_reviewed": "not_reviewed", "failed": "failed"}.get(st["llm"], "partial")
+    else:  # 보완 라운드에서 다시 돌리지 않음 → 이전 상태 (coverage.note 에 기록해 둔 값)
+        prev_note = next((c.get("note", "") for c in (prev or {}).get("coverage", []) if c["scope"] == "contract"), "")
+        m = re.search(r"news_state=(\w+)", prev_note)
         pc = prev_cov.get("contract", "not_reviewed")
-        news_state = "failed" if pc == "search_failed" else "not_reviewed" if pc == "not_reviewed" else "ok"
+        news_state = m.group(1) if m else ("failed" if pc == "search_failed" else
+                                           "not_reviewed" if pc == "not_reviewed" else "ok")
     nps_state = st.get("nps") or {"search_failed": "failed", "not_reviewed": "not_reviewed"}.get(
         prev_cov.get("headcount", "not_reviewed"), "ok")
 
@@ -1670,6 +1801,7 @@ def assemble(ctx: Ctx, state: dict) -> dict:
     by_year, scope = revenue_by_year(rec["revenue_records"], confirmed, as_of)
     # 감사보고서별 당기·전기 값 (재작성 판별용) — DART 근거 문장에서 복원 (보완 라운드에서도 동일)
     ev_by_id = {e["evidence_id"]: e for e in b.evidence}
+    src_pub = {x["source_id"]: x.get("published_at") for x in b.sources}
     report_values: dict[str, dict[int, float]] = {}
     for r in rec["revenue_records"]:
         if r.get("accounting_scope") != scope or r.get("product_id"):
@@ -1678,7 +1810,9 @@ def assemble(ctx: Ctx, state: dict) -> dict:
             e = ev_by_id.get(eid)
             m = re.search(r"(\d{4})년 (-?[\d,]+)원 \((당기|전기)\)", (e or {}).get("statement", ""))
             if e and m and e["evidence_status"] == "confirmed":
-                report_values.setdefault(e["source_ids"][0], {})[int(m.group(1))] = float(m.group(2).replace(",", ""))
+                sid = e["source_ids"][0]
+                rkey = f"{src_pub.get(sid) or ''}|{sid}"          # 접수일|source_id → 최근 보고서 판별
+                report_values.setdefault(rkey, {})[int(m.group(1))] = float(m.group(2).replace(",", ""))
     rate, tier, gdetail = cagr(by_year, report_values)
     growth_ids = [i for v in by_year.values() for i in v["evidence_ids"]]
 
@@ -1695,7 +1829,9 @@ def assemble(ctx: Ctx, state: dict) -> dict:
     exp, req = expectation(ctx.invest_stage, stage, none_reason)
     flags, rf_notes = red_flags(as_of, rec["contract_records"], rec["activity_records"], confirmed, tier, rate,
                                   growth_ids, hc_detail, exp, ctx.invest_stage, stage, req,
-                                  contract_search_ok=(news_state == "ok"))
+                                  contract_search_ok=(news_state == "ok"),
+                                  disclosed_revenue=[r for r in rec["revenue_records"]
+                                                     if r.get("accounting_scope") in ("separate", "consolidated")])
     c5_in = c5(stage, tier, stage_ids + growth_ids)
 
     # ── findings
@@ -1737,6 +1873,8 @@ def assemble(ctx: Ctx, state: dict) -> dict:
             return "search_failed"
         if news_state == "not_reviewed":
             return "not_reviewed"
+        if news_state == "partial":
+            return "insufficient_information"
         return "insufficient_information" if rs else "no_relevant_evidence_found"
 
     fds_cov = {"found": "reviewed", "not_found": "no_relevant_evidence_found",
@@ -1752,12 +1890,13 @@ def assemble(ctx: Ctx, state: dict) -> dict:
     tools = {"disclosure": {"dart"}, "revenue": {"dart"}, "headcount": {"nps"},
              "contract": {"naver", "tavily", "news"}, "activity": {"naver", "tavily", "news"},
              "customer": {"naver", "tavily", "news"}}
-    coverage = [{"scope": k, "status": v, "note": "",
+    coverage = [{"scope": k, "status": v, "note": f"news_state={news_state}" if k in ("contract", "activity", "customer") else "",
                  "search_log_indices": [i for i, x in enumerate(logs) if x.get("tool") in tools[k]]}
                 for k, v in cov.items()]
     core = [cov["disclosure"], cov["contract"], cov["headcount"]]
     bad = [c for c in core if c in ("search_failed", "not_reviewed")]
-    analysis_status = "failed" if len(bad) == len(core) else "partial" if bad or st.get("llm") == "partial" else "complete"
+    incomplete = bad or news_state == "partial" or st.get("nps") == "failed"
+    analysis_status = "failed" if len(bad) == len(core) else "partial" if incomplete else "complete"
 
     # ── missing_items
     missing = []
@@ -1859,7 +1998,7 @@ def review_response(ctx: Ctx, prev: dict, findings: list, b: Builder, new_logs: 
         resolution = "resolved"
     else:
         resolution = "unresolved"
-    used = ctx.budget.used if ctx.budget else 0
+    used = sum(b.used for b in ctx.budgets.values())
     return {
         "response_id": f"{req['request_id']}:resp", "request_id": req["request_id"], "company_id": ctx.company_id,
         "result_version": version, "resolution": resolution, "change_type": change_type,
@@ -1925,9 +2064,13 @@ def _review_plan(ctx: Ctx, related: dict) -> None:
     qs = [("tavily", f"{n0} {q['text']}") for q in req.get("questions", [])]
     qs += [("naver", f"{n0} {c} 계약") for c in clues]
     qs += [("naver", f"{n0} {s}") for s in REVIEW_SYNONYMS]
-    budget = (req.get("search_budget") or {}).get("max_calls", S.REVIEW_MAX_CALLS)
-    news_budget = budget - (2 if ctx.run_dart else 0)
-    ctx.news_queries = [q for q in qs if q[1] not in used][:max(0, news_budget)]
+    total = (req.get("search_budget") or {}).get("max_calls", S.REVIEW_MAX_CALLS)
+    dart_share = min(2, total) if ctx.run_dart else 0
+    ctx.budgets["dart"].max_calls, ctx.budgets["nps"].max_calls = dart_share, 0
+    ctx.budgets["news"].max_calls = total - dart_share
+    ctx.news_queries = [q for q in qs if q[1] not in used][:max(0, total - dart_share)]
+    if not ctx.news_queries:
+        ctx.run_news = False          # 새 검색어가 없으면 뉴스 범위는 이전 상태 유지
     ctx.prev_urls = {s["url"] for s in prev.get("sources", [])}
 
 
@@ -1944,22 +2087,22 @@ def run_traction(profile: dict, *, as_of: Optional[str] = None, run_id: Optional
     if not names:
         raise ValueError("company_profile에 기업명이 없습니다 (legal_name/name/기업명)")
 
-    max_calls = ((request or {}).get("search_budget") or {}).get("max_calls", S.REVIEW_MAX_CALLS) \
-        if request else S.INITIAL_MAX_CALLS
-    budget = Budget(max_calls)
-    http = Http(budget)
+    # 노드별 예산: 최초 실행은 S.BUDGET_SPLIT, 보완 라운드는 _review_plan 에서 요청 예산을 나눔
+    budgets = {k: Budget(v) for k, v in S.BUDGET_SPLIT.items()}
+    http = {k: Http(b) for k, b in budgets.items()}
     env = os.environ
     c = clients or {}
     ctx = Ctx(
         profile=profile, as_of=as_of_d, run_id=run_id or uuid.uuid4().hex[:12], company_id=company_id_of(profile),
         names=names, invest_stage=profile.get("invest_stage") or profile.get("최근 투자단계"),
-        homepage_host=host_of(profile.get("homepage") or ""), budget=budget,
-        dart=c.get("dart", DartClient(env["DART_API_KEY"], http) if env.get("DART_API_KEY") else None),
-        naver=c.get("naver", NaverNews(env["NAVER_CLIENT_ID"], env["NAVER_CLIENT_SECRET"], http)
+        homepage_host=host_of(profile.get("homepage") or ""), budgets=budgets,
+        dart=c.get("dart", DartClient(env["DART_API_KEY"], http["dart"]) if env.get("DART_API_KEY") else None),
+        naver=c.get("naver", NaverNews(env["NAVER_CLIENT_ID"], env["NAVER_CLIENT_SECRET"], http["news"])
                     if env.get("NAVER_CLIENT_ID") and env.get("NAVER_CLIENT_SECRET") else None),
-        tavily=c.get("tavily", Tavily(env["TAVILY_API_KEY"], http) if env.get("TAVILY_API_KEY") else None),
+        tavily=c.get("tavily", Tavily(env["TAVILY_API_KEY"], http["news"]) if env.get("TAVILY_API_KEY") else None),
         nps_files=c.get("nps_files", NpsSnapshots(Path(env.get("NPS_SNAPSHOT_DIR", ROOT / "data" / "nps")))),
-        nps_api=c.get("nps_api", NpsApi(env["DATA_GO_KR_API_KEY"], http) if env.get("DATA_GO_KR_API_KEY") else None),
+        nps_api=c.get("nps_api", NpsApi(env["DATA_GO_KR_API_KEY"], http["nps"])
+                      if env.get("DATA_GO_KR_API_KEY") else None),
         llm=get_llm() if llm == "auto" else llm,
     )
     if request:
