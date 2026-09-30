@@ -1,6 +1,6 @@
 # 개발 및 실행 안내
 
-[발표 README로 돌아가기](../../README.md)
+[README로 돌아가기](../../README.md)
 
 ## 설치 및 실행
 
@@ -46,18 +46,30 @@ Risk의 그래프 흐름·보완 한도·캐시·입력 해시·근거 연결·�
 ## 폴더 구조
 
 ```text
+README.md
 agents/
-  risk/                  # LangGraph Risk Agent
-    collection/          # 별도 수집·선별 도구
+  clinical_regulatory/   # 임상·인허가 Agent
+  market/                # 시장·사업성 Agent
+  investment_review/     # 투자 심사·보고서 Agent (main 기준)
+  risk/                  # Risk Agent
+    collection/          # 수집·선별 도구
     data/                # 고정 입력·manifest·캐시 (Git 제외)
   traction_growth/       # 실적·성장성 Agent
-data/                   # 고정 후보 CSV
+rag/market/              # 시장 RAG 문서 처리·임베딩·검색
+data/                    # 후보 CSV·분석 데이터
+examples/market/         # 시장 분석 입력 예시
 docs/
-  diagrams/              # 흐름도·편집 소스
-  evaluation_policy.md   # 평가 정책 상세 초안
-tests/                  # Risk 테스트
-scripts/                # 이전 후보 수집 도구
-outputs/                # 실행 결과 (Git 제외)
+  readme/                # README 연결 문서
+    images/              # 전체·노드별 흐름도
+    development.md       # 설치·실행·폴더 구조
+    evaluation_policy.md # 평가 정책
+    future_work.md       # 상세 개선 계획
+    risk.md              # Risk 입력·출력
+    traction_growth.md   # 실적·성장성 판단 기준
+    output_example.md    # 최종 산출물 예시
+  diagrams/              # 흐름도 원본·편집 소스
+tests/                   # 시장·RAG·Risk 테스트
+scripts/                 # 데이터 수집 도구
+outputs/                 # 실행 결과 (Git 제외)
 requirements.txt
 ```
-
