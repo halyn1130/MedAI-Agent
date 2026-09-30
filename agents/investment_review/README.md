@@ -15,9 +15,9 @@ investment_review/
   judge.py             # 최종 판정·reason_codes
   selection.py         # 정렬·K개 선정
   nodes.py             # LangGraph 노드 래퍼
-  adapters/            # traction(04)·risk(05) 원래 형식 읽기, stub(02·03 미구현)
+  adapters/            # 02~05 원래 형식 읽기 → AgentResult, stub(결과 없음)
   report/              # context_builder → writer → checker → renderer
-  tests/fixtures/      # 가짜 Envelope 입력
+  tests/fixtures/      # 02~05 실제 코드로 만든 출력 샘플 (build_fixtures.py)
 ```
 
 ## 흐름
@@ -29,19 +29,33 @@ investment_review/
 
 ## 읽는 형식
 
-| Agent | State 키 | 형식 | 보완 요청 형식 |
-|---|---|---|---|
-| 04 실적 | `traction_analysis` | `agents/traction_growth/schema.py`의 AnalysisEnvelope | `review_requests` list, `target_agent="traction"` |
-| 05 Risk | `risk_analysis`, `references` | `risk-company-3` (`areas`, `passages`) | `review_requests["risk"]` dict, `attempt=1` |
-| 02 임상, 03 시장 | — | 코드 없음 → stub | 미정 |
+어댑터는 각 Agent 출력을 바꾸지 않고 읽어 `AgentResult`(점수·게이트·이슈·우려·실사 질문·미확인·출처)로 뽑습니다. blocking 판단은 하지 않습니다.
+
+| Agent | State 키 | 형식 | 06이 쓰는 값 | 보완 요청 형식 |
+|---|---|---|---|---|
+| 02 임상 | `clinical_analysis` | `{company_id: Envelope}` | `criteria_inputs.C1`, `red_flags` CL02 → G01 | list, `target_agent="clinical"` |
+| 03 시장 | `market_analysis` | Envelope | `criteria_inputs.C2·C3·C4`, `business_concerns` | `review_requests` 중 `target_agent="market"` |
+| 04 실적 | `traction_analysis` | Envelope | `criteria_inputs.C5`, RF1~RF4, `open_questions` | list, `target_agent="traction"` |
+| 05 Risk | `risk_analysis`, `references` | `risk-company-3` | `areas` 실사 질문·미확인·`risk_signal` | `review_requests["risk"]` dict, `attempt=1` |
+
+- **C6 (06 자체 규칙 `risk-signal-v1`)**: 05 출력에 OP1~OP5가 없어 영역별 위험 신호(`kind=risk_signal`) 수로 채점합니다. 관찰이 있는 영역만 신호 0건=5, 1건=3, 2건 이상=1로 매겨 평균합니다. 관찰이 있는 영역이 하나도 없으면 null입니다(자료 없음 ≠ 위험 없음). 설계서 C6(OP1~OP5)과 다른 규칙입니다.
+- **G02**: 05 분석이 실행됐으면(`complete`·`partial`) `clear`, 실패·`no_evidence`면 `not_checked`. 05 출력에 현재 중단을 확정하는 필드가 없어 `confirmed`는 나오지 않습니다.
+- G01: 임상 분석 실패·규제 조사 미완료면 `not_checked`, CL02 confirmed면 `confirmed`, candidate면 `unresolved`, 그 외 `clear`.
 
 ## 판정 규칙 구현 메모
 
-- 게이트(G01·G02)가 입력에 없으면 `not_checked`로 보고 판단불가 처리합니다. 02 임상 결과가 없으면 G01을 조사하지 못한 것이므로, 현재는 모든 기업이 undetermined가 되는 것이 정상입니다.
+- 게이트(G01·G02)가 입력에 없으면 `not_checked`로 보고 판단불가 처리합니다.
 - 모집단에서 적용 항목인데 기업별로 `not_applicable`이 오면 `unknown`으로 바꿉니다. 불리한 항목을 빼고 재가중하지 않기 위해서입니다.
 - 총점은 소수 6자리로 반올림해 60점 경계가 부동소수 오차로 흔들리지 않게 합니다.
 
 ## 테스트
+
+샘플은 유료 API 없이 02~05 실제 코드를 실행해 만듭니다. 팀원 코드가 바뀌면 다시 생성합니다.
+
+```bash
+python -m agents.investment_review.tests.fixtures.build_fixtures
+```
+
 
 ```bash
 python -m unittest discover -s agents/investment_review/tests -t . -v

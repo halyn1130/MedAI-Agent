@@ -1,0 +1,630 @@
+{
+  "run_id": "fixture",
+  "company_id": "c001",
+  "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
+  "agent": "traction",
+  "result_version": 1,
+  "analysis_status": "partial",
+  "data": {
+    "invest_stage": "Series C",
+    "invest_stage_observed_at": "2021-04-21",
+    "financial_disclosure_status": "found",
+    "commercial_stage": "A",
+    "none_reason": null,
+    "traction_recognized": true,
+    "revenue_by_year": {
+      "2021": {
+        "value": 0.0,
+        "currency": "KRW",
+        "accounting_scope": "consolidated",
+        "evidence_ids": [
+          "c001:traction:ev08"
+        ]
+      },
+      "2022": {
+        "value": 0.0,
+        "currency": "KRW",
+        "accounting_scope": "consolidated",
+        "evidence_ids": [
+          "c001:traction:ev06",
+          "c001:traction:ev07"
+        ]
+      },
+      "2023": {
+        "value": 605020000.0,
+        "currency": "KRW",
+        "accounting_scope": "consolidated",
+        "evidence_ids": [
+          "c001:traction:ev05"
+        ]
+      }
+    },
+    "revenue_cagr": null,
+    "growth_tier": "G0",
+    "growth_detail": {
+      "observed_years": [
+        2021,
+        2022,
+        2023
+      ],
+      "periods": 0,
+      "unavailable_reason": "시작 연도(2021) 매출 ≤ 0"
+    },
+    "headcount_trend": "unknown",
+    "headcount_detail": {
+      "change_rate": null,
+      "period_start": null,
+      "period_end": null,
+      "definition": null,
+      "evidence_ids": [],
+      "unavailable_reason": "최신 관측이 기준일 3개월 이내에 없음"
+    },
+    "customer_trend": "unknown",
+    "customer_detail": {
+      "change_rate": null,
+      "period_start": null,
+      "period_end": null,
+      "definition": null,
+      "evidence_ids": [],
+      "unavailable_reason": "최신 관측이 기준일 3개월 이내에 없음"
+    },
+    "expectation_status": "met",
+    "red_flags": [],
+    "criteria_inputs": {
+      "C5": {
+        "score": 5.0,
+        "score_status": "scored",
+        "commercial_score": 5,
+        "growth_score": null,
+        "growth_metric": null,
+        "growth_status": "unknown",
+        "evidence_ids": [
+          "c001:traction:ev01",
+          "c001:traction:ev02",
+          "c001:traction:ev03",
+          "c001:traction:ev05",
+          "c001:traction:ev06",
+          "c001:traction:ev07",
+          "c001:traction:ev08"
+        ],
+        "rationale": "상업화 A(S=5). 성장 자료 미확인(G0)으로 S만 사용"
+      }
+    },
+    "revenue_records": [
+      {
+        "period_start": "2024-01-01",
+        "period_end": "2024-12-31",
+        "fiscal_year": 2024,
+        "value": 2014578203.0,
+        "currency": "KRW",
+        "unit": "KRW",
+        "accounting_scope": "separate",
+        "product_id": null,
+        "evidence_ids": [
+          "c001:traction:ev01"
+        ]
+      },
+      {
+        "period_start": "2023-01-01",
+        "period_end": "2023-12-31",
+        "fiscal_year": 2023,
+        "value": 605020000.0,
+        "currency": "KRW",
+        "unit": "KRW",
+        "accounting_scope": "separate",
+        "product_id": null,
+        "evidence_ids": [
+          "c001:traction:ev02",
+          "c001:traction:ev03"
+        ]
+      },
+      {
+        "period_start": "2022-01-01",
+        "period_end": "2022-12-31",
+        "fiscal_year": 2022,
+        "value": 0.0,
+        "currency": "KRW",
+        "unit": "KRW",
+        "accounting_scope": "separate",
+        "product_id": null,
+        "evidence_ids": [
+          "c001:traction:ev04"
+        ]
+      },
+      {
+        "period_start": "2023-01-01",
+        "period_end": "2023-12-31",
+        "fiscal_year": 2023,
+        "value": 605020000.0,
+        "currency": "KRW",
+        "unit": "KRW",
+        "accounting_scope": "consolidated",
+        "product_id": null,
+        "evidence_ids": [
+          "c001:traction:ev05"
+        ]
+      },
+      {
+        "period_start": "2022-01-01",
+        "period_end": "2022-12-31",
+        "fiscal_year": 2022,
+        "value": 0.0,
+        "currency": "KRW",
+        "unit": "KRW",
+        "accounting_scope": "consolidated",
+        "product_id": null,
+        "evidence_ids": [
+          "c001:traction:ev06",
+          "c001:traction:ev07"
+        ]
+      },
+      {
+        "period_start": "2021-01-01",
+        "period_end": "2021-12-31",
+        "fiscal_year": 2021,
+        "value": 0.0,
+        "currency": "KRW",
+        "unit": "KRW",
+        "accounting_scope": "consolidated",
+        "product_id": null,
+        "evidence_ids": [
+          "c001:traction:ev08"
+        ]
+      }
+    ],
+    "contract_records": [],
+    "activity_records": [],
+    "headcount_records": [
+      {
+        "observation_date": "2026-04-01",
+        "count": 5,
+        "population": "국민연금 사업장 가입자 수",
+        "entity_id": "nps:119868:레모넥스",
+        "evidence_ids": [
+          "c001:traction:ev09"
+        ]
+      }
+    ],
+    "customer_records": [],
+    "search_log": [
+      {
+        "query": "[dart] DART 외부감사 공시 corp_code=01380383 2021-01-01~2026-09-30",
+        "searched_at": "2026-09-30T11:40:18",
+        "status": "found",
+        "entity_names": [
+          "레모넥스"
+        ],
+        "source_ids": [
+          "c001:traction:src01",
+          "c001:traction:src02",
+          "c001:traction:src03",
+          "c001:traction:src04"
+        ],
+        "error": null
+      },
+      {
+        "query": "[news] 뉴스 검색",
+        "searched_at": "2026-09-30T11:40:18",
+        "status": "error",
+        "entity_names": [
+          "레모넥스"
+        ],
+        "source_ids": [],
+        "error": "NAVER·TAVILY 키 없음"
+      },
+      {
+        "query": "[nps] 국민연금 API 사업장 검색(getBassInfoSearchV2)",
+        "searched_at": "2026-09-30T11:40:18",
+        "status": "found",
+        "entity_names": [
+          "레모넥스"
+        ],
+        "source_ids": [],
+        "error": null
+      },
+      {
+        "query": "[nps] 국민연금 API 상세 202604",
+        "searched_at": "2026-09-30T11:40:18",
+        "status": "found",
+        "entity_names": [
+          "레모넥스"
+        ],
+        "source_ids": [
+          "c001:traction:src05"
+        ],
+        "error": null
+      },
+      {
+        "query": "[nps] 국민연금 API 12개월 취득·상실",
+        "searched_at": "2026-09-30T11:40:18",
+        "status": "not_found",
+        "entity_names": [
+          "레모넥스"
+        ],
+        "source_ids": [],
+        "error": "약 12개월 전 기록·월별 흐름 미확보"
+      }
+    ],
+    "open_questions": [
+      "최신 감사보고서 매출이 2023년 — 외부감사 대상 제외 또는 제출 지연 여부 확인"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "c001:traction:src01",
+      "title": "레모넥스 감사보고서 (2024.12)",
+      "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250507000201",
+      "publisher": "금융감독원 전자공시(DART)",
+      "source_type": "official",
+      "published_at": "2025-05-07",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c001:traction:src02",
+      "title": "레모넥스 감사보고서 (2023.12)",
+      "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20240402001248",
+      "publisher": "금융감독원 전자공시(DART)",
+      "source_type": "official",
+      "published_at": "2024-04-02",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c001:traction:src03",
+      "title": "레모넥스 연결감사보고서 (2023.12)",
+      "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20240402001256",
+      "publisher": "금융감독원 전자공시(DART)",
+      "source_type": "official",
+      "published_at": "2024-04-02",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c001:traction:src04",
+      "title": "레모넥스 연결감사보고서 (2022.12)",
+      "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20230403003476",
+      "publisher": "금융감독원 전자공시(DART)",
+      "source_type": "official",
+      "published_at": "2023-04-03",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c001:traction:src05",
+      "title": "국민연금 가입 사업장 상세 202604",
+      "url": "https://apis.data.go.kr/B552015/NpsBplcInfoInqireServiceV2#seq=4371132&ym=202604",
+      "publisher": "국민연금공단",
+      "source_type": "official",
+      "published_at": "2026-04-01",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "c001:traction:ev01",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "감사보고서 (2024.12) 손익계산서 매출액: 2024년 2,014,578,203원 (당기)",
+      "source_ids": [
+        "c001:traction:src01"
+      ],
+      "locator": "손익계산서 > 매출액 > 당기",
+      "excerpt": "매출액 | 4,23 | 2,014,578,203 | 605,020,000",
+      "event_date": "2024-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev02",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "감사보고서 (2024.12) 손익계산서 매출액: 2023년 605,020,000원 (전기)",
+      "source_ids": [
+        "c001:traction:src01"
+      ],
+      "locator": "손익계산서 > 매출액 > 전기",
+      "excerpt": "매출액 | 4,23 | 2,014,578,203 | 605,020,000",
+      "event_date": "2023-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev03",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "감사보고서 (2023.12) 손익계산서 매출액: 2023년 605,020,000원 (당기)",
+      "source_ids": [
+        "c001:traction:src02"
+      ],
+      "locator": "손익계산서 > 매출액 > 당기",
+      "excerpt": "매출액 | 26 | 605,020,000 | -",
+      "event_date": "2023-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev04",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "감사보고서 (2023.12) 손익계산서 매출액: 2022년 0원 (전기)",
+      "source_ids": [
+        "c001:traction:src02"
+      ],
+      "locator": "손익계산서 > 매출액 > 전기",
+      "excerpt": "매출액 | 26 | 605,020,000 | -",
+      "event_date": "2022-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev05",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "연결감사보고서 (2023.12) 손익계산서 매출액: 2023년 605,020,000원 (당기)",
+      "source_ids": [
+        "c001:traction:src03"
+      ],
+      "locator": "손익계산서 > 매출액 > 당기",
+      "excerpt": "매출액 | 25 | 605,020,000 | -",
+      "event_date": "2023-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev06",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "연결감사보고서 (2023.12) 손익계산서 매출액: 2022년 0원 (전기)",
+      "source_ids": [
+        "c001:traction:src03"
+      ],
+      "locator": "손익계산서 > 매출액 > 전기",
+      "excerpt": "매출액 | 25 | 605,020,000 | -",
+      "event_date": "2022-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev07",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "연결감사보고서 (2022.12) 손익계산서 매출액: 2022년 0원 (당기)",
+      "source_ids": [
+        "c001:traction:src04"
+      ],
+      "locator": "손익계산서 > 매출액 > 당기",
+      "excerpt": "매출액 | 25 | - | -",
+      "event_date": "2022-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev08",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "연결감사보고서 (2022.12) 손익계산서 매출액: 2021년 0원 (전기)",
+      "source_ids": [
+        "c001:traction:src04"
+      ],
+      "locator": "손익계산서 > 매출액 > 전기",
+      "excerpt": "매출액 | 25 | - | -",
+      "event_date": "2021-12-31",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    },
+    {
+      "evidence_id": "c001:traction:ev09",
+      "company_id": "c001",
+      "product_id": null,
+      "statement": "주식회사레모넥스 국민연금 가입자 수 5명 (202604)",
+      "source_ids": [
+        "c001:traction:src05"
+      ],
+      "locator": "자료생성년월 202604",
+      "excerpt": null,
+      "event_date": "2026-04-01",
+      "geography": null,
+      "evidence_status": "confirmed",
+      "date_uncertainty": null
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "c001:traction:f-stage",
+      "category": "stage",
+      "claim": "상업화 단계 A — 최근 36개월 인정 근거 기준",
+      "evidence_ids": [
+        "c001:traction:ev01",
+        "c001:traction:ev02",
+        "c001:traction:ev03",
+        "c001:traction:ev05"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C5"
+      ]
+    },
+    {
+      "finding_id": "c001:traction:f-disclosure",
+      "category": "disclosure",
+      "claim": "DART 감사보고서 조회 결과 found, consolidated 매출 3개 연도",
+      "evidence_ids": [
+        "c001:traction:ev05",
+        "c001:traction:ev06",
+        "c001:traction:ev07",
+        "c001:traction:ev08"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C5"
+      ]
+    },
+    {
+      "finding_id": "c001:traction:f-growth",
+      "category": "growth",
+      "claim": "성장 구간 G0: 시작 연도(2021) 매출 ≤ 0",
+      "evidence_ids": [
+        "c001:traction:ev05",
+        "c001:traction:ev06",
+        "c001:traction:ev07",
+        "c001:traction:ev08"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C5"
+      ]
+    },
+    {
+      "finding_id": "c001:traction:f-headcount",
+      "category": "headcount",
+      "claim": "고용 추이 unknown: 최신 관측이 기준일 3개월 이내에 없음",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C5"
+      ]
+    },
+    {
+      "finding_id": "c001:traction:f-customer",
+      "category": "customer",
+      "claim": "고객 추이 unknown: 최신 관측이 기준일 3개월 이내에 없음",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C5"
+      ]
+    },
+    {
+      "finding_id": "c001:traction:f-expectation",
+      "category": "expectation",
+      "claim": "투자 단계 Series C → 최소 기대 A, 상업화 A → met",
+      "evidence_ids": [
+        "c001:traction:ev01",
+        "c001:traction:ev02",
+        "c001:traction:ev03",
+        "c001:traction:ev05"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C5"
+      ]
+    },
+    {
+      "finding_id": "c001:traction:f-c5",
+      "category": "c5",
+      "claim": "C5 = 5.0 (scored) — 상업화 A(S=5). 성장 자료 미확인(G0)으로 S만 사용",
+      "evidence_ids": [
+        "c001:traction:ev01",
+        "c001:traction:ev02",
+        "c001:traction:ev03",
+        "c001:traction:ev05",
+        "c001:traction:ev06",
+        "c001:traction:ev07",
+        "c001:traction:ev08"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": [
+        "C5"
+      ]
+    }
+  ],
+  "missing_items": [
+    {
+      "item_id": "c001:traction:m01",
+      "field": "revenue_by_year",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "성장 구간 G0 → C5 성장 점수 없음",
+      "detail": "시작 연도(2021) 매출 ≤ 0"
+    },
+    {
+      "item_id": "c001:traction:m02",
+      "field": "headcount_records",
+      "cause": "not_found",
+      "route": "due_diligence",
+      "impact": "고용 추이·RF2(고용) 판단 불가",
+      "detail": "최신 관측이 기준일 3개월 이내에 없음"
+    },
+    {
+      "item_id": "c001:traction:m03",
+      "field": "customer_records",
+      "cause": "not_reviewed",
+      "route": "due_diligence",
+      "impact": "고객 추이 판단 불가",
+      "detail": "최신 관측이 기준일 3개월 이내에 없음"
+    },
+    {
+      "item_id": "c001:traction:m04",
+      "field": "contract_records",
+      "cause": "not_reviewed",
+      "route": "traction",
+      "impact": "단계 B·C·D, RF1·RF3 판단 불완전",
+      "detail": "뉴스 검색 실패 또는 API 키·LLM 미설정"
+    }
+  ],
+  "coverage": [
+    {
+      "scope": "disclosure",
+      "status": "reviewed",
+      "search_log_indices": [
+        0
+      ],
+      "note": ""
+    },
+    {
+      "scope": "revenue",
+      "status": "reviewed",
+      "search_log_indices": [
+        0
+      ],
+      "note": ""
+    },
+    {
+      "scope": "contract",
+      "status": "not_reviewed",
+      "search_log_indices": [
+        1
+      ],
+      "note": "news_state=not_reviewed"
+    },
+    {
+      "scope": "activity",
+      "status": "not_reviewed",
+      "search_log_indices": [
+        1
+      ],
+      "note": "news_state=not_reviewed"
+    },
+    {
+      "scope": "customer",
+      "status": "not_reviewed",
+      "search_log_indices": [
+        1
+      ],
+      "note": "news_state=not_reviewed"
+    },
+    {
+      "scope": "headcount",
+      "status": "reviewed",
+      "search_log_indices": [
+        2,
+        3,
+        4
+      ],
+      "note": ""
+    }
+  ],
+  "review_responses": []
+}

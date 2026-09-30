@@ -1,0 +1,161 @@
+{
+  "risk_analysis": {
+    "schema_version": "risk-company-3",
+    "company_id": "c001",
+    "company_name": "레모넥스",
+    "as_of": "2026-09-30",
+    "mode": "api",
+    "cache_key": "b4c87b12e0d6ca7dc424310f62ce917c04d5221448ddeb457bf9e418ca661483",
+    "analysis_status": "complete",
+    "areas": [
+      {
+        "category": "external_dependency",
+        "observations": [
+          {
+            "statement": "[fixture] 병원과 공동연구 협약 발표",
+            "passage_ids": [
+              "p_aa8a594e4409f62a"
+            ],
+            "kind": "observation",
+            "conditional_impact": null,
+            "citations": [
+              {
+                "passage_id": "p_aa8a594e4409f62a",
+                "source_id": "s1",
+                "url": "https://example.com/fixture-1",
+                "published_at": "2026-01-01",
+                "title": "[fixture] 협약 기사",
+                "start": 0,
+                "end": 177,
+                "text": "레모넥스는 병원과 공동연구 협약을 발표했습니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. "
+              }
+            ],
+            "verification_status": "source_linked_not_fact_verified"
+          }
+        ],
+        "unknowns": [
+          "[fixture] external_dependency 세부 조건 미확인"
+        ],
+        "due_diligence_questions": [
+          "[fixture] external_dependency 관련 계약·승계 조건은 무엇인가?"
+        ]
+      },
+      {
+        "category": "key_person_continuity",
+        "observations": [
+          {
+            "statement": "[fixture] 최고기술책임자 교체",
+            "passage_ids": [
+              "p_198621bb84616fcf"
+            ],
+            "kind": "risk_signal",
+            "conditional_impact": "후임 체계가 없으면 개발 일정 지연 가능",
+            "citations": [
+              {
+                "passage_id": "p_198621bb84616fcf",
+                "source_id": "s2",
+                "url": "https://example.com/fixture-2",
+                "published_at": "2026-03-01",
+                "title": "[fixture] 경영진 기사",
+                "start": 0,
+                "end": 179,
+                "text": "레모넥스의 최고기술책임자가 교체되었다고 밝혔습니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. "
+              }
+            ],
+            "verification_status": "source_linked_not_fact_verified"
+          }
+        ],
+        "unknowns": [
+          "[fixture] key_person_continuity 세부 조건 미확인"
+        ],
+        "due_diligence_questions": [
+          "[fixture] key_person_continuity 관련 계약·승계 조건은 무엇인가?"
+        ]
+      },
+      {
+        "category": "operational_incidents",
+        "observations": [],
+        "unknowns": [
+          "[fixture] operational_incidents 세부 조건 미확인"
+        ],
+        "due_diligence_questions": [
+          "[fixture] operational_incidents 관련 계약·승계 조건은 무엇인가?"
+        ]
+      }
+    ],
+    "diagnostics": [],
+    "passages": [
+      {
+        "passage_id": "p_aa8a594e4409f62a",
+        "source_id": "s1",
+        "url": "https://example.com/fixture-1",
+        "published_at": "2026-01-01",
+        "title": "[fixture] 협약 기사",
+        "start": 0,
+        "end": 177,
+        "text": "레모넥스는 병원과 공동연구 협약을 발표했습니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. "
+      },
+      {
+        "passage_id": "p_198621bb84616fcf",
+        "source_id": "s2",
+        "url": "https://example.com/fixture-2",
+        "published_at": "2026-03-01",
+        "title": "[fixture] 경영진 기사",
+        "start": 0,
+        "end": 179,
+        "text": "레모넥스의 최고기술책임자가 교체되었다고 밝혔습니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. "
+      }
+    ],
+    "usage": null,
+    "limitation": "원문 연결은 의미 검증이 아닙니다. 공개 자료 검토이며 투자 위험 없음으로 해석하지 마세요.",
+    "dataset_sha256": "a24ee92afb23f5823e91b0f952577f3aebf30e4ef244d9d36f2b66e946d80dfd",
+    "review_history": [
+      {
+        "attempt": 0,
+        "decision": "no_new_evidence",
+        "questions": [
+          {
+            "category": "external_dependency",
+            "question": "[fixture] external_dependency 관련 계약·승계 조건은 무엇인가?"
+          },
+          {
+            "category": "key_person_continuity",
+            "question": "[fixture] key_person_continuity 관련 계약·승계 조건은 무엇인가?"
+          },
+          {
+            "category": "operational_incidents",
+            "question": "[fixture] operational_incidents 관련 계약·승계 조건은 무엇인가?"
+          }
+        ],
+        "unknowns": [
+          "[fixture] external_dependency 세부 조건 미확인",
+          "[fixture] key_person_continuity 세부 조건 미확인",
+          "[fixture] operational_incidents 세부 조건 미확인"
+        ],
+        "diagnostics": [],
+        "source_ids": [
+          "s1",
+          "s2"
+        ],
+        "mode": "api"
+      }
+    ],
+    "stop_reason": "no_new_evidence"
+  },
+  "references": [
+    {
+      "source_id": "s1",
+      "url": "https://example.com/fixture-1",
+      "title": "[fixture] 협약 기사",
+      "published_at": "2026-01-01",
+      "content": "레모넥스는 병원과 공동연구 협약을 발표했습니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. "
+    },
+    {
+      "source_id": "s2",
+      "url": "https://example.com/fixture-2",
+      "title": "[fixture] 경영진 기사",
+      "published_at": "2026-03-01",
+      "content": "레모넥스의 최고기술책임자가 교체되었다고 밝혔습니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. fixture 문장입니다. "
+    }
+  ]
+}

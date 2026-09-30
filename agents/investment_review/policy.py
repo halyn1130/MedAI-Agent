@@ -22,6 +22,12 @@ DEFAULT_K = 5
 TIEBREAK_CRITERIA = ("C5", "C1")   # 총점 동점 시 순서. 그다음 company_id 오름차순
 TOTAL_DECIMALS = 6                 # 부동소수 오차로 60점 경계가 흔들리지 않도록 반올림
 
+# C6 운영 대비: 05 Risk 출력(risk-company-3)에 OP1~OP5가 없어 영역별 위험 신호로 채점한다 (06 자체 규칙).
+# 관찰이 있는 영역만 채점하고 평균한다. 관찰이 있는 영역이 없으면 null (자료 없음 ≠ 위험 없음).
+C6_RULE = "risk-signal-v1"
+C6_AREA_SCORE_BY_SIGNALS = {0: 5.0, 1: 3.0}   # 위험 신호 수 → 영역 점수
+C6_AREA_SCORE_MANY_SIGNALS = 1.0              # 2건 이상
+
 
 @dataclass(frozen=True)
 class Policy:

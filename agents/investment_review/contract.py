@@ -103,6 +103,21 @@ class ValidationIssue(BaseModel):
     related_ids: list[str] = Field(default_factory=list)
 
 
+class AgentResult(BaseModel):
+    """어댑터 출력. 각 Agent의 원래 형식에서 06이 쓰는 값만 뽑은 것. 판단(blocking 여부 등)은 하지 않는다."""
+    agent: str
+    company_id: Optional[str] = None
+    analysis_status: Optional[str] = None      # 원래 값 그대로 (risk의 no_evidence 포함)
+    result_version: Optional[int] = None
+    criteria: list[CriterionResult] = Field(default_factory=list)
+    gates: list[GateResult] = Field(default_factory=list)
+    issues: list[ValidationIssue] = Field(default_factory=list)
+    concerns: list[str] = Field(default_factory=list)              # 레드플래그·위험 신호·사업 우려
+    due_diligence_questions: list[str] = Field(default_factory=list)
+    unknowns: list[str] = Field(default_factory=list)              # 결측·미확인 (영향도는 문장에 보존)
+    source_ids: list[str] = Field(default_factory=list)
+
+
 # ─────────────────────────────────────────────
 # 최종 결과
 # ─────────────────────────────────────────────

@@ -1,0 +1,562 @@
+{
+  "market_analysis": {
+    "run_id": "fixture",
+    "company_id": "c001",
+    "as_of": "2026-09-30",
+    "schema_version": "2.0",
+    "criteria_version": "proposed-2.0",
+    "agent": "market",
+    "result_version": 1,
+    "analysis_status": "complete",
+    "data": {
+      "market_scope": {
+        "segment": "clinical decision support software",
+        "geography": [
+          "KR"
+        ],
+        "target_customer": "general hospitals",
+        "buyer": "hospital procurement departments",
+        "primary_user": "hospital pharmacists",
+        "product_type": "clinical decision support software",
+        "intended_use": "medication safety review",
+        "core_problem": "manual review workload",
+        "business_model": "annual enterprise subscription",
+        "base_year": 2026,
+        "forecast_period": "2026-2031",
+        "assumptions": []
+      },
+      "supplemental_context": {
+        "facts": [],
+        "unresolved_fields": []
+      },
+      "market_metrics": [
+        {
+          "metric_id": "cagr-kr-cdss-2025-2030",
+          "metric_type": "cagr",
+          "value": 0.18,
+          "unit": "ratio",
+          "currency": null,
+          "geography": "KR",
+          "segment": "clinical decision support software",
+          "base_year": 2026,
+          "start_year": 2026,
+          "end_year": 2031,
+          "method": "report forecast",
+          "assumption": null,
+          "evidence_ids": [
+            "c001:market:size_growth:ev-160df1de5135ec175b"
+          ]
+        }
+      ],
+      "dimensions": {
+        "size_growth": {
+          "score": 4.0,
+          "score_status": "scored",
+          "rationale": "동일 세그먼트·지역의 CAGR 근거 확인",
+          "evidence_ids": [
+            "c001:market:size_growth:ev-160df1de5135ec175b"
+          ],
+          "missing_item_ids": [],
+          "assumptions": [],
+          "checks": [],
+          "market_metrics": [
+            {
+              "metric_id": "cagr-kr-cdss-2025-2030",
+              "metric_type": "cagr",
+              "value": 0.18,
+              "unit": "ratio",
+              "currency": null,
+              "geography": "KR",
+              "segment": "clinical decision support software",
+              "base_year": 2026,
+              "start_year": 2026,
+              "end_year": 2031,
+              "method": "report forecast",
+              "assumption": null,
+              "evidence_ids": [
+                "c001:market:size_growth:ev-160df1de5135ec175b"
+              ]
+            }
+          ],
+          "business_concerns": []
+        },
+        "demand": {
+          "score": 5.0,
+          "score_status": "scored",
+          "rationale": "demand 근거 확인",
+          "evidence_ids": [
+            "c001:market:demand:ev-2324a0137611550f4e"
+          ],
+          "missing_item_ids": [],
+          "assumptions": [],
+          "checks": [
+            {
+              "check_id": "DM1",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:demand:ev-2324a0137611550f4e"
+              ]
+            },
+            {
+              "check_id": "DM2",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:demand:ev-2324a0137611550f4e"
+              ]
+            },
+            {
+              "check_id": "DM3",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:demand:ev-2324a0137611550f4e"
+              ]
+            },
+            {
+              "check_id": "DM4",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:demand:ev-2324a0137611550f4e"
+              ]
+            },
+            {
+              "check_id": "DM5",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:demand:ev-2324a0137611550f4e"
+              ]
+            }
+          ],
+          "market_metrics": [],
+          "business_concerns": []
+        },
+        "commercialization": {
+          "score": 5.0,
+          "score_status": "scored",
+          "rationale": "commercialization 근거 확인",
+          "evidence_ids": [
+            "c001:market:commercialization:ev-4b2331c638a0cd7ee6"
+          ],
+          "missing_item_ids": [],
+          "assumptions": [],
+          "checks": [
+            {
+              "check_id": "AD1",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:commercialization:ev-4b2331c638a0cd7ee6"
+              ]
+            },
+            {
+              "check_id": "AD2",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:commercialization:ev-4b2331c638a0cd7ee6"
+              ]
+            },
+            {
+              "check_id": "AD3",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:commercialization:ev-4b2331c638a0cd7ee6"
+              ]
+            },
+            {
+              "check_id": "AD4",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:commercialization:ev-4b2331c638a0cd7ee6"
+              ]
+            },
+            {
+              "check_id": "AD5",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:commercialization:ev-4b2331c638a0cd7ee6"
+              ]
+            }
+          ],
+          "market_metrics": [],
+          "business_concerns": []
+        },
+        "monetization": {
+          "score": null,
+          "score_status": "unknown",
+          "rationale": "monetization 근거 확인",
+          "evidence_ids": [
+            "c001:market:monetization:ev-f494fa9276d6a18f3f"
+          ],
+          "missing_item_ids": [],
+          "assumptions": [],
+          "checks": [
+            {
+              "check_id": "MO1",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:monetization:ev-f494fa9276d6a18f3f"
+              ]
+            },
+            {
+              "check_id": "MO2",
+              "status": "unknown",
+              "rationale": "가격 조건 비공개",
+              "evidence_ids": []
+            },
+            {
+              "check_id": "MO3",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:monetization:ev-f494fa9276d6a18f3f"
+              ]
+            },
+            {
+              "check_id": "MO4",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:monetization:ev-f494fa9276d6a18f3f"
+              ]
+            },
+            {
+              "check_id": "MO5",
+              "status": "yes",
+              "rationale": "원문 근거에서 확인",
+              "evidence_ids": [
+                "c001:market:monetization:ev-f494fa9276d6a18f3f"
+              ]
+            }
+          ],
+          "market_metrics": [],
+          "business_concerns": []
+        }
+      },
+      "criteria_inputs": {
+        "C2": {
+          "score": 4.0,
+          "score_status": "scored",
+          "evidence_ids": [
+            "c001:market:size_growth:ev-160df1de5135ec175b"
+          ],
+          "rationale": "C2는 비교 가능한 세부시장 CAGR 구간으로 계산"
+        },
+        "C3": {
+          "score": 5.0,
+          "score_status": "scored",
+          "evidence_ids": [
+            "c001:market:commercialization:ev-4b2331c638a0cd7ee6",
+            "c001:market:demand:ev-2324a0137611550f4e"
+          ],
+          "rationale": "C3=(수요 점수+도입·상용화 점수)/2"
+        },
+        "C4": {
+          "score": null,
+          "score_status": "unknown",
+          "evidence_ids": [
+            "c001:market:monetization:ev-f494fa9276d6a18f3f"
+          ],
+          "rationale": "C4는 5개 수익화 체크의 충족 개수"
+        }
+      },
+      "overall_market_score": null,
+      "market_summary": "시장·사업성 평가: size_growth=4.0, demand=5.0, commercialization=5.0, monetization=unknown",
+      "business_concerns": []
+    },
+    "sources": [
+      {
+        "source_id": "market:rag:src-c01d3e8a441c3bb0",
+        "title": "Healthcare AI Adoption Report",
+        "url": "https://research.example/report",
+        "publisher": "Public Research Institute",
+        "source_type": "industry_report",
+        "published_at": "2025-06-01",
+        "checked_at": "2026-09-30",
+        "document_id": "industry-report-1"
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "c001:market:commercialization:ev-4b2331c638a0cd7ee6",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 commercialization 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "commercialization"
+      },
+      {
+        "evidence_id": "c001:market:commercialization:ev-f4e10cfd7649c44853",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 commercialization 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "commercialization"
+      },
+      {
+        "evidence_id": "c001:market:demand:ev-2324a0137611550f4e",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 demand 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "demand"
+      },
+      {
+        "evidence_id": "c001:market:demand:ev-8e0a6d76a4cfe726ee",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 demand 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "demand"
+      },
+      {
+        "evidence_id": "c001:market:monetization:ev-f494fa9276d6a18f3f",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 monetization 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "monetization"
+      },
+      {
+        "evidence_id": "c001:market:monetization:ev-121d51aa32658ca945",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 monetization 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "monetization"
+      },
+      {
+        "evidence_id": "c001:market:size_growth:ev-160df1de5135ec175b",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 size_growth 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "size_growth"
+      },
+      {
+        "evidence_id": "c001:market:size_growth:ev-73e5b741c32ba491ae",
+        "company_id": "c001",
+        "statement": "Healthcare AI Adoption Report의 size_growth 관련 원문 근거",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "locator": "page 7",
+        "page": 7,
+        "excerpt": "The comparable healthcare AI segment has an 18 percent CAGR. Customers report unmet need, procurement demand, feasible workflow integration, and recurring enterprise subscription purchasing.",
+        "evidence_status": "confirmed",
+        "dimension": "size_growth"
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "c001:market:f-size_growth",
+        "category": "size_growth",
+        "claim": "size_growth: 동일 세그먼트·지역의 CAGR 근거 확인",
+        "evidence_ids": [
+          "c001:market:size_growth:ev-160df1de5135ec175b"
+        ],
+        "uncertainty": null,
+        "related_criterion_ids": [
+          "C2"
+        ]
+      },
+      {
+        "finding_id": "c001:market:f-demand",
+        "category": "demand",
+        "claim": "demand: demand 근거 확인",
+        "evidence_ids": [
+          "c001:market:demand:ev-2324a0137611550f4e"
+        ],
+        "uncertainty": null,
+        "related_criterion_ids": [
+          "C3"
+        ]
+      },
+      {
+        "finding_id": "c001:market:f-commercialization",
+        "category": "commercialization",
+        "claim": "commercialization: commercialization 근거 확인",
+        "evidence_ids": [
+          "c001:market:commercialization:ev-4b2331c638a0cd7ee6"
+        ],
+        "uncertainty": null,
+        "related_criterion_ids": [
+          "C3"
+        ]
+      },
+      {
+        "finding_id": "c001:market:f-monetization",
+        "category": "monetization",
+        "claim": "monetization: monetization 근거 확인",
+        "evidence_ids": [
+          "c001:market:monetization:ev-f494fa9276d6a18f3f"
+        ],
+        "uncertainty": "공개 근거 부족으로 판단 불가",
+        "related_criterion_ids": [
+          "C4"
+        ]
+      }
+    ],
+    "missing_items": [],
+    "retrieval_log": [
+      {
+        "query": "clinical decision support software implementation workflow integration infrastructure requirements",
+        "dimension": "commercialization",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-ed52e1375f"
+        ],
+        "top_k": 5,
+        "error": null
+      },
+      {
+        "query": "hospital procurement departments procurement deployment barriers switching cost clinical decision support software",
+        "dimension": "commercialization",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-4be583c134"
+        ],
+        "top_k": 5,
+        "error": null
+      },
+      {
+        "query": "general hospitals unmet need demand clinical decision support software",
+        "dimension": "demand",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-fb23e5a0a5"
+        ],
+        "top_k": 5,
+        "error": null
+      },
+      {
+        "query": "hospital procurement departments adoption intention budget willingness to pay clinical decision support software",
+        "dimension": "demand",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-aff26450e3"
+        ],
+        "top_k": 5,
+        "error": null
+      },
+      {
+        "query": "clinical decision support software pricing revenue model subscription license per-use",
+        "dimension": "monetization",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-93650eba96"
+        ],
+        "top_k": 5,
+        "error": null
+      },
+      {
+        "query": "hospital procurement departments procurement payment pathway economics ROI clinical decision support software",
+        "dimension": "monetization",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-1b801756e8"
+        ],
+        "top_k": 5,
+        "error": null
+      },
+      {
+        "query": "clinical decision support software market size CAGR KR 2026-2031",
+        "dimension": "size_growth",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-ad8c247124"
+        ],
+        "top_k": 5,
+        "error": null
+      },
+      {
+        "query": "clinical decision support software industry forecast KR base year 2026",
+        "dimension": "size_growth",
+        "searched_at": "2026-09-30T11:40:18+09:00",
+        "status": "found",
+        "source_ids": [
+          "market:rag:src-c01d3e8a441c3bb0"
+        ],
+        "chunk_ids": [
+          "chunk-9d7c7eee3b"
+        ],
+        "top_k": 5,
+        "error": null
+      }
+    ],
+    "web_search_log": [],
+    "review_responses": []
+  },
+  "review_response": null
+}
