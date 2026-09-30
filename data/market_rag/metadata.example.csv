@@ -1,0 +1,2 @@
+path,document_id,title,publisher,published_at,region,segment,source_type,source_url,include_pages,exclude_pages
+reports/example.pdf,example-market-report,Example Healthcare AI Market Report,Example Publisher,2025-01-01,global,healthcare_ai,industry_report,https://example.org/report,,
