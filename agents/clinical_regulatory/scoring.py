@@ -77,12 +77,12 @@ def c1_for_product(ctx: ClinicalRun, pid: str) -> dict:
         # 분류 상태와 C1 사유의 일관성 동기화
         info["has_efficacy_claim"] = has_claim
 
-    if not has_claim and (info["regulatory_applicability"] == "out_of_scope" or
+    rel = [s for s in ctx.studies if s["product_id"] == pid and s["product_match"]]
+
+    if not rel and not has_claim and (info["regulatory_applicability"] == "out_of_scope" or
                           (info["product_type"] in C1_NOT_APPLICABLE_TYPES and info["regulatory_applicability"] != "in_scope")):
         return {"score": None, "status": "not_applicable", "level": "L0", "evidence_ids": [], "conflict": False,
                 "rationale": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)"}
-
-    rel = [s for s in ctx.studies if s["product_id"] == pid and s["product_match"]]
 
     # L3 검증: 전향적 다기관(prospective and multicenter) 또는 독립 외부 검증(external_validation)이 아니면 L2 상한
     for s in rel:

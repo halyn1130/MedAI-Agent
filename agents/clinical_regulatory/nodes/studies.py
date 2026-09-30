@@ -8,14 +8,14 @@ try:
     from ..context import ClinicalAgentState, ClinicalRun
     from ..llm import _company_brief, _product_brief, ask
     from ..tools import _coverage_status, _scope_of, pubmed_search, web_search
-    from ..utils import _pkey, compare_to_as_of, norm_date, strip_fake_jan1
+    from ..utils import _company_core, _dedupe, _pkey, compare_to_as_of, norm_date, strip_fake_jan1
 except ImportError:
     import schema as S
     from config import LEVEL_RANK
     from context import ClinicalAgentState, ClinicalRun
     from llm import _company_brief, _product_brief, ask
     from tools import _coverage_status, _scope_of, pubmed_search, web_search
-    from utils import _pkey, compare_to_as_of, norm_date, strip_fake_jan1
+    from utils import _company_core, _dedupe, _pkey, compare_to_as_of, norm_date, strip_fake_jan1
 
 
 def _study_key(s: dict, ctx: ClinicalRun) -> tuple:
@@ -41,10 +41,16 @@ def studies_node(state: ClinicalAgentState) -> dict:
             ctx.set_coverage("clinical_studies", pid, None, "reviewed", note="규제 비대상이며 효능 주장 없음")
             continue
         hits: list[dict] = []
-        for pn in [n for n in ctx.product_names(pid) if n.isascii() and re.search(r"[A-Za-z]", n)][:2]:
+        for pn in [n for n in ctx.product_names(pid) if n.isascii() and re.search(r"[A-Za-z]", n)][:3]:
             hits.append(pubmed_search(ctx, f'"{pn}"[Title/Abstract]'))  # PubMed는 영문 검색만 의미 있음
+        eng_affils = []
         if ctx.company.english_name:
-            hits.append(pubmed_search(ctx, f'"{ctx.company.english_name}"[Affiliation]'))
+            eng_affils.append(ctx.company.english_name)
+            core = _company_core(ctx.company.english_name)
+            if core and len(core) >= 3:
+                eng_affils.append(core)
+        for ea in _dedupe(eng_affils)[:2]:
+            hits.append(pubmed_search(ctx, f'"{ea}"[Affiliation]'))
         pn = (ctx.product_names(pid) or [ctx.company.display_name])[0]
         hits.append(web_search(ctx, f"{ctx.company.display_name} {pn} 임상 연구 논문"))
         hits.append(web_search(ctx, f"{pn} clinical validation study"))

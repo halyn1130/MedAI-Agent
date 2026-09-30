@@ -116,6 +116,19 @@ def compare_to_as_of(d: Optional[str], as_of: str) -> str:
     return "before" if len(d) == 10 else "ambiguous"
 
 
+def date_from_url(url: str) -> Optional[str]:
+    """URL에 포함된 날짜 추출 (예: /2025/08/04/244864, /2021-02-03/ 등)"""
+    if not url:
+        return None
+    m = re.search(r"/(20\d{2})[-/_](0[1-9]|1[0-2])[-/_](0[1-9]|[12]\d|3[01])\b", url)
+    if m:
+        return f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
+    m = re.search(r"(?:[/=_]|AKR)(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])", url)
+    if m:
+        return f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
+    return None
+
+
 _OFFICIAL = ("mfds.go.kr", "fda.gov", "hira.or.kr", "neca.re.kr", "nhis.or.kr", "mohw.go.kr",
              "europa.eu", "pmda.go.jp", ".go.kr", ".gov")
 _RESEARCH = ("pubmed", "ncbi.nlm.nih.gov", "doi.org", "clinicaltrials.gov", "nature.com", "sciencedirect",

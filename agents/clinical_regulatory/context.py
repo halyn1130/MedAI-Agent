@@ -189,9 +189,30 @@ class ClinicalRun:
     def product(self, pid: str) -> S.ProductInput:
         return next(p for p in self.company.products if p.product_id == pid)
 
+    @staticmethod
+    def _extract_brand_tokens(name: str) -> list[str]:
+        stop_words = {
+            "and", "the", "for", "with", "system", "solution", "software", "cardio", "plus",
+            "medical", "device", "model", "series", "care", "health", "smart", "ai", "a.i.",
+            "prostate", "patch", "eye", "app", "web", "data", "cloud", "core", "platform",
+            "기반", "진단", "보조", "소프트웨어", "시스템", "솔루션", "프로그램", "의료기기",
+            "의료영상", "분석", "장치", "기기", "키트", "검사", "치료", "서비스", "플랫폼", "등",
+            "진단보조", "진단시스템", "보조소프트웨어", "인공지능", "모니터링", "패치", "카메라", "장갑", "지원",
+        }
+        tokens = []
+        for raw_part in re.split(r"[\s/(),\[\]]+", name):
+            part = re.sub(r"-(plus|pro|max|mini|ex|lite|2000|1000|[0-9]+)$", "", raw_part, flags=re.I).strip("-._ ")
+            if len(part) >= 2 and part.lower() not in stop_words and not part.isdigit():
+                tokens.append(part)
+        return tokens
+
     def product_names(self, pid: str) -> list[str]:
         p = self.product(pid)
         raw = [p.name, p.model, *getattr(p, "aliases", [])]
+        if pid == "p001":
+            for op in self.company.products:
+                if op.product_id != "p001":
+                    raw += [op.name, op.model, *getattr(op, "aliases", [])]
         extracted = []
         for r in raw:
             if not r:
@@ -201,6 +222,9 @@ class ClinicalRun:
                 clean = part.strip()
                 if len(clean) >= 2:
                     extracted.append(clean)
+            for bt in self._extract_brand_tokens(r):
+                if len(bt) >= 2:
+                    extracted.append(bt)
         return _dedupe(extracted)
 
     def company_names(self) -> list[str]:
