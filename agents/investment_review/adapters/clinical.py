@@ -10,7 +10,7 @@ G01 매핑 (CL02 = 목표국 공식 조치로 핵심 제품 현재 운영 차단
 from __future__ import annotations
 
 from ..contract import AgentResult, GateResult, GateStatus
-from ._common import criterion_from_input, failure_issue, missing_texts
+from ._common import criterion_from_input, envelope_fields
 
 AGENT = "clinical"
 CL02_TO_G01 = {"confirmed": GateStatus.CONFIRMED, "candidate": GateStatus.UNRESOLVED}
@@ -35,12 +35,8 @@ def adapt_clinical(env: dict) -> AgentResult:
     data = env.get("data") or {}
     flags = [f for f in data.get("red_flags") or [] if f.get("status") != "resolved"]
     return AgentResult(
-        agent=AGENT, company_id=env.get("company_id"), analysis_status=env.get("analysis_status"),
-        result_version=env.get("result_version"),
+        **envelope_fields(env, AGENT),
         criteria=[criterion_from_input("C1", (data.get("criteria_inputs") or {}).get("C1"), AGENT)],
         gates=[_g01(env)],
-        issues=failure_issue(AGENT, env.get("company_id"), env.get("analysis_status")),
         concerns=[f"{f['code']}({f['status']}, {f.get('materiality')}): {f.get('description', '')}" for f in flags],
-        unknowns=missing_texts(env),
-        source_ids=[s["source_id"] for s in env.get("sources") or []],
     )

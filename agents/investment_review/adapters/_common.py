@@ -29,3 +29,17 @@ def missing_texts(envelope: dict) -> list[str]:
         impact = f"[{m['impact']}] " if m.get("impact") else ""
         out.append(f"{impact}{m.get('field')}: {m.get('cause')}" + (f" — {m['detail']}" if m.get("detail") else ""))
     return out
+
+
+def envelope_fields(env: dict, agent: str) -> dict:
+    """AnalysisEnvelope 공통 필드 → AgentResult 인자."""
+    sources = env.get("sources") or []
+    return dict(
+        agent=agent, company_id=env.get("company_id"), as_of=env.get("as_of"),
+        analysis_status=env.get("analysis_status"), result_version=env.get("result_version"),
+        evidence_ids=[e["evidence_id"] for e in env.get("evidence") or []],
+        source_published={s["source_id"]: s.get("published_at") for s in sources},
+        source_ids=[s["source_id"] for s in sources],
+        issues=failure_issue(agent, env.get("company_id"), env.get("analysis_status")),
+        unknowns=missing_texts(env),
+    )

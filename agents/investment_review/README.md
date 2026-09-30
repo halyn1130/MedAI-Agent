@@ -42,6 +42,23 @@ investment_review/
 - **G02**: 05 분석이 실행됐으면(`complete`·`partial`) `clear`, 실패·`no_evidence`면 `not_checked`. 05 출력에 현재 중단을 확정하는 필드가 없어 `confirmed`는 나오지 않습니다.
 - G01: 임상 분석 실패·규제 조사 미완료면 `not_checked`, CL02 confirmed면 `confirmed`, candidate면 `unresolved`, 그 외 `clear`.
 
+## 검증과 보완 요청
+
+`validate.py`가 어댑터 결과를 대조해 이슈를 만들고, `review_requests.py`가 담당 Agent별로 묶어 **각 Agent의 ReviewRequest 형식 그대로** 요청을 만듭니다. 기업당 1라운드입니다.
+
+| 검사 | 판단불가(blocking) | 보완 요청 |
+|---|---|---|
+| `company_mismatch` 결과 company_id ≠ 심사 대상 | O | X (입력 오류) |
+| `as_of_mismatch` 기준일 불일치 | O | O |
+| `unknown_evidence` 점수가 결과에 없는 근거 ID 참조 | O | O |
+| `no_evidence` 점수에 근거 ID 없음 | O | O |
+| `future_source` 기준일 이후 발행 출처 | X (경고) | O |
+| `score_unknown` 적용 항목 점수 미확인 | X (judge가 처리) | O |
+
+- 분석 실패(`failed`)·결과 없음(`not_run`) Agent에는 보완 요청을 보내지 않습니다.
+- 시장 요청은 `dimensions`로 재실행 영역을 지정합니다: C2=`size_growth`, C3=`demand`+`commercialization`, C4=`monetization`.
+- 요청 형식은 테스트에서 각 팀원의 pydantic 모델(`ReviewRequest`)로 검증합니다.
+
 ## 판정 규칙 구현 메모
 
 - 게이트(G01·G02)가 입력에 없으면 `not_checked`로 보고 판단불가 처리합니다.

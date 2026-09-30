@@ -34,7 +34,7 @@ def c6_from_areas(risk: dict) -> CriterionResult:
             continue
         n = len(_signals(area))
         scored.append((area["category"], n, C6_AREA_SCORE_BY_SIGNALS.get(n, C6_AREA_SCORE_MANY_SIGNALS)))
-        evidence += [c["passage_id"] for o in _signals(area) for c in o.get("citations") or []]
+        evidence += [c["passage_id"] for o in area["observations"] for c in o.get("citations") or []]
     if not scored:
         return CriterionResult(**base, rationale=f"[{C6_RULE}] 관찰이 있는 영역 없음 → 채점 불가")
     score = sum(s for _, _, s in scored) / len(scored)
@@ -56,7 +56,10 @@ def adapt_risk(risk: dict, references: Optional[list] = None) -> AgentResult:
     areas = risk.get("areas") or []
     signals = [(a["category"], o) for a in areas for o in _signals(a)]
     return AgentResult(
-        agent=AGENT, company_id=risk.get("company_id"), analysis_status=risk.get("analysis_status"),
+        agent=AGENT, company_id=risk.get("company_id"), as_of=risk.get("as_of"),
+        analysis_status=risk.get("analysis_status"),
+        evidence_ids=[p["passage_id"] for p in risk.get("passages") or []],
+        source_published={r["source_id"]: r.get("published_at") for r in references or []},
         criteria=[c6_from_areas(risk)],
         gates=[g02_from_status(risk)],
         issues=failure_issue(AGENT, risk.get("company_id"), risk.get("analysis_status")),

@@ -99,6 +99,7 @@ class ValidationIssue(BaseModel):
     target_agent: Optional[str] = None
     criterion_id: Optional[str] = None
     blocking: bool = False
+    reviewable: bool = True          # 담당 Agent 보완으로 해결 가능한지 (ID 불일치 등은 False)
     detail: str = ""
     related_ids: list[str] = Field(default_factory=list)
 
@@ -107,8 +108,11 @@ class AgentResult(BaseModel):
     """어댑터 출력. 각 Agent의 원래 형식에서 06이 쓰는 값만 뽑은 것. 판단(blocking 여부 등)은 하지 않는다."""
     agent: str
     company_id: Optional[str] = None
+    as_of: Optional[str] = None
     analysis_status: Optional[str] = None      # 원래 값 그대로 (risk의 no_evidence 포함)
     result_version: Optional[int] = None
+    evidence_ids: list[str] = Field(default_factory=list)          # 결과 안에 실제로 있는 근거 ID (risk는 passage_id)
+    source_published: dict[str, Optional[str]] = Field(default_factory=dict)  # source_id → 발행일
     criteria: list[CriterionResult] = Field(default_factory=list)
     gates: list[GateResult] = Field(default_factory=list)
     issues: list[ValidationIssue] = Field(default_factory=list)
