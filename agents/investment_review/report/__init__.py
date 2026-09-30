@@ -28,6 +28,14 @@ def generate_report(reviews: list[dict], analyses: dict[str, dict], companies: d
             notes.append("LLM 서술 없음(모델 미설정 또는 호출 실패) → 템플릿 문장")
         else:
             narrative, notes = check_narrative(raw, ctx)
+            if notes:  # 검증에 걸린 항목만 한 번 더 요청
+                retry = write(ctx, llm, feedback=notes)
+                fixed, retry_notes = check_narrative(retry or {}, ctx)
+                failed = {n.split(":")[0] if n.startswith(("summary", "criteria_guide")) else n.split(":")[0] + ":" + n.split(":")[1]
+                          for n in notes}
+                narrative.update({k: v for k, v in fixed.items() if k in failed or k not in narrative})
+                notes = [f"1차: {n}" for n in notes] + [f"재요청 후: {n}" for n in retry_notes
+                                                        if n.split(":")[0] in {f.split(":")[0] for f in failed}]
     markdown = render(ctx, narrative)
     check = check_report(markdown, ctx)
     check["narrative"] = {"used": sorted(narrative or {}), "notes": notes}

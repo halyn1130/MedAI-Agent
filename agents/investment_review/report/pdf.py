@@ -3,7 +3,7 @@
 - 브라우저: 설치된 Google Chrome(channel="chrome")을 먼저 쓰고, 없으면 Playwright Chromium.
   Chromium이 없으면: python -m playwright install chromium
 - 한글 글꼴은 시스템 글꼴(Apple SD Gothic Neo / Noto Sans KR / 맑은 고딕)을 쓴다.
-- 만든 PDF의 실제 쪽수를 pypdf로 센다.
+- 만든 PDF의 실제 쪽수를 pypdf로 센다. max_pages를 넘으면 인쇄 배율을 SCALES 순서로 줄여 다시 만든다.
 """
 from __future__ import annotations
 
@@ -13,18 +13,18 @@ from pathlib import Path
 from markdown_it import MarkdownIt
 
 CSS = """
-@page { size: A4; margin: 14mm 14mm 16mm 14mm; }
+@page { size: A4; margin: 12mm 12mm 14mm 12mm; }
 body { font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-       font-size: 9pt; line-height: 1.45; color: #1f2937; }
+       font-size: 8.5pt; line-height: 1.4; color: #1f2937; }
 h1 { font-size: 15pt; margin: 0 0 4px; color: #111827; }
 h1 + p { color: #4b5563; margin-top: 0; }
-h2 { font-size: 11.5pt; margin: 14px 0 6px; padding-bottom: 3px; border-bottom: 1.5px solid #1f2937; }
+h2 { font-size: 11pt; margin: 10px 0 5px; padding-bottom: 3px; border-bottom: 1.5px solid #1f2937; }
 h3 { font-size: 10pt; margin: 10px 0 4px; }
 h4 { font-size: 9pt; margin: 6px 0 2px; color: #374151; }
 p, ul { margin: 3px 0; }
 ul { padding-left: 16px; }
 li { margin: 1px 0; }
-table { border-collapse: collapse; width: 100%; margin: 4px 0 8px; font-size: 8pt; page-break-inside: auto; }
+table { border-collapse: collapse; width: 100%; margin: 4px 0 8px; font-size: 7.5pt; page-break-inside: auto; }
 tr { page-break-inside: avoid; }
 th, td { border: 1px solid #d1d5db; padding: 2px 5px; vertical-align: top; }
 th { background: #f3f4f6; }
@@ -33,6 +33,8 @@ h2#reference + ol, .reference { font-size: 7.5pt; }
 ol { padding-left: 18px; }
 .reference li { word-break: break-all; }
 """
+
+SCALES = (1.0, 0.95, 0.9)   # 5쪽 제한을 넘을 때 쓰는 인쇄 배율 (0.9 = 본문 약 7.7pt)
 
 FOOTER = ('<div style="font-size:7pt;color:#6b7280;width:100%;text-align:center;">'
           '<span class="pageNumber"></span> / <span class="totalPages"></span></div>')
@@ -51,8 +53,8 @@ def page_count(path: Path) -> int:
     return len(PdfReader(str(path)).pages)
 
 
-def to_pdf(markdown: str, path: Path) -> int:
-    """PDF를 쓰고 실제 쪽수를 돌려준다. 브라우저를 못 띄우면 RuntimeError."""
+def to_pdf(markdown: str, path: Path, max_pages: int | None = None) -> int:
+    """PDF를 쓰고 실제 쪽수를 돌려준다. max_pages를 넘으면 배율을 줄여 다시 만든다. 브라우저를 못 띄우면 RuntimeError."""
     from playwright.sync_api import Error, sync_playwright
 
     with sync_playwright() as p:
@@ -68,8 +70,12 @@ def to_pdf(markdown: str, path: Path) -> int:
         try:
             page = browser.new_page()
             page.set_content(to_html(markdown), wait_until="load")
-            page.pdf(path=str(path), format="A4", print_background=True, prefer_css_page_size=True,
-                     display_header_footer=True, header_template="<div></div>", footer_template=FOOTER)
+            for scale in SCALES:
+                page.pdf(path=str(path), format="A4", print_background=True, prefer_css_page_size=True, scale=scale,
+                         display_header_footer=True, header_template="<div></div>", footer_template=FOOTER)
+                pages = page_count(path)
+                if max_pages is None or pages <= max_pages:
+                    break
         finally:
             browser.close()
-    return page_count(path)
+    return pages

@@ -43,7 +43,7 @@ def main() -> None:
     ap.add_argument("--traction-json", type=Path, help="저장된 실적 결과 {company_id: Envelope}")
     ap.add_argument("--max-concurrency", type=int, default=5)
     ap.add_argument("--no-report", action="store_true", help="보고서 생성 생략")
-    ap.add_argument("--llm-report", action="store_true", help="보고서 SUMMARY·논점을 LLM으로 서술")
+    ap.add_argument("--no-llm-report", action="store_true", help="보고서 LLM 서술 없이 템플릿 문장만")
     args = ap.parse_args()
 
     companies = load_companies(args.csv)
@@ -93,7 +93,7 @@ def main() -> None:
     if not args.no_report:
         from .report.__main__ import write_report
         check = write_report(args.out, out["final_reviews"], analyses, {c["company_id"]: c for c in companies},
-                             meta, "auto" if args.llm_report else None)
+                             meta, None if args.no_llm_report else "auto")
         print(f"보고서: {args.out / 'final_report.md'} · 약 {check['pages']}쪽 · 검증 {'통과' if check['ok'] else check['issues']}")
     names = {c["company_id"]: c["company_name"] for c in companies}
     for r in out["final_reviews"]:

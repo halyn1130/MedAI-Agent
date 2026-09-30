@@ -6,7 +6,7 @@ from ..report import generate_report
 from ..report.checker import check_narrative, check_report
 from ..report.context_builder import build_context
 from ..report.renderer import render
-from ..report.writer import Narrative, CompanyPoint
+from ..report.writer import Narrative, CompanyText
 from .test_graph import FakeAgents, profile
 from ..nodes import build_graph
 
@@ -28,16 +28,20 @@ def run(n=3):
 
 
 class FakeLLM:
+    """narrative 하나 또는 여러 개(호출 순서대로)를 돌려준다. 받은 메시지를 기록한다."""
+
     def __init__(self, narrative=None, fail=False):
-        self.narrative, self.fail = narrative, fail
+        self.outputs = narrative if isinstance(narrative, list) else [narrative]
+        self.fail, self.calls = fail, []
 
     def with_structured_output(self, _schema):
         return self
 
-    def invoke(self, _messages):
+    def invoke(self, messages):
+        self.calls.append(messages)
         if self.fail:
             raise RuntimeError("llm down")
-        return self.narrative
+        return self.outputs[min(len(self.calls), len(self.outputs)) - 1]
 
 
 class ReportTests(unittest.TestCase):
@@ -89,23 +93,55 @@ class NarrativeTests(unittest.TestCase):
         self.ctx = build_context(*self.args)
         self.cid = self.ctx["selected"][0]["company_id"]
 
-    def test_unknown_number_is_dropped(self):
+    def names(self):
+        return ", ".join(c["name"] for c in self.ctx["selected"])
+
+    def test_checks(self):
         total = self.ctx["selected"][0]["total"]
-        clean, issues = check_narrative({"summary": f"후보 2개 중 {total:g}점 기업 선정", self.cid: "매출 999억 원",
-                                         "c999": "없는 기업"}, self.ctx)
+        clean, issues = check_narrative({
+            "summary": f"후보 3개 중 {self.names()} 선정, 최고 {total:g}점",
+            f"points:{self.cid}": "매출 999억 원",                 # 입력에 없는 숫자
+            f"select:{self.cid}": "매출 392858405 원",             # 날것 숫자
+            "criteria_guide": "SCORE_BELOW_60 기준",              # 코드
+            "points:c999": "없는 기업"}, self.ctx)
         self.assertEqual(sorted(clean), ["summary"])
-        self.assertEqual(len(issues), 2)
+        self.assertEqual(len(issues), 4)
+
+    def test_summary_must_name_selected(self):
+        clean, issues = check_narrative({"summary": "적격 기업이 선정됐다."}, self.ctx)
+        self.assertEqual(clean, {})
+        self.assertIn("누락", issues[0])
 
     def test_generate_report_with_llm(self):
-        narrative = Narrative(summary="LLM 요약 문장이다.", points=[CompanyPoint(company_id=self.cid, point="LLM 논점이다.")])
+        name = self.ctx["selected"][0]["name"]
+        narrative = Narrative(summary=f"LLM 요약이다. {self.names()} 선정.", criteria_guide="LLM 기준 안내다.",
+                              companies=[CompanyText(name=name, selection_reason="LLM 선정 이유다.", points="LLM 논점이다.")])
         md, check = generate_report(*self.args, llm=FakeLLM(narrative), fetch=None)
-        self.assertIn("LLM 요약 문장이다.", md)
-        self.assertIn("**핵심 검토 논점**: LLM 논점이다.", md)
-        self.assertEqual(check["narrative"]["used"], sorted([self.cid, "summary"]))
+        for text in ("LLM 요약이다.", "LLM 기준 안내다.", "**선정 이유**: LLM 선정 이유다.", "**핵심 검토 논점**: LLM 논점이다."):
+            self.assertIn(text, md)
+        self.assertEqual(check["narrative"]["used"], sorted(["criteria_guide", f"points:{self.cid}", f"select:{self.cid}", "summary"]))
+
+    def test_retry_with_feedback_replaces_failed_item(self):
+        bad = Narrative(summary="이름 없는 요약이다.")
+        good = Narrative(summary=f"다시 쓴 요약이다. {self.names()} 선정.")
+        llm = FakeLLM([bad, good])
+        md, check = generate_report(*self.args, llm=llm, fetch=None)
+        self.assertEqual(len(llm.calls), 2)
+        self.assertIn("누락", llm.calls[1][-1][1])                     # 재요청에 검증 사유 전달
+        self.assertIn("다시 쓴 요약이다.", md)
+        self.assertTrue(check["narrative"]["notes"][0].startswith("1차:"))
+
+    def test_llm_input_has_precomputed_values_and_no_sources(self):
+        from ..report.writer import llm_input
+        data = llm_input(self.ctx)
+        self.assertEqual(data["sources"], [])
+        self.assertEqual(data["ineligible"], [])
+        self.assertTrue(data["selected_list"])
+        self.assertIn("zero_filled_easy", data["selected"][0])
 
     def test_llm_failure_falls_back_to_template(self):
         md, check = generate_report(*self.args, llm=FakeLLM(fail=True), fetch=None)
-        self.assertIn("- **분석 개요**: 기준일 2026-09-30", md)
+        self.assertIn("- **분석 개요**: 기준일 2026-09-30", md)  # 템플릿 요약(개조식)
         self.assertIn("- **선정 기업**", md)
         self.assertIn("템플릿 문장", check["narrative"]["notes"][0])
 
@@ -181,7 +217,7 @@ class CitationTests(unittest.TestCase):
         from ..report.citations import format_reference
         self.assertEqual(format_reference({"url": "https://dart.fss.or.kr/a", "title": "A사 감사보고서 (2024.12)",
                                            "publisher": "금융감독원 전자공시(DART)", "published_at": "2025-03-25"}),
-                         "금융감독원 전자공시(DART)(2025). *A사 감사보고서 (2024.12)*. https://dart.fss.or.kr/a")
+                         "A사(2025). *감사보고서 (2024.12)*. https://dart.fss.or.kr/a")  # 발행기관 = 기업명
         self.assertEqual(format_reference({"url": "https://www.etnews.com/1", "publisher": "www.etnews.com",
                                            "title": "기사 제목 < 기업 < 기사본문 - 전자신문", "published_at": "2023-12-10"}),
                          "전자신문(2023-12-10). *기사 제목*. 전자신문, https://www.etnews.com/1")
@@ -214,14 +250,23 @@ class ExplainTests(unittest.TestCase):
     def test_messages(self):
         from ..contract import GateResult
         from ..report.context_builder import explain
-        self.assertEqual(explain(self.review(2, 2, 2, 2, 2, 2)), "총점 40점으로 적격 기준 60점 미만")
-        self.assertEqual(explain(self.review(1, 5, 5, 5, 5, 5)), "임상 근거 1점으로 항목별 최소 기준 2점 미만")
+        self.assertEqual(explain(self.review(2, 2, 2, 2, 2, 2)), "총점 40점(100점 만점)으로 적격 기준인 60점에 못 미쳤다.")
+        self.assertEqual(explain(self.review(1, 5, 5, 5, 5, 5)), "임상 연구 점수가 최소 기준(2점)에 못 미쳤다.")
         blocked = self.review(4, 4, 4, 4, 4, 4, gates=[GateResult(code="G01", status="confirmed", reason="판매 중지"),
                                                         GateResult(code="G02", status="clear")])
-        self.assertEqual(explain(blocked), "핵심 제품의 목표국 운영을 막는 공식 조치가 확인되어 총점과 무관하게 부적격(판매 중지)")
+        self.assertEqual(explain(blocked), "핵심 제품의 목표국 운영을 막는 공식 조치가 확인되어 총점과 관계없이 부적격이다(판매 중지).")
         missing = self.review(4, 4, 4, 4, 4, 4, gates=[GateResult(code="G01", status="clear"),
                                                         GateResult(code="G02", status="not_checked", reason="05 Risk 결과 없음")])
-        self.assertEqual(explain(missing), "핵심 사업 운영의 현재 중단 여부를 조사하지 못함(05 Risk 결과 없음)")
+        self.assertEqual(explain(missing), "판단에 필요한 공개자료가 부족해 판정하지 못했다(05 Risk 결과 없음).")
+
+    def test_zero_filled_sentences(self):
+        from ..report.context_builder import explain
+        # 0점 2개: 풀어쓰기, 받침에 맞는 조사 (0+10+15+0+10+6 = 41)
+        self.assertEqual(explain(self.review(None, 5, 5, None, 2, 2)),
+                         "총점 41점(100점 만점)으로 적격 기준인 60점에 못 미쳤다. 임상 연구, 매출을 내는 구조를 보여주는 공개자료를 찾지 못해 0점 처리됐다.")
+        # 0점 4개 이상: 확인된 항목을 제외한 개수
+        self.assertEqual(explain(self.review(None, 5, 5, None, None, None)),
+                         "총점 25점(100점 만점)으로 적격 기준인 60점에 못 미쳤다. 시장 성장성, 병원·고객 도입 수요를 제외한 4개 항목의 공개자료를 찾지 못해 0점 처리됐다.")
 
 
 class ScoreReasonTests(unittest.TestCase):
