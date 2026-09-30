@@ -1,6 +1,6 @@
 # MedAI-Agent
 
-Healthcare AI 스타트업 투자 검토 · LangGraph 기반 멀티 에이전트
+의료 AI 스타트업 투자 검토 · LangGraph 기반 멀티 에이전트
 
 ## 개요
 
@@ -124,3 +124,7 @@ SKALA 4기 울산캠퍼스 2반 5조
     <td width="20%" align="center">Risk 분석<br>Agent 구축</td>
   </tr>
 </table>
+
+## 최종 산출물 예시
+
+[최종 산출물 예시 보기](docs/readme/output_example.md)
