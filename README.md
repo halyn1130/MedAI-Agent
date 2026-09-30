@@ -4,10 +4,9 @@ Healthcare AI 스타트업의 공개 자료를 모아 **임상·인허가, 시�
 
 가상 VC의 심사역을 주요 사용자로 설정합니다. 기업마다 흩어진 자료를 같은 기준으로 정리해 초기 검토 시간을 줄이고, 추가 실사에서 확인해야 할 질문을 제시하는 것이 목표입니다.
 
-> **현재 이 브랜치 구현:** Risk 에이전트, 실적·성장성 에이전트, 시장·사업성 Agent와 BAAI/bge-m3 기반 dense RAG.
-> **시장 분석 구성:** 로컬 Chroma index builder, 입력 예제, 단위 테스트와 페이지 단위 근거 추적.
-> **통합 예정:** 상위 LangGraph, 전문 Agent와 투자심사 Agent의 최종 공통 계약, 최종 보고서 생성.
-> 공통 State와 평가 정책은 팀 검토 단계이며, 시장 Agent는 다른 Agent의 인터페이스를 변경하지 않고 독립 노드로 연결됩니다.
+> **현재 구현:** Risk 에이전트의 단독 실행, 입력 예제, 테스트.
+> **구현 예정:** 나머지 분석 에이전트, 시장 RAG, LangGraph 통합, 점수 계산 및 최종 보고서 생성.
+> 공통 State와 평가 정책은 설계 단계이며, 현재 Risk 입출력과 통합 계약 사이에는 이행 작업이 남아 있습니다.
 
 ## 분석 범위
 
@@ -110,173 +109,17 @@ flowchart TD
 
 기업·투자사 발표, 공식 규제 기록, 논문, 시장 보고서, 고객·산업·조달 자료, 공시와 운영 공지를 활용합니다. 제공 데이터셋에서 구성한 공통 프로필을 검색의 출발점으로 사용하며, 2·3·4번이 각자 확보한 자료를 Source → Evidence → Finding으로 연결합니다. 최초 병렬 실행은 다른 분석의 완성 결과를 필수 입력으로 요구하지 않으며, 취합 후 동일 제품·국가·기간인지 대조합니다. 입력 누락은 미확인으로 기록하고, 담당별 추가 조사 또는 보완 요청으로 처리합니다. 1번으로 되돌려 별도 수집을 시키지 않습니다.
 
-시장 RAG는 `문서 로딩 → 페이지별 텍스트 추출 → 청크 분할 → BAAI/bge-m3 임베딩 → Chroma 영속 인덱스 → dense 검색 → 원문 근거 연결` 순서로 구현되어 있습니다. 입력 문서는 총 200쪽 이내로 검사하며, 페이지 번호와 문서 메타데이터를 모든 청크에 보존합니다. Hybrid 검색은 확장 지점만 두고 현재 제출 범위는 dense baseline입니다.
-
-### 청킹 방식
-
-```
-PDF
-→ pypdf로 페이지별 텍스트 추출
-→ 페이지 안에서 공백 기준 토큰 분리
-→ 700토큰씩 자름
-→ 다음 청크에 앞 청크의 마지막 100토큰을 중복 포함
-```
-
-- `chunk_size`: 700
-- `overlap`: 100
-- 실제 이동 간격: 600
-- 환경변수로 변경 가능
-    - `MARKET_RAG_CHUNK_SIZE`
-    - `MARKET_RAG_CHUNK_OVERLAP`
-
-### 실제 데이터 결과
-
-원본 PDF는:
-
-- PDF 6개
-- 물리적 202쪽
-- 빈 페이지 2쪽을 `metadata.csv`로 제외
-- 실제 인덱싱 대상 200쪽
-
-파싱 결과:
-
-- 텍스트가 있는 페이지: 193쪽
-- 빈 페이지 또는 이미지 위주 페이지: 7쪽
-- 최종 청크: 193개
-
-### 청크에 보존한 메타데이터
-
-```
-chunk_id
-document_id
-title
-publisher
-published_at
-region
-segment
-source_type
-source_url
-path
-page
-chunk_index
-token_start
-token_count
-```
-
-검색결과에서 다음과 같이 추적 가능.
-
-```
-Evidence
-→ chunk_id
-→ document_id
-→ 원본 PDF
-→ 실제 page
-→ 공식 source_url
-```
-
-`chunk_id`는 아래 정보를 SHA-256으로 해싱
-
-```
-document_id + page + chunk_index + chunk text
-```
-
-### 임베딩·Vector DB 방식
-
-```
-청크 텍스트
-→ BAAI/bge-m3
-→ 벡터 정규화
-→ ChromaDB persistent collection
-```
-
-- 임베딩 모델: `BAAI/bge-m3`
-- 임베딩 정규화: 활성화
-- Vector DB: 로컬 ChromaDB
-- 거리 함수: cosine
-- 저장 경로: `data/vectorstore/market/`
-- 바깥 처리 묶음: 64청크
-- 모델 내부 embedding batch: 16개
-
-### 검색 방식
-
-- **Dense Search baseline**
-- Chroma Top-K: 5
-- 동일 `chunk_id` 중복 제거
-- 점수가 높은 순으로 정렬
-- 영역별 최대 10개 청크만 분석기에 전달
-
-### 병렬 실행 문제 처리
-
-4개 분석 노드를 병렬 실행해서 각 스레드가 bge-m3를 동시에 로드하려고 해서 메모리가 터졌음. 그래서 임베딩 객체를 하나만 공유하고:
-
-- 모델 최초 로드에 lock
-- `encode_document`
-- `encode_query`
-
-호출에도 lock, 모델은 프로세스당 한 번만 로드하고, 네 영역이 같은 인스턴스를 안전하게 공유
+시장 RAG는 `문서 로딩 → 텍스트 추출 → 청크 분할 → 임베딩·인덱스 → 검색 → 원문 확인` 순서로 설계합니다. 입력 문서는 총 200쪽 이내로 관리하고, 임베딩 후보 3~4개를 동일한 질의 20개로 비교해 Hit@k·MRR과 실행 비용을 확인할 예정입니다. 모델과 벡터 저장소는 아직 확정하지 않았습니다.
 
 ## 설치 및 실행
 
-Python 3.10 이상을 사용하며 저장소 루트에서 실행합니다. Apple Silicon 개발환경에서는 Python 3.11을 권장합니다.
+현재 실행 가능한 범위는 **Risk 단독 분석**입니다. Python 3.10 이상을 사용하며 저장소 루트에서 실행합니다.
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
-
-### Market RAG 데이터셋 설치
-
-`market_rag_dataset.zip`을 압축 해제한 후 프로젝트 루트의 `data/market_rag/` 디렉토리에 넣어주세요.
-
-```text
-MedAI-Agent/data/market_rag/
-├── reports/*.pdf
-├── papers/*.pdf
-└── metadata.csv
-```
-
-PDF와 생성된 Vector DB는 Git에 커밋하지 않습니다. 페이지 수 확인과 Index 생성 명령은 다음과 같습니다.
-
-```bash
-python -m rag.market.dataset_stats
-python -m rag.market.build_index --rebuild
-```
-
-Vector DB는 `data/vectorstore/market/`에 생성됩니다.
-
-### API 없이 Market 데모 실행
-
-```bash
-python -m agents.market \
-  --input examples/market/input.json \
-  --output outputs/market_demo.json \
-  --demo
-```
-
-데모는 검색·LLM 호출 없이 입출력 연결만 확인합니다. 실제 기업 분석 결과를 생성하지 않습니다.
-
-### API를 사용한 Market 분석
-
-로컬 `.env`에 다음 환경변수를 설정합니다. `.env.example`은 변수 형식을 공유하는 템플릿입니다.
-
-| 변수 | 용도 |
-|---|---|
-| `OPENAI_API_KEY` | 모델 API 인증 |
-| `MARKET_MODEL` | structured output을 지원하는 OpenAI 모델 ID |
-| `TAVILY_API_KEY` | 웹검색 API 인증 |
-
-```bash
-python -m agents.market \
-  --input examples/market/input.json \
-  --output outputs/market_result.json
-```
-
-실제 기업을 분석할 때는 예제를 해당 기업의 State JSON으로 교체합니다. 현재 Web Search 호출 한도는 기본 6회, 보완 한도는 1회입니다. 최종 투자 가중치와 전체 투자 판단은 Market Agent의 책임이 아닙니다.
-
-CLI 결과 JSON은 `market_analysis`와 선택적인 `review_response`를 최상위 키로 가집니다. 상위 LangGraph에 연결하는 `market_agent_node`는 공통 State의 `market_analysis`만 갱신합니다.
-
-입력 예시는 [examples/market](examples/market), 상세 실행 방식과 반환 구조는 [시장 Agent 문서](docs/market_agent.md)를 참고하세요.
 
 ### 고정 데이터로 Risk 분석
 
@@ -297,31 +140,24 @@ python -m agents.risk --company-id <manifest에_등록된_company_id> --output o
 ### 테스트
 
 ```bash
-python -m pytest tests/test_market_agent.py tests/test_market_rag.py -q
 python -m unittest discover -s tests -v
 python -m unittest agents.risk.test_graph agents.risk.test_company_analysis agents.risk.test_output_contract agents.risk.collection.test_collect agents.risk.collection.test_quality -v
 ```
 
-Market 테스트는 조건부 Web Search, 4개 분석 결과의 분리, 페이지 근거 추적, `unknown` 처리, 선택 영역 보완과 1회 제한을 검증합니다. Risk 테스트는 통합 브랜치의 기존 unittest 명령을 유지합니다.
+현재 테스트는 Risk 모듈의 근거 참조, 부분 실패, 검색 예산, 보완 및 재시도 제한 등을 검증합니다.
 
 ## 폴더 구조
 
 ```text
-agents/market/       # 시장·사업성 Agent, State·스키마·점수 계산
 agents/risk/         # Risk 분석 코드·스키마·프롬프트
-agents/traction_growth/ # 실적·성장성 Agent 코드·스키마·평가 기준
-rag/market/          # PDF loader, chunker, bge-m3, Chroma, dense retriever
-data/market_rag/     # 별도 전달할 시장 RAG 데이터셋 위치 (PDF Git 제외)
-data/startup_list.csv # 고정 후보 기업 데이터
-examples/market/     # Market 입력 예시
-tests/               # Market 및 통합 브랜치 Agent 테스트
+data/               # 후보 기업 데이터
+tests/               # Risk 테스트
 scripts/             # 이전 후보 수집 도구 (현재 흐름 미사용)
 docs/diagrams/       # 흐름도와 편집 소스
-docs/market_agent.md # 데이터 설치·인덱스·실행·입출력 문서
 output/review/       # 설계 검토 기록
 outputs/             # 실행 결과 (Git 제외)
 README.md            # 프로젝트 안내·공통 평가 정책 초안
-requirements.txt     # Agent 실행 의존성
+requirements.txt     # Risk 실행 의존성
 requirements-scrapers.txt # 후보 수집기 선택 의존성
 .env.example         # 환경변수 템플릿
 ```
@@ -676,9 +512,7 @@ C5의 성장 자료처럼 명시적인 대체 규칙이 있는 정보는 그 부
 - [x] Risk 단독 구현·입력 예제·테스트 작성
 - [ ] 제공 데이터셋 로딩·정규화와 공통 입력 계약 확정 (추가 수집 없음)
 - [ ] 평가 가중치·임계값·미확인 처리 규칙 팀 검토
-- [x] 시장·사업성 에이전트와 시장 RAG 구현
-- [x] 실적·성장성 에이전트 구현
-- [ ] 임상·인허가 에이전트 구현
+- [ ] 임상·시장·실적 에이전트별 직접 자료 수집·분석 및 시장 RAG 구현
 - [ ] Risk를 공통 State·보완 계약에 연결하고 운영 대비 체크 추가
 - [ ] LangGraph 병렬 분석·결과 취합·보완 루프·종료 처리 구현
 - [ ] Python 채점·최종 판정·기업 선정 구현
