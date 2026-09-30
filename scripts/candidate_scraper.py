@@ -21,7 +21,7 @@ import os
 import re
 import sys
 from typing import Dict, Iterable, List, Optional, Set, Tuple
-from urllib.parse import parse_qs, quote_plus, urlparse, urlencode
+from urllib.parse import parse_qs, quote_plus, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -104,10 +104,6 @@ AI_KEYWORDS = [
     "llm",
     "genai",
 ]
-
-
-class ScrapeError(RuntimeError):
-    pass
 
 
 def normalize_space(text: str) -> str:

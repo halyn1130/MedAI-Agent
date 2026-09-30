@@ -2,9 +2,10 @@ requests>=2.31.0
 beautifulsoup4>=4.12.0
 playwright>=1.46.0
 
-# 4번 실적·성장성 에이전트
-pydantic>=2.6
-langgraph>=0.2
-langchain>=0.3            # init_chat_model (TRACTION_LLM_MODEL)
+# 실적·성장성 / Risk 공통 의존성
+pydantic>=2.7,<3
+langgraph>=1.2,<2
+langchain>=0.3
 pytest>=8
-langchain-openai>=0.3    # OPENAI_API_KEY 사용
+langchain-openai>=1.0,<2
+python-dotenv>=1.0,<2
