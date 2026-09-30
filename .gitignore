@@ -56,6 +56,15 @@ dist/
 /data/chroma/
 /data/faiss/
 
+# Market RAG 원본 데이터셋은 별도 ZIP으로 전달
+/data/market_rag/**
+!/data/market_rag/.gitkeep
+!/data/market_rag/reports/
+!/data/market_rag/reports/.gitkeep
+!/data/market_rag/papers/
+!/data/market_rag/papers/.gitkeep
+!/data/market_rag/metadata.example.csv
+
 # PDF 전체
 *.[pP][dD][fF]
 

@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-09-30",
+  "company_profile": {
+    "company_id": "sample-health-ai",
+    "company_name": "Sample Health AI",
+    "product_type": "clinical decision support software",
+    "intended_use": "support medication safety review",
+    "target_customer": "general hospitals",
+    "buyer": "hospital procurement and pharmacy departments",
+    "primary_user": "hospital pharmacists and physicians",
+    "business_model": "annual enterprise software subscription",
+    "geography": [
+      "KR"
+    ],
+    "core_problem": "manual medication review workload and preventable medication errors"
+  }
+}
