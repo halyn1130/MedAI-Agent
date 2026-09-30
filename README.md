@@ -16,7 +16,7 @@ Healthcare AI 스타트업 투자 검토 · LangGraph 기반 멀티 에이전트
 ## 구조
 
 <p align="center">
-  <a href="docs/diagrams/presentation/00_전체_플로우차트.svg"><img src="docs/diagrams/presentation/00_전체_플로우차트.svg" alt="입력·정규화 → 임상·시장·실적·Risk 병렬 분석 → 투자 심사·보고서 흐름도" width="620"></a>
+  <a href="docs/readme/images/overview.svg"><img src="docs/readme/images/overview.svg" alt="입력·정규화 → 임상·시장·실적·Risk 병렬 분석 → 투자 심사·보고서 흐름도" width="620"></a>
 </p>
 
 | 노드 | 처리 | 평가 연결 |
@@ -60,22 +60,65 @@ Healthcare AI 스타트업 투자 검토 · LangGraph 기반 멀티 에이전트
 - 정렬: 총점 → C5 → C1 내림차순 → `company_id` 오름차순
 - 심사 보완: 기업당 최대 1라운드
 
+## 재현 방법
+
+Python 3.11+ 권장 · 저장소 루트 기준 · 개별 모듈 실행
+
+```bash
+# 설치
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp -n .env.example .env
+
+# Risk 실행: .env 설정 및 입력 데이터 준비 후
+python -m agents.risk --company-id "등록된_company_id" --output outputs/risk_result.json
+
+# 테스트
+python -m pytest tests agents/risk -q
+```
+
+- 필수 설정: `.env`의 `OPENAI_API_KEY`, `RISK_MODEL`
+- 필수 데이터: `agents/risk/data/frozen_manifest.json` 및 등록 원문 별도 확보 (Git 제외)
+- [상세 설정·실적 분석 실행](docs/readme/development.md)
+
 ## 문서
 
-- [설치·실행·테스트·폴더 구조](docs/development.md)
-- [Risk Agent 입력·출력](agents/risk/README.md)
-- [상세 평가 정책](docs/evaluation_policy.md)
-- [실적·성장성 판단 기준](agents/traction_growth/criteria.md)
-- [전체 흐름도](docs/diagrams/presentation/00_전체_플로우차트.svg)
+- [설치·실행·테스트·폴더 구조](docs/readme/development.md)
+- [Risk Agent 입력·출력](docs/readme/risk.md)
+- [상세 평가 정책](docs/readme/evaluation_policy.md)
+- [실적·성장성 판단 기준](docs/readme/traction_growth.md)
+- [전체 흐름도](docs/readme/images/overview.svg)
+
+## Future Work
+
+| 영역 | Future Work |
+|---|---|
+| 임상·인허가 | 임상·규제 데이터 연동, 근거 정량 추출·충돌 검증 |
+| 시장·사업성 | 원문 품질·검색 고도화, 검색 성능 비교 평가 |
+| 실적·성장성 | 법인·재무·고용 데이터 정합성 강화, 판정 정확도 평가 |
+| Risk | 후속 근거 확충, 판단 기준·보완 루프 개선, 정확도 평가 |
+| 투자 심사·보고서 | 미정 |
+
+[상세 개선 계획](docs/readme/future_work.md)
 
 ## Contributors
 
 SKALA 4기 울산캠퍼스 2반 5조
 
-| 이름 | 담당 | Future Work |
-|---|---|---|
-| 서준영 | 임상·인허가 | **비적용 기업 교차 검증:** 웰니스·플랫폼 기업의 미허가 의학적 효능 표방 리스크 스크리닝, 대학병원 실증 연구 발굴<br>**판단불가 보완 루프 고도화:** 연구진 네트워크 멀티홉 검색, 국내외 임상시험 레지스트리 진행 상태 자동 연동<br>**PubMed 전문 정량 분석:** 논문 전문 파싱 기반 표본 수·대조군·주요 성능 지표 수치 자동 테이블 추출<br>**글로벌 규제 DB 연동:** 유럽·일본 공공 인허가 데이터 파이프라인 추가, 식약처 품목분류 온톨로지 자동 매핑<br>**출처 위계화·충돌 중재:** 출처 신뢰도 가중치 기반 상충 주장 자동 중재, 신뢰도 스코어 산출 |
-| 안동선 | 시장·사업성, RAG | **데이터 품질:** 모델보다 신뢰할 수 있는 원문 확보·시장 범위 일치 우선<br>**근거 구분:** 시장 규모·고객 수요·도입 가능성·수익화 근거 분리 판단<br>**검색 고도화:** 표·페이지 구조 보존, 메타데이터 필터링·검색 결과 재정렬 강화<br>**성능 검증:** 정답 데이터셋 구축, 임베딩 모델·검색 방식 성능의 객관적 비교 |
-| 변현준 | 실적·성장성 | **입력 데이터셋 재구성:** 1번 노드와 법인 식별자(사업자등록번호·DART 고유번호) 공통 키 정합, 외부감사 대상 가능성이 높은 Series B~C 기업 중심 후보 재구성<br>**독립 출처 확충:** 보도자료 전재 외 조달청 계약정보·병원·기관 발표·기사 원문 수집 경로 추가, 유료 계약·실증 근거 인정 비율 제고<br>**재무 데이터 정합성 강화:** 감사보고서 정정·연결범위 변경 판별, 동일 기준 3개년 매출 확보, 성장률 판단 불가(G0) 비율 축소<br>**고용 지표 정밀화:** 국민연금 지점 사업장의 법인 단위 통합 방법 검토, 본사 기준 고용 규모 과소 추정 보완<br>**판정 품질 평가:** 사람 검토 기업 사례 정답셋 구축, 근거 분류·단계 판정·레드플래그 정확도 측정, 규칙 변경 효과 정량 검증 |
-| 유하린 | Risk | **후속 데이터 확충:** 협약 후 실제 도입·계약 갱신, 경영진 변경·후임 선임, 운영 사건 복구·해결 자료 확보<br>**판단 기준 고도화:** 자원·인력 핵심성, 대체 가능성, 사건 현재성·해결 여부, 출처 신뢰도 반영<br>**근거 적합성 검증:** 분석 전 기업 일치·발행 시점·중복·관련성 확인<br>**보완 루프 효율화:** 잔여 자료의 보완 질문 응답 가능성 평가, 불필요한 모델 재호출 축소<br>**분석 품질 평가:** 사람 검토 사례 기반 사실 추출·근거 연결·미확인 처리 정확도 측정 |
-| 김민솔 | 투자 심사·보고서 | 미정 |
+<table width="730" border="1" cellspacing="0" cellpadding="6">
+  <tr>
+    <td width="20%" align="center"><a href="https://github.com/minsol1"><img src="https://github.com/minsol1.png?size=160" width="80" height="80" alt="김민솔 GitHub 프로필 사진"><br><b>김민솔</b></a></td>
+    <td width="20%" align="center"><a href="https://github.com/insidesight0921-stack"><img src="https://github.com/insidesight0921-stack.png?size=160" width="80" height="80" alt="변현준 GitHub 프로필 사진"><br><b>변현준</b></a></td>
+    <td width="20%" align="center"><a href="https://github.com/apej460"><img src="https://github.com/apej460.png?size=160" width="80" height="80" alt="서준영 GitHub 프로필 사진"><br><b>서준영</b></a></td>
+    <td width="20%" align="center"><a href="https://github.com/overdozya"><img src="https://github.com/overdozya.png?size=160" width="80" height="80" alt="안동선 GitHub 프로필 사진"><br><b>안동선</b></a></td>
+    <td width="20%" align="center"><a href="https://github.com/yuhalyn"><img src="https://github.com/yuhalyn.png?size=160" width="80" height="80" alt="유하린 GitHub 프로필 사진"><br><b>유하린</b></a></td>
+  </tr>
+  <tr>
+    <td width="20%" align="center">투자 심사·보고서 생성<br>Agent 구축</td>
+    <td width="20%" align="center">실적·성장성 분석<br>Agent 구축</td>
+    <td width="20%" align="center">임상·인허가 분석<br>Agent 구축</td>
+    <td width="20%" align="center">시장·사업성 분석<br>Agent·RAG 구축</td>
+    <td width="20%" align="center">Risk 분석<br>Agent 구축</td>
+  </tr>
+</table>
