@@ -35,8 +35,34 @@
         "evidence_ids": []
       }
     ],
-    "designation_records": [],
-    "reimbursement_records": [],
+    "designation_records": [
+      {
+        "record_id": "c020:clinical:des01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "혁신의료기기 지정",
+        "status": "active",
+        "scope": "AI 기반 맥파(PPG)로부터 동맥혈압(ABP)을 추정하여 심장판막 질환을 분류하는 솔루션.",
+        "effective_at": null,
+        "evidence_ids": [
+          "c020:clinical:ev01"
+        ]
+      }
+    ],
+    "reimbursement_records": [
+      {
+        "record_id": "c020:clinical:rmb01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "비급여 상한금액 설정",
+        "status": "pending",
+        "scope": "AI 기반 심장판막 질환 분류 모델의 비급여 상한금액 설정.",
+        "effective_at": null,
+        "evidence_ids": [
+          "c020:clinical:ev02"
+        ]
+      }
+    ],
     "clinical_studies": [
       {
         "study_id": "c020:clinical:st01",
@@ -51,7 +77,7 @@
         "result": "딥 러닝 알고리즘을 통한 심장음 분석으로 심장질환 환자 분류 가능성 확인",
         "limitations": "제품명 미기재, 회사 알고리즘 연구",
         "evidence_ids": [
-          "c020:clinical:ev01"
+          "c020:clinical:ev03"
         ],
         "evidence_level": "L2",
         "result_direction": "supports",
@@ -67,11 +93,11 @@
         "external_validation": null,
         "sample_size": 10000,
         "comparator": null,
-        "endpoint": "딥러닝 알고리즘의 정확도 검증",
-        "result": "AUC 88.4%로 높은 정확도 확인",
+        "endpoint": "정확도 검증",
+        "result": "AI 모델의 성능을 평가하는 곡선하면적(AUC)은 88.4%로 높은 정확도 확인",
         "limitations": "제품명 미기재, 회사 알고리즘 연구",
         "evidence_ids": [
-          "c020:clinical:ev02"
+          "c020:clinical:ev04"
         ],
         "evidence_level": "L2",
         "result_direction": "supports",
@@ -81,7 +107,7 @@
     ],
     "claim_checks": [],
     "red_flags": [],
-    "clinical_summary": "[임상·인허가] 딥메트릭스 (c020) | 기준일 2026-09-30\n- p001 AI기반 심장판막 질환 분류 모델: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001]",
+    "clinical_summary": "[임상·인허가] 딥메트릭스 (c020) | 기준일 2026-09-30\n- p001 AI기반 심장판막 질환 분류 모델: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 혁신의료기기 지정·active; 비급여 상한금액 설정·pending | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: regulatory_records[p001][KR], criteria_inputs.C1[p001]",
     "criteria_inputs": {
       "C1": {
         "score": null,
@@ -101,7 +127,9 @@
     "validation_issues": [],
     "id_keys": {
       "finding|regulatory|c020:clinical:reg01": "c020:clinical:fd01",
-      "finding|clinical_evidence|p001": "c020:clinical:fd02"
+      "finding|designation|c020:clinical:des01": "c020:clinical:fd02",
+      "finding|reimbursement|c020:clinical:rmb01": "c020:clinical:fd03",
+      "finding|clinical_evidence|p001": "c020:clinical:fd04"
     },
     "collected_profile": {
       "legal_name": "딥메트릭스",
@@ -113,11 +141,11 @@
           "product_id": "p001",
           "name": "AI기반 심장판막 질환 분류 모델",
           "model": null,
-          "intended_use": "맥파(PPG)로부터 동맥혈압(ABP)을 추정하여 심장판막 질환을 분류하는 솔루션",
-          "target_disease": "심장판막 질환",
-          "users": "의료기관",
-          "environment": "병원",
-          "modality": "소프트웨어",
+          "intended_use": "AI 기반 맥파(PPG)로부터 동맥혈압(ABP)을 추정하여 심장판막 질환을 분류하는 솔루션.",
+          "target_disease": null,
+          "users": null,
+          "environment": null,
+          "modality": null,
           "target_countries": [
             "KR"
           ],
@@ -140,6 +168,56 @@
     }
   },
   "sources": [
+    {
+      "source_id": "c020:clinical:src29",
+      "title": "식약처, AI 적용 등 혁신의료기기 ‘45개 지정’",
+      "url": "https://www.dailymedi.com/news/news_view.php?wr_id=933433",
+      "publisher": "www.dailymedi.com",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c020:clinical:src30",
+      "title": "미래 의료의 변화를 이끄는 핵심!혁신의료기기를 아시나요?💡 : 네이버 블로그",
+      "url": "https://m.blog.naver.com/kfdazzang/224335281618",
+      "publisher": "m.blog.naver.com",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c020:clinical:src31",
+      "title": "작년 AI 적용 등 혁신의료기기 45개 지정…전년대비 1.5배",
+      "url": "https://www.yna.co.kr/view/AKR20260129064600017",
+      "publisher": "www.yna.co.kr",
+      "source_type": "news",
+      "published_at": "2026-01-29",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c020:clinical:src38",
+      "title": "뇌동맥류·뇌출혈 검출 등 혁신의료기술 4종 비급여 임시 등재 < 보건의료 < 정책 < 기사본문 - 히트뉴스",
+      "url": "https://www.hitnews.co.kr/news/articleView.html?idxno=57721",
+      "publisher": "www.hitnews.co.kr",
+      "source_type": "news",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c020:clinical:src39",
+      "title": "“AI 의료기술 급여체계, 성능 따라 차등수가 필요” < 심평원 < 정책·행정 < 기사본문 - 의학신문",
+      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=3007776",
+      "publisher": "www.bosa.co.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
     {
       "source_id": "c020:clinical:src47",
       "title": "[보고서]딥 러닝 알고리즘에 기반, 비임상 환경에서의 심장음 ...",
@@ -166,6 +244,37 @@
       "evidence_id": "c020:clinical:ev01",
       "company_id": "c020",
       "product_id": "p001",
+      "statement": "딥메트릭스의 AI기반 심장판막 질환 분류 모델이 혁신의료기기로 지정됨.",
+      "source_ids": [
+        "c020:clinical:src29",
+        "c020:clinical:src30",
+        "c020:clinical:src31"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c020:clinical:ev02",
+      "company_id": "c020",
+      "product_id": "p001",
+      "statement": "AI기반 심장판막 질환 분류 모델이 비급여로 등재될 예정이다.",
+      "source_ids": [
+        "c020:clinical:src38",
+        "c020:clinical:src39"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "partial"
+    },
+    {
+      "evidence_id": "c020:clinical:ev03",
+      "company_id": "c020",
+      "product_id": "p001",
       "statement": "딥 러닝 알고리즘에 기반한 심장음 분석 연구",
       "source_ids": [
         "c020:clinical:src47"
@@ -177,10 +286,10 @@
       "evidence_status": "partial"
     },
     {
-      "evidence_id": "c020:clinical:ev02",
+      "evidence_id": "c020:clinical:ev04",
       "company_id": "c020",
       "product_id": "p001",
-      "statement": "심전도를 통한 대동맥판막협착증 진단 연구",
+      "statement": "AI를 사용한 대동맥판막협착증 진단 연구",
       "source_ids": [
         "c020:clinical:src48"
       ],
@@ -202,6 +311,26 @@
     },
     {
       "finding_id": "c020:clinical:fd02",
+      "category": "designation",
+      "claim": "AI기반 심장판막 질환 분류 모델 [KR] 혁신의료기기 지정 · active / 범위: AI 기반 맥파(PPG)로부터 동맥혈압(ABP)을 추정하여 심장판막 질환을 분류하는 솔루션.",
+      "evidence_ids": [
+        "c020:clinical:ev01"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c020:clinical:fd03",
+      "category": "reimbursement",
+      "claim": "AI기반 심장판막 질환 분류 모델 [KR] 비급여 상한금액 설정 · pending / 범위: AI 기반 심장판막 질환 분류 모델의 비급여 상한금액 설정.",
+      "evidence_ids": [
+        "c020:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c020:clinical:fd04",
       "category": "clinical_evidence",
       "claim": "AI기반 심장판막 질환 분류 모델: 임상 근거 L0, C1 없음 (unknown), 연구 2건",
       "evidence_ids": [],
@@ -234,7 +363,7 @@
       "cause": "not_found",
       "route": "due_diligence",
       "impact": "high",
-      "detail": "조회 범위 내 미발견 (조회명: 딥메트릭스, AI기반 심장판막 질환 분류 모델, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+      "detail": "조회 범위 내 미발견 (조회명: 딥메트릭스, DeepMetrics, AI기반 심장판막 질환 분류 모델, AI기반, 심장판막, 질환, 분류, 모델, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
     },
     {
       "item_id": "c020:clinical:mi04",
@@ -259,7 +388,7 @@
         "period": null
       },
       "checked_at": "2026-09-30",
-      "note": "심장판막 질환을 분류하는 솔루션으로, 질병 진단에 사용되며, 의료기관에서 사용된다."
+      "note": "AI 기반 맥파(PPG)로부터 동맥혈압(ABP)을 추정하여 심장판막 질환을 분류하는 솔루션으로, 질병 진단에 사용되므로 규제 대상에 해당한다."
     },
     {
       "coverage_id": "c020:clinical:cv02",
@@ -270,7 +399,13 @@
       "search_scope": {
         "names": [
           "딥메트릭스",
-          "AI기반 심장판막 질환 분류 모델"
+          "DeepMetrics",
+          "AI기반 심장판막 질환 분류 모델",
+          "AI기반",
+          "심장판막",
+          "질환",
+          "분류",
+          "모델"
         ],
         "queries": [
           "딥메트릭스 AI기반 심장판막 질환 분류 모델 식약처 허가 인증"
@@ -290,7 +425,7 @@
       "area": "designation",
       "product_id": "p001",
       "country": "KR",
-      "status": "no_relevant_evidence_found",
+      "status": "reviewed",
       "search_scope": {
         "names": [],
         "queries": [
@@ -312,7 +447,7 @@
       "area": "reimbursement",
       "product_id": "p001",
       "country": "KR",
-      "status": "no_relevant_evidence_found",
+      "status": "reviewed",
       "search_scope": {
         "names": [],
         "queries": [
@@ -339,6 +474,7 @@
         "names": [],
         "queries": [
           "\"DeepMetrics\"[Affiliation]",
+          "\"deepmetrics\"[Affiliation]",
           "딥메트릭스 AI기반 심장판막 질환 분류 모델 임상 연구 논문",
           "AI기반 심장판막 질환 분류 모델 clinical validation study"
         ],

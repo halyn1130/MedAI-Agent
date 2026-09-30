@@ -21,6 +21,7 @@ try:
         _item_companies,
         _publisher_of,
         _Transient,
+        date_from_url,
         same_company,
         source_type_of,
     )
@@ -34,6 +35,7 @@ except ImportError:
         _item_companies,
         _publisher_of,
         _Transient,
+        date_from_url,
         same_company,
         source_type_of,
     )
@@ -161,8 +163,9 @@ def web_search(ctx: ClinicalRun, query: str, max_results: int = 5) -> dict:
             results = []
             for x in res.get("results", []):
                 url = x.get("url") or ""
+                pub_date = x.get("published_date") or date_from_url(url)
                 sid = ctx.add_source(x.get("title") or url, url, _publisher_of(url),
-                                     source_type_of(url, ctx.company.homepage), x.get("published_date"))
+                                     source_type_of(url, ctx.company.homepage), pub_date)
                 if sid:  # 기준일 이후 자료는 제외됨
                     ctx.source_text[sid] = ctx.source_text.get(sid, "") + " " + (x.get("title") or "") + " " + (x.get("content") or "")
                     results.append({"source_id": sid, "title": x.get("title"), "url": url,
@@ -218,7 +221,8 @@ def fetch_page(ctx: ClinicalRun, url: str) -> dict:
     if not text:
         hit = _hit("페이지", url, False, err or "본문 없음", text="")
     else:
-        sid = ctx.add_source(url, url, _publisher_of(url), source_type_of(url, ctx.company.homepage))
+        sid = ctx.add_source(url, url, _publisher_of(url), source_type_of(url, ctx.company.homepage),
+                             date_from_url(url))
         if sid:
             ctx.source_text[sid] = ctx.source_text.get(sid, "") + " " + text[:20000]
         hit = _hit("페이지", url, True, None, source_id=sid, text=text[:20000])
@@ -227,7 +231,7 @@ def fetch_page(ctx: ClinicalRun, url: str) -> dict:
 
 
 def _pubmed_abstracts(ctx: ClinicalRun, ids: list[str], extra: dict) -> dict[str, str]:
-    """efetch로 초록 원문을 가져온다 (연구 설계·표본 수·다기관 여부 판단용)"""
+    """efetch로 초록 원문 및 저자 소속을 가져온다 (연구 설계·표본 수·다기관·회사 소속 여부 판단용)"""
     if not ids:
         return {}
     url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
@@ -257,8 +261,10 @@ def _pubmed_abstracts(ctx: ClinicalRun, ids: list[str], extra: dict) -> dict[str
                 if text:
                     parts.append(f"{label}: {text}" if label else text)
             pub_types = [pt.text for pt in art.iter("PublicationType") if pt.text]
-            if parts or pub_types:
-                out[pmid] = ("[" + ", ".join(pub_types) + "] " if pub_types else "") + " ".join(parts)
+            affils = [a.text.strip() for a in art.iter("Affiliation") if a.text and a.text.strip()]
+            affil_str = (" [Affiliations: " + "; ".join(affils[:10]) + "]") if affils else ""
+            if parts or pub_types or affils:
+                out[pmid] = ("[" + ", ".join(pub_types) + "] " if pub_types else "") + " ".join(parts) + affil_str
     except ET.ParseError:
         return {}
     return out

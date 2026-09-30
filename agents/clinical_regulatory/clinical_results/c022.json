@@ -12,27 +12,15 @@
       {
         "product_id": "p001",
         "regulatory_applicability": "in_scope",
-        "product_type": "ai_software",
-        "assessment_status": "complete",
-        "evidence_level": "L0",
-        "clinical_score": null,
-        "score_status": "unknown",
-        "evidence_ids": [
-          "c022:clinical:ev01"
-        ]
-      },
-      {
-        "product_id": "p002",
-        "regulatory_applicability": "in_scope",
         "product_type": "hardware",
-        "assessment_status": "partial",
-        "evidence_level": "L0",
-        "clinical_score": null,
-        "score_status": "unknown",
+        "assessment_status": "complete",
+        "evidence_level": "L2",
+        "clinical_score": 2.0,
+        "score_status": "scored",
         "evidence_ids": [
-          "c022:clinical:ev02",
-          "c022:clinical:ev03",
-          "c022:clinical:ev04"
+          "c022:clinical:ev04",
+          "c022:clinical:ev01",
+          "c022:clinical:ev02"
         ]
       }
     ],
@@ -41,12 +29,12 @@
         "record_id": "c022:clinical:reg01",
         "product_id": "p001",
         "country": "KR",
-        "authority": "식약처",
+        "authority": "식품의약품안전처",
         "procedure_type": "approval",
         "record_number": null,
         "permitted_use": "심전도 모니터링",
         "status": "active",
-        "effective_at": "2019-09-01",
+        "effective_at": "2018-09-07",
         "valid_until": null,
         "evidence_ids": [
           "c022:clinical:ev01"
@@ -54,14 +42,14 @@
       },
       {
         "record_id": "c022:clinical:reg02",
-        "product_id": "p002",
+        "product_id": "p001",
         "country": "KR",
-        "authority": "식약처",
-        "procedure_type": "certification",
-        "record_number": "제인 18-4727",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": null,
         "permitted_use": "심전도 모니터링",
         "status": "active",
-        "effective_at": "2018-09-07",
+        "effective_at": "2021-04-26",
         "valid_until": null,
         "evidence_ids": [
           "c022:clinical:ev02"
@@ -69,32 +57,17 @@
       },
       {
         "record_id": "c022:clinical:reg03",
-        "product_id": "p002",
+        "product_id": "p001",
         "country": "KR",
-        "authority": "식약처",
-        "procedure_type": "certification",
-        "record_number": "제인 21-4345",
+        "authority": "식품의약품안전처",
+        "procedure_type": "approval",
+        "record_number": null,
         "permitted_use": "심전도 모니터링",
-        "status": "active",
-        "effective_at": "2021-04-26",
-        "valid_until": null,
-        "evidence_ids": [
-          "c022:clinical:ev03"
-        ]
-      },
-      {
-        "record_id": "c022:clinical:reg04",
-        "product_id": "p002",
-        "country": "KR",
-        "authority": "식약처",
-        "procedure_type": "certification",
-        "record_number": "제인 26-4694",
-        "permitted_use": "심전도 모니터링",
-        "status": "active",
+        "status": "pending",
         "effective_at": "2026-07-28",
         "valid_until": null,
         "evidence_ids": [
-          "c022:clinical:ev04"
+          "c022:clinical:ev02"
         ]
       }
     ],
@@ -106,10 +79,10 @@
         "country": "KR",
         "program": "신의료기술 평가",
         "status": "pending",
-        "scope": "S-Patch Cardio의 신의료기술 평가 진행 중",
-        "effective_at": null,
+        "scope": "S-Patch Cardio의 비급여 등재 신청",
+        "effective_at": "2026-07-28",
         "evidence_ids": [
-          "c022:clinical:ev05"
+          "c022:clinical:ev03"
         ]
       }
     ],
@@ -119,95 +92,15 @@
         "product_id": "p001",
         "design": "관찰 연구",
         "prospective": null,
-        "multicenter": true,
-        "external_validation": true,
-        "sample_size": null,
-        "comparator": "12-lead ECG",
-        "endpoint": "ECG age의 AF 위험과의 연관성",
-        "result": "AI 기반 웨어러블 심전도 모니터링 기기가 AF 위험을 예측하는 데 유용함을 보여줌.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구 / 제품명 미기재 간접 근거로 L2 상한 적용",
-        "evidence_ids": [
-          "c022:clinical:ev06"
-        ],
-        "evidence_level": "L2",
-        "result_direction": "supports",
-        "product_match": true,
-        "methods_verifiable": true
-      },
-      {
-        "study_id": "c022:clinical:st02",
-        "product_id": "p001",
-        "design": "관찰 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
-        "sample_size": 106606,
-        "comparator": "12-lead ECG",
-        "endpoint": "AF 예측 성능",
-        "result": "단일 리드 ECG ML 모델이 AF 예측에서 0.801의 AUROC를 기록함.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구",
-        "evidence_ids": [
-          "c022:clinical:ev07"
-        ],
-        "evidence_level": "L2",
-        "result_direction": "supports",
-        "product_match": true,
-        "methods_verifiable": true
-      },
-      {
-        "study_id": "c022:clinical:st03",
-        "product_id": "p001",
-        "design": "후향적 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
-        "sample_size": 11349,
-        "comparator": "기존 ECG 모델",
-        "endpoint": "AF 스크리닝 성능",
-        "result": "제안된 알고리즘이 AUROC 0.908을 기록하며 높은 NPV를 유지함.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구",
-        "evidence_ids": [
-          "c022:clinical:ev08"
-        ],
-        "evidence_level": "L2",
-        "result_direction": "supports",
-        "product_match": true,
-        "methods_verifiable": true
-      },
-      {
-        "study_id": "c022:clinical:st04",
-        "product_id": "p001",
-        "design": "후향적 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
-        "sample_size": 13081,
-        "comparator": "기존 진단 방법",
-        "endpoint": "HFpEF 예측 성능",
-        "result": "AI-ECG 모델이 HFpEF 예측에서 AUROC 0.81을 기록함.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구",
-        "evidence_ids": [
-          "c022:clinical:ev09"
-        ],
-        "evidence_level": "L2",
-        "result_direction": "supports",
-        "product_match": true,
-        "methods_verifiable": true
-      },
-      {
-        "study_id": "c022:clinical:st05",
-        "product_id": "p001",
-        "design": "관찰 연구",
-        "prospective": null,
         "multicenter": null,
         "external_validation": null,
         "sample_size": null,
-        "comparator": "기존 진단 방법",
-        "endpoint": "심전도 유래 심장 나이 예측 성능",
-        "result": "AI 기반 모델이 심전도 유래 심장 나이를 정확히 예측함.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구",
+        "comparator": null,
+        "endpoint": "심전도 나이와 심방세동의 연관성",
+        "result": "웨어러블 기기에서 유도된 심전도 나이가 심방세동과 유의미한 연관성을 보임",
+        "limitations": "표본 수 미비, 특정 인구집단에 국한된 연구",
         "evidence_ids": [
-          "c022:clinical:ev10"
+          "c022:clinical:ev04"
         ],
         "evidence_level": "L2",
         "result_direction": "supports",
@@ -221,10 +114,10 @@
         "product_id": "p001",
         "original_claim": "회사는 **AI 기반 웨어러블 심전도 모니터링 기기**인 S-Patch Cardio를 제공하며, B2C 및 B2B 고객을 대상으로 **디지털 헬스케어 솔루션**을 통해 심전도 데이터를 분석하고 예측하는 서비스를 제공합니다.",
         "status": "supported",
-        "comparison_reason": "AI 기반 웨어러블 심전도 모니터링 기기인 S-Patch Cardio에 대한 설명이 확인된 기록과 일치함.",
+        "comparison_reason": "S-Patch Cardio는 AI 기반 웨어러블 심전도 모니터링 기기로, 심전도 데이터를 분석하고 예측하는 서비스 제공에 대한 주장을 뒷받침하는 근거가 있음.",
         "evidence_ids": [
           "c022:clinical:ev01",
-          "c022:clinical:ev06"
+          "c022:clinical:ev02"
         ]
       },
       {
@@ -232,32 +125,28 @@
         "product_id": "p001",
         "original_claim": "FDA 승인을 받은 제품을 통해 글로벌 시장에 진출하고 있으며, 삼진제약과의 파트너십을 통해 국내 유통망을 확립하고 있습니다.",
         "status": "unknown",
-        "comparison_reason": "FDA 승인 관련 정보가 확인된 바가 없음.",
+        "comparison_reason": "FDA 승인 관련 정보가 없으며, 삼진제약과의 파트너십에 대한 근거가 없음.",
         "evidence_ids": []
       }
     ],
     "red_flags": [],
-    "clinical_summary": "[임상·인허가] 웰리시스 (c022) | 기준일 2026-09-30\n- p001 S-Patch Cardio: ai_software/in_scope | 공식 상태: KR approval·active(\"심전도 모니터링\") | 제도: 신의료기술 평가·pending | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 1, unknown 1 | 평가 상태 complete\n- p002 홀터 심전계: hardware/in_scope | 공식 상태: KR certification·active(\"심전도 모니터링\"); KR certification·active(\"심전도 모니터링\"); KR certification·active(\"심전도 모니터링\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], criteria_inputs.C1[p002]",
+    "clinical_summary": "[임상·인허가] 웰리시스 (c022) | 기준일 2026-09-30\n- p001 S-Patch Cardio: hardware/in_scope | 공식 상태: KR approval·active(\"심전도 모니터링\"); KR approval·active(\"심전도 모니터링\"); KR approval·pending(\"심전도 모니터링\") | 제도: 신의료기술 평가·pending | 임상 근거 L2, C1 2.0 (scored) | 주장 대조: supported 1, unknown 1 | 평가 상태 complete\n- C1 잠정 집계: 2.0 (scored)",
     "criteria_inputs": {
       "C1": {
-        "score": null,
-        "score_status": "unknown",
+        "score": 2.0,
+        "score_status": "scored",
         "product_scores": [
           {
             "product_id": "p001",
-            "score": null,
-            "score_status": "unknown",
-            "scope_weight": 1.0
-          },
-          {
-            "product_id": "p002",
-            "score": null,
-            "score_status": "unknown",
+            "score": 2.0,
+            "score_status": "scored",
             "scope_weight": 1.0
           }
         ],
-        "evidence_ids": [],
-        "rationale": "점수화된 제품 없음"
+        "evidence_ids": [
+          "c022:clinical:ev04"
+        ],
+        "rationale": "제품별 점수의 scope_weight 가중평균 (잠정, 심사 p.4 규칙으로 재집계)"
       }
     },
     "validation_issues": [],
@@ -265,11 +154,9 @@
       "finding|regulatory|c022:clinical:reg01": "c022:clinical:fd01",
       "finding|regulatory|c022:clinical:reg02": "c022:clinical:fd02",
       "finding|regulatory|c022:clinical:reg03": "c022:clinical:fd03",
-      "finding|regulatory|c022:clinical:reg04": "c022:clinical:fd04",
-      "finding|reimbursement|c022:clinical:rmb01": "c022:clinical:fd05",
-      "finding|clinical_evidence|p001": "c022:clinical:fd06",
-      "finding|clinical_evidence|p002": "c022:clinical:fd07",
-      "finding|claim|c022:p001:cl02": "c022:clinical:fd08"
+      "finding|reimbursement|c022:clinical:rmb01": "c022:clinical:fd04",
+      "finding|clinical_evidence|p001": "c022:clinical:fd05",
+      "finding|claim|c022:p001:cl02": "c022:clinical:fd06"
     },
     "collected_profile": {
       "legal_name": "웰리시스",
@@ -282,10 +169,10 @@
           "name": "S-Patch Cardio",
           "model": null,
           "intended_use": "심전도 모니터링",
-          "target_disease": null,
-          "users": null,
-          "environment": null,
-          "modality": null,
+          "target_disease": "심혈관 질환",
+          "users": "의료진",
+          "environment": "원격 모니터링",
+          "modality": "웨어러블",
           "target_countries": [
             "KR"
           ],
@@ -301,20 +188,6 @@
               "claimed_at": null
             }
           ]
-        },
-        {
-          "product_id": "p002",
-          "name": "홀터 심전계",
-          "model": null,
-          "intended_use": "심전도 모니터링",
-          "target_disease": null,
-          "users": null,
-          "environment": null,
-          "modality": null,
-          "target_countries": [
-            "KR"
-          ],
-          "claims": []
         }
       ],
       "collection_notes": {
@@ -323,27 +196,14 @@
           "https://thevc.kr/wellysis",
           "https://www.newswire.co.kr/newsRead.php?no=1015676",
           "https://www.biotimes.co.kr/news/articleView.html?idxno=22970",
-          "https://www.hankookilbo.com/news/article/A2026010510070005203"
+          "https://himsstv.brightcovegallery.com/detail/video/6093313222001/s-patch-cardio-to-bring-continuous-ecg-monitoring?autoStart=true&page=48&q=patient"
         ],
-        "dropped_claims_not_in_page": [
-          "AI 기반 웨어러블 심전도 모니터링 기기인 S-Patch Cardio를 제공하며, B2C 및 B2B 고객을 대상으로 심전도 데이터를 분석하고 예",
-          "AI 기반 웨어러블 심전도 모니터링 기기인 S-Patch Cardio를 제공하며, B2C 및 B2B 고객을 대상으로 심전도 데이터를 분석하고 예"
-        ],
+        "dropped_claims_not_in_page": [],
         "collected_at": "2026-09-30"
       }
     }
   },
   "sources": [
-    {
-      "source_id": "c022:clinical:src01",
-      "title": "식약처 의료기기 품목허가 조회: 웰리시스",
-      "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EC%9B%B0%EB%A6%AC%EC%8B%9C%EC%8A%A4",
-      "publisher": "식품의약품안전처",
-      "source_type": "official",
-      "published_at": null,
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
     {
       "source_id": "c022:clinical:src20",
       "title": "Wellysis",
@@ -366,61 +226,21 @@
     },
     {
       "source_id": "c022:clinical:src30",
-      "title": "S-Patch Cardio | Healthcare Solution | Samsung SDS | Europe",
-      "url": "https://www.samsungsds.com/eu/cardio/cardio.html",
-      "publisher": "www.samsungsds.com",
-      "source_type": "other",
+      "title": "S-Patch Ex, Wearable ECG Patch, Cleared by US FDA",
+      "url": "https://www.prnewswire.com/news-releases/s-patch-ex-wearable-ecg-patch-cleared-by-us-fda-301922877.html",
+      "publisher": "www.prnewswire.com",
+      "source_type": "news",
       "published_at": null,
       "checked_at": "2026-09-30",
       "original_source_id": null
     },
     {
-      "source_id": "c022:clinical:src49",
+      "source_id": "c022:clinical:src42",
       "title": "Wearable device derived electrocardiographic age and its association with atrial fibrillation.",
       "url": "https://pubmed.ncbi.nlm.nih.gov/41548032/",
       "publisher": "NPJ Digit Med",
       "source_type": "research",
       "published_at": "2026-01-17",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c022:clinical:src50",
-      "title": "Machine learning algorithms for predicting atrial fibrillation using single-lead data derived from 12-lead ECGs.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/41126917/",
-      "publisher": "Front Cardiovasc Med",
-      "source_type": "research",
-      "published_at": "2025-10-07",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c022:clinical:src51",
-      "title": "Sequential AI-ECG Diagnostic Protocol for Opportunistic Atrial Fibrillation Screening: A Retrospective Single-Center Study.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/41010879/",
-      "publisher": "J Clin Med",
-      "source_type": "research",
-      "published_at": "2025-09-22",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c022:clinical:src52",
-      "title": "Artificial intelligence-enabled electrocardiogram model for predicting heart failure with preserved ejection fraction: a single-center study.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/40984990/",
-      "publisher": "Eur Heart J Digit Health",
-      "source_type": "research",
-      "published_at": "2025-07-17",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c022:clinical:src53",
-      "title": "Comparison of Artificial Intelligence-Derived Heart Age with Chronological Age Using Normal Sinus Electrocardiograms in Patients with No Evidence of Cardiac Disease.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/40807167/",
-      "publisher": "J Clin Med",
-      "source_type": "research",
-      "published_at": "2025-08-06",
       "checked_at": "2026-09-30",
       "original_source_id": null
     }
@@ -437,31 +257,17 @@
       ],
       "locator": null,
       "excerpt": null,
-      "event_date": "2019-09-01",
+      "event_date": "2018-09-07",
       "geography": "KR",
       "evidence_status": "confirmed"
     },
     {
       "evidence_id": "c022:clinical:ev02",
       "company_id": "c022",
-      "product_id": "p002",
-      "statement": "웰리시스 홀터 심전계 식약처 certification 기록 (제인 18-4727)",
+      "product_id": "p001",
+      "statement": "S-Patch Cardio는 길이 10㎝, 무게 8g의 작은 패치로 심장 부근에 부착해 심전도를 최장 100시간 동안 원격으로 모니터링하는 의료기기다.",
       "source_ids": [
-        "c022:clinical:src01"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2018-09-07",
-      "geography": "KR",
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c022:clinical:ev03",
-      "company_id": "c022",
-      "product_id": "p002",
-      "statement": "웰리시스 홀터 심전계 식약처 certification 기록 (제인 21-4345)",
-      "source_ids": [
-        "c022:clinical:src01"
+        "c022:clinical:src21"
       ],
       "locator": null,
       "excerpt": null,
@@ -470,100 +276,30 @@
       "evidence_status": "confirmed"
     },
     {
-      "evidence_id": "c022:clinical:ev04",
-      "company_id": "c022",
-      "product_id": "p002",
-      "statement": "웰리시스 홀터 심전계 식약처 certification 기록 (제인 26-4694)",
-      "source_ids": [
-        "c022:clinical:src01"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2026-07-28",
-      "geography": "KR",
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c022:clinical:ev05",
+      "evidence_id": "c022:clinical:ev03",
       "company_id": "c022",
       "product_id": "p001",
-      "statement": "S-Patch Cardio의 신의료기술 평가가 진행 중이다.",
+      "statement": "S-Patch Cardio의 비급여 등재가 신청되었다.",
       "source_ids": [
         "c022:clinical:src30"
       ],
       "locator": null,
       "excerpt": null,
-      "event_date": null,
+      "event_date": "2026-07-28",
       "geography": "KR",
       "evidence_status": "unverified"
     },
     {
-      "evidence_id": "c022:clinical:ev06",
+      "evidence_id": "c022:clinical:ev04",
       "company_id": "c022",
       "product_id": "p001",
-      "statement": "AI 기반 웨어러블 심전도 모니터링 기기가 AF 위험을 예측하는 데 유용함을 보여줌.",
+      "statement": "웨어러블 기기에서 유도된 심전도 나이가 심방세동과 유의미한 연관성을 보임",
       "source_ids": [
-        "c022:clinical:src49"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2026-01-17",
-      "geography": null,
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c022:clinical:ev07",
-      "company_id": "c022",
-      "product_id": "p001",
-      "statement": "단일 리드 ECG ML 모델이 AF 예측에서 0.801의 AUROC를 기록함.",
-      "source_ids": [
-        "c022:clinical:src50"
+        "c022:clinical:src42"
       ],
       "locator": null,
       "excerpt": null,
       "event_date": null,
-      "geography": null,
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c022:clinical:ev08",
-      "company_id": "c022",
-      "product_id": "p001",
-      "statement": "제안된 알고리즘이 AUROC 0.908을 기록하며 높은 NPV를 유지함.",
-      "source_ids": [
-        "c022:clinical:src51"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2025-09-22",
-      "geography": null,
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c022:clinical:ev09",
-      "company_id": "c022",
-      "product_id": "p001",
-      "statement": "AI-ECG 모델이 HFpEF 예측에서 AUROC 0.81을 기록함.",
-      "source_ids": [
-        "c022:clinical:src52"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2025-09",
-      "geography": null,
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c022:clinical:ev10",
-      "company_id": "c022",
-      "product_id": "p001",
-      "statement": "AI 기반 모델이 심전도 유래 심장 나이를 정확히 예측함.",
-      "source_ids": [
-        "c022:clinical:src53"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2025-08-06",
       "geography": null,
       "evidence_status": "confirmed"
     }
@@ -582,7 +318,7 @@
     {
       "finding_id": "c022:clinical:fd02",
       "category": "regulatory",
-      "claim": "홀터 심전계 [KR] certification · active (제인 18-4727) / 사용 목적: \"심전도 모니터링\"",
+      "claim": "S-Patch Cardio [KR] approval · active / 사용 목적: \"심전도 모니터링\"",
       "evidence_ids": [
         "c022:clinical:ev02"
       ],
@@ -592,7 +328,17 @@
     {
       "finding_id": "c022:clinical:fd03",
       "category": "regulatory",
-      "claim": "홀터 심전계 [KR] certification · active (제인 21-4345) / 사용 목적: \"심전도 모니터링\"",
+      "claim": "S-Patch Cardio [KR] approval · pending / 사용 목적: \"심전도 모니터링\"",
+      "evidence_ids": [
+        "c022:clinical:ev02"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c022:clinical:fd04",
+      "category": "reimbursement",
+      "claim": "S-Patch Cardio [KR] 신의료기술 평가 · pending / 범위: S-Patch Cardio의 비급여 등재 신청",
       "evidence_ids": [
         "c022:clinical:ev03"
       ],
@@ -600,49 +346,21 @@
       "related_criterion_ids": []
     },
     {
-      "finding_id": "c022:clinical:fd04",
-      "category": "regulatory",
-      "claim": "홀터 심전계 [KR] certification · active (제인 26-4694) / 사용 목적: \"심전도 모니터링\"",
+      "finding_id": "c022:clinical:fd05",
+      "category": "clinical_evidence",
+      "claim": "S-Patch Cardio: 임상 근거 L2, C1 2 (scored), 연구 1건",
       "evidence_ids": [
         "c022:clinical:ev04"
       ],
       "uncertainty": null,
-      "related_criterion_ids": []
-    },
-    {
-      "finding_id": "c022:clinical:fd05",
-      "category": "reimbursement",
-      "claim": "S-Patch Cardio [KR] 신의료기술 평가 · pending / 범위: S-Patch Cardio의 신의료기술 평가 진행 중",
-      "evidence_ids": [
-        "c022:clinical:ev05"
-      ],
-      "uncertainty": null,
-      "related_criterion_ids": []
+      "related_criterion_ids": [
+        "C1"
+      ]
     },
     {
       "finding_id": "c022:clinical:fd06",
-      "category": "clinical_evidence",
-      "claim": "S-Patch Cardio: 임상 근거 L0, C1 없음 (unknown), 연구 5건",
-      "evidence_ids": [],
-      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 5건 점수 제외)",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c022:clinical:fd07",
-      "category": "clinical_evidence",
-      "claim": "홀터 심전계: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
-      "evidence_ids": [],
-      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c022:clinical:fd08",
       "category": "claim",
-      "claim": "주장 \"FDA 승인을 받은 제품을 통해 글로벌 시장에 진출하고 있으며, 삼진제약과의 파트너십을 통해 국내 유통망을 확립하고 있습니다.\" → unknown: FDA 승인 관련 정보가 확인된 바가 없음.",
+      "claim": "주장 \"FDA 승인을 받은 제품을 통해 글로벌 시장에 진출하고 있으며, 삼진제약과의 파트너십을 통해 국내 유통망을 확립하고 있습니다.\" → unknown: FDA 승인 관련 정보가 없으며, 삼진제약과의 파트너십에 대한 근거가 없음.",
       "evidence_ids": [],
       "uncertainty": "근거 부족",
       "related_criterion_ids": [
@@ -650,32 +368,7 @@
       ]
     }
   ],
-  "missing_items": [
-    {
-      "item_id": "c022:clinical:mi01",
-      "field": "criteria_inputs.C1[p001]",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "high",
-      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함 (제품명 미기재 및 비소속 연구로 5건 점수 제외)"
-    },
-    {
-      "item_id": "c022:clinical:mi02",
-      "field": "products[p002].claims",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "low",
-      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
-    },
-    {
-      "item_id": "c022:clinical:mi03",
-      "field": "criteria_inputs.C1[p002]",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "high",
-      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
-    }
-  ],
+  "missing_items": [],
   "coverage": [
     {
       "coverage_id": "c022:clinical:cv01",
@@ -690,25 +383,10 @@
         "period": null
       },
       "checked_at": "2026-09-30",
-      "note": "회사는 AI 기반 웨어러블 심전도 모니터링 기기인 S-Patch Cardio를 제공하며, 심전도 데이터를 분석하고 예측하는 서비스를 제공합니다. FDA 승인을 받은 제품으로, 의료기기 규제 대상입니다."
+      "note": "S-Patch Cardio는 심전도 모니터링을 위한 웨어러블 기기로, 심혈관 질환을 대상으로 하며, AI 기반으로 심전도 데이터를 분석하고 예측하는 서비스를 제공한다고 주장하고 있습니다. 또한, FDA 승인을 받은 제품으로 확인되어 규제 대상에 해당합니다."
     },
     {
       "coverage_id": "c022:clinical:cv02",
-      "area": "classification",
-      "product_id": "p002",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "홀터 심전계는 심전도 모니터링을 위한 기기로, 의료기기 규제 대상입니다. 효능 주장은 확인되지 않았습니다."
-    },
-    {
-      "coverage_id": "c022:clinical:cv03",
       "area": "regulatory",
       "product_id": "p001",
       "country": "KR",
@@ -716,7 +394,8 @@
       "search_scope": {
         "names": [
           "웰리시스",
-          "S-Patch Cardio"
+          "S-Patch Cardio",
+          "S-Patch"
         ],
         "queries": [
           "웰리시스 S-Patch Cardio 식약처 허가 인증"
@@ -732,22 +411,42 @@
       "note": null
     },
     {
+      "coverage_id": "c022:clinical:cv03",
+      "area": "designation",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "웰리시스 혁신의료기기 지정",
+          "S-Patch Cardio 혁신의료기술 평가",
+          "S-Patch Cardio 비급여 등재 고시",
+          "웰리시스 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
       "coverage_id": "c022:clinical:cv04",
-      "area": "regulatory",
-      "product_id": "p002",
+      "area": "reimbursement",
+      "product_id": "p001",
       "country": "KR",
       "status": "reviewed",
       "search_scope": {
-        "names": [
-          "웰리시스",
-          "홀터 심전계"
-        ],
+        "names": [],
         "queries": [
-          "웰리시스 홀터 심전계 식약처 허가 인증"
+          "웰리시스 혁신의료기기 지정",
+          "S-Patch Cardio 혁신의료기술 평가",
+          "S-Patch Cardio 비급여 등재 고시",
+          "웰리시스 건강보험 급여 등재"
         ],
         "sources": [
-          "식약처 의료기기 품목허가",
-          "식약처 의료기기 품목정보",
           "웹 검색"
         ],
         "period": null
@@ -757,94 +456,6 @@
     },
     {
       "coverage_id": "c022:clinical:cv05",
-      "area": "designation",
-      "product_id": "p001",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "웰리시스 혁신의료기기 지정",
-          "S-Patch Cardio 혁신의료기술 평가",
-          "S-Patch Cardio 비급여 등재 고시",
-          "웰리시스 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c022:clinical:cv06",
-      "area": "reimbursement",
-      "product_id": "p001",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "웰리시스 혁신의료기기 지정",
-          "S-Patch Cardio 혁신의료기술 평가",
-          "S-Patch Cardio 비급여 등재 고시",
-          "웰리시스 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c022:clinical:cv07",
-      "area": "designation",
-      "product_id": "p002",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "웰리시스 혁신의료기기 지정",
-          "홀터 심전계 혁신의료기술 평가",
-          "홀터 심전계 비급여 등재 고시",
-          "웰리시스 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c022:clinical:cv08",
-      "area": "reimbursement",
-      "product_id": "p002",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "웰리시스 혁신의료기기 지정",
-          "홀터 심전계 혁신의료기술 평가",
-          "홀터 심전계 비급여 등재 고시",
-          "웰리시스 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c022:clinical:cv09",
       "area": "clinical_studies",
       "product_id": "p001",
       "country": null,
@@ -853,7 +464,9 @@
         "names": [],
         "queries": [
           "\"S-Patch Cardio\"[Title/Abstract]",
+          "\"S-Patch\"[Title/Abstract]",
           "\"Wellysis\"[Affiliation]",
+          "\"wellysis\"[Affiliation]",
           "웰리시스 S-Patch Cardio 임상 연구 논문",
           "S-Patch Cardio clinical validation study"
         ],
@@ -867,29 +480,7 @@
       "note": null
     },
     {
-      "coverage_id": "c022:clinical:cv10",
-      "area": "clinical_studies",
-      "product_id": "p002",
-      "country": null,
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "\"Wellysis\"[Affiliation]",
-          "웰리시스 홀터 심전계 임상 연구 논문",
-          "홀터 심전계 clinical validation study"
-        ],
-        "sources": [
-          "PubMed",
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c022:clinical:cv11",
+      "coverage_id": "c022:clinical:cv06",
       "area": "claim_check",
       "product_id": "p001",
       "country": null,
@@ -902,21 +493,6 @@
       },
       "checked_at": "2026-09-30",
       "note": null
-    },
-    {
-      "coverage_id": "c022:clinical:cv12",
-      "area": "claim_check",
-      "product_id": "p002",
-      "country": null,
-      "status": "insufficient_information",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "회사 주장 원문을 찾지 못함"
     }
   ],
   "review_responses": []
