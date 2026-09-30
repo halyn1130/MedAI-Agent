@@ -1,4 +1,6 @@
-# Risk 수집·분석 v3
+# Risk 수집·분석 v3 (이전 실행 방식)
+
+현재 기본 Agent는 고정 데이터 기반 LangGraph입니다. [현재 실행 안내](README.md)를 먼저 참고하세요. 아래 전체 수집 도구는 데이터셋을 갱신할 때만 별도로 실행합니다.
 
 ## 실행
 
@@ -7,7 +9,7 @@
 python -m agents.risk.run_all --input data/startup_list.csv
 
 # 이미 수집한 기업: GPT 캐시 자동 재사용
-python -m agents.risk --input 기업폴더/reviewed/state.json --output 결과.json --max-search-calls 0
+python -m agents.risk --company-id <고정_manifest의_company_id> --output 결과.json
 
 # 기존 전체 수집: 재검색 없이 분석
 python -m agents.risk.batch_analyze --input-dir 수집폴더

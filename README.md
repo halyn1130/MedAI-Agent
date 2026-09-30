@@ -121,36 +121,17 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-### API 없이 데모 실행
+### 고정 데이터로 Risk 분석
+
+Risk Agent는 LangGraph의 `데이터 확인 → 근거 선택 → 분석 → 검토 → 보완 또는 반환` 흐름으로 실행합니다. 기존 수집본 42개 기업을 `agents/risk/data/frozen_manifest.json`에 등록했으며, 파일 해시가 달라지면 실행을 중단합니다. 데이터와 manifest는 Git에 포함되지 않으므로 새 환경에는 별도로 전달해야 합니다.
+
+로컬 `.env`에 `OPENAI_API_KEY`, `RISK_MODEL`을 설정합니다. 이 Agent는 웹검색을 하지 않으므로 Tavily 키가 필요하지 않습니다.
 
 ```bash
-python -m agents.risk \
-  --input examples/risk/input.json \
-  --output outputs/risk_demo.json \
-  --demo
+python -m agents.risk --company-id <manifest에_등록된_company_id> --output outputs/risk_result.json
 ```
 
-데모는 검색·LLM 호출 없이 입출력 연결만 확인합니다. 실제 기업 분석 결과를 생성하지 않습니다.
-
-### API를 사용한 Risk 분석
-
-로컬 `.env`에 다음 환경변수를 설정합니다. `.env.example`은 변수 형식을 공유하는 템플릿입니다.
-
-| 변수 | 용도 |
-|---|---|
-| `OPENAI_API_KEY` | 모델 API 인증 |
-| `RISK_MODEL` | 현재 호출 방식과 호환되는 OpenAI 모델 ID |
-| `TAVILY_API_KEY` | 웹검색 API 인증 |
-
-```bash
-python -m agents.risk \
-  --input examples/risk/input.json \
-  --output outputs/risk_result.json
-```
-
-실제 기업을 분석할 때는 예제를 해당 기업의 State JSON으로 교체합니다. 모델에 따라 호출 옵션 조정이 필요할 수 있습니다. 현재 검색 호출 한도는 기본 6회, 보완 한도는 1회입니다. C6 채점과 전체 투자 판단은 아직 구현되지 않았습니다.
-
-입력·보완 예시는 [examples/risk](examples/risk), 상세 실행 방식과 반환 구조는 [Risk README](agents/risk/README.md)를 참고하세요.
+출력은 `risk_analysis`와 `references`를 담은 dict입니다. 외부 재검색 없이 고정 자료 안에서 최대 1회 보완하며, 같은 입력은 기존 모델 응답 캐시를 재사용합니다. 기본 실행당 GPT 호출은 최대 2회입니다. 기존 `--input`, `--demo`, `--max-search-calls` 옵션은 제거되었습니다. 상세 연결 방법은 [Risk README](agents/risk/README.md)를 참고하세요.
 
 ### 기존 후보 수집 도구
 
@@ -160,6 +141,7 @@ python -m agents.risk \
 
 ```bash
 python -m unittest discover -s tests -v
+python -m unittest agents.risk.test_graph agents.risk.test_company_analysis agents.risk.test_output_contract agents.risk.collection.test_collect agents.risk.collection.test_quality -v
 ```
 
 현재 테스트는 Risk 모듈의 근거 참조, 부분 실패, 검색 예산, 보완 및 재시도 제한 등을 검증합니다.
@@ -169,7 +151,6 @@ python -m unittest discover -s tests -v
 ```text
 agents/risk/         # Risk 분석 코드·스키마·프롬프트
 data/               # 후보 기업 데이터
-examples/risk/       # 최초 입력·보완 요청 예시
 tests/               # Risk 테스트
 scripts/             # 이전 후보 수집 도구 (현재 흐름 미사용)
 docs/diagrams/       # 흐름도와 편집 소스

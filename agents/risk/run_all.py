@@ -6,8 +6,8 @@ from datetime import datetime,date
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from hashlib import sha256
 from dotenv import load_dotenv
-from .collect import collect_company,load_companies
-from .providers import TavilySearch
+from .collection.collect import collect_company,load_companies
+from .collection.search import TavilySearch
 from .company_analysis import analyze,save_result
 
 

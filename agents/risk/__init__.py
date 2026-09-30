@@ -1,5 +1,4 @@
-from .agent import RiskAgent, merge_by_agent, merge_references
-from .schema import RiskAgentOutput, RiskAnalysis, ReviewRequest
+"""Default public API: frozen-dataset LangGraph Risk Agent."""
+from .agent import RiskAgent, RiskInput, RiskOutput, RiskState, build_risk_graph
 
-__all__ = ['RiskAgent', 'RiskAgentOutput', 'RiskAnalysis', 'ReviewRequest',
-           'merge_by_agent', 'merge_references']
+__all__ = ['RiskAgent', 'RiskInput', 'RiskOutput', 'RiskState', 'build_risk_graph']

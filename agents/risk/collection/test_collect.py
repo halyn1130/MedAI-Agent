@@ -5,8 +5,8 @@ from datetime import date
 import json
 
 from .collect import collect_company, load_companies
-from .providers import ProviderError
-from .schema import Source
+from ..errors import ProviderError
+from ..schema import Source
 
 
 class CollectTests(unittest.TestCase):

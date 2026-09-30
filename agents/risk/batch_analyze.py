@@ -5,10 +5,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
-from .agent import RiskAgent
 from .providers import ChatAnalyzer
 from .schema import CategoryResult, Coverage
-from .quality import QUESTIONS, CATEGORIES
+from .collection.quality import QUESTIONS, CATEGORIES
 
 
 class NoEvidence:

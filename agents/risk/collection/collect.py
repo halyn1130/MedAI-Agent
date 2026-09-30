@@ -1,4 +1,4 @@
-"""Collect candidate public evidence: python -m agents.risk.collect --help."""
+"""Collect candidate public evidence: python -m agents.risk.collection --help."""
 import argparse
 import csv
 import json
@@ -6,7 +6,8 @@ from datetime import date, datetime
 from hashlib import sha256
 from pathlib import Path
 
-from .providers import ProviderError, TavilySearch
+from ..errors import ProviderError
+from .search import TavilySearch
 
 QUERIES = {
     'partnerships': ['업무협약', '공급 계약', '협력 종료 대체'],
@@ -132,7 +133,7 @@ def collect_company(profile, search, folder, as_of, max_calls=9):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', type=Path, required=True, help='Company CSV or State JSON')
-    parser.add_argument('--output-dir', type=Path, default=Path(__file__).parent / 'data')
+    parser.add_argument('--output-dir', type=Path, default=Path(__file__).parents[1] / 'data')
     parser.add_argument('--as-of', type=date.fromisoformat, default=date.today())
     parser.add_argument('--limit', type=int, default=1, help='Maximum companies (default: 1)')
     parser.add_argument('--max-search-calls', type=int, default=9, help='Per company')

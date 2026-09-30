@@ -21,6 +21,7 @@ operational_incidents: 실제 발생한 중단·사고·분쟁과 후속 대응.
 영역별 observations, unknowns, questions를 반환하세요. 세 영역을 모두 포함하세요.
 사건이나 교체를 확인하지 못했으면 그것이 발생했다는 전제의 질문을 쓰지 마세요.
 질문은 '담당자 부재 시 업무 대행 체계가 있는가?'처럼 중립적으로 작성하세요.
+review_context가 있으면 이전 판단과 보완 질문을 검토하되 원문이 지지하는 경우에만 수정하세요. 이전 판단은 근거가 아닙니다.
 현재 상태·계약 조건 등 미확인은 명시하되 위험 없음/높음으로 바꾸지 마세요.
 발행일 미상/오래된 자료는 현재 상태를 확정할 수 없습니다. 기준일 이후 정보는 쓰지 마세요.
 '''
@@ -112,6 +113,8 @@ def analyze(state, cache_dir, caller=None, model=None):
     chunks=passages(state)
     payload={'company_id':state['company_profile']['company_id'], 'company_name':state['company_profile']['company_name'],
              'as_of':state['as_of'],'passages':chunks}
+    if state.get('risk_review_context'):
+        payload['review_context'] = state['risk_review_context']
     key=hashlib.sha256(json.dumps({'model':model,'prompt':PROMPT,'schema':Reply.model_json_schema(),'input':payload},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
     cache_dir=Path(cache_dir);cache_dir.mkdir(parents=True,exist_ok=True)
     path=cache_dir/(key+'.json'); pending=cache_dir/(key+'.pending')

@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 from .providers import ChatAnalyzer, ProviderError
 from .schema import CategoryResult, Coverage
-from .agent import RiskAgent
+from .legacy_agent import RiskAgent
 
 class ContractTests(unittest.TestCase):
     def test_empty_findings_with_questions_is_success(self):

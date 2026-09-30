@@ -46,7 +46,7 @@ for k,t,kind in [('input','고정 CSV 데이터셋','io'),('read','파일 로딩
 x.chain('input','read','norm','valid');x.e('valid','scope','예');x.e('valid','missing','아니요');x.chain('missing','hold');x.chain('scope','opt','out','end');x.save()
 # clinical
 x=G('02_서준영_임상_인허가','02 · 임상·인허가 분석 | 서준영','Healthcare AI | 공식 상태와 임상 근거를 구분')
-for k,t,kind in [('input','기업·제품·용도·목표국 입력','io'),('scope','제품 식별 및 규제 적용 범위 조사','p'),('dec','규제 적용\n여부 확인','d'),('official','공식 기록 직접 수집\n허가·지정·등재·현재 조치','p'),('na','비적용 근거 기록\n비영상만으로 제외하지 않음','p'),('unk','범위 미확인 기록\n필수 누락·보완 질문 생성','bad'),('study','논문·시험·회사 주장 직접 수집\n규제 비대상도 효능 주장 검토','p'),('compare','제품·사용환경·연구 결과 대조\n상충 근거와 한계 기록','p'),('validate','출처·사실·판단 연결 검증\nC1 적용성·근거 수준·CL 플래그','p'),('out','clinical_analysis 반환\n공식 상태 · 점수/unknown · 보완 항목','io')]:x.n(k,t,kind)
+for k,t,kind in [('input','기업·제품·용도·목표국 입력','io'),('scope','제품·용도 수집 및 규제 적용 범위 조사\n정식명·홈페이지·회사 주장 원문 수집','p'),('dec','규제 적용\n여부 확인','d'),('official','공식 기록 직접 수집\n허가·지정·등재·현재 조치','p'),('na','비적용 근거 기록\n명칭·표기만으로 제외하지 않음','p'),('unk','범위 미확인 기록\n공식 기록 조회 시도·결측 기록','bad'),('study','논문·시험·회사 주장 직접 수집\n규제 비대상도 효능 주장 검토','p'),('compare','제품·사용환경·연구 결과 대조\n상충 근거와 한계 기록','p'),('validate','출처·사실·판단 연결 검증\nC1 적용성·근거 수준·CL 플래그','p'),('out','clinical_analysis 반환\n공식 상태 · 점수/unknown · 보완 항목','io')]:x.n(k,t,kind)
 x.chain('input','scope','dec');x.same('official','na','unk')
 for k,l in [('official','적용'),('na','비적용'),('unk','미확인')]:x.e('dec',k,l);x.e(k,'study')
 x.chain('study','compare','validate','out');reviewloop(x,'out','validate');x.save()
@@ -66,8 +66,8 @@ for k,t,kind in [('input','기업 프로필·기준일\n기존 결과·보완 �
 x.chain('input','check','scope','search','facts','more');x.e('more','search','예');x.e('more','validate','아니요');x.e('validate','out');reviewloop(x,'out','validate');x.save()
 # review
 x=G('06_김민솔_투자_심사_보고서','06 · 투자 심사·보고서 작성 | 김민솔','평가 정책 proposed-2.0 | 점수 계산은 Python · 설명은 근거 기반')
-for k,t,kind in [('input','네 분석 결과·근거·실행 상태','io'),('valid','대상·기간·스키마·근거 충돌 검증','p'),('need','보완 필요하며\n1회 한도 내인가?','d'),('req','해당 Agent에 질문·근거·예산 전달\n보완 결과 취합','p'),('gate','G01·G02\n현재 중대 차단 확인?','d'),('unknown','필수 결측·충돌·검증 오류\n또는 적용 점수 unknown?','d'),('score','C1~C6 가중 총점 계산\nproposed-2.0 정책 적용\n중복 합산·임의 결측 보정 금지','p'),('pass','총점 ≥ 60이며\n모든 적용 항목 ≥ 2?','d'),('yes','적격','end'),('no','부적격\n차단 또는 점수 미달 사유','bad'),('hold','판단불가\n미확인·충돌·실패 사유','bad'),('all','전체 기업 결과 취합\n적격 기업 중 최대 K개 선정','p'),('report','보고서 생성\n선정·미선정 이유 · 점수·근거\n미확인·보완 이력·실사 질문','end')]:x.n(k,t,kind)
-x.chain('input','valid','need');x.e('need','req','예');x.e('req','valid','보완 후',True);x.e('need','gate','아니요 / 종료');x.e('gate','no','예');x.e('gate','unknown','아니요');x.e('unknown','hold','예');x.e('unknown','score','아니요');x.chain('score','pass');x.e('pass','yes','예');x.e('pass','no','아니요');x.same('yes','no','hold')
-for k in ['yes','no','hold']:x.e(k,'all')
+for k,t,kind in [('input','네 분석 결과·근거·실행 상태','io'),('valid','대상·기간·스키마·근거 충돌 검증','p'),('need','보완 필요하며\n1회 한도 내인가?','d'),('req','해당 Agent에 질문·근거·예산 전달\n보완 결과 취합','p'),('gate','G01·G02\n현재 중대 차단 확인?','d'),('score','C1~C6 가중 총점 계산\nproposed-2.0 정책 적용\n중복 합산·임의 결측 보정 금지','p'),('pass','총점 ≥ 60이며\n모든 적용 항목 ≥ 2?','d'),('yes','적격','end'),('no','부적격\n차단 또는 점수 미달 사유','bad'),('all','전체 기업 결과 취합\n적격 기업 중 최대 K개 선정','p'),('report','보고서 생성\n선정·미선정 이유 · 점수·근거\n미확인·보완 이력·실사 질문','end')]:x.n(k,t,kind)
+x.chain('input','valid','need');x.e('need','req','예');x.e('req','valid','보완 후',True);x.e('need','gate','아니요 / 종료');x.e('gate','no','예');x.e('gate','score','아니요');x.chain('score','pass');x.e('pass','yes','예');x.e('pass','no','아니요');x.same('yes','no')
+for k in ['yes','no']:x.e(k,'all')
 x.chain('all','report');x.save()
 print('Created 7 PNG diagrams')

@@ -2,7 +2,7 @@ import copy
 import unittest
 from unittest.mock import patch, Mock
 
-from agents.risk import RiskAgent, merge_references
+from agents.risk.legacy_agent import RiskAgent, merge_references
 from agents.risk.providers import ProviderError, TavilySearch
 from agents.risk.schema import RiskAnalysis
 
@@ -95,12 +95,12 @@ class RiskTests(unittest.TestCase):
         response.json.return_value = {'results': [{'url': 'https://example.com/source',
             'title': 'Source', 'content': 'Evidence', 'published_date': 'Tue, 10 Jun 2025 17:00:00 GMT'}]}
         from datetime import date
-        with patch('agents.risk.providers.requests.post', return_value=response) as post:
+        with patch('agents.risk.collection.search.requests.post', return_value=response) as post:
             sources = TavilySearch('test-only').search('query', company_id='demo', as_of=date(2026, 9, 29))
             self.assertEqual(str(sources[0].published_at), '2025-06-10')
             self.assertEqual(post.call_args.kwargs['timeout'], 30)
         import requests
-        with patch('agents.risk.providers.requests.post', side_effect=requests.RequestException('secret=test-only')):
+        with patch('agents.risk.collection.search.requests.post', side_effect=requests.RequestException('secret=test-only')):
             with self.assertRaises(ProviderError) as caught:
                 TavilySearch('test-only').search('query', company_id='demo', as_of=date.today())
             self.assertNotIn('test-only', str(caught.exception))
