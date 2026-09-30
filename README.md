@@ -19,14 +19,16 @@ Healthcare AI 스타트업 투자 검토 · LangGraph 기반 멀티 에이전트
   <a href="docs/readme/images/overview.svg"><img src="docs/readme/images/overview.svg" alt="입력·정규화 → 임상·시장·실적·Risk 병렬 분석 → 투자 심사·보고서 흐름도" width="620"></a>
 </p>
 
+↓ 노드 이름 클릭 시 상세 구현 흐름도 확인 가능.
+
 | 노드 | 처리 | 평가 연결 |
 |---|---|---|
-| 입력·정규화 | CSV 로딩, 식별자·공통 입력 정규화 | — |
-| 임상·인허가 | 규제 기록·연구·회사 주장 대조 | C1 |
-| 시장·사업성 | 시장 성장·수요·도입·수익화 분석 | C2·C3·C4 |
-| 실적·성장성 | 매출·계약 검증, 상업화·성장 평가 | C5 |
-| Risk | 외부 자원 의존·핵심 역할 연속성·운영 사건 분석 | C6 변환용 근거 |
-| 투자 심사 | 근거 검증, 보완 요청, 채점·선정·보고서 | 최종 판정 |
+| [입력·정규화](docs/readme/images/input.svg) | CSV 로딩, 식별자·공통 입력 정규화 | — |
+| [임상·인허가](docs/readme/images/clinical.svg) | 규제 기록·연구·회사 주장 대조 | C1 |
+| [시장·사업성](docs/readme/images/market.svg) | 시장 성장·수요·도입·수익화 분석 | C2·C3·C4 |
+| [실적·성장성](docs/readme/images/traction.svg) | 매출·계약 검증, 상업화·성장 평가 | C5 |
+| [Risk](docs/readme/images/risk.svg) | 외부 자원 의존·핵심 역할 연속성·운영 사건 분석 | C6 변환용 근거 |
+| [투자 심사](docs/readme/images/review.svg) | 근거 검증, 보완 요청, 채점·선정·보고서 | 최종 판정 |
 
 - 실행 구조: 4개 분석 노드 병렬 처리 후 심사
 - 공통 근거 계약(설계): `Source → Evidence → Finding`
