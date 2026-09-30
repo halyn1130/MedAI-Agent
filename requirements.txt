@@ -1,3 +1,11 @@
 requests>=2.31.0
 beautifulsoup4>=4.12.0
 playwright>=1.46.0
+
+# 실적·성장성 / Risk 공통 의존성
+pydantic>=2.7,<3
+langgraph>=1.2,<2
+langchain>=0.3
+pytest>=8
+langchain-openai>=1.0,<2
+python-dotenv>=1.0,<2

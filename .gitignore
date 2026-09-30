@@ -27,11 +27,12 @@ dist/
 *.egg-info/
 .eggs/
 
-# Risk 구현은 이번 공유에서 제외 (로컬 보존)
-/agents/risk/
-/risk/
+# Risk 코드는 공유하고 수집 데이터·분석 결과·모델 캐시는 제외
+/agents/risk/data/
+/risk/data/
+
+# 로컬 Risk 입력 예시·다이어그램 생성 도구
 /examples/risk/
-/tests/test_risk.py
 /docs/diagrams/render_risk_workflow.py
 
 # 로컬 수집·다이어그램 생성 도구
@@ -84,3 +85,7 @@ Desktop.ini
 *.swp
 *.swo
 *~
+
+# 4번 실적·성장성: 로컬 개발·테스트 폴더, 팀 공유용 캐시 zip
+dev/
+*.zip
