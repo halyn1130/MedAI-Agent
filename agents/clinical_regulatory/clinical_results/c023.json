@@ -12,12 +12,13 @@
       {
         "product_id": "p001",
         "regulatory_applicability": "in_scope",
-        "product_type": "other",
-        "assessment_status": "partial",
-        "evidence_level": "L0",
-        "clinical_score": null,
-        "score_status": "unknown",
+        "product_type": "ai_software",
+        "assessment_status": "complete",
+        "evidence_level": "L2",
+        "clinical_score": 2.0,
+        "score_status": "scored",
         "evidence_ids": [
+          "c023:clinical:ev10",
           "c023:clinical:ev01",
           "c023:clinical:ev02",
           "c023:clinical:ev03",
@@ -36,16 +37,6 @@
         "clinical_score": null,
         "score_status": "unknown",
         "evidence_ids": []
-      },
-      {
-        "product_id": "p003",
-        "regulatory_applicability": "in_scope",
-        "product_type": "ai_software",
-        "assessment_status": "partial",
-        "evidence_level": "L0",
-        "clinical_score": null,
-        "score_status": "unknown",
-        "evidence_ids": []
       }
     ],
     "regulatory_records": [
@@ -56,7 +47,7 @@
         "authority": "식품의약품안전처",
         "procedure_type": "certification",
         "record_number": "제인 21-4032",
-        "permitted_use": "심혈관질환 진단 및 중재시술 지원",
+        "permitted_use": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
         "status": "active",
         "effective_at": "2021-01-15",
         "valid_until": null,
@@ -71,7 +62,7 @@
         "authority": "식품의약품안전처",
         "procedure_type": "certification",
         "record_number": "제인 21-4894",
-        "permitted_use": "심혈관질환 진단 및 중재시술 지원",
+        "permitted_use": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
         "status": "active",
         "effective_at": "2021-10-21",
         "valid_until": null,
@@ -86,7 +77,7 @@
         "authority": "식품의약품안전처",
         "procedure_type": "certification",
         "record_number": "제인 23-4056",
-        "permitted_use": "심혈관질환 진단 및 중재시술 지원",
+        "permitted_use": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
         "status": "active",
         "effective_at": "2023-01-11",
         "valid_until": null,
@@ -101,7 +92,7 @@
         "authority": "식품의약품안전처",
         "procedure_type": "certification",
         "record_number": "제인 23-5031",
-        "permitted_use": "심혈관질환 진단 및 중재시술 지원",
+        "permitted_use": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
         "status": "active",
         "effective_at": "2023-08-22",
         "valid_until": null,
@@ -116,7 +107,7 @@
         "authority": "식품의약품안전처",
         "procedure_type": "certification",
         "record_number": "제인 25-4086",
-        "permitted_use": "심혈관질환 진단 및 중재시술 지원",
+        "permitted_use": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
         "status": "active",
         "effective_at": "2025-01-23",
         "valid_until": null,
@@ -166,19 +157,6 @@
         "effective_at": null,
         "valid_until": null,
         "evidence_ids": []
-      },
-      {
-        "record_id": "c023:clinical:reg09",
-        "product_id": "p003",
-        "country": "KR",
-        "authority": "식품의약품안전처",
-        "procedure_type": "unknown",
-        "record_number": null,
-        "permitted_use": null,
-        "status": "not_found",
-        "effective_at": null,
-        "valid_until": null,
-        "evidence_ids": []
       }
     ],
     "designation_records": [
@@ -188,52 +166,92 @@
         "country": "KR",
         "program": "혁신의료기기 지정",
         "status": "active",
-        "scope": "심혈관질환 진단 및 중재시술 지원",
+        "scope": null,
         "effective_at": "2021-01-15",
         "evidence_ids": [
           "c023:clinical:ev08"
         ]
       }
     ],
-    "reimbursement_records": [],
-    "clinical_studies": [],
+    "reimbursement_records": [
+      {
+        "record_id": "c023:clinical:rmb01",
+        "product_id": "p001",
+        "country": "KR",
+        "program": "신의료기술 평가",
+        "status": "pending",
+        "scope": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
+        "effective_at": null,
+        "evidence_ids": [
+          "c023:clinical:ev09"
+        ]
+      }
+    ],
+    "clinical_studies": [
+      {
+        "study_id": "c023:clinical:st01",
+        "product_id": "p001",
+        "design": "Validation Study, Multicenter Study",
+        "prospective": true,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": 452,
+        "comparator": "quantitative flow ratio (QFR)",
+        "endpoint": "diagnostic accuracy for detecting FFR ≤0.80",
+        "result": "MPFFR showed similar diagnostic performance with QFR; area under the curve to predict FFR ≤0.80 was 0.949 versus 0.953.",
+        "limitations": "none / 제품명 미기재 간접 근거로 L2 상한 적용",
+        "evidence_ids": [
+          "c023:clinical:ev10"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "supports",
+        "product_match": true,
+        "methods_verifiable": true
+      },
+      {
+        "study_id": "c023:clinical:st02",
+        "product_id": "p001",
+        "design": "Clinical Trial Protocol",
+        "prospective": true,
+        "multicenter": true,
+        "external_validation": false,
+        "sample_size": 240,
+        "comparator": "2D-quantitative coronary angiography (QCA)",
+        "endpoint": "area under the curve for identifying physiologically significant coronary stenosis (FFR ≤0.80)",
+        "result": "not available",
+        "limitations": "none",
+        "evidence_ids": [
+          "c023:clinical:ev11"
+        ],
+        "evidence_level": "L2",
+        "result_direction": "unclear",
+        "product_match": true,
+        "methods_verifiable": false
+      }
+    ],
     "claim_checks": [
       {
-        "claim_id": "c023:p002:cl01",
-        "product_id": "p002",
-        "original_claim": "AI 기반 심혈관 중재시술용 실시간 병변 정량화 솔루션… 1~2초 만에 의료진 임상결정 지원 관상동맥 주혈관-분지혈관 병변 동시 탐지하는 소프트웨어, 국내 첫 FDA 통과",
-        "status": "unknown",
-        "comparison_reason": "근거가 없음",
-        "evidence_ids": []
-      },
-      {
-        "claim_id": "c023:p002:cl02",
-        "product_id": "p002",
-        "original_claim": "인공지능을 이용해 분지혈관의 여러 병변까지 실시간으로 자동 분석해주는 제품이 FDA 승인을 받은 것은 국내 업체로서는 이번이 처음이다.",
-        "status": "unknown",
-        "comparison_reason": "근거가 없음",
-        "evidence_ids": []
-      },
-      {
-        "claim_id": "c023:p002:cl03",
-        "product_id": "p002",
-        "original_claim": "심혈관 질환 분석 분야는 인체 위해 등급이 높아 FDA가 미국 현지 병원들의 환자 데이터로 사실상 임상수준의 성능테스트를 업체들에게 요구하는 등 매우 까다로운 분야로 알려져 있다.",
-        "status": "unknown",
-        "comparison_reason": "근거가 없음",
-        "evidence_ids": []
+        "claim_id": "c023:p001:cl01",
+        "product_id": "p001",
+        "original_claim": "임상 연구를 통해 AI 기반 분석 기술의 정확성과 신뢰성이 검증되었습니다.",
+        "status": "partially_supported",
+        "comparison_reason": "임상 연구 결과가 AI 기반 분석 기술의 정확성을 일부 뒷받침하지만, 신뢰성에 대한 직접적인 근거는 부족함.",
+        "evidence_ids": [
+          "c023:clinical:ev10"
+        ]
       }
     ],
     "red_flags": [],
-    "clinical_summary": "[임상·인허가] 메디픽셀 (c023) | 기준일 2026-09-30\n- p001 심혈관질환 진단 및 중재시술 지원: other/in_scope | 공식 상태: KR certification·active(\"심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관질환 진단 및 중재시술 지원\"); KR approval·active; KR approval·active | 제도: 혁신의료기기 지정·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p002 Medipixel XA: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: unknown 3 | 평가 상태 partial\n- p003 MP-FFR: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 없음 (unknown)\n- 주요 한계: criteria_inputs.C1[p001], regulatory_records[p002][KR], criteria_inputs.C1[p002], regulatory_records[p003][KR], criteria_inputs.C1[p003]",
+    "clinical_summary": "[임상·인허가] 메디픽셀 (c023) | 기준일 2026-09-30\n- p001 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원: ai_software/in_scope | 공식 상태: KR certification·active(\"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"); KR certification·active(\"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"); KR approval·active; KR approval·active | 제도: 혁신의료기기 지정·active; 신의료기술 평가·pending | 임상 근거 L2, C1 2.0 (scored) | 주장 대조: partially_supported 1 | 평가 상태 complete\n- p002 Medipixel XA: ai_software/in_scope | 공식 상태: KR unknown·not_found | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 2.0 (scored)\n- 주요 한계: regulatory_records[p002][KR], criteria_inputs.C1[p002]",
     "criteria_inputs": {
       "C1": {
-        "score": null,
-        "score_status": "unknown",
+        "score": 2.0,
+        "score_status": "scored",
         "product_scores": [
           {
             "product_id": "p001",
-            "score": null,
-            "score_status": "unknown",
+            "score": 2.0,
+            "score_status": "scored",
             "scope_weight": 1.0
           },
           {
@@ -241,16 +259,12 @@
             "score": null,
             "score_status": "unknown",
             "scope_weight": 1.0
-          },
-          {
-            "product_id": "p003",
-            "score": null,
-            "score_status": "unknown",
-            "scope_weight": 1.0
           }
         ],
-        "evidence_ids": [],
-        "rationale": "점수화된 제품 없음"
+        "evidence_ids": [
+          "c023:clinical:ev10"
+        ],
+        "rationale": "제품별 점수의 scope_weight 가중평균 (잠정, 심사 p.4 규칙으로 재집계) / 판단불가 제품 제외: p002"
       }
     },
     "validation_issues": [],
@@ -263,26 +277,23 @@
       "finding|regulatory|c023:clinical:reg06": "c023:clinical:fd06",
       "finding|regulatory|c023:clinical:reg07": "c023:clinical:fd07",
       "finding|regulatory|c023:clinical:reg08": "c023:clinical:fd08",
-      "finding|regulatory|c023:clinical:reg09": "c023:clinical:fd09",
-      "finding|designation|c023:clinical:des01": "c023:clinical:fd10",
+      "finding|designation|c023:clinical:des01": "c023:clinical:fd09",
+      "finding|reimbursement|c023:clinical:rmb01": "c023:clinical:fd10",
       "finding|clinical_evidence|p001": "c023:clinical:fd11",
       "finding|clinical_evidence|p002": "c023:clinical:fd12",
-      "finding|clinical_evidence|p003": "c023:clinical:fd13",
-      "finding|claim|c023:p002:cl01": "c023:clinical:fd14",
-      "finding|claim|c023:p002:cl02": "c023:clinical:fd15",
-      "finding|claim|c023:p002:cl03": "c023:clinical:fd16"
+      "finding|claim|c023:p001:cl01": "c023:clinical:fd13"
     },
     "collected_profile": {
       "legal_name": "메디픽셀",
-      "english_name": "Medipixel, Inc.",
+      "english_name": "Medipixel",
       "homepage": "https://medipixel.io",
       "aliases": [],
       "products": [
         {
           "product_id": "p001",
-          "name": "심혈관질환 진단 및 중재시술 지원",
+          "name": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
           "model": null,
-          "intended_use": "심혈관질환 진단 및 중재시술 지원",
+          "intended_use": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
           "target_disease": null,
           "users": null,
           "environment": null,
@@ -290,44 +301,20 @@
           "target_countries": [
             "KR"
           ],
-          "claims": []
+          "claims": [
+            {
+              "text": "임상 연구를 통해 AI 기반 분석 기술의 정확성과 신뢰성이 검증되었습니다.",
+              "url": "https://medipixel.io",
+              "claimed_at": null
+            }
+          ]
         },
         {
           "product_id": "p002",
           "name": "Medipixel XA",
           "model": "MPXA-2000",
-          "intended_use": "AI 기반 심혈관 질환 진단보조 솔루션",
-          "target_disease": "심혈관질환",
-          "users": "의료진",
-          "environment": "병원",
-          "modality": "영상 분석 소프트웨어",
-          "target_countries": [
-            "KR"
-          ],
-          "claims": [
-            {
-              "text": "AI 기반 심혈관 중재시술용 실시간 병변 정량화 솔루션… 1~2초 만에 의료진 임상결정 지원 관상동맥 주혈관-분지혈관 병변 동시 탐지하는 소프트웨어, 국내 첫 FDA 통과",
-              "url": "https://www.medifonews.com/news/article.html?no=176968",
-              "claimed_at": "2023-03-27"
-            },
-            {
-              "text": "인공지능을 이용해 분지혈관의 여러 병변까지 실시간으로 자동 분석해주는 제품이 FDA 승인을 받은 것은 국내 업체로서는 이번이 처음이다.",
-              "url": "https://www.medifonews.com/news/article.html?no=176968",
-              "claimed_at": "2023-03-27"
-            },
-            {
-              "text": "심혈관 질환 분석 분야는 인체 위해 등급이 높아 FDA가 미국 현지 병원들의 환자 데이터로 사실상 임상수준의 성능테스트를 업체들에게 요구하는 등 매우 까다로운 분야로 알려져 있다.",
-              "url": "https://www.medifonews.com/news/article.html?no=176968",
-              "claimed_at": "2023-03-27"
-            }
-          ]
-        },
-        {
-          "product_id": "p003",
-          "name": "MP-FFR",
-          "model": null,
-          "intended_use": "심근분획혈류예비력(FFR) 계산 소프트웨어",
-          "target_disease": "심혈관질환",
+          "intended_use": "AI 기반 심혈관 중재시술용 실시간 병변 정량화 솔루션",
+          "target_disease": "심혈관 질환",
           "users": "의료진",
           "environment": "병원",
           "modality": "영상 분석 소프트웨어",
@@ -340,14 +327,12 @@
       "collection_notes": {
         "searched_pages": [
           "https://medipixel.io",
+          "https://www.nextunicorn.kr/company/0dea52be7d41e794",
+          "https://thevc.kr/medipixel/products",
           "https://www.medifonews.com/news/article.html?no=176968",
-          "https://www.biotimes.co.kr/news/articleView.html?idxno=11375",
-          "https://medipixel.io/newsroom/%EB%A9%94%EB%94%94%ED%94%BD%EC%85%80-%EC%8B%AC%ED%98%88%EA%B4%80-AI-%EA%B8%B0%EC%88%A0%EB%A1%9C-%EB%AF%B8%EA%B5%AD-%ED%8A%B9%ED%97%88-%ED%9A%8D%EB%93%9D",
-          "https://pharm.edaily.co.kr/news/read?newsId=01446486638985680"
+          "http://www.kglobaltimes.com/news/articleView.html?idxno=25664"
         ],
-        "dropped_claims_not_in_page": [
-          "‘Medipixel XA’는 협착이 의심되는 혈관들을 자동으로 ..."
-        ],
+        "dropped_claims_not_in_page": [],
         "collected_at": "2026-09-30"
       }
     }
@@ -382,6 +367,36 @@
       "published_at": null,
       "checked_at": "2026-09-30",
       "original_source_id": null
+    },
+    {
+      "source_id": "c023:clinical:src24",
+      "title": "[보고서]인공지능 기반의 자동화된 심혈관질환 진단 보조 및 시술도구 추천 시스템 개발",
+      "url": "https://scienceon.kisti.re.kr/srch/selectPORSrchReport.do?cn=TRKO202300005274",
+      "publisher": "scienceon.kisti.re.kr",
+      "source_type": "other",
+      "published_at": null,
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c023:clinical:src43",
+      "title": "Artificial Intelligence-Driven Angiographic Quantification of Fractional Flow Reserve: Proof-of-Concept Validation Study.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42622240/",
+      "publisher": "J Am Heart Assoc",
+      "source_type": "research",
+      "published_at": "2026-09-01",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
+    },
+    {
+      "source_id": "c023:clinical:src44",
+      "title": "Diagnostic performance of angiography-derived fractional flow reserve compared to pressure wire-derived fractional flow reserve: Rationale and design of MPFFR pivotal trial.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39353758/",
+      "publisher": "Cardiovasc Revasc Med",
+      "source_type": "research",
+      "published_at": "2025-08-01",
+      "checked_at": "2026-09-30",
+      "original_source_id": null
     }
   ],
   "evidence": [
@@ -389,7 +404,7 @@
       "evidence_id": "c023:clinical:ev01",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 21-4032)",
+      "statement": "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 21-4032)",
       "source_ids": [
         "c023:clinical:src01"
       ],
@@ -403,7 +418,7 @@
       "evidence_id": "c023:clinical:ev02",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 21-4894)",
+      "statement": "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 21-4894)",
       "source_ids": [
         "c023:clinical:src01"
       ],
@@ -417,7 +432,7 @@
       "evidence_id": "c023:clinical:ev03",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 23-4056)",
+      "statement": "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 23-4056)",
       "source_ids": [
         "c023:clinical:src01"
       ],
@@ -431,7 +446,7 @@
       "evidence_id": "c023:clinical:ev04",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 23-5031)",
+      "statement": "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 23-5031)",
       "source_ids": [
         "c023:clinical:src01"
       ],
@@ -445,7 +460,7 @@
       "evidence_id": "c023:clinical:ev05",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 25-4086)",
+      "statement": "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 certification 기록 (제인 25-4086)",
       "source_ids": [
         "c023:clinical:src01"
       ],
@@ -459,7 +474,7 @@
       "evidence_id": "c023:clinical:ev06",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 approval 기록 (제허 25-3)",
+      "statement": "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 approval 기록 (제허 25-3)",
       "source_ids": [
         "c023:clinical:src01"
       ],
@@ -473,7 +488,7 @@
       "evidence_id": "c023:clinical:ev07",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 approval 기록 (제허 26-4)",
+      "statement": "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 approval 기록 (제허 26-4)",
       "source_ids": [
         "c023:clinical:src01"
       ],
@@ -487,7 +502,7 @@
       "evidence_id": "c023:clinical:ev08",
       "company_id": "c023",
       "product_id": "p001",
-      "statement": "메디픽셀의 심혈관질환 진단 및 중재시술 지원 소프트웨어는 혁신의료기기로 지정되었다.",
+      "statement": "메디픽셀의 심혈관 진단 및 시술도구 제어 제품이 혁신의료기기로 지정됨.",
       "source_ids": [
         "c023:clinical:src08",
         "c023:clinical:src09"
@@ -497,13 +512,55 @@
       "event_date": "2021-01-15",
       "geography": "KR",
       "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c023:clinical:ev09",
+      "company_id": "c023",
+      "product_id": "p001",
+      "statement": "메디픽셀의 제품이 신의료기술 평가를 신청함.",
+      "source_ids": [
+        "c023:clinical:src24"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": null,
+      "geography": "KR",
+      "evidence_status": "unverified"
+    },
+    {
+      "evidence_id": "c023:clinical:ev10",
+      "company_id": "c023",
+      "product_id": "p001",
+      "statement": "AI-driven angiography-based FFR demonstrated comparable diagnostic accuracy with QFR in identifying functionally significant stenosis.",
+      "source_ids": [
+        "c023:clinical:src43"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2026-09",
+      "geography": null,
+      "evidence_status": "confirmed"
+    },
+    {
+      "evidence_id": "c023:clinical:ev11",
+      "company_id": "c023",
+      "product_id": "p001",
+      "statement": "This pivotal MPFFR trial aims to validate its diagnostic performance against 2D-QCA.",
+      "source_ids": [
+        "c023:clinical:src44"
+      ],
+      "locator": null,
+      "excerpt": null,
+      "event_date": "2025-08",
+      "geography": null,
+      "evidence_status": "unverified"
     }
   ],
   "findings": [
     {
       "finding_id": "c023:clinical:fd01",
       "category": "regulatory",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 21-4032) / 사용 목적: \"심혈관질환 진단 및 중재시술 지원\"",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 21-4032) / 사용 목적: \"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"",
       "evidence_ids": [
         "c023:clinical:ev01"
       ],
@@ -513,7 +570,7 @@
     {
       "finding_id": "c023:clinical:fd02",
       "category": "regulatory",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 21-4894) / 사용 목적: \"심혈관질환 진단 및 중재시술 지원\"",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 21-4894) / 사용 목적: \"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"",
       "evidence_ids": [
         "c023:clinical:ev02"
       ],
@@ -523,7 +580,7 @@
     {
       "finding_id": "c023:clinical:fd03",
       "category": "regulatory",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 23-4056) / 사용 목적: \"심혈관질환 진단 및 중재시술 지원\"",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 23-4056) / 사용 목적: \"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"",
       "evidence_ids": [
         "c023:clinical:ev03"
       ],
@@ -533,7 +590,7 @@
     {
       "finding_id": "c023:clinical:fd04",
       "category": "regulatory",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 23-5031) / 사용 목적: \"심혈관질환 진단 및 중재시술 지원\"",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 23-5031) / 사용 목적: \"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"",
       "evidence_ids": [
         "c023:clinical:ev04"
       ],
@@ -543,7 +600,7 @@
     {
       "finding_id": "c023:clinical:fd05",
       "category": "regulatory",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 25-4086) / 사용 목적: \"심혈관질환 진단 및 중재시술 지원\"",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] certification · active (제인 25-4086) / 사용 목적: \"심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원\"",
       "evidence_ids": [
         "c023:clinical:ev05"
       ],
@@ -553,7 +610,7 @@
     {
       "finding_id": "c023:clinical:fd06",
       "category": "regulatory",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] approval · active (제허 25-3)",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] approval · active (제허 25-3)",
       "evidence_ids": [
         "c023:clinical:ev06"
       ],
@@ -563,7 +620,7 @@
     {
       "finding_id": "c023:clinical:fd07",
       "category": "regulatory",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] approval · active (제허 26-4)",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] approval · active (제허 26-4)",
       "evidence_ids": [
         "c023:clinical:ev07"
       ],
@@ -580,16 +637,8 @@
     },
     {
       "finding_id": "c023:clinical:fd09",
-      "category": "regulatory",
-      "claim": "MP-FFR [KR] unknown · not_found",
-      "evidence_ids": [],
-      "uncertainty": "조회 범위 내 미발견. 무허가를 뜻하지 않음",
-      "related_criterion_ids": []
-    },
-    {
-      "finding_id": "c023:clinical:fd10",
       "category": "designation",
-      "claim": "심혈관질환 진단 및 중재시술 지원 [KR] 혁신의료기기 지정 · active / 범위: 심혈관질환 진단 및 중재시술 지원",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] 혁신의료기기 지정 · active",
       "evidence_ids": [
         "c023:clinical:ev08"
       ],
@@ -597,11 +646,23 @@
       "related_criterion_ids": []
     },
     {
+      "finding_id": "c023:clinical:fd10",
+      "category": "reimbursement",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 [KR] 신의료기술 평가 · pending / 범위: 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
+      "evidence_ids": [
+        "c023:clinical:ev09"
+      ],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
       "finding_id": "c023:clinical:fd11",
       "category": "clinical_evidence",
-      "claim": "심혈관질환 진단 및 중재시술 지원: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
-      "evidence_ids": [],
-      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "claim": "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원: 임상 근거 L2, C1 2 (scored), 연구 2건",
+      "evidence_ids": [
+        "c023:clinical:ev10"
+      ],
+      "uncertainty": null,
       "related_criterion_ids": [
         "C1"
       ]
@@ -618,40 +679,12 @@
     },
     {
       "finding_id": "c023:clinical:fd13",
-      "category": "clinical_evidence",
-      "claim": "MP-FFR: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
-      "evidence_ids": [],
-      "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c023:clinical:fd14",
       "category": "claim",
-      "claim": "주장 \"AI 기반 심혈관 중재시술용 실시간 병변 정량화 솔루션… 1~2초 만에 의료진 임상결정 지원 관상동맥 주혈관-분지혈관 병변 동시 탐지하는 소프트웨어, 국내 첫 FDA 통과\" → unknown: 근거가 없음",
-      "evidence_ids": [],
-      "uncertainty": "근거 부족",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c023:clinical:fd15",
-      "category": "claim",
-      "claim": "주장 \"인공지능을 이용해 분지혈관의 여러 병변까지 실시간으로 자동 분석해주는 제품이 FDA 승인을 받은 것은 국내 업체로서는 이번이 처음이다.\" → unknown: 근거가 없음",
-      "evidence_ids": [],
-      "uncertainty": "근거 부족",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c023:clinical:fd16",
-      "category": "claim",
-      "claim": "주장 \"심혈관 질환 분석 분야는 인체 위해 등급이 높아 FDA가 미국 현지 병원들의 환자 데이터로 사실상 임상수준의 성능테스트를 업체들에게 요구하는 등 매우 까다로운 분야로 알려져 있다.\" → unknown: 근거가 없음",
-      "evidence_ids": [],
-      "uncertainty": "근거 부족",
+      "claim": "주장 \"임상 연구를 통해 AI 기반 분석 기술의 정확성과 신뢰성이 검증되었습니다.\" → partially_supported: 임상 연구 결과가 AI 기반 분석 기술의 정확성을 일부 뒷받침하지만, 신뢰성에 대한 직접적인 근거는 부족함.",
+      "evidence_ids": [
+        "c023:clinical:ev10"
+      ],
+      "uncertainty": null,
       "related_criterion_ids": [
         "C1"
       ]
@@ -660,7 +693,7 @@
   "missing_items": [
     {
       "item_id": "c023:clinical:mi01",
-      "field": "products[p001].claims",
+      "field": "products[p002].claims",
       "cause": "not_found",
       "route": "due_diligence",
       "impact": "low",
@@ -668,55 +701,15 @@
     },
     {
       "item_id": "c023:clinical:mi02",
-      "field": "criteria_inputs.C1[p001]",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "high",
-      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
-    },
-    {
-      "item_id": "c023:clinical:mi03",
       "field": "regulatory_records[p002][KR]",
       "cause": "not_found",
       "route": "due_diligence",
       "impact": "high",
-      "detail": "조회 범위 내 미발견 (조회명: 메디픽셀, Medipixel XA, MPXA-2000, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
+      "detail": "조회 범위 내 미발견 (조회명: 메디픽셀, Medipixel XA, Medipixel, XA, MPXA-2000, MPXA, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
     },
     {
-      "item_id": "c023:clinical:mi04",
+      "item_id": "c023:clinical:mi03",
       "field": "criteria_inputs.C1[p002]",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "high",
-      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
-    },
-    {
-      "item_id": "c023:clinical:mi05",
-      "field": "products[p003].model",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "medium",
-      "detail": "모델명이 없어 품목 매칭 정확도가 낮음"
-    },
-    {
-      "item_id": "c023:clinical:mi06",
-      "field": "products[p003].claims",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "low",
-      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
-    },
-    {
-      "item_id": "c023:clinical:mi07",
-      "field": "regulatory_records[p003][KR]",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "high",
-      "detail": "조회 범위 내 미발견 (조회명: 메디픽셀, MP-FFR, 확인일 2026-09-30). 공개자료로 해결되지 않으면 실사 필요"
-    },
-    {
-      "item_id": "c023:clinical:mi08",
-      "field": "criteria_inputs.C1[p003]",
       "cause": "not_found",
       "route": "due_diligence",
       "impact": "high",
@@ -737,7 +730,7 @@
         "period": null
       },
       "checked_at": "2026-09-30",
-      "note": "제품의 구체적인 기능이나 효능에 대한 정보가 부족하여 판단할 수 없음."
+      "note": "제품의 사용 목적이 심혈관 진단 및 시술도구 제어로, 질병 진단 및 치료에 해당하므로 규제 대상이다. 또한, 임상 연구를 통해 AI 기반 분석 기술의 정확성과 신뢰성이 검증되었다고 주장하고 있다."
     },
     {
       "coverage_id": "c023:clinical:cv02",
@@ -752,25 +745,10 @@
         "period": null
       },
       "checked_at": "2026-09-30",
-      "note": "AI 기반 심혈관 질환 진단보조 솔루션으로, FDA 통과 및 실시간 병변 정량화 지원 주장 포함."
+      "note": "AI 기반 심혈관 중재시술용 실시간 병변 정량화 솔루션으로, 심혈관 질환의 진단 및 치료에 사용되므로 규제 대상이다. 그러나 효능 주장에 대한 내용이 없다."
     },
     {
       "coverage_id": "c023:clinical:cv03",
-      "area": "classification",
-      "product_id": "p003",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "심근분획혈류예비력(FFR) 계산 소프트웨어로, 구체적인 효능 주장은 없음."
-    },
-    {
-      "coverage_id": "c023:clinical:cv04",
       "area": "regulatory",
       "product_id": "p001",
       "country": "KR",
@@ -778,10 +756,20 @@
       "search_scope": {
         "names": [
           "메디픽셀",
-          "심혈관질환 진단 및 중재시술 지원"
+          "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원",
+          "심혈관",
+          "시술도구",
+          "제어",
+          "심혈관질환",
+          "중재시술",
+          "Medipixel XA",
+          "Medipixel",
+          "XA",
+          "MPXA-2000",
+          "MPXA"
         ],
         "queries": [
-          "메디픽셀 심혈관질환 진단 및 중재시술 지원 식약처 허가 인증"
+          "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 식약처 허가 인증"
         ],
         "sources": [
           "식약처 의료기기 품목허가",
@@ -794,7 +782,7 @@
       "note": null
     },
     {
-      "coverage_id": "c023:clinical:cv05",
+      "coverage_id": "c023:clinical:cv04",
       "area": "regulatory",
       "product_id": "p002",
       "country": "KR",
@@ -803,7 +791,10 @@
         "names": [
           "메디픽셀",
           "Medipixel XA",
-          "MPXA-2000"
+          "Medipixel",
+          "XA",
+          "MPXA-2000",
+          "MPXA"
         ],
         "queries": [
           "메디픽셀 Medipixel XA 식약처 허가 인증"
@@ -819,31 +810,7 @@
       "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
     },
     {
-      "coverage_id": "c023:clinical:cv06",
-      "area": "regulatory",
-      "product_id": "p003",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [
-          "메디픽셀",
-          "MP-FFR"
-        ],
-        "queries": [
-          "메디픽셀 MP-FFR 식약처 허가 인증"
-        ],
-        "sources": [
-          "식약처 의료기기 품목허가",
-          "식약처 의료기기 품목정보",
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "조회 범위 내 미발견 (무허가를 뜻하지 않음)"
-    },
-    {
-      "coverage_id": "c023:clinical:cv07",
+      "coverage_id": "c023:clinical:cv05",
       "area": "designation",
       "product_id": "p001",
       "country": "KR",
@@ -852,8 +819,52 @@
         "names": [],
         "queries": [
           "메디픽셀 혁신의료기기 지정",
-          "심혈관질환 진단 및 중재시술 지원 혁신의료기술 평가",
-          "심혈관질환 진단 및 중재시술 지원 비급여 등재 고시",
+          "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 혁신의료기술 평가",
+          "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 비급여 등재 고시",
+          "메디픽셀 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c023:clinical:cv06",
+      "area": "reimbursement",
+      "product_id": "p001",
+      "country": "KR",
+      "status": "reviewed",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "메디픽셀 혁신의료기기 지정",
+          "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 혁신의료기술 평가",
+          "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 비급여 등재 고시",
+          "메디픽셀 건강보험 급여 등재"
+        ],
+        "sources": [
+          "웹 검색"
+        ],
+        "period": null
+      },
+      "checked_at": "2026-09-30",
+      "note": null
+    },
+    {
+      "coverage_id": "c023:clinical:cv07",
+      "area": "designation",
+      "product_id": "p002",
+      "country": "KR",
+      "status": "no_relevant_evidence_found",
+      "search_scope": {
+        "names": [],
+        "queries": [
+          "메디픽셀 혁신의료기기 지정",
+          "Medipixel XA 혁신의료기술 평가",
+          "Medipixel XA 비급여 등재 고시",
           "메디픽셀 건강보험 급여 등재"
         ],
         "sources": [
@@ -867,15 +878,15 @@
     {
       "coverage_id": "c023:clinical:cv08",
       "area": "reimbursement",
-      "product_id": "p001",
+      "product_id": "p002",
       "country": "KR",
       "status": "no_relevant_evidence_found",
       "search_scope": {
         "names": [],
         "queries": [
           "메디픽셀 혁신의료기기 지정",
-          "심혈관질환 진단 및 중재시술 지원 혁신의료기술 평가",
-          "심혈관질환 진단 및 중재시술 지원 비급여 등재 고시",
+          "Medipixel XA 혁신의료기술 평가",
+          "Medipixel XA 비급여 등재 고시",
           "메디픽셀 건강보험 급여 등재"
         ],
         "sources": [
@@ -888,104 +899,20 @@
     },
     {
       "coverage_id": "c023:clinical:cv09",
-      "area": "designation",
-      "product_id": "p002",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "메디픽셀 혁신의료기기 지정",
-          "Medipixel XA 혁신의료기술 평가",
-          "Medipixel XA 비급여 등재 고시",
-          "메디픽셀 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c023:clinical:cv10",
-      "area": "reimbursement",
-      "product_id": "p002",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "메디픽셀 혁신의료기기 지정",
-          "Medipixel XA 혁신의료기술 평가",
-          "Medipixel XA 비급여 등재 고시",
-          "메디픽셀 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c023:clinical:cv11",
-      "area": "designation",
-      "product_id": "p003",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "메디픽셀 혁신의료기기 지정",
-          "MP-FFR 혁신의료기술 평가",
-          "MP-FFR 비급여 등재 고시",
-          "메디픽셀 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c023:clinical:cv12",
-      "area": "reimbursement",
-      "product_id": "p003",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "메디픽셀 혁신의료기기 지정",
-          "MP-FFR 혁신의료기술 평가",
-          "MP-FFR 비급여 등재 고시",
-          "메디픽셀 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c023:clinical:cv13",
       "area": "clinical_studies",
       "product_id": "p001",
       "country": null,
-      "status": "no_relevant_evidence_found",
+      "status": "reviewed",
       "search_scope": {
         "names": [],
         "queries": [
-          "\"Medipixel, Inc.\"[Affiliation]",
-          "메디픽셀 심혈관질환 진단 및 중재시술 지원 임상 연구 논문",
-          "심혈관질환 진단 및 중재시술 지원 clinical validation study"
+          "\"Medipixel XA\"[Title/Abstract]",
+          "\"Medipixel\"[Title/Abstract]",
+          "\"XA\"[Title/Abstract]",
+          "\"Medipixel\"[Affiliation]",
+          "\"medipixel\"[Affiliation]",
+          "메디픽셀 심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 임상 연구 논문",
+          "심혈관 진단 및 시술도구 제어 | 심혈관질환 진단 및 중재시술 지원 clinical validation study"
         ],
         "sources": [
           "PubMed",
@@ -997,7 +924,7 @@
       "note": null
     },
     {
-      "coverage_id": "c023:clinical:cv14",
+      "coverage_id": "c023:clinical:cv10",
       "area": "clinical_studies",
       "product_id": "p002",
       "country": null,
@@ -1006,8 +933,10 @@
         "names": [],
         "queries": [
           "\"Medipixel XA\"[Title/Abstract]",
-          "\"MPXA-2000\"[Title/Abstract]",
-          "\"Medipixel, Inc.\"[Affiliation]",
+          "\"Medipixel\"[Title/Abstract]",
+          "\"XA\"[Title/Abstract]",
+          "\"Medipixel\"[Affiliation]",
+          "\"medipixel\"[Affiliation]",
           "메디픽셀 Medipixel XA 임상 연구 논문",
           "Medipixel XA clinical validation study"
         ],
@@ -1021,47 +950,9 @@
       "note": null
     },
     {
-      "coverage_id": "c023:clinical:cv15",
-      "area": "clinical_studies",
-      "product_id": "p003",
-      "country": null,
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "\"MP-FFR\"[Title/Abstract]",
-          "\"Medipixel, Inc.\"[Affiliation]",
-          "메디픽셀 MP-FFR 임상 연구 논문",
-          "MP-FFR clinical validation study"
-        ],
-        "sources": [
-          "PubMed",
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c023:clinical:cv16",
+      "coverage_id": "c023:clinical:cv11",
       "area": "claim_check",
       "product_id": "p001",
-      "country": null,
-      "status": "insufficient_information",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "회사 주장 원문을 찾지 못함"
-    },
-    {
-      "coverage_id": "c023:clinical:cv17",
-      "area": "claim_check",
-      "product_id": "p002",
       "country": null,
       "status": "reviewed",
       "search_scope": {
@@ -1074,9 +965,9 @@
       "note": null
     },
     {
-      "coverage_id": "c023:clinical:cv18",
+      "coverage_id": "c023:clinical:cv12",
       "area": "claim_check",
-      "product_id": "p003",
+      "product_id": "p002",
       "country": null,
       "status": "insufficient_information",
       "search_scope": {
