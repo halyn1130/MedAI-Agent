@@ -22,6 +22,24 @@ DEFAULT_K = 5
 TIEBREAK_CRITERIA = ("C5", "C1")   # 총점 동점 시 순서. 그다음 company_id 오름차순
 TOTAL_DECIMALS = 6                 # 부동소수 오차로 60점 경계가 흔들리지 않도록 반올림
 
+# C3·C4: 03 시장 체크(yes/no/unknown)를 06이 직접 센다 (06 자체 규칙).
+# 영역 점수 = yes 개수. unknown은 점수에 넣지 않고 따로 표시한다. 확인된 체크(yes/no)가 없으면 null.
+CHECK_RULE = "confirmed-checks-v1"
+C3_DIMENSIONS = ("demand", "commercialization")   # C3 = 두 영역 평균
+C4_DIMENSIONS = ("monetization",)
+
+# ── 완화 규칙 (06 자체, 공개자료만으로 판단불가가 과도해 낮춘 기준) ──────────────
+# ① C2 대체: C2가 null이면 03이 찾은 CAGR 수치(중앙값)로 설계서 구간에 따라 채점. 세부시장이 아닐 수 있음을 근거에 남긴다.
+C2_CAGR_FALLBACK = True
+C2_CAGR_BANDS = ((0.0, 0.0), (0.05, 1.0), (0.10, 2.0), (0.15, 3.0), (0.20, 4.0))  # (상한 미만, 점수), 그 이상 5
+# ② C3 한쪽 허용: demand·commercialization 중 확인된 영역만으로 C3 계산.
+C3_ALLOW_SINGLE_DIMENSION = True
+# ③ 부분 판정: 채점된 가중치 비율이 이 값 이상이면 채점된 항목으로 판정 (Policy.min_coverage).
+MIN_COVERAGE = 0.5
+# ④ 0점 처리: 미확인(unknown) 적용 항목을 0점으로 채워 총점을 계산 (Policy.missing_as_zero).
+#    0점으로 채운 항목에는 2점 최소 기준을 적용하지 않는다(적용하면 빈 항목이 있는 기업이 모두 부적격).
+#    켜면 부분 판정(min_coverage)은 쓰이지 않는다.
+
 # C6 운영 대비: 05 Risk 출력(risk-company-3)에 OP1~OP5가 없어 영역별 위험 신호로 채점한다 (06 자체 규칙).
 # 관찰이 있는 영역만 채점하고 평균한다. 관찰이 있는 영역이 없으면 null (자료 없음 ≠ 위험 없음).
 C6_RULE = "risk-signal-v1"
@@ -38,6 +56,8 @@ class Policy:
     min_criterion: float = CRITERION_MIN_SCORE
     k: int = DEFAULT_K
     tiebreak: tuple[str, ...] = TIEBREAK_CRITERIA
+    min_coverage: float | None = MIN_COVERAGE   # None이면 설계서 기준(모든 적용 항목 필요)
+    missing_as_zero: bool = False                # True면 미확인 항목 0점 처리 (④)
     criteria_version: str = CRITERIA_VERSION
 
     def __post_init__(self):
@@ -51,10 +71,15 @@ class Policy:
             raise ValueError("at least one criterion must be applicable")  # README: 구성 오류
         if self.k < 0:
             raise ValueError("k must be >= 0")
+        if self.min_coverage is not None and not 0 < self.min_coverage <= 1:
+            raise ValueError("min_coverage must be in (0, 1]")
 
     @property
     def applicable(self) -> tuple[str, ...]:
         return tuple(c for c in CRITERIA if c not in self.not_applicable)
 
 
-DEFAULT_POLICY = Policy()
+PARTIAL_POLICY = Policy()                        # 완화 기준: 부분 판정 50%
+ZERO_FILL_POLICY = Policy(missing_as_zero=True)  # 완화 기준: 미확인 0점 처리
+STRICT_POLICY = Policy(min_coverage=None)        # 설계서 기준
+DEFAULT_POLICY = ZERO_FILL_POLICY

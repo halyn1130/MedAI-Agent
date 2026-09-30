@@ -44,6 +44,18 @@ def normalize_criteria(results: Iterable[CriterionResult],
     return out
 
 
+def zero_fill(results: list[CriterionResult]) -> list[CriterionResult]:
+    """미확인 적용 항목을 0점으로 채운다 (policy.missing_as_zero). 원래 근거는 rationale에 남긴다."""
+    out = []
+    for r in results:
+        if r.score_status == ScoreStatus.UNKNOWN:
+            r = r.model_copy(update={"score": 0.0, "score_status": ScoreStatus.SCORED, "zero_filled": True,
+                                     "weighted_points": 0.0,
+                                     "rationale": "[0점 처리] 미확인" + (f" — {r.rationale}" if r.rationale else "")})
+        out.append(r)
+    return out
+
+
 def unknown_criteria(results: list[CriterionResult]) -> list[str]:
     return [r.criterion_id for r in results if r.score_status == ScoreStatus.UNKNOWN]
 
@@ -55,3 +67,15 @@ def total_score(results: list[CriterionResult]) -> Optional[float]:
         return None
     total = sum(r.weighted_points for r in applied) / sum(r.weight for r in applied) * 100
     return round(total, TOTAL_DECIMALS)
+
+
+def reference_score(results: list[CriterionResult]) -> tuple[Optional[float], list[str], Optional[float]]:
+    """채점된 항목만으로 계산한 참고 점수, 쓴 항목, 쓴 가중치 비율. 순위·선정에 쓰지 않는다."""
+    applied = [r for r in results if r.score_status != ScoreStatus.NOT_APPLICABLE]
+    scored = [r for r in applied if r.score_status == ScoreStatus.SCORED]
+    if not scored:
+        return None, [], None
+    used = sum(r.weight for r in scored)
+    total = sum(r.weighted_points for r in scored) / used * 100
+    return (round(total, TOTAL_DECIMALS), [r.criterion_id for r in scored],
+            round(used / sum(r.weight for r in applied), TOTAL_DECIMALS))

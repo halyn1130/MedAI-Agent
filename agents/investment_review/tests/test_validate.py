@@ -33,7 +33,7 @@ def codes(issues):
 class ValidateTests(unittest.TestCase):
     def test_fixtures(self):
         issues = validate(CID, AS_OF, results())
-        self.assertEqual(codes(issues), ["clinical:score_unknown:C1", "market:score_unknown:C4"])
+        self.assertEqual(codes(issues), ["clinical:score_unknown:C1", "market:unconfirmed_checks:C4"])
         self.assertFalse(any(i.blocking for i in issues))
 
     def test_company_and_as_of_mismatch(self):

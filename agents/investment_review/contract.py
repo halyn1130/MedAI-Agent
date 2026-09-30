@@ -64,6 +64,8 @@ class CriterionResult(BaseModel):
     source_agent: Optional[str] = None
     evidence_ids: list[str] = Field(default_factory=list)
     rationale: str = ""
+    unconfirmed_checks: list[str] = Field(default_factory=list)   # 점수에 넣지 않은 unknown 체크 ID
+    zero_filled: bool = False        # 미확인이라 0점으로 채운 항목 (policy.missing_as_zero)
     weight: Optional[float] = None
     weighted_points: Optional[float] = None
 
@@ -146,6 +148,11 @@ class InvestmentReview(BaseModel):
     criterion_results: list[CriterionResult] = Field(default_factory=list)
     gate_results: list[GateResult] = Field(default_factory=list)
     total_score: Optional[float] = None
+    # 참고 점수: 총점이 null일 때 채점된 항목만으로 계산. 순위·선정에 쓰지 않는다.
+    reference_score: Optional[float] = None
+    reference_criteria: list[str] = Field(default_factory=list)   # 참고 점수에 쓴 항목
+    reference_weight: Optional[float] = None                       # 쓴 항목 가중치 합 / 적용 가중치 합 (0~1)
+    score_basis: Optional[str] = None      # full / partial(부분 판정) / zero_filled(미확인 0점 처리)
     final_status: FinalStatus = FinalStatus.UNDETERMINED
     reason_codes: list[ReasonCode] = Field(default_factory=list)
     remaining_unknowns: list[str] = Field(default_factory=list)

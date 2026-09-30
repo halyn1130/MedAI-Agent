@@ -27,6 +27,7 @@ QUESTION = {
     "unknown_evidence": "{criterion} 점수가 참조한 근거 ID({ids})가 결과에 없습니다. 근거를 연결하거나 점수를 다시 판단해 주세요.",
     "no_evidence": "{criterion} 점수에 근거 ID가 없습니다. 근거를 연결하거나 점수를 다시 판단해 주세요.",
     "as_of_mismatch": "기준일이 심사 기준일과 다릅니다. 심사 기준일로 다시 분석해 주세요. ({detail})",
+    "unconfirmed_checks": "{criterion}의 미확인 체크({ids})를 확인할 근거가 있습니까? 확인되면 yes/no로 갱신해 주세요.",
     "future_source": "기준일 이후 발행 출처({ids})가 포함되었습니다. 점수 근거에서 제외했는지 확인해 주세요.",
 }
 

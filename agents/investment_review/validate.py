@@ -6,6 +6,7 @@
 - unknown_evidence : 채점된 점수가 결과 안에 없는 근거 ID를 참조 → 판단불가, 보완 요청
 - no_evidence      : 채점된 점수에 근거 ID가 하나도 없음 → 판단불가, 보완 요청
 - future_source    : 기준일 이후 발행 출처가 포함됨 → 경고, 보완 요청
+- unconfirmed_checks: 점수는 나왔지만 unknown 체크가 남음 (C3·C4) → 경고, 보완 요청
 - score_unknown    : 적용 항목 점수 미확인 → 경고(판정은 judge가 처리), 보완 요청
 
 blocking=True 이슈가 보완 후에도 남으면 judge가 판단불가로 처리한다.
@@ -54,6 +55,10 @@ def validate_result(company_id: str, as_of: str, result: AgentResult,
             elif not c.evidence_ids:
                 issues.append(_issue(company_id, agent, "no_evidence", IssueKind.MISSING_EVIDENCE, blocking=True,
                                      criterion_id=c.criterion_id, detail=f"{c.criterion_id} 점수에 근거 ID 없음"))
+            if c.unconfirmed_checks:
+                issues.append(_issue(company_id, agent, "unconfirmed_checks", IssueKind.MISSING_EVIDENCE,
+                                     blocking=False, criterion_id=c.criterion_id, related_ids=c.unconfirmed_checks,
+                                     detail=f"{c.criterion_id} 미확인 체크 {', '.join(c.unconfirmed_checks)}"))
         else:
             issues.append(_issue(company_id, agent, "score_unknown", IssueKind.MISSING_EVIDENCE, blocking=False,
                                  criterion_id=c.criterion_id, related_ids=c.evidence_ids,

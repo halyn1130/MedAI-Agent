@@ -38,6 +38,7 @@ investment_review/
 | 04 실적 | `traction_analysis` | Envelope | `criteria_inputs.C5`, RF1~RF4, `open_questions` | list, `target_agent="traction"` |
 | 05 Risk | `risk_analysis`, `references` | `risk-company-3` | `areas` 실사 질문·미확인·`risk_signal` | `review_requests["risk"]` dict, `attempt=1` |
 
+- **C3·C4 (06 자체 규칙 `confirmed-checks-v1`)**: 03 결과의 `criteria_inputs.C3·C4`는 체크가 하나라도 unknown이면 null이라, 06이 `dimensions`의 체크를 직접 셉니다. 영역 점수는 yes 개수이고 unknown은 점수에 넣지 않고 `unconfirmed_checks`·미확인 목록·보완 요청으로 남깁니다. 확인된 체크(yes/no)가 없는 영역은 null이며, C3는 `demand`·`commercialization` 평균이라 둘 중 하나라도 null이면 null입니다.
 - **C6 (06 자체 규칙 `risk-signal-v1`)**: 05 출력에 OP1~OP5가 없어 영역별 위험 신호(`kind=risk_signal`) 수로 채점합니다. 관찰이 있는 영역만 신호 0건=5, 1건=3, 2건 이상=1로 매겨 평균합니다. 관찰이 있는 영역이 하나도 없으면 null입니다(자료 없음 ≠ 위험 없음). 설계서 C6(OP1~OP5)과 다른 규칙입니다.
 - **G02**: 05 분석이 실행됐으면(`complete`·`partial`) `clear`, 실패·`no_evidence`면 `not_checked`. 05 출력에 현재 중단을 확정하는 필드가 없어 `confirmed`는 나오지 않습니다.
 - G01: 임상 분석 실패·규제 조사 미완료면 `not_checked`, CL02 confirmed면 `confirmed`, candidate면 `unresolved`, 그 외 `clear`.
@@ -54,15 +55,28 @@ investment_review/
 | `no_evidence` 점수에 근거 ID 없음 | O | O |
 | `future_source` 기준일 이후 발행 출처 | X (경고) | O |
 | `score_unknown` 적용 항목 점수 미확인 | X (judge가 처리) | O |
+| `unconfirmed_checks` 점수는 나왔지만 unknown 체크가 남음 (C3·C4) | X (경고) | O |
 
 - 분석 실패(`failed`)·결과 없음(`not_run`) Agent에는 보완 요청을 보내지 않습니다.
 - 시장 요청은 `dimensions`로 재실행 영역을 지정합니다: C2=`size_growth`, C3=`demand`+`commercialization`, C4=`monetization`.
 - 요청 형식은 테스트에서 각 팀원의 pydantic 모델(`ReviewRequest`)로 검증합니다.
 
+## 완화 기준 (기본값)
+
+공개자료만으로는 모든 기업이 판단불가가 되어, 06에서 기준을 낮췄습니다. `policy.py`에서 끌 수 있습니다. `DEFAULT_POLICY`는 `ZERO_FILL_POLICY`(0점 처리), `PARTIAL_POLICY`는 부분 판정, `STRICT_POLICY`는 설계서 기준입니다. G01·G02 미확인이나 blocking 이슈는 어느 기준에서도 판단불가입니다.
+
+| 완화 | 설정 | 내용 |
+|---|---|---|
+| C2 대체 | `C2_CAGR_FALLBACK` | 03 C2가 null이면 03이 찾은 CAGR 수치의 중앙값을 설계서 구간(5%·10%·15%·20%)으로 채점. 세부시장이 아닐 수 있음을 근거에 표시 |
+| C3 한쪽 허용 | `C3_ALLOW_SINGLE_DIMENSION` | 수요·도입 중 확인된 영역만으로 C3 계산 |
+| **0점 처리 (기본값)** | `Policy.missing_as_zero=True` | 미확인 적용 항목을 0점으로 채워 총점을 계산 (`score_basis=zero_filled`, 항목별 `zero_filled=True`). 0점으로 채운 항목에는 2점 최소 기준을 적용하지 않고, 60점 기준은 그대로 적용. 켜면 부분 판정은 쓰이지 않음 |
+| 부분 판정 | `Policy.min_coverage=0.5` (`PARTIAL_POLICY`) | 게이트·차단 이슈가 없고 채점된 가중치가 50% 이상이면 채점된 항목으로 적격·부적격 판정 (`score_basis=partial`). 60점·2점 기준은 채점된 항목에 그대로 적용 |
+
 ## 판정 규칙 구현 메모
 
 - 게이트(G01·G02)가 입력에 없으면 `not_checked`로 보고 판단불가 처리합니다.
 - 모집단에서 적용 항목인데 기업별로 `not_applicable`이 오면 `unknown`으로 바꿉니다. 불리한 항목을 빼고 재가중하지 않기 위해서입니다.
+- **참고 점수**: 총점이 null이면 채점된 항목만으로 `reference_score`를 계산하고, 쓴 항목(`reference_criteria`)과 가중치 비율(`reference_weight`)을 함께 남깁니다. 판정·순위·선정에는 쓰지 않고 판단불가 사유 옆에 표시만 합니다.
 - 총점은 소수 6자리로 반올림해 60점 경계가 부동소수 오차로 흔들리지 않게 합니다.
 
 ## 테스트

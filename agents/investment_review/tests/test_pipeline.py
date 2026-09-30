@@ -11,6 +11,7 @@ from pathlib import Path
 from ..adapters import adapt_clinical, adapt_market, adapt_risk, adapt_traction
 from ..contract import FinalStatus, ReasonCode
 from ..judge import judge
+from ..policy import PARTIAL_POLICY, STRICT_POLICY
 from ..review_requests import build_review_requests
 from ..selection import select
 from ..validate import validate
@@ -36,10 +37,14 @@ def company(cid, c1=3.0, c2=None, c3=None, c4=3.0, c5=None, risk_signals=None, c
     if c1 is not None:
         raw["clinical"]["evidence"] = [{**raw["traction"]["evidence"][0], "evidence_id": f"{cid}:clinical:ev01"}]
         ci.update(score=c1, score_status="scored", evidence_ids=[f"{cid}:clinical:ev01"])
-    for key, value in (("C2", c2), ("C3", c3), ("C4", c4)):
-        if value is not None:
-            item = raw["market"]["data"]["criteria_inputs"][key]
-            item.update(score=value, score_status="scored")
+    if c2 is not None:
+        raw["market"]["data"]["criteria_inputs"]["C2"].update(score=c2, score_status="scored")
+    dims = raw["market"]["data"]["dimensions"]
+    for names, value in ((("demand", "commercialization"), c3), (("monetization",), c4)):
+        if value is not None:  # 06은 체크를 직접 센다 → yes value개, 나머지 no
+            for name in names:
+                for n, chk in enumerate(dims[name]["checks"]):
+                    chk["status"] = "yes" if n < value else "no"
     if c5 is not None:
         raw["traction"]["data"]["criteria_inputs"]["C5"]["score"] = c5
     if risk_signals is not None:  # 영역별 위험 신호 수 → C6
@@ -60,22 +65,29 @@ def adapt(raw):
             adapt_risk(raw["risk"]["risk_analysis"], raw["risk"]["references"])]
 
 
-def review_company(cid, raw, review_round=0):
+def review_company(cid, raw, review_round=0, policy=None):
     results = adapt(raw)                                        # 1. 읽기
     issues = validate(cid, AS_OF, results)                      # 2. 검증
     requests = build_review_requests(cid, AS_OF, issues, results, review_round)  # 3. 보완 요청
     criteria = [c for r in results for c in r.criteria]
     gates = [g for r in results for g in r.gates]
-    review = judge(cid, AS_OF, criteria, gates, issues)         # 4. 판정
+    review = judge(cid, AS_OF, criteria, gates, issues, **({"policy": policy} if policy else {}))  # 4. 판정
     return review, requests
 
 
 class PipelineTests(unittest.TestCase):
     def test_lemonex_as_is(self):
         """샘플 그대로: C1(N/A)·C4 비어 있음 → 판단불가, 임상·시장에 보완 요청."""
-        review, requests = review_company("c001", BASE)
+        review, requests = review_company("c001", BASE, policy=STRICT_POLICY)
         self.assertEqual((review.final_status, review.total_score), (FinalStatus.UNDETERMINED, None))
         self.assertEqual(sorted(requests), ["clinical", "market"])
+        # 완화 기준: C1만 비어 가중치 80% → 부분 판정
+        review, _ = review_company("c001", BASE, policy=PARTIAL_POLICY)
+        self.assertEqual((review.final_status, review.score_basis), (FinalStatus.ELIGIBLE, "partial"))
+        # 기본값(0점 처리)
+        review, _ = review_company("c001", BASE)
+        self.assertEqual((review.final_status, review.total_score, review.score_basis),
+                         (FinalStatus.ELIGIBLE, 72.0, "zero_filled"))
 
     def test_review_round_then_final(self):
         """보완 응답으로 C1·C4가 채워졌다고 가정 → 2회차에서 판정, 추가 요청 없음."""

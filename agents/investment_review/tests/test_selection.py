@@ -2,16 +2,16 @@ import unittest
 
 from ..contract import CriterionResult, FinalStatus, GateResult
 from ..judge import judge
-from ..policy import CRITERIA, Policy
+from ..policy import CRITERIA, STRICT_POLICY, Policy
 from ..selection import select
 
 CLEAR = [GateResult(code="G01", status="clear"), GateResult(code="G02", status="clear")]
 
 
-def review(company_id, *scores, gates=CLEAR):
+def review(company_id, *scores, gates=CLEAR, policy=None):
     items = [CriterionResult(criterion_id=c, score=s, score_status="scored" if s is not None else "unknown")
              for c, s in zip(CRITERIA, scores)]
-    return judge(company_id, "2026-09-30", items, gates)
+    return judge(company_id, "2026-09-30", items, gates, policy=policy or Policy())
 
 
 def ranked(results):
@@ -20,9 +20,10 @@ def ranked(results):
 
 class SelectionTests(unittest.TestCase):
     def test_no_eligible(self):
-        out = select([review("b", 2, 2, 2, 2, 2, 2), review("a", 4, None, 3, 4, 4, 3)])
+        out = select([review("b", 2, 2, 2, 2, 2, 2), review("a", 4, None, 3, 4, 4, 3, policy=STRICT_POLICY)])
         self.assertEqual(ranked(out), [("a", None, False), ("b", None, False)])
-        self.assertEqual(out[0].selection.reason, "판단불가 (MISSING_EVIDENCE)")
+        # C2 미확인: 나머지 90% 가중치로 참고 점수 (16+9+12+20+9) / 90 × 100 = 73.3
+        self.assertEqual(out[0].selection.reason, "판단불가 (MISSING_EVIDENCE) · 참고 점수 73.3 (C1·C3·C4·C5·C6, 가중치 90% 기준)")
         self.assertEqual(out[1].selection.reason, "부적격 (SCORE_BELOW_60)")
 
     def test_fewer_than_k_selects_all_eligible(self):
@@ -60,6 +61,10 @@ class SelectionTests(unittest.TestCase):
         out = select([review("a", 5, 5, 5, 5, 5, 5, gates=gates)])
         self.assertEqual(out[0].final_status, FinalStatus.INELIGIBLE)
         self.assertFalse(out[0].selection.selected)
+
+    def test_partial_reason(self):
+        out = select([review("a", 4, None, 3, 4, 4, 3)])
+        self.assertEqual(out[0].selection.reason, "적격 1개 중 1위 · 부분 판정 (C1·C3·C4·C5·C6, 가중치 90%)")
 
     def test_duplicate_company_rejected(self):
         with self.assertRaises(ValueError):

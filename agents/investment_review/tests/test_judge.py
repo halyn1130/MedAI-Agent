@@ -3,7 +3,7 @@ import unittest
 from ..contract import (CriterionResult, FinalStatus, GateResult, IssueKind, ReasonCode,
                         ScoreStatus, ValidationIssue)
 from ..judge import judge
-from ..policy import CRITERIA, Policy
+from ..policy import CRITERIA, PARTIAL_POLICY, STRICT_POLICY, Policy
 from ..scoring import normalize_criteria, total_score
 
 CLEAR = [GateResult(code="G01", status="clear"), GateResult(code="G02", status="clear")]
@@ -41,7 +41,7 @@ class ReadmeExampleTests(unittest.TestCase):
         self.assertEqual(r.reason_codes, [ReasonCode.SCORE_BELOW_60])
 
     def test_unknown_score_is_undetermined(self):
-        r = run(4, 3, 3.5, None, 4, 3)
+        r = run(4, 3, 3.5, None, 4, 3, policy=STRICT_POLICY)
         self.assertEqual((r.total_score, r.final_status), (None, FinalStatus.UNDETERMINED))
         self.assertEqual(r.reason_codes, [ReasonCode.MISSING_EVIDENCE])
         self.assertIn("C4: 점수 미확인", r.remaining_unknowns)
@@ -53,12 +53,74 @@ class ReadmeExampleTests(unittest.TestCase):
         self.assertEqual(r.reason_codes, [ReasonCode.G01])
 
 
+class PartialJudgmentTests(unittest.TestCase):
+    """완화 기준: 채점 가중치 50% 이상이면 채점된 항목으로 판정."""
+
+    def test_partial_eligible(self):
+        r = run(4, 3, 3.5, None, 4, 3, policy=PARTIAL_POLICY)
+        # (16+6+10.5+20+9) / 85 × 100
+        self.assertEqual((r.final_status, r.score_basis), (FinalStatus.ELIGIBLE, "partial"))
+        self.assertAlmostEqual(r.total_score, 61.5 / 85 * 100, places=5)
+        self.assertEqual(r.reference_weight, 0.85)
+        self.assertIn("C4: 점수 미확인", r.remaining_unknowns)
+
+    def test_below_coverage_is_undetermined(self):
+        r = run(None, None, None, 4, 4, None, policy=PARTIAL_POLICY)  # C4·C5 = 40%
+        self.assertEqual((r.final_status, r.total_score, r.reference_score), (FinalStatus.UNDETERMINED, None, 80.0))
+
+    def test_exact_coverage_boundary(self):
+        r = run(None, None, 4, 4, 4, None, policy=Policy(min_coverage=0.55))  # C3·C4·C5 = 55%
+        self.assertEqual(r.score_basis, "partial")
+
+    def test_partial_still_needs_criterion_min(self):
+        r = run(4, 3, 3.5, None, 4, 1, policy=PARTIAL_POLICY)  # (16+6+10.5+20+3) / 85 = 65.3, C6 < 2
+        self.assertEqual((r.final_status, r.reason_codes), (FinalStatus.INELIGIBLE, [ReasonCode.CRITERION_BELOW_2]))
+
+    def test_partial_does_not_override_gate_or_blocking(self):
+        gates = [GateResult(code="G01", status="unresolved"), GateResult(code="G02", status="clear")]
+        self.assertEqual(run(4, 3, 3.5, None, 4, 3, gates=gates, policy=PARTIAL_POLICY).final_status, FinalStatus.UNDETERMINED)
+
+    def test_full_basis(self):
+        self.assertEqual(run(4, 3, 3.5, 4, 4, 3, policy=PARTIAL_POLICY).score_basis, "full")
+
+
+class ZeroFillTests(unittest.TestCase):
+    """기본값: 미확인 항목 0점 처리."""
+
+    def test_unknown_becomes_zero(self):
+        r = run(4, 3, 3.5, None, 4, 3)  # 16+6+10.5+0+20+9 = 61.5
+        self.assertEqual((r.final_status, r.total_score, r.score_basis), (FinalStatus.ELIGIBLE, 61.5, "zero_filled"))
+        c4 = r.criterion_results[3]
+        self.assertEqual((c4.score, c4.zero_filled), (0.0, True))
+        self.assertIn("C4: 점수 미확인", r.remaining_unknowns)
+
+    def test_zero_filled_is_not_below_2(self):
+        r = run(None, 5, 5, 5, 5, 5)  # 0+10+15+15+25+15 = 80
+        self.assertEqual((r.final_status, r.total_score, r.reason_codes), (FinalStatus.ELIGIBLE, 80.0, []))
+
+    def test_zero_filled_can_drop_below_60(self):
+        r = run(4, 3, None, None, 4, 3)  # 16+6+0+0+20+9 = 51
+        self.assertEqual((r.final_status, r.reason_codes), (FinalStatus.INELIGIBLE, [ReasonCode.SCORE_BELOW_60]))
+
+    def test_real_low_score_still_below_2(self):
+        r = run(None, 5, 5, 5, 5, 1)
+        self.assertEqual(r.reason_codes, [ReasonCode.CRITERION_BELOW_2])
+
+    def test_gate_and_blocking_still_undetermined(self):
+        gates = [GateResult(code="G01", status="not_checked"), GateResult(code="G02", status="clear")]
+        self.assertEqual(run(4, 3, 3.5, None, 4, 3, gates=gates).final_status, FinalStatus.UNDETERMINED)
+
+    def test_all_scored_is_full(self):
+        self.assertEqual(run(4, 3, 3.5, 4, 4, 3).score_basis, "full")
+
+
 class PriorityTests(unittest.TestCase):
     def test_confirmed_gate_beats_unknown_score(self):
         gates = [GateResult(code="G01", status="clear"), GateResult(code="G02", status="confirmed")]
         r = run(4, None, 3, 4, 4, 3, gates=gates)
+        # 0점 처리로 총점은 참고용 66(16+0+9+12+20+9)이지만 G02가 우선
         self.assertEqual((r.final_status, r.reason_codes, r.total_score),
-                         (FinalStatus.INELIGIBLE, [ReasonCode.G02], None))
+                         (FinalStatus.INELIGIBLE, [ReasonCode.G02], 66.0))
 
     def test_missing_gate_is_not_checked(self):
         r = run(4, 3, 3.5, 4, 4, 3, gates=[GateResult(code="G01", status="clear")])

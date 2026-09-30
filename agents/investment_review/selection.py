@@ -40,9 +40,17 @@ def select(reviews: Iterable[InvestmentReview], policy: Policy = DEFAULT_POLICY,
     for rank, r in enumerate(eligible, start=1):
         selected = rank <= k
         reason = f"적격 {len(eligible)}개 중 {rank}위" + ("" if selected else f", 선정 한도 K={k} 초과")
+        if r.score_basis == "partial":
+            reason += f" · 부분 판정 ({'·'.join(r.reference_criteria)}, 가중치 {r.reference_weight:.0%})"
+        elif r.score_basis == "zero_filled":
+            zeros = [c.criterion_id for c in r.criterion_results if c.zero_filled]
+            reason += f" · 미확인 0점 처리 ({'·'.join(zeros)})"
         out.append(r.model_copy(update={"selection": Selection(rank=rank, selected=selected, reason=reason)}))
     for r in others:
         codes = ", ".join(c.value for c in r.reason_codes)
         reason = NOT_SELECTED_REASON[r.final_status] + (f" ({codes})" if codes else "")
+        if r.total_score is None and r.reference_score is not None:
+            reason += (f" · 참고 점수 {r.reference_score:.1f} "
+                       f"({'·'.join(r.reference_criteria)}, 가중치 {r.reference_weight:.0%} 기준)")
         out.append(r.model_copy(update={"selection": Selection(reason=reason)}))
     return out
