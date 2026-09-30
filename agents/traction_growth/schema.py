@@ -546,3 +546,4 @@ class ExtractionBatch(BaseModel):
 
 # 노드 반환 예:  return {"traction_analysis": envelope.model_dump(mode="json")}
 TractionAnalysis = AnalysisEnvelope  # 기존 import 호환용 별칭
+

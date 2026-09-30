@@ -52,3 +52,5 @@ class TavilySearch:
         except (requests.RequestException, ValueError, KeyError, TypeError, AttributeError):
             # Never persist exception text containing request headers or credentials.
             raise ProviderError('Web search failed; check service access and configuration') from None
+
+
