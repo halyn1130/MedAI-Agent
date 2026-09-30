@@ -90,16 +90,22 @@ def main() -> None:
     meta = {"as_of": args.as_of, "criteria_version": POLICIES[args.policy].criteria_version,
             "policy": args.policy, "k": args.k or DEFAULT_K}
     (args.out / "run_meta.json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
+    result, note = path, "보고서 생성 생략 (--no-report)"
     if not args.no_report:
         from .report.__main__ import write_report
         check = write_report(args.out, out["final_reviews"], analyses, {c["company_id"]: c for c in companies},
                              meta, None if args.no_llm_report else "auto")
-        print(f"보고서: {args.out / 'final_report.md'} · 약 {check['pages']}쪽 · 검증 {'통과' if check['ok'] else check['issues']}")
+        pdf = args.out / "final_report.pdf"
+        if "pdf_error" in check or not pdf.exists():
+            result, note = args.out / "final_report.md", f"PDF 생성 실패: {check.get('pdf_error', 'PDF 없음')}"
+        else:
+            result, note = pdf, f"{check['pages']}쪽 · 검증 {'통과' if check['ok'] else check['issues']}"
     names = {c["company_id"]: c["company_name"] for c in companies}
     for r in out["final_reviews"]:
         total = "-" if r["total_score"] is None else f"{r['total_score']:.1f}"
         print(f"{r['company_id']} {names[r['company_id']][:10]:10} {r['final_status']:12} {total:>6}  {r['selection']['reason']}")
-    print(f"\n결과: {path}")
+    print(f"\n판정 상세: {path}")
+    print(f"결과: {result} ({note})")
 
 
 if __name__ == "__main__":
