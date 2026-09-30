@@ -112,6 +112,109 @@ flowchart TD
 
 시장 RAG는 `문서 로딩 → 페이지별 텍스트 추출 → 청크 분할 → BAAI/bge-m3 임베딩 → Chroma 영속 인덱스 → dense 검색 → 원문 근거 연결` 순서로 구현되어 있습니다. 입력 문서는 총 200쪽 이내로 검사하며, 페이지 번호와 문서 메타데이터를 모든 청크에 보존합니다. Hybrid 검색은 확장 지점만 두고 현재 제출 범위는 dense baseline입니다.
 
+### 청킹 방식
+
+```
+PDF
+→ pypdf로 페이지별 텍스트 추출
+→ 페이지 안에서 공백 기준 토큰 분리
+→ 700토큰씩 자름
+→ 다음 청크에 앞 청크의 마지막 100토큰을 중복 포함
+```
+
+- `chunk_size`: 700
+- `overlap`: 100
+- 실제 이동 간격: 600
+- 환경변수로 변경 가능
+    - `MARKET_RAG_CHUNK_SIZE`
+    - `MARKET_RAG_CHUNK_OVERLAP`
+
+### 실제 데이터 결과
+
+원본 PDF는:
+
+- PDF 6개
+- 물리적 202쪽
+- 빈 페이지 2쪽을 `metadata.csv`로 제외
+- 실제 인덱싱 대상 200쪽
+
+파싱 결과:
+
+- 텍스트가 있는 페이지: 193쪽
+- 빈 페이지 또는 이미지 위주 페이지: 7쪽
+- 최종 청크: 193개
+
+### 청크에 보존한 메타데이터
+
+```
+chunk_id
+document_id
+title
+publisher
+published_at
+region
+segment
+source_type
+source_url
+path
+page
+chunk_index
+token_start
+token_count
+```
+
+검색결과에서 다음과 같이 추적 가능.
+
+```
+Evidence
+→ chunk_id
+→ document_id
+→ 원본 PDF
+→ 실제 page
+→ 공식 source_url
+```
+
+`chunk_id`는 아래 정보를 SHA-256으로 해싱
+
+```
+document_id + page + chunk_index + chunk text
+```
+
+### 임베딩·Vector DB 방식
+
+```
+청크 텍스트
+→ BAAI/bge-m3
+→ 벡터 정규화
+→ ChromaDB persistent collection
+```
+
+- 임베딩 모델: `BAAI/bge-m3`
+- 임베딩 정규화: 활성화
+- Vector DB: 로컬 ChromaDB
+- 거리 함수: cosine
+- 저장 경로: `data/vectorstore/market/`
+- 바깥 처리 묶음: 64청크
+- 모델 내부 embedding batch: 16개
+
+### 검색 방식
+
+- **Dense Search baseline**
+- Chroma Top-K: 5
+- 동일 `chunk_id` 중복 제거
+- 점수가 높은 순으로 정렬
+- 영역별 최대 10개 청크만 분석기에 전달
+
+### 병렬 실행 문제 처리
+
+4개 분석 노드를 병렬 실행해서 각 스레드가 bge-m3를 동시에 로드하려고 해서 메모리가 터졌음. 그래서 임베딩 객체를 하나만 공유하고:
+
+- 모델 최초 로드에 lock
+- `encode_document`
+- `encode_query`
+
+호출에도 lock, 모델은 프로세스당 한 번만 로드하고, 네 영역이 같은 인스턴스를 안전하게 공유
+
 ## 설치 및 실행
 
 Python 3.10 이상을 사용하며 저장소 루트에서 실행합니다. Apple Silicon 개발환경에서는 Python 3.11을 권장합니다.
