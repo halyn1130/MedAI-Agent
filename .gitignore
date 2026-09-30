@@ -85,6 +85,7 @@ Desktop.ini
 *.swp
 *.swo
 *~
+
 # 4번 실적·성장성: 로컬 개발·테스트 폴더, 팀 공유용 캐시 zip
 dev/
 *.zip
