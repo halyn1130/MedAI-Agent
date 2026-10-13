@@ -1,0 +1,53 @@
+{
+  "validation_mode": "offline_contract_validation",
+  "llm_calls": 0,
+  "collection_calls": 0,
+  "company_profile_kind": "synthetic_example",
+  "evaluated_code_commit": "61a9544129efcd41f5eb99e48af68c4ae08d4edb",
+  "command": "python -m agents.market --input examples/market/input.json --output outputs/market_offline_result.json --demo",
+  "dataset_version": "market-dataset-v1",
+  "sources": 6,
+  "records": 193,
+  "page_stats": {
+    "pdf_files": 6,
+    "physical_pages": 202,
+    "indexed_pages": 200,
+    "empty_text_pages": 7
+  },
+  "result": {
+    "analysis_status": "partial",
+    "result_version": 1,
+    "evidence_count": 772,
+    "coverage_count": 4,
+    "missing_item_count": 5,
+    "error_count": 0,
+    "criteria_score_status": {
+      "C2": "unknown",
+      "C3": "unknown",
+      "C4": "unknown"
+    }
+  },
+  "files": [
+    {
+      "path": "data/market_evaluation/dataset.json",
+      "bytes": 550187,
+      "sha256": "0ab83cbcfc4cec182aa466a93ee06ce5326d79736c8d1776d90a1cd19219f432"
+    },
+    {
+      "path": "examples/market/input.json",
+      "bytes": 555405,
+      "sha256": "ec890d7812adb8186555c7971b4dc47e02373bf99911054062505d36f2d9404b"
+    },
+    {
+      "path": "examples/market/offline_result.json",
+      "bytes": 4152950,
+      "sha256": "58e0f8e4fe17b1fa87836e6a6622abe648a083a6171907f4522e01133f1debee"
+    },
+    {
+      "path": "data/market_evaluation/source_documents.zip",
+      "bytes": 7131105,
+      "sha256": "f4450fb7f87bc4201ada045b353106bb2717887b6d998562f52d219799c84ce8"
+    }
+  ],
+  "note": "기존 시장 원문을 사용한 오프라인 계약 검증입니다. 가상 기업 프로필이며 실제 LLM 평가 점수는 산출하지 않았습니다."
+}

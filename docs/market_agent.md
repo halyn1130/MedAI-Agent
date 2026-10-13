@@ -101,7 +101,9 @@ python -m agents.market --input examples/market/input.json --output outputs/mark
 python -m pytest tests/test_market_agent.py tests/test_market_rag.py -q
 ```
 
-예제의 빈 `dataset`을 ZIP 안의 `dataset.json` 또는 Orchestrator가 준비한 일부 레코드로 교체하여 사용합니다. `--demo`는 LLM을 호출하지 않고 미확인 점수를 반환합니다.
+`examples/market/input.json`에는 실제 시장 자료의 출처 6개·원문 레코드 193개를 담은 `dataset`이 포함되어 있습니다. 기업 프로필은 `Sample Health AI`라는 가상 기업이며, 실제 기업 평가에는 Orchestrator가 준비한 프로필과 해당 평가에 사용할 레코드를 전달합니다. `--demo`는 LLM을 호출하지 않고 미확인 점수를 반환합니다.
+
+공유 데이터셋은 [data/market_evaluation](../data/market_evaluation/README.md)에 있습니다. `dataset.json`은 Worker 입력의 `dataset` 값으로 바로 쓸 수 있고, `source_documents.zip`에는 원본 PDF 6개와 메타데이터도 포함됩니다. 저장된 오프라인 실행 결과는 [offline_result.json](../examples/market/offline_result.json), 검증 요약은 [offline_validation.json](../examples/market/offline_validation.json)에서 확인할 수 있습니다. 이 결과는 API 없이 입력·출력·근거 연결을 검증한 것이며 실제 LLM 평가 결과는 아닙니다.
 
 기존 PDF 6개는 물리적으로 202쪽이며, `metadata.csv`에서 2쪽을 제외한 200쪽이 대상입니다. 이 중 텍스트가 추출된 193쪽을 `dataset.json`의 레코드로 담고, 추출 텍스트가 없는 7쪽도 PDF 원본 안에 보존합니다. ZIP에는 PDF 원본, 메타데이터, 페이지별 원문을 담은 `dataset.json`, 입출력 JSON Schema, 파일별 SHA-256을 기록한 `manifest.json`이 들어갑니다. 확인일이 기존 메타데이터에 없으면 `checked_at=null`로 보존합니다.
 
