@@ -1,12 +1,13 @@
 {
-  "run_id": "run-2026-09-30",
+  "run_id": "run-2026-10-13",
   "company_id": "c002",
-  "as_of": "2026-09-30",
+  "as_of": "2026-10-13",
   "schema_version": "2.0",
   "criteria_version": "proposed-2.0",
   "agent": "clinical",
+  "dataset_version": "clinical-e152832148",
   "result_version": 1,
-  "analysis_status": "complete",
+  "analysis_status": "partial",
   "data": {
     "product_assessments": [
       {
@@ -22,48 +23,29 @@
       {
         "product_id": "p002",
         "regulatory_applicability": "in_scope",
-        "product_type": "ai_software",
-        "assessment_status": "partial",
+        "product_type": "hardware",
+        "assessment_status": "complete",
         "evidence_level": "L2",
         "clinical_score": 2.0,
         "score_status": "scored",
         "evidence_ids": [
           "c002:clinical:ev05",
           "c002:clinical:ev06",
-          "c002:clinical:ev01"
+          "c002:clinical:ev01",
+          "c002:clinical:ev02"
         ]
       },
       {
         "product_id": "p003",
         "regulatory_applicability": "in_scope",
-        "product_type": "hardware",
-        "assessment_status": "complete",
+        "product_type": "ai_software",
+        "assessment_status": "partial",
         "evidence_level": "L0",
         "clinical_score": null,
         "score_status": "unknown",
         "evidence_ids": [
-          "c002:clinical:ev02"
+          "c002:clinical:ev03"
         ]
-      },
-      {
-        "product_id": "p004",
-        "regulatory_applicability": "out_of_scope",
-        "product_type": "research",
-        "assessment_status": "complete",
-        "evidence_level": "L0",
-        "clinical_score": null,
-        "score_status": "not_applicable",
-        "evidence_ids": []
-      },
-      {
-        "product_id": "p005",
-        "regulatory_applicability": "out_of_scope",
-        "product_type": "research",
-        "assessment_status": "complete",
-        "evidence_level": "L0",
-        "clinical_score": null,
-        "score_status": "not_applicable",
-        "evidence_ids": []
       }
     ],
     "regulatory_records": [
@@ -73,10 +55,10 @@
         "country": "KR",
         "authority": "식약처",
         "procedure_type": "certification",
-        "record_number": "제인 22-4952",
-        "permitted_use": "AI 기반 뇌 영상 분석 소프트웨어",
+        "record_number": "제인 24-156",
+        "permitted_use": "양전자 방출·전산화 단층 촬영장치",
         "status": "active",
-        "effective_at": "2022-12-01",
+        "effective_at": "2024-02-13",
         "valid_until": null,
         "evidence_ids": [
           "c002:clinical:ev01"
@@ -87,60 +69,34 @@
         "product_id": "p002",
         "country": "KR",
         "authority": "식약처",
-        "procedure_type": "notification",
-        "record_number": "제신 25-17",
-        "permitted_use": null,
+        "procedure_type": "certification",
+        "record_number": "제인 22-4952",
+        "permitted_use": "전임상 PET/MRI 장비",
         "status": "active",
-        "effective_at": "2025-07-02",
-        "valid_until": null,
-        "evidence_ids": [
-          "c002:clinical:ev01"
-        ]
-      },
-      {
-        "record_id": "c002:clinical:reg03",
-        "product_id": "p003",
-        "country": "KR",
-        "authority": "FDA",
-        "procedure_type": "510k",
-        "record_number": null,
-        "permitted_use": "임상용 양전자 방출 단층 촬영 장비",
-        "status": "active",
-        "effective_at": "2025-08-15",
+        "effective_at": "2022-12-01",
         "valid_until": null,
         "evidence_ids": [
           "c002:clinical:ev02"
         ]
       },
       {
+        "record_id": "c002:clinical:reg03",
+        "product_id": "p003",
+        "country": "KR",
+        "authority": "식약처",
+        "procedure_type": "notification",
+        "record_number": "제신 25-17",
+        "permitted_use": "PET 영상 분석 보조 소프트웨어",
+        "status": "active",
+        "effective_at": "2025-07-02",
+        "valid_until": null,
+        "evidence_ids": [
+          "c002:clinical:ev03"
+        ]
+      },
+      {
         "record_id": "c002:clinical:reg04",
         "product_id": "p001",
-        "country": "KR",
-        "authority": "해당 없음",
-        "procedure_type": "unknown",
-        "record_number": null,
-        "permitted_use": null,
-        "status": "not_applicable",
-        "effective_at": null,
-        "valid_until": null,
-        "evidence_ids": []
-      },
-      {
-        "record_id": "c002:clinical:reg05",
-        "product_id": "p004",
-        "country": "KR",
-        "authority": "해당 없음",
-        "procedure_type": "unknown",
-        "record_number": null,
-        "permitted_use": null,
-        "status": "not_applicable",
-        "effective_at": null,
-        "valid_until": null,
-        "evidence_ids": []
-      },
-      {
-        "record_id": "c002:clinical:reg06",
-        "product_id": "p005",
         "country": "KR",
         "authority": "해당 없음",
         "procedure_type": "unknown",
@@ -159,19 +115,7 @@
         "country": "KR",
         "program": "조달청 혁신시제품",
         "status": "active",
-        "scope": "지정기간(지정일 기준 3년) 동안 수의계약으로 조달청 시범구매 사업 참여 가능",
-        "effective_at": null,
-        "evidence_ids": [
-          "c002:clinical:ev03"
-        ]
-      },
-      {
-        "record_id": "c002:clinical:des02",
-        "product_id": "p003",
-        "country": "KR",
-        "program": "조달청 혁신시제품",
-        "status": "active",
-        "scope": "지정기간(지정일 기준 3년) 동안 수의계약으로 조달청 시범구매 사업 참여 가능",
+        "scope": "지정일 기준 3년 동안 수의계약으로 조달청 시범구매 사업 참여 가능",
         "effective_at": null,
         "evidence_ids": [
           "c002:clinical:ev04"
@@ -183,14 +127,14 @@
       {
         "study_id": "c002:clinical:st01",
         "product_id": "p002",
-        "design": "관찰 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
+        "design": "성능 평가 연구",
+        "prospective": false,
+        "multicenter": false,
+        "external_validation": false,
         "sample_size": null,
         "comparator": null,
-        "endpoint": "ASC PET 이미지 생성 정확도",
-        "result": "GPDM이 기존 방법보다 높은 이미지 생성 정확도를 달성함.",
+        "endpoint": "이미지 품질 및 성능 평가",
+        "result": "SimPET-L과 SimPET-XL은 기존 SimPET 시스템에 비해 적절한 성능을 보였다.",
         "limitations": "제품명 미기재, 회사 알고리즘 연구",
         "evidence_ids": [
           "c002:clinical:ev05"
@@ -203,77 +147,17 @@
       {
         "study_id": "c002:clinical:st02",
         "product_id": "p002",
-        "design": "관찰 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
+        "design": "성능 평가 연구",
+        "prospective": false,
+        "multicenter": false,
+        "external_validation": false,
         "sample_size": null,
         "comparator": null,
-        "endpoint": "PET 시스템의 이미지 품질",
-        "result": "PHAROS 시스템이 다양한 응용 분야에서 높은 이미지 품질을 달성함.",
+        "endpoint": "이미지 품질 및 성능 평가",
+        "result": "SimPET-X는 동시에 PET/MR 이미징을 위한 소동물 PET 인서트로서 적절한 성능을 보였다.",
         "limitations": "제품명 미기재, 회사 알고리즘 연구",
         "evidence_ids": [
           "c002:clinical:ev06"
-        ],
-        "evidence_level": "L2",
-        "result_direction": "supports",
-        "product_match": true,
-        "methods_verifiable": true
-      },
-      {
-        "study_id": "c002:clinical:st03",
-        "product_id": "p002",
-        "design": "관찰 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
-        "sample_size": null,
-        "comparator": null,
-        "endpoint": "AI 보조 방법의 PET 정량화 성능",
-        "result": "간접 PVC가 모든 테스트된 아키텍처에서 직접 접근 방식을 일관되게 초월함.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구",
-        "evidence_ids": [
-          "c002:clinical:ev07"
-        ],
-        "evidence_level": "L2",
-        "result_direction": "supports",
-        "product_match": true,
-        "methods_verifiable": true
-      },
-      {
-        "study_id": "c002:clinical:st04",
-        "product_id": "p002",
-        "design": "관찰 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
-        "sample_size": null,
-        "comparator": null,
-        "endpoint": "PET 정량화를 위한 striatal subregion 세분화 정확도",
-        "result": "StriaSeg-iARM이 기존 모델보다 우수한 세분화 성능을 달성함.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구",
-        "evidence_ids": [
-          "c002:clinical:ev08"
-        ],
-        "evidence_level": "L2",
-        "result_direction": "supports",
-        "product_match": true,
-        "methods_verifiable": true
-      },
-      {
-        "study_id": "c002:clinical:st05",
-        "product_id": "p002",
-        "design": "관찰 연구",
-        "prospective": null,
-        "multicenter": null,
-        "external_validation": null,
-        "sample_size": null,
-        "comparator": null,
-        "endpoint": "BGO 기반 TOF-PET의 타이밍 정확도",
-        "result": "InterCS가 픽셀화된 BGO Cherenkov TOF-PET 검출기에서 타이밍 정확도를 저하시킴을 보여줌.",
-        "limitations": "제품명 미기재, 회사 알고리즘 연구",
-        "evidence_ids": [
-          "c002:clinical:ev09"
         ],
         "evidence_level": "L2",
         "result_direction": "supports",
@@ -283,26 +167,29 @@
     ],
     "claim_checks": [
       {
-        "claim_id": "c002:p003:cl01",
-        "product_id": "p003",
+        "claim_id": "c002:p002:cl01",
+        "product_id": "p002",
         "original_claim": "브라이토닉스이미징, 국내 최초 개발 임상용 PET 시스템 의료기기 미국 FDA 510(k) 허가 획득",
         "status": "supported",
-        "comparison_reason": "브라이토닉스이미징의 임상용 양전자 방출 단층 촬영 장비에 대한 FDA 510(k) 허가 기록이 확인됨.",
+        "comparison_reason": "브라이토닉스이미징의 양전자 방출·전산화 단층 촬영장치에 대한 허가가 확인됨.",
         "evidence_ids": [
-          "c002:clinical:ev02"
+          "c002:clinical:ev01"
         ]
       },
       {
-        "claim_id": "c002:p004:cl01",
-        "product_id": "p004",
-        "original_claim": "뛰어난 PET 및 MRI 성능",
-        "status": "unknown",
-        "comparison_reason": "제품 효능 주장 아님",
-        "evidence_ids": []
+        "claim_id": "c002:p002:cl02",
+        "product_id": "p002",
+        "original_claim": "SiPM(Silicon Photomultiplier) 기반의 컴팩트 PET 시스템인 SimPET series는 적은 소모 전력과 우수한 검출기 안정성을 그 특징으로 하며, SimPET과 다양한 MRI를 결합하여 PET/MRI 동시 촬영이 가능합니다.",
+        "status": "supported",
+        "comparison_reason": "SimPET 시리즈의 성능이 연구를 통해 확인되었으며, PET/MRI 동시 촬영이 가능하다는 주장이 뒷받침됨.",
+        "evidence_ids": [
+          "c002:clinical:ev05",
+          "c002:clinical:ev06"
+        ]
       }
     ],
     "red_flags": [],
-    "clinical_summary": "[임상·인허가] 브라이토닉스이미징 (c002) | 기준일 2026-09-30\n- p001 전임상 PET/MRI 장비: research/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p002 BTX Brain: ai_software/in_scope | 공식 상태: KR certification·active(\"AI 기반 뇌 영상 분석 소프트웨어\"); KR notification·active | 제도: 조달청 혁신시제품·active | 임상 근거 L2, C1 2.0 (scored) | 주장 대조: 주장 없음 | 평가 상태 partial\n- p003 PHAROS: hardware/in_scope | 공식 상태: KR 510k·active(\"임상용 양전자 방출 단층 촬영 장비\") | 제도: 조달청 혁신시제품·active | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: supported 1 | 평가 상태 complete\n- p004 SimPET: research/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: unknown 1 | 평가 상태 complete\n- p005 ELIOS: research/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- C1 잠정 집계: 2.0 (scored)\n- 주요 한계: criteria_inputs.C1[p003]",
+    "clinical_summary": "[임상·인허가] 브라이토닉스이미징 (c002) | 기준일 2026-10-13\n- p001 전임상 PET/MRI | 전임상 PET/MRI 장비: research/out_of_scope | 공식 상태: KR unknown·not_applicable | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (not_applicable) | 주장 대조: 주장 없음 | 평가 상태 complete\n- p002 SimPET: hardware/in_scope | 공식 상태: KR certification·active(\"양전자 방출·전산화 단층 촬영장치\"); KR certification·active(\"전임상 PET/MRI 장비\") | 제도: 조달청 혁신시제품·active | 임상 근거 L2, C1 2.0 (scored) | 주장 대조: supported 2 | 평가 상태 complete\n- p003 BTX Brain: ai_software/in_scope | 공식 상태: KR notification·active(\"PET 영상 분석 보조 소프트웨어\") | 제도: 확인된 기록 없음 | 임상 근거 L0, C1 없음 (unknown) | 주장 대조: 주장 없음 | 평가 상태 partial\n- C1 잠정 집계: 2.0 (scored)\n- 주요 한계: BTX Brain 임상 근거",
     "criteria_inputs": {
       "C1": {
         "score": 2.0,
@@ -325,18 +212,6 @@
             "score": null,
             "score_status": "unknown",
             "scope_weight": 1.0
-          },
-          {
-            "product_id": "p004",
-            "score": null,
-            "score_status": "not_applicable",
-            "scope_weight": 1.0
-          },
-          {
-            "product_id": "p005",
-            "score": null,
-            "score_status": "not_applicable",
-            "scope_weight": 1.0
           }
         ],
         "evidence_ids": [
@@ -346,363 +221,116 @@
         "rationale": "제품별 점수의 scope_weight 가중평균 (잠정, 심사 p.4 규칙으로 재집계) / 판단불가 제품 제외: p003"
       }
     },
-    "validation_issues": [],
-    "id_keys": {
-      "finding|regulatory|c002:clinical:reg01": "c002:clinical:fd01",
-      "finding|regulatory|c002:clinical:reg02": "c002:clinical:fd02",
-      "finding|regulatory|c002:clinical:reg03": "c002:clinical:fd03",
-      "finding|regulatory|c002:clinical:reg04": "c002:clinical:fd04",
-      "finding|regulatory|c002:clinical:reg05": "c002:clinical:fd05",
-      "finding|regulatory|c002:clinical:reg06": "c002:clinical:fd06",
-      "finding|designation|c002:clinical:des01": "c002:clinical:fd07",
-      "finding|designation|c002:clinical:des02": "c002:clinical:fd08",
-      "finding|clinical_evidence|p001": "c002:clinical:fd09",
-      "finding|clinical_evidence|p002": "c002:clinical:fd10",
-      "finding|clinical_evidence|p003": "c002:clinical:fd11",
-      "finding|clinical_evidence|p004": "c002:clinical:fd12",
-      "finding|clinical_evidence|p005": "c002:clinical:fd13",
-      "finding|claim|c002:p004:cl01": "c002:clinical:fd14"
-    },
-    "collected_profile": {
-      "legal_name": "브라이토닉스이미징",
-      "english_name": "Brightonix Imaging Inc.",
-      "homepage": "https://www.brtnx.com/kr",
-      "aliases": [],
-      "products": [
-        {
-          "product_id": "p001",
-          "name": "전임상 PET/MRI 장비",
-          "model": null,
-          "intended_use": "전임상 PET/MRI 장비",
-          "target_disease": null,
-          "users": null,
-          "environment": null,
-          "modality": null,
-          "target_countries": [
-            "KR"
-          ],
-          "claims": []
-        },
-        {
-          "product_id": "p002",
-          "name": "BTX Brain",
-          "model": null,
-          "intended_use": "AI 기반 뇌 영상 분석 소프트웨어",
-          "target_disease": "치매, 파킨슨병 등",
-          "users": "의료기관",
-          "environment": "연구실, 임상",
-          "modality": "PET",
-          "target_countries": [
-            "KR"
-          ],
-          "claims": []
-        },
-        {
-          "product_id": "p003",
-          "name": "PHAROS",
-          "model": null,
-          "intended_use": "임상용 양전자 방출 단층 촬영 장비",
-          "target_disease": "암, 치매, 파킨슨병, 심혈관질환 등",
-          "users": "의료기관",
-          "environment": "임상",
-          "modality": "PET",
-          "target_countries": [
-            "KR"
-          ],
-          "claims": [
-            {
-              "text": "브라이토닉스이미징, 국내 최초 개발 임상용 PET 시스템 의료기기 미국 FDA 510(k) 허가 획득",
-              "url": "https://www.brtnx.com/kr",
-              "claimed_at": null
-            }
-          ]
-        },
-        {
-          "product_id": "p004",
-          "name": "SimPET",
-          "model": null,
-          "intended_use": "전임상 PET/MRI 플랫폼",
-          "target_disease": null,
-          "users": "연구기관",
-          "environment": "연구실",
-          "modality": "PET/MRI",
-          "target_countries": [
-            "KR"
-          ],
-          "claims": [
-            {
-              "text": "뛰어난 PET 및 MRI 성능",
-              "url": "https://www.brtnx.com/kr/product/product_pet.php",
-              "claimed_at": null
-            }
-          ]
-        },
-        {
-          "product_id": "p005",
-          "name": "ELIOS",
-          "model": null,
-          "intended_use": "전임상 PET/CT 시스템",
-          "target_disease": null,
-          "users": "연구기관",
-          "environment": "연구실",
-          "modality": "PET/CT",
-          "target_countries": [
-            "KR"
-          ],
-          "claims": []
-        }
-      ],
-      "collection_notes": {
-        "searched_pages": [
-          "https://www.brtnx.com/kr",
-          "https://www.brtnx.com/kr/product/product_pet.php",
-          "https://thevc.kr/brightoniximaging",
-          "https://biz.chosun.com/industry/business-venture/2026/07/08/TOKFL4W6VFCY7PYKAUXRBFPVDQ",
-          "https://medipharmhealth.co.kr/news/article.html?no=110320"
-        ],
-        "dropped_claims_not_in_page": [],
-        "collected_at": "2026-09-30"
-      }
-    }
+    "validation_issues": []
   },
   "sources": [
     {
       "source_id": "c002:clinical:src01",
       "title": "식약처 의료기기 품목허가 조회: 브라이토닉스이미징",
       "url": "https://apis.data.go.kr/1471000/MdlpPrdlstPrmisnInfoService06/getMdlpPrdlstPrmisnList05?entrps=%EB%B8%8C%EB%9D%BC%EC%9D%B4%ED%86%A0%EB%8B%89%EC%8A%A4%EC%9D%B4%EB%AF%B8%EC%A7%95",
+      "published_at": null,
+      "collected_at": "2026-10-13",
       "publisher": "식품의약품안전처",
-      "source_type": "official",
-      "published_at": null,
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c002:clinical:src10",
-      "title": "브라이토닉스이미징, 임상용 PET 시스템 의료기기 미국 FDA 허가",
-      "url": "https://medipharmhealth.co.kr/news/article.html?no=110320",
-      "publisher": "medipharmhealth.co.kr",
-      "source_type": "other",
-      "published_at": null,
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c002:clinical:src20",
-      "title": "브라이토닉스이미징, 국내 최초 개발 임상용 PET 시스템 의료기기 미국 FDA 510(k) 허가 획득:약품신문",
-      "url": "http://www.yakpum.co.kr/27597",
-      "publisher": "www.yakpum.co.kr",
-      "source_type": "other",
-      "published_at": null,
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c002:clinical:src21",
-      "title": "브라이토닉스이미징, 국내 최초 개발 임상용 PET 시스템 의료기기 미국 FDA 510(k) 허가 획득 - 소식 - 정보 - 브라이토닉스이미징",
-      "url": "https://www.brtnx.com/kr/news/news.php?bgu=view&idx=205",
-      "publisher": "www.brtnx.com",
-      "source_type": "company",
-      "published_at": null,
-      "checked_at": "2026-09-30",
-      "original_source_id": null
+      "source_type": "official"
     },
     {
       "source_id": "c002:clinical:src22",
       "title": "브라이토닉스이미징 임상용 양전자방출단층촬영(PET) 시스템‘PHAROS', 조달청 혁신시제품으로 지정 - 소식 - 정보 - 브라이토닉스이미징",
       "url": "https://www.brtnx.com/kr/news/news.php?bgu=view&idx=183",
+      "published_at": null,
+      "collected_at": "2026-10-13",
       "publisher": "www.brtnx.com",
-      "source_type": "company",
-      "published_at": null,
-      "checked_at": "2026-09-30",
-      "original_source_id": null
+      "source_type": "company"
     },
     {
-      "source_id": "c002:clinical:src24",
-      "title": "브라이토닉스이미징 뇌영상 분석 솔루션 ‘BTXBrain', 조달청 혁신시제품으로 지정 - 소식 - 정보 - 브라이토닉스이미징",
-      "url": "https://brtnx.com/kr/news/news.php?bgu=view&idx=167&cate=",
-      "publisher": "brtnx.com",
-      "source_type": "company",
-      "published_at": null,
-      "checked_at": "2026-09-30",
-      "original_source_id": null
+      "source_id": "c002:clinical:src64",
+      "title": "Performance evaluation of SimPET-L and SimPET-XL: MRI-compatible small-animal PET systems with rat-body imaging capability.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36881339/",
+      "published_at": "2023-03-07",
+      "collected_at": "2026-10-13",
+      "publisher": "EJNMMI Phys",
+      "source_type": "research"
     },
     {
-      "source_id": "c002:clinical:src47",
-      "title": "GPDM: generation-prior diffusion model for accelerated direct attenuation and scatter correction of whole-body18F-FDG PET.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/42235583/",
-      "publisher": "Phys Med Biol",
-      "source_type": "research",
-      "published_at": "2026-06-19",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c002:clinical:src48",
-      "title": "First-in-Human Imaging Results of PHAROS: A Versatile High-Resolution TOF/DOI PET Scanner for Brain, Breast, and Extremity Imaging.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/42209120/",
-      "publisher": "J Nucl Med",
-      "source_type": "research",
-      "published_at": "2026-08-03",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c002:clinical:src49",
-      "title": "Evaluating AI-aided approaches for (18)F-FDG PET quantification: Indirect synthetic MR-based versus direct partial volume correction.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/41621734/",
-      "publisher": "Neuroimage",
-      "source_type": "research",
-      "published_at": "2026-03-01",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c002:clinical:src50",
-      "title": "An interactive cascaded deep learning framework with expert refinement for accurate striatal subregion segmentation.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/41606103/",
-      "publisher": "Sci Rep",
-      "source_type": "research",
-      "published_at": "2026-01-28",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
-    },
-    {
-      "source_id": "c002:clinical:src51",
-      "title": "Investigating the timing behavior of compton scattering in BGO for time-of-flight PET.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/41604773/",
-      "publisher": "Phys Med Biol",
-      "source_type": "research",
-      "published_at": "2026-02-13",
-      "checked_at": "2026-09-30",
-      "original_source_id": null
+      "source_id": "c002:clinical:src66",
+      "title": "Performance Evaluation of SimPET-X, a PET Insert for Simultaneous Mouse Total-Body PET/MR Imaging.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33768465/",
+      "published_at": "2021-10-01",
+      "collected_at": "2026-10-13",
+      "publisher": "Mol Imaging Biol",
+      "source_type": "research"
     }
   ],
   "evidence": [
     {
       "evidence_id": "c002:clinical:ev01",
-      "company_id": "c002",
-      "product_id": "p002",
-      "statement": "브라이토닉스이미징의 뇌영상분석소프트웨어",
-      "source_ids": [
-        "c002:clinical:src01"
-      ],
-      "locator": null,
+      "record_id": "c002:clinical:rec01",
+      "source_id": "c002:clinical:src01",
       "excerpt": null,
-      "event_date": "2022-12-01",
+      "locator": "조회어: 브라이토닉스이미징",
+      "product_id": "p002",
+      "statement": "브라이토닉스이미징의 양전자 방출·전산화 단층 촬영장치에 대한 허가",
+      "event_date": "2024-02-13",
       "geography": "KR",
       "evidence_status": "confirmed"
     },
     {
       "evidence_id": "c002:clinical:ev02",
-      "company_id": "c002",
-      "product_id": "p003",
-      "statement": "브라이토닉스이미징의 임상용 양전자 방출 단층 촬영 장비",
-      "source_ids": [
-        "c002:clinical:src20",
-        "c002:clinical:src10",
-        "c002:clinical:src21"
-      ],
-      "locator": null,
+      "record_id": "c002:clinical:rec01",
+      "source_id": "c002:clinical:src01",
       "excerpt": null,
-      "event_date": "2025-08-15",
+      "locator": "조회어: 브라이토닉스이미징",
+      "product_id": "p002",
+      "statement": "브라이토닉스이미징의 전임상 PET/MRI 장비에 대한 허가",
+      "event_date": "2022-12-01",
       "geography": "KR",
       "evidence_status": "confirmed"
     },
     {
       "evidence_id": "c002:clinical:ev03",
-      "company_id": "c002",
-      "product_id": "p002",
-      "statement": "브라이토닉스이미징 뇌영상 분석 솔루션 ‘BTXBrain'이 국내 조달청의 2024년 제1차 혁신시제품으로 지정되었다.",
-      "source_ids": [
-        "c002:clinical:src24"
-      ],
-      "locator": null,
-      "excerpt": "브라이토닉스이미징 뇌영상 분석 솔루션 ‘BTXBrain'이 국내 조달청의 2024년 제1차 혁신시제품으로 지정되었다.",
-      "event_date": null,
+      "record_id": "c002:clinical:rec01",
+      "source_id": "c002:clinical:src01",
+      "excerpt": null,
+      "locator": "조회어: 브라이토닉스이미징",
+      "product_id": "p003",
+      "statement": "브라이토닉스이미징의 PET 영상 분석 보조 소프트웨어에 대한 인증",
+      "event_date": "2025-07-02",
       "geography": "KR",
       "evidence_status": "confirmed"
     },
     {
       "evidence_id": "c002:clinical:ev04",
-      "company_id": "c002",
-      "product_id": "p003",
-      "statement": "브라이토닉스이미징 임상용 양전자방출단층촬영(PET) 시스템‘PHAROS'가 국내 조달청의 2024년 제3차 혁신시제품으로 지정되었다.",
-      "source_ids": [
-        "c002:clinical:src22"
-      ],
+      "record_id": "c002:clinical:rec34",
+      "source_id": "c002:clinical:src22",
+      "excerpt": null,
       "locator": null,
-      "excerpt": "브라이토닉스이미징 임상용 양전자방출단층촬영(PET) 시스템‘PHAROS'가 국내 조달청의 2024년 제3차 혁신시제품으로 지정되었다.",
+      "product_id": "p002",
+      "statement": "PHAROS는 감마선의 검출 위치를 3차원적으로 정밀하게 감지하고 감마선 쌍의 도달 시간을 계산함으로써 더욱 선명하고 정확한 이미지를 제공하는 최첨단 시스템이다.",
       "event_date": null,
       "geography": "KR",
       "evidence_status": "confirmed"
     },
     {
       "evidence_id": "c002:clinical:ev05",
-      "company_id": "c002",
-      "product_id": "p002",
-      "statement": "GPDM은 NASC PET 이미지에서 ASC PET 이미지를 생성하는 새로운 프레임워크를 제안함.",
-      "source_ids": [
-        "c002:clinical:src47"
-      ],
-      "locator": null,
+      "record_id": "c002:clinical:rec81",
+      "source_id": "c002:clinical:src64",
       "excerpt": null,
-      "event_date": "2026-06-19",
+      "locator": null,
+      "product_id": "p002",
+      "statement": "SimPET-L과 SimPET-XL의 성능을 평가하였다.",
+      "event_date": "2023-03-07",
       "geography": null,
       "evidence_status": "confirmed"
     },
     {
       "evidence_id": "c002:clinical:ev06",
-      "company_id": "c002",
-      "product_id": "p002",
-      "statement": "PHAROS 시스템의 첫 번째 인체 이미징 결과를 보고함.",
-      "source_ids": [
-        "c002:clinical:src48"
-      ],
-      "locator": null,
+      "record_id": "c002:clinical:rec83",
+      "source_id": "c002:clinical:src66",
       "excerpt": null,
-      "event_date": "2026-08-03",
-      "geography": null,
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c002:clinical:ev07",
-      "company_id": "c002",
-      "product_id": "p002",
-      "statement": "AI 보조 방법의 PET 정량화에 대한 두 가지 전략을 평가함.",
-      "source_ids": [
-        "c002:clinical:src49"
-      ],
       "locator": null,
-      "excerpt": null,
-      "event_date": "2026-03-01",
-      "geography": null,
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c002:clinical:ev08",
-      "company_id": "c002",
       "product_id": "p002",
-      "statement": "StriaSeg-iARM을 소개하고 PET 정량화에 대한 적용 가능성을 보여줌.",
-      "source_ids": [
-        "c002:clinical:src50"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2026-01-28",
-      "geography": null,
-      "evidence_status": "confirmed"
-    },
-    {
-      "evidence_id": "c002:clinical:ev09",
-      "company_id": "c002",
-      "product_id": "p002",
-      "statement": "BGO에서의 Compton 산란 타이밍 행동을 조사함.",
-      "source_ids": [
-        "c002:clinical:src51"
-      ],
-      "locator": null,
-      "excerpt": null,
-      "event_date": "2026-02-13",
+      "statement": "SimPET-X의 성능을 평가하였다.",
+      "event_date": "2021-10-01",
       "geography": null,
       "evidence_status": "confirmed"
     }
@@ -711,7 +339,7 @@
     {
       "finding_id": "c002:clinical:fd01",
       "category": "regulatory",
-      "claim": "BTX Brain [KR] certification · active (제인 22-4952) / 사용 목적: \"AI 기반 뇌 영상 분석 소프트웨어\"",
+      "claim": "SimPET [KR] certification · active (제인 24-156) / 사용 목적: \"양전자 방출·전산화 단층 촬영장치\"",
       "evidence_ids": [
         "c002:clinical:ev01"
       ],
@@ -721,17 +349,7 @@
     {
       "finding_id": "c002:clinical:fd02",
       "category": "regulatory",
-      "claim": "BTX Brain [KR] notification · active (제신 25-17)",
-      "evidence_ids": [
-        "c002:clinical:ev01"
-      ],
-      "uncertainty": null,
-      "related_criterion_ids": []
-    },
-    {
-      "finding_id": "c002:clinical:fd03",
-      "category": "regulatory",
-      "claim": "PHAROS [KR] 510k · active / 사용 목적: \"임상용 양전자 방출 단층 촬영 장비\"",
+      "claim": "SimPET [KR] certification · active (제인 22-4952) / 사용 목적: \"전임상 PET/MRI 장비\"",
       "evidence_ids": [
         "c002:clinical:ev02"
       ],
@@ -739,33 +357,9 @@
       "related_criterion_ids": []
     },
     {
-      "finding_id": "c002:clinical:fd04",
+      "finding_id": "c002:clinical:fd03",
       "category": "regulatory",
-      "claim": "전임상 PET/MRI 장비 [KR] unknown · not_applicable",
-      "evidence_ids": [],
-      "uncertainty": null,
-      "related_criterion_ids": []
-    },
-    {
-      "finding_id": "c002:clinical:fd05",
-      "category": "regulatory",
-      "claim": "SimPET [KR] unknown · not_applicable",
-      "evidence_ids": [],
-      "uncertainty": null,
-      "related_criterion_ids": []
-    },
-    {
-      "finding_id": "c002:clinical:fd06",
-      "category": "regulatory",
-      "claim": "ELIOS [KR] unknown · not_applicable",
-      "evidence_ids": [],
-      "uncertainty": null,
-      "related_criterion_ids": []
-    },
-    {
-      "finding_id": "c002:clinical:fd07",
-      "category": "designation",
-      "claim": "BTX Brain [KR] 조달청 혁신시제품 · active / 범위: 지정기간(지정일 기준 3년) 동안 수의계약으로 조달청 시범구매 사업 참여 가능",
+      "claim": "BTX Brain [KR] notification · active (제신 25-17) / 사용 목적: \"PET 영상 분석 보조 소프트웨어\"",
       "evidence_ids": [
         "c002:clinical:ev03"
       ],
@@ -773,9 +367,17 @@
       "related_criterion_ids": []
     },
     {
-      "finding_id": "c002:clinical:fd08",
+      "finding_id": "c002:clinical:fd04",
+      "category": "regulatory",
+      "claim": "전임상 PET/MRI | 전임상 PET/MRI 장비 [KR] unknown · not_applicable",
+      "evidence_ids": [],
+      "uncertainty": null,
+      "related_criterion_ids": []
+    },
+    {
+      "finding_id": "c002:clinical:fd05",
       "category": "designation",
-      "claim": "PHAROS [KR] 조달청 혁신시제품 · active / 범위: 지정기간(지정일 기준 3년) 동안 수의계약으로 조달청 시범구매 사업 참여 가능",
+      "claim": "SimPET [KR] 조달청 혁신시제품 · active / 범위: 지정일 기준 3년 동안 수의계약으로 조달청 시범구매 사업 참여 가능",
       "evidence_ids": [
         "c002:clinical:ev04"
       ],
@@ -783,9 +385,9 @@
       "related_criterion_ids": []
     },
     {
-      "finding_id": "c002:clinical:fd09",
+      "finding_id": "c002:clinical:fd06",
       "category": "clinical_evidence",
-      "claim": "전임상 PET/MRI 장비: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
+      "claim": "전임상 PET/MRI | 전임상 PET/MRI 장비: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
       "evidence_ids": [],
       "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
       "related_criterion_ids": [
@@ -793,9 +395,9 @@
       ]
     },
     {
-      "finding_id": "c002:clinical:fd10",
+      "finding_id": "c002:clinical:fd07",
       "category": "clinical_evidence",
-      "claim": "BTX Brain: 임상 근거 L2, C1 2 (scored), 연구 5건",
+      "claim": "SimPET: 임상 근거 L2, C1 2 (scored), 연구 2건",
       "evidence_ids": [
         "c002:clinical:ev05",
         "c002:clinical:ev06"
@@ -806,41 +408,11 @@
       ]
     },
     {
-      "finding_id": "c002:clinical:fd11",
+      "finding_id": "c002:clinical:fd08",
       "category": "clinical_evidence",
-      "claim": "PHAROS: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
+      "claim": "BTX Brain: 임상 근거 L0, C1 없음 (unknown), 연구 0건",
       "evidence_ids": [],
       "uncertainty": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c002:clinical:fd12",
-      "category": "clinical_evidence",
-      "claim": "SimPET: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
-      "evidence_ids": [],
-      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c002:clinical:fd13",
-      "category": "clinical_evidence",
-      "claim": "ELIOS: 임상 근거 L0, C1 없음 (not_applicable), 연구 0건",
-      "evidence_ids": [],
-      "uncertainty": "규제 비대상이며 효능 주장이 없어 임상 효능 평가 비적용 (전체 후보군 공통 규칙)",
-      "related_criterion_ids": [
-        "C1"
-      ]
-    },
-    {
-      "finding_id": "c002:clinical:fd14",
-      "category": "claim",
-      "claim": "주장 \"뛰어난 PET 및 MRI 성능\" → unknown: 제품 효능 주장 아님",
-      "evidence_ids": [],
-      "uncertainty": "근거 부족",
       "related_criterion_ids": [
         "C1"
       ]
@@ -848,535 +420,330 @@
   ],
   "missing_items": [
     {
-      "item_id": "c002:clinical:mi01",
-      "field": "products[p002].claims",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "low",
-      "detail": "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"
+      "missing_id": "c002:clinical:mi01",
+      "item": "BTX Brain 회사 주장 원문",
+      "reason": "회사 주장 원문이 없어 주장 대조 불가",
+      "related_criterion_ids": [
+        "C1"
+      ],
+      "required_for_assessment": false
     },
     {
-      "item_id": "c002:clinical:mi02",
-      "field": "criteria_inputs.C1[p003]",
-      "cause": "not_found",
-      "route": "due_diligence",
-      "impact": "high",
-      "detail": "평가 가능한 제품 관련 임상 근거를 찾지 못함"
+      "missing_id": "c002:clinical:mi02",
+      "item": "BTX Brain 임상 근거",
+      "reason": "평가 가능한 제품 관련 임상 근거를 찾지 못함",
+      "related_criterion_ids": [
+        "C1"
+      ],
+      "required_for_assessment": true
     }
   ],
   "coverage": [
     {
       "coverage_id": "c002:clinical:cv01",
       "area": "classification",
-      "product_id": "p001",
-      "country": null,
+      "record_ids": [],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "전임상 PET/MRI 장비로 연구용으로 사용되며, 질병 진단이나 치료 목적이 아닌 것으로 확인됨."
+      "note": "전임상 PET/MRI 장비는 연구용으로 사용되며, 질병 진단이나 치료 목적이 아닌 전임상 연구에 사용되므로 'out_of_scope'로 분류된다.",
+      "product_id": "p001",
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv02",
       "area": "classification",
-      "product_id": "p002",
-      "country": null,
+      "record_ids": [],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "AI 기반 뇌 영상 분석 소프트웨어로, 치매 및 파킨슨병 진단에 사용되며, 의료기관에서 사용됨."
+      "note": "SimPET은 임상용 PET 시스템으로 FDA 510(k) 허가를 받았으며, 뇌질환 및 암을 대상으로 하는 장비로 'in_scope'에 해당한다. 또한, 효능 주장이 포함되어 있어 'has_efficacy_claim'이 true이다.",
+      "product_id": "p002",
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv03",
       "area": "classification",
-      "product_id": "p003",
-      "country": null,
+      "record_ids": [],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "임상용 양전자 방출 단층 촬영 장비로, FDA 510(k) 허가를 받았으며, 암, 치매, 파킨슨병 등 질병 진단에 사용됨."
+      "note": "BTX Brain은 PET 영상 분석을 보조하는 AI 기반 소프트웨어로, 의료기관에서 사용되며, 질병 진단이나 치료에 직접적으로 사용되는 소프트웨어로 'in_scope'에 해당하지만, 효능 주장이 없어 'has_efficacy_claim'은 false이다.",
+      "product_id": "p003",
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv04",
-      "area": "classification",
-      "product_id": "p004",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "전임상 PET/MRI 플랫폼으로 연구기관에서 사용되며, 질병 진단이나 치료 목적이 아닌 것으로 확인됨."
+      "area": "regulatory",
+      "record_ids": [],
+      "status": "not_applicable",
+      "note": "규제 비대상",
+      "product_id": "p001",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv05",
-      "area": "classification",
-      "product_id": "p005",
-      "country": null,
+      "area": "regulatory",
+      "record_ids": [
+        "c002:clinical:rec01",
+        "c002:clinical:rec24",
+        "c002:clinical:rec28",
+        "c002:clinical:rec29",
+        "c002:clinical:rec30",
+        "c002:clinical:rec31"
+      ],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "전임상 PET/CT 시스템으로 연구기관에서 사용되며, 질병 진단이나 치료 목적이 아닌 것으로 확인됨."
+      "note": null,
+      "product_id": "p002",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv06",
       "area": "regulatory",
-      "product_id": "p001",
-      "country": "KR",
+      "record_ids": [
+        "c002:clinical:rec01",
+        "c002:clinical:rec15",
+        "c002:clinical:rec29",
+        "c002:clinical:rec30",
+        "c002:clinical:rec32",
+        "c002:clinical:rec33"
+      ],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 조회하지 않음"
+      "note": null,
+      "product_id": "p003",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv07",
-      "area": "regulatory",
-      "product_id": "p002",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [
-          "브라이토닉스이미징",
-          "BTX Brain"
-        ],
-        "queries": [
-          "브라이토닉스이미징 BTX Brain 식약처 허가 인증"
-        ],
-        "sources": [
-          "식약처 의료기기 품목허가",
-          "식약처 의료기기 품목정보",
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
+      "area": "designation",
+      "record_ids": [],
+      "status": "not_applicable",
+      "note": "규제 비대상",
+      "product_id": "p001",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv08",
-      "area": "regulatory",
-      "product_id": "p003",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [
-          "브라이토닉스이미징",
-          "PHAROS"
-        ],
-        "queries": [
-          "브라이토닉스이미징 PHAROS 식약처 허가 인증"
-        ],
-        "sources": [
-          "식약처 의료기기 품목허가",
-          "식약처 의료기기 품목정보",
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
+      "area": "reimbursement",
+      "record_ids": [],
+      "status": "not_applicable",
+      "note": "규제 비대상",
+      "product_id": "p001",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv09",
-      "area": "regulatory",
-      "product_id": "p004",
-      "country": "KR",
+      "area": "designation",
+      "record_ids": [
+        "c002:clinical:rec30",
+        "c002:clinical:rec34",
+        "c002:clinical:rec35",
+        "c002:clinical:rec36",
+        "c002:clinical:rec37",
+        "c002:clinical:rec48",
+        "c002:clinical:rec49",
+        "c002:clinical:rec50",
+        "c002:clinical:rec51",
+        "c002:clinical:rec52",
+        "c002:clinical:rec53",
+        "c002:clinical:rec54",
+        "c002:clinical:rec55",
+        "c002:clinical:rec56",
+        "c002:clinical:rec57",
+        "c002:clinical:rec58",
+        "c002:clinical:rec59",
+        "c002:clinical:rec60",
+        "c002:clinical:rec61"
+      ],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 조회하지 않음"
+      "note": null,
+      "product_id": "p002",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv10",
-      "area": "regulatory",
-      "product_id": "p005",
-      "country": "KR",
+      "area": "reimbursement",
+      "record_ids": [
+        "c002:clinical:rec30",
+        "c002:clinical:rec34",
+        "c002:clinical:rec35",
+        "c002:clinical:rec36",
+        "c002:clinical:rec37",
+        "c002:clinical:rec48",
+        "c002:clinical:rec49",
+        "c002:clinical:rec50",
+        "c002:clinical:rec51",
+        "c002:clinical:rec52",
+        "c002:clinical:rec53",
+        "c002:clinical:rec54",
+        "c002:clinical:rec55",
+        "c002:clinical:rec56",
+        "c002:clinical:rec57",
+        "c002:clinical:rec58",
+        "c002:clinical:rec59",
+        "c002:clinical:rec60",
+        "c002:clinical:rec61"
+      ],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 조회하지 않음"
+      "note": "제공 자료에서 미발견",
+      "product_id": "p002",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv11",
       "area": "designation",
-      "product_id": "p001",
-      "country": "KR",
+      "record_ids": [
+        "c002:clinical:rec30",
+        "c002:clinical:rec34",
+        "c002:clinical:rec35",
+        "c002:clinical:rec36",
+        "c002:clinical:rec37",
+        "c002:clinical:rec48",
+        "c002:clinical:rec49",
+        "c002:clinical:rec50",
+        "c002:clinical:rec51",
+        "c002:clinical:rec62",
+        "c002:clinical:rec63",
+        "c002:clinical:rec64",
+        "c002:clinical:rec65",
+        "c002:clinical:rec66",
+        "c002:clinical:rec67",
+        "c002:clinical:rec68",
+        "c002:clinical:rec69",
+        "c002:clinical:rec70",
+        "c002:clinical:rec71"
+      ],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 해당 없음"
+      "note": "제공 자료에서 미발견",
+      "product_id": "p003",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv12",
       "area": "reimbursement",
-      "product_id": "p001",
-      "country": "KR",
+      "record_ids": [
+        "c002:clinical:rec30",
+        "c002:clinical:rec34",
+        "c002:clinical:rec35",
+        "c002:clinical:rec36",
+        "c002:clinical:rec37",
+        "c002:clinical:rec48",
+        "c002:clinical:rec49",
+        "c002:clinical:rec50",
+        "c002:clinical:rec51",
+        "c002:clinical:rec62",
+        "c002:clinical:rec63",
+        "c002:clinical:rec64",
+        "c002:clinical:rec65",
+        "c002:clinical:rec66",
+        "c002:clinical:rec67",
+        "c002:clinical:rec68",
+        "c002:clinical:rec69",
+        "c002:clinical:rec70",
+        "c002:clinical:rec71"
+      ],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 해당 없음"
+      "note": "제공 자료에서 미발견",
+      "product_id": "p003",
+      "country": "KR"
     },
     {
       "coverage_id": "c002:clinical:cv13",
-      "area": "designation",
-      "product_id": "p002",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "브라이토닉스이미징 혁신의료기기 지정",
-          "BTX Brain 혁신의료기술 평가",
-          "BTX Brain 비급여 등재 고시",
-          "브라이토닉스이미징 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
+      "area": "clinical_studies",
+      "record_ids": [],
+      "status": "not_applicable",
+      "note": "규제 비대상이며 효능 주장 없음",
+      "product_id": "p001",
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv14",
-      "area": "reimbursement",
+      "area": "clinical_studies",
+      "record_ids": [
+        "c002:clinical:rec02",
+        "c002:clinical:rec30",
+        "c002:clinical:rec31",
+        "c002:clinical:rec81",
+        "c002:clinical:rec82",
+        "c002:clinical:rec83",
+        "c002:clinical:rec84",
+        "c002:clinical:rec85",
+        "c002:clinical:rec86",
+        "c002:clinical:rec87",
+        "c002:clinical:rec88",
+        "c002:clinical:rec89",
+        "c002:clinical:rec90",
+        "c002:clinical:rec98",
+        "c002:clinical:rec99",
+        "c002:clinical:rec100",
+        "c002:clinical:rec101",
+        "c002:clinical:rec102",
+        "c002:clinical:rec103",
+        "c002:clinical:rec104",
+        "c002:clinical:rec105"
+      ],
+      "status": "reviewed",
+      "note": null,
       "product_id": "p002",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "브라이토닉스이미징 혁신의료기기 지정",
-          "BTX Brain 혁신의료기술 평가",
-          "BTX Brain 비급여 등재 고시",
-          "브라이토닉스이미징 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv15",
-      "area": "designation",
-      "product_id": "p003",
-      "country": "KR",
+      "area": "clinical_studies",
+      "record_ids": [
+        "c002:clinical:rec30",
+        "c002:clinical:rec32",
+        "c002:clinical:rec78",
+        "c002:clinical:rec86",
+        "c002:clinical:rec87",
+        "c002:clinical:rec88",
+        "c002:clinical:rec89",
+        "c002:clinical:rec90",
+        "c002:clinical:rec106",
+        "c002:clinical:rec107",
+        "c002:clinical:rec108",
+        "c002:clinical:rec109",
+        "c002:clinical:rec110",
+        "c002:clinical:rec111",
+        "c002:clinical:rec112",
+        "c002:clinical:rec113",
+        "c002:clinical:rec114",
+        "c002:clinical:rec115",
+        "c002:clinical:rec116",
+        "c002:clinical:rec117",
+        "c002:clinical:rec118",
+        "c002:clinical:rec119",
+        "c002:clinical:rec120",
+        "c002:clinical:rec121",
+        "c002:clinical:rec122"
+      ],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "브라이토닉스이미징 혁신의료기기 지정",
-          "PHAROS 혁신의료기술 평가",
-          "PHAROS 비급여 등재 고시",
-          "브라이토닉스이미징 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
+      "note": "제공 자료에서 제품 관련 연구 미발견",
+      "product_id": "p003",
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv16",
-      "area": "reimbursement",
-      "product_id": "p003",
-      "country": "KR",
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "브라이토닉스이미징 혁신의료기기 지정",
-          "PHAROS 혁신의료기술 평가",
-          "PHAROS 비급여 등재 고시",
-          "브라이토닉스이미징 건강보험 급여 등재"
-        ],
-        "sources": [
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
+      "area": "claim_check",
+      "record_ids": [],
+      "status": "not_applicable",
+      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음",
+      "product_id": "p001",
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv17",
-      "area": "designation",
-      "product_id": "p004",
-      "country": "KR",
+      "area": "claim_check",
+      "record_ids": [],
       "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 해당 없음"
+      "note": null,
+      "product_id": "p002",
+      "country": null
     },
     {
       "coverage_id": "c002:clinical:cv18",
-      "area": "reimbursement",
-      "product_id": "p004",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 해당 없음"
-    },
-    {
-      "coverage_id": "c002:clinical:cv19",
-      "area": "designation",
-      "product_id": "p005",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 해당 없음"
-    },
-    {
-      "coverage_id": "c002:clinical:cv20",
-      "area": "reimbursement",
-      "product_id": "p005",
-      "country": "KR",
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상으로 해당 없음"
-    },
-    {
-      "coverage_id": "c002:clinical:cv21",
-      "area": "clinical_studies",
-      "product_id": "p001",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상이며 효능 주장 없음"
-    },
-    {
-      "coverage_id": "c002:clinical:cv22",
-      "area": "clinical_studies",
-      "product_id": "p004",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상이며 효능 주장 없음"
-    },
-    {
-      "coverage_id": "c002:clinical:cv23",
-      "area": "clinical_studies",
-      "product_id": "p005",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상이며 효능 주장 없음"
-    },
-    {
-      "coverage_id": "c002:clinical:cv24",
-      "area": "clinical_studies",
-      "product_id": "p002",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "\"BTX Brain\"[Title/Abstract]",
-          "\"Brightonix Imaging Inc.\"[Affiliation]",
-          "브라이토닉스이미징 BTX Brain 임상 연구 논문",
-          "BTX Brain clinical validation study"
-        ],
-        "sources": [
-          "PubMed",
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c002:clinical:cv25",
-      "area": "clinical_studies",
+      "area": "claim_check",
+      "record_ids": [],
+      "status": "not_reviewed",
+      "note": "company_profile에 회사 주장 원문이 없음",
       "product_id": "p003",
-      "country": null,
-      "status": "no_relevant_evidence_found",
-      "search_scope": {
-        "names": [],
-        "queries": [
-          "\"PHAROS\"[Title/Abstract]",
-          "\"Brightonix Imaging Inc.\"[Affiliation]",
-          "브라이토닉스이미징 PHAROS 임상 연구 논문",
-          "PHAROS clinical validation study"
-        ],
-        "sources": [
-          "PubMed",
-          "웹 검색"
-        ],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c002:clinical:cv26",
-      "area": "claim_check",
-      "product_id": "p001",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
-    },
-    {
-      "coverage_id": "c002:clinical:cv27",
-      "area": "claim_check",
-      "product_id": "p002",
-      "country": null,
-      "status": "insufficient_information",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "회사 주장 원문을 찾지 못함"
-    },
-    {
-      "coverage_id": "c002:clinical:cv28",
-      "area": "claim_check",
-      "product_id": "p003",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c002:clinical:cv29",
-      "area": "claim_check",
-      "product_id": "p004",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": null
-    },
-    {
-      "coverage_id": "c002:clinical:cv30",
-      "area": "claim_check",
-      "product_id": "p005",
-      "country": null,
-      "status": "reviewed",
-      "search_scope": {
-        "names": [],
-        "queries": [],
-        "sources": [],
-        "period": null
-      },
-      "checked_at": "2026-09-30",
-      "note": "규제 비대상·효능 주장 없음으로 대조 대상 없음"
+      "country": null
     }
   ],
-  "review_responses": []
+  "review_responses": [],
+  "errors": []
 }
