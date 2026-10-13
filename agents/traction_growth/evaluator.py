@@ -1,53 +1,41 @@
-"""실적·성장성 평가 노드 (수집 제거판) — Orchestrator-Workers 구조용.
+"""실적·성장성 Worker (평가 전용 단일 노드) — 공통 State 계약(docs/common_state.md 초안) 준수.
 
-왜 만들었나
-    새 구조에서는 "01 공통 데이터 수집" 노드가 DART·뉴스·국민연금 자료를 모아 오고,
-    실적·성장성 워커는 받은 자료로 **분석·평가만** 한다. 수집 코드(DART·뉴스·국민연금)는 collect.py 로 분리했다.
-    이 파일 = LLM 근거 추출 + 근거 조립(Builder) + 판정 조립(assemble) + 평가 노드.
-    판정 규칙(단계·성장·추이·기대치·레드플래그·C5)은 rules.py → 같은 입력이면 기존과 같은 판정.
+구성
+    이 파일 = LLM 근거 추출 + 근거 조립(Builder) + 판정 조립(assemble) + Worker 노드·계약 변환.
+    판정 규칙(단계·성장·추이·기대치·레드플래그·C5)은 rules.py, 수집은 collect.py (앞단 수집 노드로 이동 예정).
+    서브그래프: START ─ extract ─ judge ─ END   (외부 검색·수집·재시도 없음, LLM은 원문 레코드 해석에만)
 
-서브그래프
-    기존:  START ─┬─ collect_dart ─┐
-                  ├─ collect_news ─┴─ extract ─┐
-                  └─ collect_nps ──────────────┴─ judge ─ END
-    변경:  START ─ extract ─ judge ─ END        (외부 호출 0회. LLM은 docs가 있을 때 extract에서만)
+입력 (common_state.md 4장 Worker 입력)
+    {run_id, company_id, as_of, schema_version, criteria_version, company_profile,
+     dataset: {version, sources: [Source], records: [DataRecord]}, previous_result, review_request}
+    - Source     : source_id, title, url, published_at, collected_at
+    - DataRecord : record_id, source_id, content, locator, tags
+        content 가 dict {kind, record, status?, statement?, excerpt?, event_date?} → 구조화 사실
+            (kind ∈ revenue | contract | activity | headcount | customer, record = schema.py 관측값 필드)
+        content 가 문자열 → 원문. LLM이 근거 후보를 뽑고, 발췌가 원문에 없으면 버린다.
+        tags: 레코드 배분용. TRACTION_TAGS 중 하나가 있으면 읽음(태그가 하나도 없는 데이터셋이면 전체).
+              출처 유형 태그(official·company·partner·news·…)가 있으면 독립 확인 판단에 사용.
+    - 노드에서 읽는 State: review_requests["traction"], worker_results["traction"](=previous_result)
 
-입력 계약: state["traction_inputs"]  (01 공통 데이터 수집 노드가 채운다)
-    {
-      "docs":   [ {url, title, publisher, source_type?, published_at?, retrieved_at?, text} ],
-                # 구조화 안 된 원문(기사·공시 본문). LLM이 계약·활동·매출·고객 근거로 추출한다.
-                # source_type 이 없으면 URL로 추정(official / company / news / other).
-      "facts":  [ {kind, source, status, record, statement, excerpt, locator, event_date, date_uncertainty} ],
-                # 이미 구조화된 사실. kind ∈ revenue | contract | activity | headcount | customer
-                # (DART 매출 파싱 결과, 국민연금 가입자 수 등 — agent.py 수집 노드가 만들던 형식과 동일)
-      "status": {"disclosure": found|not_found|search_failed|not_reviewed,
-                 "news": ok|partial|failed|not_reviewed,
-                 "nps":  ok|not_found|failed|not_reviewed},
-                # 수집이 "끝까지 됐는지". 'ok/found'일 때만 "찾아봤는데 없음"으로 판정한다(RF1·none_reason).
-                # 빠진 키는 not_reviewed 로 본다 = 보수적 기본값 (수집 상태를 모르면 '없음'으로 단정하지 않음)
-      "search_log": [ {query, searched_at, status, entity_names, error?, source_urls?} ]   # 선택
-    }
+반환 (common_state.md 5장 Worker 공통 반환 결과)
+    {run_id, company_id, as_of, schema_version, criteria_version, agent="traction", dataset_version,
+     result_version, analysis_status, data, sources, evidence, findings, missing_items, coverage,
+     review_responses, errors}
+    - data = 분야별 상세(schema.TractionData: 단계·성장·추이·RF·criteria_inputs.C5·관측 records·open_questions)
+    - evidence: evidence_id, record_id, source_id, excerpt, locator  (원문 연결 evidence.record_id → dataset)
+    - 노드 반환은 자기 결과 변경분만: {"worker_results": {"traction": result}}
 
-출력: state["traction_analysis"] = AnalysisEnvelope dict (기존과 동일 계약 → 심사 어댑터 수정 불필요)
-
-단순 워커 원칙 (2026-10-13)
-    - 호출되면 주어진 입력으로 **정확히 한 번** 평가해서 반환한다.
-    - 노드는 실행 여부를 스스로 판단하지 않는다: 결과 재사용·건너뛰기, 재분석 횟수 상한, 중복 요청 제거,
-      여러 요청 반복 처리 없음 → 모두 Orchestrator가 결정 (종료 보장도 Orchestrator State에서 관리).
-    - 자체 검색·수집·재시도 루프 없음. LLM 호출은 원문(docs) 해석에만 사용.
-
-재분석 지시: state["traction_request"]  (ReviewRequest 1건, 없으면 최초 평가)
-    Orchestrator가 "해석 불명확"으로 지시를 넣어 이 노드를 다시 호출하면, 이전 결과(traction_analysis)와
-    입력 자료로 다시 판정해 result_version+1, review_responses 에 응답을 남긴다.
-    지시가 있는데 이전 결과가 없으면 ValueError → Orchestrator의 Fallback(재시도/제외)이 처리.
-    (자료 부족 → 재수집은 01 수집 노드의 몫)
+원칙
+    - 호출되면 주어진 데이터로 정확히 한 번 평가. 실행 여부·재실행·횟수·중복 처리 판단 없음 (Orchestrator 몫).
+    - reviewed = 제공 자료를 검토했다는 뜻 (외부 검색 완료 아님) → 근거가 없다고 '계약 없음'·0점으로 단정하지 않음.
+    - 입력 계약 위반·실행 오류도 예외 대신 analysis_status=failed + errors 로 반환 (누락과 구분).
 
 실행 (프로젝트 루트)
-    # 저장된 기존 결과(Envelope)를 입력 자료로 되돌려 평가만 다시 실행 — 수집 노드 없이 바로 테스트
+    # 저장된 기존 결과를 공통 데이터셋으로 되돌려 Worker만 실행 — 수집 노드 없이 테스트
     python -m agents.traction_growth.evaluator --from-envelope outputs/investment_review/traction_analysis.json --company c001
     python -m agents.traction_growth.evaluator --from-envelope outputs/investment_review/traction_analysis.json --all
-    # 수집 노드가 만든 입력 파일로 실행
-    python -m agents.traction_growth.evaluator --inputs traction_inputs_c001.json --company c001 --as-of 2026-09-30
+    # Worker 입력 JSON 파일로 실행
+    python -m agents.traction_growth.evaluator --input worker_input_c001.json
 """
 from __future__ import annotations
 
@@ -70,17 +58,16 @@ from .common import (
     RECORD_KEYS,
     Ctx,
     TGState,
+    _host_in,
     _source_type,
     cache_on,
     cache_refresh,
-    company_id_of,
     company_names,
     host_of,
     load_env,
     log_tool,
     norm_name,
     parse_date,
-    profile_from_csv,
 )
 from .rules import (
     EXCLUDED_CONTRACT,
@@ -208,9 +195,10 @@ def item_to_fact(it, doc: dict, as_of: Optional[date] = None) -> Optional[dict]:
         # 기준일보다 나중에 받은 결과(과거 기준일로 다시 돌리는 경우)는 존재 확인 불가 → partial (schema.Source 규칙)
         if not (as_of and doc.get("retrieved_at") and doc["retrieved_at"] <= as_of.isoformat()):
             status = "partial"
-    src = {k: doc.get(k) for k in ("url", "title", "publisher", "source_type", "published_at")}
+    src = {k: doc.get(k) for k in ("url", "title", "publisher", "source_type", "published_at", "source_id")}
     f = {"source": src, "statement": it.statement, "excerpt": it.excerpt if verified else None,
-         "locator": None, "event_date": it.event_date, "status": status, "date_uncertainty": None}
+         "locator": doc.get("locator"), "event_date": it.event_date, "status": status, "date_uncertainty": None,
+         "record_id": doc.get("record_id")}
     ev_date, unc = it.event_date, None
     if not ev_date:
         ev_date, unc = doc.get("published_at"), "사건일 미기재 → 게재일로 대체"
@@ -291,8 +279,18 @@ class Builder:
         self.unknown_mismatch = 0
 
     def _source(self, s: dict) -> str:
-        if s["url"] in self.url2src:
-            return self.url2src[s["url"]]
+        key = s.get("source_id") or s["url"]          # 공통 데이터셋 입력이면 출처 ID 기준 (URL 없을 수 있음)
+        if key in self.url2src:
+            return self.url2src[key]
+        if s.get("source_id"):
+            sid = s["source_id"]
+            self.sources.append({"source_id": sid, "title": s.get("title") or sid, "url": s.get("url") or "",
+                                 "publisher": s.get("publisher") or host_of(s.get("url") or "") or "unknown",
+                                 "source_type": s.get("source_type") or "other", "published_at": s.get("published_at"),
+                                 "checked_at": date.today().isoformat(), "original_source_id": None})
+            self.url2src[key] = sid
+            self.new_sources.append(sid)
+            return sid
         self.n_src += 1
         sid = f"{self.cid}:traction:src{self.n_src:02d}"
         self.sources.append({"source_id": sid, "title": s.get("title") or s["url"], "url": s["url"],
@@ -312,7 +310,8 @@ class Builder:
         self.evidence.append({"evidence_id": eid, "company_id": self.cid, "product_id": None,
                               "statement": f["statement"], "source_ids": [sid], "locator": f.get("locator"),
                               "excerpt": f.get("excerpt"), "event_date": f.get("event_date"), "geography": None,
-                              "evidence_status": f["status"], "date_uncertainty": f.get("date_uncertainty")})
+                              "evidence_status": f["status"], "date_uncertainty": f.get("date_uncertainty"),
+                              "record_id": f.get("record_id")})
         self._ev_key[key] = eid
         self.new_evidence.append(eid)
         return eid
@@ -635,89 +634,101 @@ def make_judge(ctx: Ctx):
 
 
 # ════════════════════════════════════════════════════════════
-# 평가 노드 (Orchestrator 워커) · 입력 계약 · CLI
+# 공통 Worker 계약 (docs/common_state.md) · 평가 노드 · CLI
 # ════════════════════════════════════════════════════════════
-STATUS_KEYS = ("disclosure", "news", "nps")
-EVAL_LIMITATIONS = ["평가 전용 노드: 추가 수집 없이 입력 자료(traction_inputs)로만 재판정",
-                    "자료 부족 항목은 01 공통 데이터 수집 노드의 재수집 대상"]
+WORKER = "traction"
+FACT_KINDS = {k.removesuffix("_records") for k in RECORD_KEYS}
+# 데이터셋 레코드 배분: 이 태그 중 하나가 있으면 실적·성장성 자료로 읽는다.
+# 태그가 달린 레코드가 하나도 없으면 전체를 읽는다 (팀 태그 규칙 확정 전 임시 규칙).
+TRACTION_TAGS = {"traction", "financial", "revenue", "disclosure", "contract", "activity", "customer",
+                 "headcount", "news"} | FACT_KINDS
+SOURCE_TYPE_TAGS = {"official", "company", "partner", "research", "news", "other"}
+OFFICIAL_HOSTS = ("dart.fss.or.kr", "opendart.fss.or.kr", "data.go.kr", "nps.or.kr")
+AREA_KINDS = {"disclosure": {"revenue"}, "revenue": {"revenue"}, "contract": {"contract"},
+              "activity": {"activity"}, "customer": {"customer"}, "headcount": {"headcount"}}
+TEXT_AREAS = {"contract", "activity", "customer", "revenue"}   # 원문(LLM 추출)이 근거가 될 수 있는 범위
+CAUSE_TEXT = {"not_found": "제공 자료에서 확인되지 않음", "not_reviewed": "관련 자료가 데이터셋에 없음",
+              "search_failed": "관련 자료 처리 실패", "input_missing": "입력 프로필에 값 없음"}
 
 
-# ─────────────────────────────────────────────
-# 입력 정리
-# ─────────────────────────────────────────────
-def normalize_inputs(inputs: Optional[dict], homepage_host: str = "", review: bool = False) -> dict:
-    """traction_inputs → 서브그래프 시작 State (docs·facts·status·search_log·notes).
-
-    status 키가 빠졌을 때: 최초 평가면 not_reviewed(모르면 '없음'으로 단정하지 않음),
-    재분석 라운드면 비워 둔다 → assemble 이 이전 결과의 상태를 유지 (이번 라운드에 재수집 안 한 범위)."""
-    inputs = inputs or {}
-    docs = []
-    for d in inputs.get("docs") or []:
-        if not d.get("url"):
-            continue                                   # URL 없는 문서는 근거로 연결할 수 없음
-        docs.append({**d, "source_type": d.get("source_type") or _source_type(d["url"], homepage_host)})
-    facts = [f for f in inputs.get("facts") or []
-             if f.get("kind") in {k.removesuffix("_records") for k in RECORD_KEYS} and f.get("source", {}).get("url")]
-    status = {k: v for k, v in (inputs.get("status") or {}).items() if k in STATUS_KEYS and v}
-    if not review:
-        for k in STATUS_KEYS:
-            status.setdefault(k, "not_reviewed")
-    logs = []
-    for x in inputs.get("search_log") or []:
-        x = dict(x)
-        x["_urls"] = list(x.pop("source_urls", None) or x.pop("_urls", None) or [])
-        x.setdefault("source_ids", [])
-        logs.append(x)
-    return {"docs": docs, "facts": facts, "status": status, "search_log": logs,
-            "notes": list(inputs.get("notes") or [])}
+class WorkerInputError(ValueError):
+    """입력 계약 위반 → 평가하지 않고 failed 결과로 반환 (code 포함)."""
+    def __init__(self, code: str, message: str):
+        super().__init__(message)
+        self.code = code
 
 
-def inputs_from_envelope(env: dict) -> dict:
-    """저장된 기존 결과(AnalysisEnvelope) → traction_inputs.
+def _source_type_of(url: Optional[str], tags: list[str], homepage_host: str) -> str:
+    for t in tags or []:
+        if t in SOURCE_TYPE_TAGS:
+            return t                                     # 수집 노드가 출처 유형을 태그로 준 경우 우선
+    if url and _host_in(host_of(url), OFFICIAL_HOSTS):
+        return "official"
+    return _source_type(url, homepage_host) if url else "other"
 
-    수집 노드가 아직 없을 때 평가 노드를 실제 데이터로 시험하기 위한 변환.
-    records의 각 근거(evidence)를 fact 하나로 되돌린다. ID(contract_id 등)는 평가 시 다시 매긴다.
+
+def _is_fact(content: Any) -> bool:
+    return isinstance(content, dict) and content.get("kind") in FACT_KINDS and isinstance(content.get("record"), dict)
+
+
+def select_records(dataset: dict) -> list[dict]:
+    recs = list(dataset.get("records") or [])
+    if not any(r.get("tags") for r in recs):
+        return recs
+    return [r for r in recs if set(r.get("tags") or []) & TRACTION_TAGS]
+
+
+def dataset_to_state(dataset: dict, homepage_host: str = "") -> tuple[dict, dict]:
+    """공통 데이터셋 → 평가 서브그래프 시작 State.
+
+    - 구조화 레코드(content가 {kind, record, ...} dict) → fact (매출·계약·활동·고용·고객)
+    - 원문 레코드(content가 문자열) → doc (LLM이 근거 후보를 추출, 발췌가 원문에 없으면 버림)
+    - 수집 완료 여부는 계약에 없으므로 보수적으로 둔다: 원문이 있어도 news=partial
+      (reviewed = 제공 자료 검토, 외부 검색 완료 아님 → '계약 없음'(RF1) 등 부재 판정은 하지 않음)
+    반환: (State, 정보 {fact_records, doc_records, records_by_kind})
     """
-    src = {s["source_id"]: s for s in env.get("sources", [])}
-    ev = {e["evidence_id"]: e for e in env.get("evidence", [])}
-    data = env.get("data", {})
-    drop = {"evidence_ids", "contract_id", "activity_id"}
-    facts = []
-    for key in RECORD_KEYS:
-        kind = key.removesuffix("_records")
-        for r in data.get(key, []):
-            rec = {k: v for k, v in r.items() if k not in drop}
-            if kind == "contract":
-                rec["counterparty_id"] = None              # Builder가 거래처명으로 다시 만든다
-            for eid in r.get("evidence_ids", []):
-                e = ev.get(eid)
-                if not e or not e.get("source_ids") or e["source_ids"][0] not in src:
-                    continue
-                s = src[e["source_ids"][0]]
-                facts.append({"kind": kind, "record": rec, "status": e["evidence_status"],
-                              "source": {k: s.get(k) for k in ("url", "title", "publisher", "source_type", "published_at")},
-                              "statement": e["statement"], "excerpt": e.get("excerpt"), "locator": e.get("locator"),
-                              "event_date": e.get("event_date"), "date_uncertainty": e.get("date_uncertainty")})
-    cov = {c["scope"]: c for c in env.get("coverage", [])}
-    note = cov.get("contract", {}).get("note", "")
-    news = note.split("news_state=", 1)[1].split()[0] if "news_state=" in note else "not_reviewed"
-    nps = {"reviewed": "ok", "no_relevant_evidence_found": "not_found", "search_failed": "failed"}.get(
-        cov.get("headcount", {}).get("status"), "not_reviewed")
-    url_of = {sid: s["url"] for sid, s in src.items()}
-    logs = [{**{k: v for k, v in x.items() if k != "source_ids"},
-             "source_urls": [url_of[i] for i in x.get("source_ids", []) if i in url_of]}
-            for x in data.get("search_log", [])]
-    return {"docs": [], "facts": facts, "search_log": logs,
-            "status": {"disclosure": data.get("financial_disclosure_status") or "not_reviewed",
-                       "news": news, "nps": nps}}
+    sources = {s["source_id"]: s for s in dataset.get("sources") or []}
+    facts, docs = [], []
+    by_kind: dict[str, list[str]] = {k: [] for k in FACT_KINDS}
+    info = {"fact_records": [], "doc_records": [], "skipped": []}
+    for r in select_records(dataset):
+        s = sources.get(r.get("source_id"))
+        if s is None:
+            info["skipped"].append(r.get("record_id"))
+            continue                                      # 계약: source_id는 데이터셋에 있어야 함
+        stype = _source_type_of(s.get("url"), r.get("tags") or [], homepage_host)
+        src = {"source_id": s["source_id"], "url": s.get("url") or "", "title": s.get("title"),
+               "publisher": host_of(s.get("url") or "") or None, "source_type": stype,
+               "published_at": s.get("published_at")}
+        c = r.get("content")
+        if _is_fact(c):
+            facts.append({"kind": c["kind"], "record": dict(c["record"]), "source": src,
+                          "status": c.get("status") or "partial", "statement": c.get("statement") or str(c["record"]),
+                          "excerpt": c.get("excerpt"), "locator": r.get("locator") or c.get("locator"),
+                          "event_date": c.get("event_date"), "date_uncertainty": c.get("date_uncertainty"),
+                          "record_id": r["record_id"]})
+            by_kind[c["kind"]].append(r["record_id"])
+            info["fact_records"].append(r["record_id"])
+        elif isinstance(c, str) and c.strip():
+            # LLM이 근거를 원문 레코드에 정확히 되짚도록 레코드별 고유 URL을 쓴다 (출력 출처는 데이터셋 Source 그대로)
+            docs.append({"url": f"record://{r['record_id']}", "title": s.get("title") or "", "text": c,
+                         "source_type": stype, "published_at": s.get("published_at"),
+                         "retrieved_at": s.get("collected_at"), "publisher": src["publisher"],
+                         "source_id": s["source_id"], "record_id": r["record_id"], "locator": r.get("locator")})
+            info["doc_records"].append(r["record_id"])
+        else:
+            info["skipped"].append(r.get("record_id"))
+    has_official_revenue = any(f["kind"] == "revenue" and f["source"]["source_type"] == "official" for f in facts)
+    status = {"disclosure": "found" if has_official_revenue else "not_reviewed",
+              "news": "partial" if docs else "not_reviewed",
+              "nps": "ok" if by_kind["headcount"] else "not_reviewed"}
+    info["records_by_kind"] = by_kind
+    return {"docs": docs, "facts": facts, "status": status, "search_log": [], "notes": []}, info
 
 
-# ─────────────────────────────────────────────
-# 서브그래프 · 실행
-# ─────────────────────────────────────────────
 def build_eval_graph(ctx: Ctx):
     g = StateGraph(TGState)
-    g.add_node("extract", make_extract(ctx))               # docs → facts (LLM, 원문 발췌 대조로 환각 차단)
+    g.add_node("extract", make_extract(ctx))               # 원문 → fact (LLM, 발췌 대조로 환각 차단)
     g.add_node("judge", lambda state: {"envelope": assemble(ctx, state)})   # 규칙 판정 (LLM 없음)
     g.add_edge(START, "extract")
     g.add_edge("extract", "judge")
@@ -725,46 +736,191 @@ def build_eval_graph(ctx: Ctx):
     return g.compile()
 
 
-def evaluate_traction(profile: dict, inputs: Optional[dict], *, as_of: Optional[str] = None,
-                      run_id: Optional[str] = None, request: Optional[dict] = None,
-                      previous: Optional[dict] = None, llm: Any = "auto") -> dict:
-    """한 기업 평가. request가 있으면 재분석 라운드(previous 필수). 반환: AnalysisEnvelope dict."""
-    load_env()
-    if request and not previous:
-        raise ValueError("재분석 요청에는 이전 결과(previous)가 필요합니다")
-    as_of_s = (request or {}).get("as_of") or (previous or {}).get("as_of") or as_of or date.today().isoformat()
-    as_of_d, _ = parse_date(as_of_s)
-    names = company_names(profile)
-    if not names:
-        raise ValueError("company_profile에 기업명이 없습니다 (legal_name/name/기업명)")
-    homepage = host_of(profile.get("homepage") or "")
-    start = normalize_inputs(inputs, homepage, review=bool(request))
-    ctx = Ctx(profile=profile, as_of=as_of_d, run_id=run_id or uuid.uuid4().hex[:12],
-              company_id=company_id_of(profile), names=names,
-              invest_stage=profile.get("invest_stage") or profile.get("최근 투자단계"), homepage_host=homepage,
-              llm=(get_llm() if start["docs"] else None) if llm == "auto" else llm,
-              run_dart=False, run_news=False, run_nps=False)
-    if request:
-        ctx.mode, ctx.request, ctx.previous = "review", request, previous
-    env = build_eval_graph(ctx).invoke(start)["envelope"]
-    if request and env.get("review_responses"):
-        env["review_responses"][-1]["limitations"] = list(EVAL_LIMITATIONS)
-    return env
+def _coverage(env: dict, info: dict, llm_status: Optional[str]) -> list[dict]:
+    internal = {c["scope"]: c["status"] for c in env.get("coverage", [])}
+    used = {e.get("record_id") for e in env.get("evidence", []) if e.get("record_id")}
+    out = []
+    for i, (area, kinds) in enumerate(AREA_KINDS.items(), start=1):
+        rids = [rid for k in kinds for rid in info["records_by_kind"].get(k, [])]
+        if area in TEXT_AREAS:
+            rids += info["doc_records"]
+        rids = list(dict.fromkeys(rids))
+        text_unread = area in TEXT_AREAS and info["doc_records"] and llm_status in ("not_reviewed", "failed")
+        if not rids:
+            st, note = "not_reviewed", "관련 레코드 없음"
+        elif internal.get(area) == "reviewed" and not text_unread:
+            st, note = "reviewed", "제공 자료 검토 (외부 검색 완료 아님)"
+        else:
+            st = "partial"
+            note = ("원문 레코드 LLM 미처리" if text_unread else
+                    "제공 자료에 확인된 근거 없음 — 부재로 판정하지 않음" if not (set(rids) & used) else
+                    "일부 근거만 확인")
+        out.append({"coverage_id": f"{env['company_id']}:{WORKER}:cv{i:02d}", "area": area,
+                    "record_ids": rids, "status": st, "note": note})
+    return out
 
 
-def traction_evaluate_node(state: dict) -> dict:
-    """메인 그래프 워커 노드 — 주어진 입력으로 한 번 평가해서 반환한다.
+def _missing(env: dict) -> list[dict]:
+    d = env["data"]
+    c5_unknown = d["criteria_inputs"]["C5"]["score"] is None
+    out = []
+    for i, m in enumerate(env.get("missing_items", []), start=1):
+        detail = m.get("detail") or ""
+        if m["field"] == "contract_records":
+            detail = "제공 자료만으로는 계약 부재를 확정할 수 없음 (외부 검색 완료 아님)"
+        reason = f"{CAUSE_TEXT.get(m['cause'], m['cause'])} — {m['impact']}" + (f" ({detail})" if detail else "")
+        required = c5_unknown and m["field"] in ("revenue_by_year", "contract_records")
+        out.append({"missing_id": f"{env['company_id']}:{WORKER}:mi{i:02d}", "item": m["field"], "reason": reason,
+                    "related_criterion_ids": ["C5"], "required_for_assessment": required})
+    return out
 
-    읽기: company_profile, traction_inputs, as_of, run_id,
-          traction_request(재분석 지시 1건, 선택), traction_analysis(재분석일 때만 이전 결과로 사용)
-    쓰기: traction_analysis
-    실행·재실행·횟수·중복 판단은 하지 않는다 (Orchestrator 몫).
+
+def _review_responses(findings: list[dict], previous: Optional[dict], req: Optional[dict]) -> list[dict]:
+    out = list((previous or {}).get("review_responses") or [])
+    if not req:
+        return out
+    before = {f["finding_id"]: f["claim"] for f in (previous or {}).get("findings", [])}
+    after = {f["finding_id"]: f for f in findings}
+    targets = [t for t in (req.get("target_finding_ids") or list(after)) if t in after or t in before]
+    changed = [t for t in targets if before.get(t) != (after.get(t) or {}).get("claim")]
+    backed = bool(targets) and all((after.get(t) or {}).get("evidence_ids") for t in targets)
+    for q in req.get("questions") or []:
+        if changed:
+            ans = "; ".join(f"{before.get(t, '(없음)')} → {(after.get(t) or {}).get('claim', '(해제)')}" for t in changed)
+        else:
+            ans = "같은 자료로 재검토 — 판단 유지: " + "; ".join((after.get(t) or {}).get("claim", t) for t in targets)
+        if not backed:
+            ans += " · 대상 판단을 뒷받침하는 근거가 제공 자료에 부족함"
+        out.append({"request_id": req["request_id"], "question_id": q["question_id"], "answer": ans,
+                    "finding_ids": targets, "resolved": backed})
+    return out
+
+
+def _result(meta: dict, *, status: str, version: int, data: Optional[dict] = None, sources=None, evidence=None,
+            findings=None, missing=None, coverage=None, responses=None, errors=None) -> dict:
+    res = {**meta, "agent": WORKER, "result_version": version, "analysis_status": status,
+           "data": data or {}, "sources": sources or [], "evidence": evidence or [], "findings": findings or [],
+           "missing_items": missing or [], "coverage": coverage or [], "review_responses": responses or [],
+           "errors": errors or []}
+    return S.WorkerResult.model_validate(res).model_dump(mode="json")
+
+
+def evaluate_worker(worker_input: dict, llm: Any = "auto") -> dict:
+    """Worker 입력(common_state.md 4장) → Worker 공통 반환 결과(5장). 예외를 던지지 않는다.
+
+    호출되면 주어진 데이터로 한 번 평가한다. 실행 여부·횟수·중복 판단은 하지 않는다 (Orchestrator 몫).
+    - previous_result 가 있으면 result_version = 이전 + 1 (재평가)
+    - review_request 가 있으면 질문별 답변을 review_responses 에 추가 (결론을 바꿀 의무는 없음)
+    - 입력 계약 위반·실행 오류 → analysis_status=failed + errors (누락과 구분되도록 결과를 명시적으로 반환)
     """
-    req = state.get("traction_request")
-    env = evaluate_traction(state.get("company_profile") or {}, state.get("traction_inputs"),
-                            as_of=state.get("as_of"), run_id=state.get("run_id"),
-                            request=req, previous=state.get("traction_analysis") if req else None)
-    return {"traction_analysis": env}
+    w = worker_input or {}
+    dataset = w.get("dataset") or {}
+    previous, req = w.get("previous_result"), w.get("review_request")
+    meta = {k: w.get(k) for k in ("run_id", "company_id", "as_of")}
+    meta.update(schema_version=w.get("schema_version") or S.SCHEMA_VERSION,
+                criteria_version=w.get("criteria_version") or S.CRITERIA_VERSION,
+                dataset_version=dataset.get("version"))
+    version = ((previous or {}).get("result_version") or 0) + 1
+    try:
+        load_env()
+        if not meta["company_id"] or not meta["as_of"]:
+            raise WorkerInputError("INVALID_INPUT", "company_id·as_of 는 필수")
+        if req and req.get("dataset_version") and req["dataset_version"] != dataset.get("version"):
+            raise WorkerInputError("DATASET_VERSION_MISMATCH",
+                                   f"재검토 요청 데이터 버전 {req['dataset_version']} ≠ 입력 {dataset.get('version')}")
+        S.Dataset.model_validate(dataset)
+        profile = {**(w.get("company_profile") or {}), "company_id": meta["company_id"]}
+        names = company_names(profile)
+        if not names:
+            raise WorkerInputError("INVALID_INPUT", "company_profile 에 기업명이 없음 (legal_name/name/기업명)")
+        homepage = host_of(profile.get("homepage") or "")
+        start, info = dataset_to_state(dataset, homepage)
+        as_of_d, _ = parse_date(meta["as_of"])
+        ctx = Ctx(profile=profile, as_of=as_of_d, run_id=meta["run_id"] or uuid.uuid4().hex[:12],
+                  company_id=meta["company_id"], names=names,
+                  invest_stage=profile.get("invest_stage") or profile.get("최근 투자단계"), homepage_host=homepage,
+                  llm=(get_llm() if start["docs"] else None) if llm == "auto" else llm,
+                  run_dart=False, run_news=False, run_nps=False)
+        out = build_eval_graph(ctx).invoke(start)
+        env, llm_status = out["envelope"], (out.get("status") or {}).get("llm")
+    except WorkerInputError as e:
+        return _result(meta, status="failed", version=version, errors=[{"code": e.code, "message": str(e)}],
+                       responses=list((previous or {}).get("review_responses") or []))
+    except Exception as e:  # noqa: BLE001 - 실행 오류도 결과로 반환
+        return _result(meta, status="failed", version=version,
+                       errors=[{"code": type(e).__name__, "message": str(e)[:300]}],
+                       responses=list((previous or {}).get("review_responses") or []))
+
+    errors = []
+    if start["docs"] and llm_status == "not_reviewed":
+        errors.append({"code": "LLM_NOT_CONFIGURED", "message": f"원문 레코드 {len(start['docs'])}건 근거 추출 생략"})
+    elif llm_status in ("failed", "partial"):
+        errors.append({"code": f"LLM_EXTRACTION_{llm_status.upper()}", "message": "원문 레코드 일부·전체 추출 실패"})
+    coverage = _coverage(env, info, llm_status)
+    status = "complete" if all(c["status"] == "reviewed" for c in coverage) and not errors else "partial"
+    ds_sources = {s["source_id"]: s for s in dataset.get("sources") or []}
+    used_sids = list(dict.fromkeys(sid for e in env["evidence"] for sid in e["source_ids"]))
+    data = dict(env["data"])
+    data["open_questions"] = list(data.get("open_questions") or []) + \
+        [f"데이터셋 레코드 {rid}: source_id 없음 또는 내용 비어 있음 → 제외" for rid in info["skipped"] if rid]
+    return _result(
+        meta, status=status, version=version, data=data,
+        sources=[ds_sources[s] for s in used_sids if s in ds_sources],
+        evidence=[{"evidence_id": e["evidence_id"], "record_id": e.get("record_id"),
+                   "source_id": (e.get("source_ids") or [None])[0], "excerpt": e.get("excerpt"),
+                   "locator": e.get("locator")} for e in env["evidence"]],
+        findings=env["findings"], missing=_missing(env), coverage=coverage,
+        responses=_review_responses(env["findings"], previous, req), errors=errors)
+
+
+def build_worker_input(state: dict) -> dict:
+    """EvaluationState(common_state.md 2장) → Worker 입력(4장). 재평가 여부는 State에 있는 그대로 전달."""
+    req = (state.get("review_requests") or {}).get(WORKER)
+    return {k: state.get(k) for k in ("run_id", "company_id", "as_of", "schema_version", "criteria_version",
+                                      "company_profile", "dataset")} | {
+        "previous_result": (state.get("worker_results") or {}).get(WORKER),
+        "review_request": req,
+    }
+
+
+def traction_worker_node(state: dict) -> dict:
+    """메인 그래프 Worker 노드: 자기 결과 변경분만 반환 → {"worker_results": {"traction": result}}."""
+    return {"worker_results": {WORKER: evaluate_worker(build_worker_input(state))}}
+
+
+traction_evaluate_node = traction_worker_node   # 이전 이름 호환
+
+
+# ─────────────────────────────────────────────
+# 테스트용 변환: 저장된 기존 결과(AnalysisEnvelope) → 공통 데이터셋
+# ─────────────────────────────────────────────
+def dataset_from_envelope(env: dict, version: str = "dataset-from-envelope") -> dict:
+    """기존 결과의 근거를 구조화 레코드로 되돌린다 (수집 노드 없이 실제 데이터로 시험)."""
+    srcs = {s["source_id"]: s for s in env.get("sources", [])}
+    ev = {e["evidence_id"]: e for e in env.get("evidence", [])}
+    drop = {"evidence_ids", "contract_id", "activity_id"}
+    records, n = [], 0
+    for key in RECORD_KEYS:
+        kind = key.removesuffix("_records")
+        for r in env.get("data", {}).get(key, []):
+            rec = {k: v for k, v in r.items() if k not in drop}
+            if kind == "contract":
+                rec["counterparty_id"] = None
+            for eid in r.get("evidence_ids", []):
+                e = ev.get(eid)
+                if not e or not e.get("source_ids") or e["source_ids"][0] not in srcs:
+                    continue
+                n += 1
+                s = srcs[e["source_ids"][0]]
+                records.append({"record_id": f"{env['company_id']}:rec{n:03d}", "source_id": s["source_id"],
+                                "locator": e.get("locator"), "tags": ["traction", kind, s.get("source_type") or "other"],
+                                "content": {"kind": kind, "record": rec, "status": e["evidence_status"],
+                                            "statement": e["statement"], "excerpt": e.get("excerpt"),
+                                            "event_date": e.get("event_date"),
+                                            "date_uncertainty": e.get("date_uncertainty")}})
+    sources = [{"source_id": s["source_id"], "title": s.get("title"), "url": s.get("url") or None,
+                "published_at": s.get("published_at"), "collected_at": s.get("checked_at")} for s in srcs.values()]
+    return {"version": version, "sources": sources, "records": records}
 
 
 # ─────────────────────────────────────────────
@@ -776,45 +932,48 @@ def _profiles() -> dict[str, dict]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="실적·성장성 평가 노드 단독 실행 (수집 없음)")
+    ap = argparse.ArgumentParser(description="실적·성장성 Worker 단독 실행 (공통 계약 입력, 수집 없음)")
     src = ap.add_mutually_exclusive_group(required=True)
-    src.add_argument("--from-envelope", type=Path, help="저장된 결과 {company_id: Envelope} → 입력 자료로 변환")
-    src.add_argument("--inputs", type=Path, help="traction_inputs JSON 파일 (한 기업)")
+    src.add_argument("--from-envelope", type=Path, help="저장된 결과 {company_id: Envelope} → 공통 데이터셋으로 변환")
+    src.add_argument("--input", type=Path, help="Worker 입력 JSON 파일 (common_state.md 4장 형식)")
     ap.add_argument("--company", help="company_id (예: c001)")
     ap.add_argument("--all", action="store_true", help="--from-envelope 의 모든 기업")
-    ap.add_argument("--as-of", help="기준일 (기본: 저장 결과의 as_of 또는 오늘)")
+    ap.add_argument("--as-of", help="기준일 (기본: 저장 결과의 as_of)")
     ap.add_argument("--out", type=Path, help="결과 저장 경로 (JSON)")
     args = ap.parse_args()
-    profiles = _profiles()
 
-    if args.inputs:
-        if not args.company:
-            ap.error("--inputs 에는 --company 가 필요합니다")
-        jobs = [(args.company, json.loads(args.inputs.read_text(encoding="utf-8")), args.as_of, None)]
+    if args.input:
+        jobs = [(json.loads(args.input.read_text(encoding="utf-8")), None)]
     else:
         saved = json.loads(args.from_envelope.read_text(encoding="utf-8"))
         ids = list(saved) if args.all else [args.company] if args.company else ap.error("--company 또는 --all")
-        jobs = [(cid, inputs_from_envelope(saved[cid]), args.as_of or saved[cid].get("as_of"), saved[cid]) for cid in ids]
-
+        profiles = _profiles()
+        jobs = []
+        for cid in ids:
+            p = profiles.get(cid) or {"legal_name": cid}
+            jobs.append(({"run_id": "cli", "company_id": cid, "as_of": args.as_of or saved[cid].get("as_of"),
+                          "schema_version": S.SCHEMA_VERSION, "criteria_version": S.CRITERIA_VERSION,
+                          "company_profile": {"legal_name": p.get("company_name") or p.get("legal_name"),
+                                              "aliases": [], "products": [],
+                                              "invest_stage": p.get("최근 투자단계")},
+                          "dataset": dataset_from_envelope(saved[cid]), "previous_result": None,
+                          "review_request": None}, saved[cid]))
     out, diff = {}, 0
-    for cid, inputs, as_of, old in jobs:
-        profile = profiles.get(cid) or profile_from_csv(cid) or {"legal_name": cid}
-        env = evaluate_traction(profile, inputs, as_of=as_of, llm=None)
-        out[cid] = env
-        d = env["data"]
-        c5_new = d["criteria_inputs"]["C5"]["score"]
-        line = (f"{cid} {profile.get('company_name', '')[:10]:10} 단계={d['commercial_stage']:4} 성장={d['growth_tier']} "
-                f"고용={d['headcount_trend']:7} C5={c5_new} 상태={env['analysis_status']} "
-                f"근거={len(env['evidence'])}")
+    for wi, old in jobs:
+        res = evaluate_worker(wi, llm=None)
+        out[res["company_id"]] = res
+        d = res["data"] or {}
+        c5 = ((d.get("criteria_inputs") or {}).get("C5") or {}).get("score")
+        line = (f"{res['company_id']} 단계={d.get('commercial_stage')} 성장={d.get('growth_tier')} "
+                f"C5={c5} 상태={res['analysis_status']} 근거={len(res['evidence'])} 오류={len(res['errors'])}")
         if old:
-            c5_old = old["data"]["criteria_inputs"]["C5"]["score"]
-            same = (c5_old == c5_new and old["data"]["commercial_stage"] == d["commercial_stage"]
-                    and old["data"]["growth_tier"] == d["growth_tier"])
+            same = (old["data"]["criteria_inputs"]["C5"]["score"] == c5 and old["data"]["commercial_stage"] == d.get("commercial_stage")
+                    and old["data"]["growth_tier"] == d.get("growth_tier"))
             diff += not same
-            line += "  기존과 동일" if same else f"  ※ 기존 C5={c5_old} 단계={old['data']['commercial_stage']}"
+            line += "  기존과 동일" if same else f"  ※ 기존 C5={old['data']['criteria_inputs']['C5']['score']}"
         print(line)
     if args.from_envelope:
-        print(f"\n기존 결과 대비 판정 차이: {diff} / {len(jobs)}개 기업")
+        print(f"\n기존 결과 대비 판정(단계·성장·C5) 차이: {diff} / {len(jobs)}개 기업")
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(out if len(out) > 1 else next(iter(out.values())),

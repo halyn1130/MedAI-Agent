@@ -2,12 +2,12 @@
 
     from agents.traction_growth import traction_growth_node
 
-Orchestrator 구조(수집 분리)에서는 평가 전용 노드를 쓴다:
-    from agents.traction_growth import traction_evaluate_node   # 입력: state["traction_inputs"]
+Orchestrator 구조(공통 State 계약, docs/common_state.md)에서는 평가 전용 Worker 노드를 쓴다:
+    from agents.traction_growth import traction_worker_node   # 읽기: dataset 등 → {"worker_results": {"traction": ...}}
 """
-__all__ = ["run_traction", "traction_growth_node", "evaluate_traction", "traction_evaluate_node"]
-_MODULE = {"run_traction": "agent", "traction_growth_node": "agent",
-           "evaluate_traction": "evaluator", "traction_evaluate_node": "evaluator"}
+__all__ = ["run_traction", "traction_growth_node", "evaluate_worker", "traction_worker_node", "traction_evaluate_node"]
+_MODULE = {"run_traction": "agent", "traction_growth_node": "agent", "evaluate_worker": "evaluator",
+           "traction_worker_node": "evaluator", "traction_evaluate_node": "evaluator"}
 
 
 def __getattr__(name):  # 지연 import: `python -m agents.traction_growth.agent` 실행 시 경고 방지

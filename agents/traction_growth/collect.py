@@ -1,7 +1,7 @@
 """실적·성장성 — 수집 (OpenDART · 뉴스(네이버·Tavily) · 국민연금).
 
 Orchestrator 구조에서는 "01 공통 데이터 수집" 노드로 옮겨질 부분이다.
-수집 결과는 평가 노드 입력 계약(traction_inputs)과 같은 모양으로 반환한다 → collect_traction_inputs()
+수집 결과는 공통 데이터셋(docs/common_state.md 3장)으로 반환한다 → collect_dataset()
 
     START ─┬─ collect_dart ─┐
            ├─ collect_news ─┼─ END        (병렬, 판정·LLM 없음)
@@ -42,6 +42,7 @@ from .common import (
     host_of,
     log_query,
     norm_name,
+    now_iso,
     parse_date,
     search_log,
 )
@@ -966,7 +967,7 @@ def _review_plan(ctx: Ctx, related: dict) -> None:
 
 
 # ─────────────────────────────────────────────
-# 수집 전용 실행 → 평가 노드 입력(traction_inputs)
+# 수집 전용 실행 → 공통 데이터셋 (Worker 입력의 dataset)
 # ─────────────────────────────────────────────
 def build_collect_graph(ctx: Ctx):
     """수집 노드 3개만 병렬 실행 (판정·LLM 없음)."""
@@ -979,16 +980,44 @@ def build_collect_graph(ctx: Ctx):
     return g.compile()
 
 
-def to_inputs(state: dict) -> dict:
-    """수집 State → traction_inputs (evaluator.py 입력 계약). 내부 필드 _urls 는 source_urls 로 이름만 바꾼다."""
-    logs = [{**{k: v for k, v in x.items() if k != "_urls"}, "source_urls": list(x.get("_urls") or [])}
-            for x in state.get("search_log") or []]
-    return {"docs": list(state.get("docs") or []), "facts": list(state.get("facts") or []),
-            "status": dict(state.get("status") or {}), "search_log": logs,
-            "notes": list(state.get("notes") or [])}
+def to_dataset(state: dict, company_id: str, version: str) -> dict:
+    """수집 State → 공통 데이터셋 {version, sources, records} (docs/common_state.md 3장).
+
+    - 출처 URL 하나 = Source 하나 (source_id: {company_id}:src{n})
+    - 구조화 사실(DART 매출·국민연금 고용) → content dict {kind, record, status, statement, excerpt, event_date}
+    - 원문(뉴스 요약·DART 파싱 실패 본문) → content 문자열
+    - tags: ["traction", 종류, 출처 유형] — 평가 Worker의 레코드 배분·독립 확인 판단에 사용
+    - 검색 기록·수집 상태는 계약에 없으므로 notes 와 함께 dataset 밖(로그)으로 남긴다 → collect_log
+    """
+    sources: dict[str, dict] = {}
+
+    def sid_of(s: dict) -> str:
+        key = s.get("url") or s.get("title")
+        if key not in sources:
+            sources[key] = {"source_id": f"{company_id}:src{len(sources) + 1:03d}", "title": s.get("title"),
+                            "url": s.get("url"), "published_at": s.get("published_at"),
+                            "collected_at": s.get("retrieved_at") or now_iso()[:10]}
+        return sources[key]["source_id"]
+
+    records = []
+    for f in state.get("facts") or []:
+        records.append({"record_id": f"{company_id}:rec{len(records) + 1:03d}", "source_id": sid_of(f["source"]),
+                        "locator": f.get("locator"),
+                        "tags": ["traction", f["kind"], f["source"].get("source_type") or "other"],
+                        "content": {k: f.get(k) for k in ("kind", "record", "status", "statement", "excerpt",
+                                                          "event_date", "date_uncertainty")}})
+    for d in state.get("docs") or []:
+        text = f"{d.get('title') or ''}\n{d.get('text') or ''}".strip()
+        records.append({"record_id": f"{company_id}:rec{len(records) + 1:03d}", "source_id": sid_of(d),
+                        "locator": None, "tags": ["traction", d.get("tool") or "news", d.get("source_type") or "other"],
+                        "content": text})
+    return {"version": version, "sources": list(sources.values()), "records": records}
 
 
-def collect_traction_inputs(ctx: Ctx) -> dict:
-    """설정된 Ctx(클라이언트·검색어·예산)로 수집만 실행해 traction_inputs 를 돌려준다.
-    Ctx 구성은 agent.make_ctx() 참고 (최초 실행·보완 라운드 검색 계획 포함)."""
-    return to_inputs(build_collect_graph(ctx).invoke({}))
+def collect_dataset(ctx: Ctx, version: str) -> tuple[dict, dict]:
+    """설정된 Ctx(클라이언트·검색어·예산)로 수집만 실행 → (공통 데이터셋, 수집 로그).
+    Ctx 구성은 agent.make_ctx() 참고."""
+    state = build_collect_graph(ctx).invoke({})
+    log = {"status": dict(state.get("status") or {}), "search_log": list(state.get("search_log") or []),
+           "notes": list(state.get("notes") or [])}
+    return to_dataset(state, ctx.company_id, version), log

@@ -20,7 +20,7 @@
     # 읽기: company_profile(없으면 current_company), review_requests, clinical_analysis, risk_analysis
     # 쓰기: traction_analysis (AnalysisEnvelope dict)
 Orchestrator 구조 (평가만):
-    from agents.traction_growth.evaluator import traction_evaluate_node   # 읽기: traction_inputs
+    from agents.traction_growth.evaluator import traction_worker_node   # 공통 State 계약 (docs/common_state.md)
 
 환경변수(.env): DART_API_KEY, TAVILY_API_KEY, DATA_GO_KR_API_KEY, OPENAI_API_KEY
                (선택) TRACTION_LLM_MODEL, TRACTION_LLM_TEMPERATURE, NAVER_CLIENT_ID/SECRET, NPS_API_BASE, NPS_SNAPSHOT_DIR
