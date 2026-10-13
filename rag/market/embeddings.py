@@ -20,10 +20,12 @@ class BgeM3Embeddings:
         *,
         device: str | None = None,
         batch_size: int = 16,
+        local_files_only: bool = False,
     ):
         self.model_name = model_name
         self.device = device
         self.batch_size = batch_size
+        self.local_files_only = local_files_only
         self._model = None
         # LangGraph fans four analysis nodes out concurrently. SentenceTransformer
         # model construction and encode calls are guarded so one shared retriever
@@ -42,7 +44,8 @@ class BgeM3Embeddings:
                             "sentence-transformers is required for BAAI/bge-m3 embeddings"
                         ) from exc
                     self._model = SentenceTransformer(
-                        self.model_name, device=self.device
+                        self.model_name, device=self.device,
+                        local_files_only=self.local_files_only,
                     )
         return self._model
 

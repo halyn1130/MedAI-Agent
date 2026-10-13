@@ -185,7 +185,7 @@ def no_external_data_calls(monkeypatch):
 
 def test_single_pass_contract_and_existing_scoring():
     reasoner = FakeReasoner()
-    result = MarketNode(reasoner)(worker_input())
+    result = MarketNode(reasoner, use_rag=False)(worker_input())
     assert Counter(reasoner.dimension_calls) == Counter(
         {d: 1 for d in ("size_growth", "demand", "commercialization", "monetization")}
     )
@@ -225,7 +225,7 @@ def test_single_pass_contract_and_existing_scoring():
 
 def test_missing_data_returns_contract_missing_items_and_null_scores():
     reasoner = FakeReasoner()
-    result = MarketNode(reasoner)(worker_input(records=False))
+    result = MarketNode(reasoner, use_rag=False)(worker_input(records=False))
     assert reasoner.dimension_calls == []
     assert result["analysis_status"] == "partial"
     assert result["data"]["overall_market_score"] is None
@@ -249,7 +249,7 @@ def test_missing_data_returns_contract_missing_items_and_null_scores():
 
 def test_missing_profile_is_supplemented_only_from_supplied_data():
     profile = {"company_id": "company-1", "company_name": "Acme Health AI"}
-    result = MarketNode(FakeReasoner())(worker_input(profile))
+    result = MarketNode(FakeReasoner(), use_rag=False)(worker_input(profile))
     facts = result["data"]["supplemental_context"]["facts"]
     assert facts and all(f["source_ids"] == ["report-1"] for f in facts)
     assert not any(m["item"] == "buyer" for m in result["missing_items"])
@@ -257,7 +257,7 @@ def test_missing_profile_is_supplemented_only_from_supplied_data():
 
 def test_reexecution_always_evaluates_once_even_with_repeated_review_id_and_high_round():
     reasoner = FakeReasoner()
-    node = MarketNode(reasoner)
+    node = MarketNode(reasoner, use_rag=False)
     payload = worker_input()
     first = node(payload)
     payload["previous_result"] = first
@@ -282,7 +282,7 @@ def test_reexecution_always_evaluates_once_even_with_repeated_review_id_and_high
 
 
 def test_reexecution_with_empty_dataset_never_reuses_old_sources_or_scores():
-    node = MarketNode(FakeReasoner())
+    node = MarketNode(FakeReasoner(), use_rag=False)
     first = node(worker_input())
     payload = worker_input(records=False)
     payload["dataset"]["version"] = "empty-v2"
@@ -303,7 +303,7 @@ def test_failure_has_no_retry_and_keeps_other_domain_results():
             return super().analyze_dimension(dimension, *args, **kwargs)
 
     reasoner = Failing()
-    result = MarketNode(reasoner)(worker_input())
+    result = MarketNode(reasoner, use_rag=False)(worker_input())
     assert len(reasoner.dimension_calls) == 4
     assert reasoner.dimension_calls.count("demand") == 1
     assert result["data"]["dimensions"]["demand"]["score"] is None
@@ -322,7 +322,7 @@ def test_invalid_evidence_ids_cannot_score_checks():
                 check.evidence_ids = ["not-provided"]
             return draft
 
-    result = MarketNode(BadEvidence())(worker_input())
+    result = MarketNode(BadEvidence(), use_rag=False)(worker_input())
     assert result["data"]["dimensions"]["demand"]["score"] is None
     assert all(
         c["status"] == "unknown"
@@ -338,7 +338,7 @@ def test_mismatched_cagr_period_remains_unknown():
                 metric.start_year, metric.end_year = 2025, 2030
             return draft
 
-    result = MarketNode(WrongPeriod())(worker_input())
+    result = MarketNode(WrongPeriod(), use_rag=False)(worker_input())
     assert result["data"]["criteria_inputs"]["C2"]["score"] is None
 
 
@@ -350,7 +350,7 @@ def test_cagr_keeps_metric_evidence_when_top_level_ids_are_omitted():
                 draft.evidence_ids = []
             return draft
 
-    result = MarketNode(MetricEvidenceOnly())(worker_input())
+    result = MarketNode(MetricEvidenceOnly(), use_rag=False)(worker_input())
     c2 = result["data"]["criteria_inputs"]["C2"]
     assert c2["score"] == 4 and c2["evidence_ids"]
     assert set(c2["evidence_ids"]) <= {e["evidence_id"] for e in result["evidence"]}
@@ -363,7 +363,7 @@ def test_all_domain_call_failures_return_failed_without_retry():
             raise RuntimeError("provider unavailable")
 
     reasoner = FailedReasoner()
-    result = MarketNode(reasoner)(worker_input())
+    result = MarketNode(reasoner, use_rag=False)(worker_input())
     assert len(reasoner.dimension_calls) == 4
     assert len(result["errors"]) == 4
     assert result["analysis_status"] == "failed"
@@ -377,7 +377,7 @@ def test_wrong_profile_excerpt_cannot_fill_missing_context():
                 fact.excerpt = "quotation absent from all supplied material"
             return draft
 
-    result = MarketNode(UnlinkedProfile())(worker_input(profile={}))
+    result = MarketNode(UnlinkedProfile(), use_rag=False)(worker_input(profile={}))
     assert not result["data"]["supplemental_context"]["facts"]
     assert any(m["item"] == "buyer" for m in result["missing_items"])
 
@@ -397,7 +397,7 @@ def test_dataset_filters_future_and_other_company_records():
         {"source_id": "not-provided", "text": "unknown source"},
     ]
     reasoner = FakeReasoner()
-    result = MarketNode(reasoner)(payload)
+    result = MarketNode(reasoner, use_rag=False)(payload)
     assert not reasoner.dimension_calls
     assert not result["evidence"]
     assert {s["source_id"] for s in result["sources"]} == {"report-1"}
@@ -410,19 +410,19 @@ def test_input_is_not_mutated_and_duplicate_records_do_not_duplicate_evidence():
         copy.deepcopy(payload["dataset"]["records"][0])
     )
     before = copy.deepcopy(payload)
-    result = MarketNode(FakeReasoner())(payload)
+    result = MarketNode(FakeReasoner(), use_rag=False)(payload)
     assert payload == before
     assert len(result["evidence"]) == 4
 
 
-def test_worker_never_imports_retrieval_or_search_on_reexecution(monkeypatch, tmp_path):
+def test_worker_never_imports_external_search_on_reexecution(monkeypatch, tmp_path):
     import builtins
 
     original = builtins.__import__
 
     def guarded(name, *args, **kwargs):
-        if name.startswith("rag.market") or name.startswith("tavily"):
-            raise AssertionError(f"Worker imported retrieval or collection: {name}")
+        if name.startswith("tavily") or name.startswith("playwright"):
+            raise AssertionError(f"Worker imported external search or collection: {name}")
         return original(name, *args, **kwargs)
 
     monkeypatch.setattr(builtins, "__import__", guarded)
@@ -436,15 +436,26 @@ def test_worker_never_imports_retrieval_or_search_on_reexecution(monkeypatch, tm
             pool.map(lambda _: market_agent_module.default_market_agent(), range(4))
         )
     assert len({id(node) for node in nodes}) == 1
+    class FixedLocalContext:
+        calls = 0
+
+        def prepare(self, payload):
+            self.calls += 1
+            return payload
+
+    preparer = FixedLocalContext()
+    nodes[0].preparer = preparer
+    assert nodes[0].use_rag is True
     payload = worker_input()
     payload["previous_result"] = nodes[0](payload)
     result = nodes[0](payload)
     assert result["result_version"] == 2
+    assert preparer.calls == 2
     monkeypatch.setattr(market_agent_module, "_DEFAULT_AGENT", None)
 
 
 def test_single_node_graph_has_no_collection_or_retry_edges():
-    node = MarketNode(FakeReasoner())
+    node = MarketNode(FakeReasoner(), use_rag=False)
     graph = node.build_graph()
     assert {(e.source, e.target) for e in graph.get_graph().edges} == {
         ("__start__", "evaluate"),
@@ -459,7 +470,7 @@ def test_cli_emits_direct_worker_result(tmp_path, monkeypatch):
     inp, out = tmp_path / "input.json", tmp_path / "output.json"
     inp.write_text(json.dumps(worker_input()), encoding="utf-8")
     monkeypatch.setattr(
-        sys, "argv", ["market", "--input", str(inp), "--output", str(out), "--demo"]
+        sys, "argv", ["market", "--input", str(inp), "--output", str(out), "--demo", "--prepared-input"]
     )
     main()
     result = json.loads(out.read_text())
@@ -492,4 +503,4 @@ def test_rejects_previous_result_identity_mismatch(field, value):
         field: value,
     }
     with pytest.raises(ValueError):
-        MarketNode()(payload)
+        MarketNode(use_rag=False)(payload)

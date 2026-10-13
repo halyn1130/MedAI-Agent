@@ -233,6 +233,7 @@ def record_evidence(
         "source_ids": record["source_ids"],
         "excerpt": record.get("excerpt") or text,
         "locator": record.get("locator"),
+        "page": record.get("page"),
         "event_date": record.get("event_date"),
         "evidence_status": record.get("evidence_status", "unverified"),
         **extra,

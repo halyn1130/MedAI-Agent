@@ -1,4 +1,4 @@
-"""One market evaluation over worker_input.dataset, without retrieval or retries."""
+"""One market evaluation using fixed local PDF RAG, without web search or retries."""
 
 from __future__ import annotations
 
@@ -88,24 +88,65 @@ def required_market_context(profile: dict[str, Any]) -> list[str]:
 
 
 class MarketNode:
-    def __init__(self, reasoner: MarketReasoner | None = None):
+    def __init__(
+        self, reasoner: MarketReasoner | None = None, *, use_rag: bool = True, preparer=None
+    ):
         self.reasoner = reasoner or ConservativeMarketReasoner()
+        self.use_rag = use_rag
+        self.preparer = preparer
+
+    @staticmethod
+    def _worker_input(value: dict | WorkerInput) -> tuple[dict | WorkerInput, bool]:
+        # Keep the existing 06 caller working without changing its graph or the
+        # common v2 contract. Only that legacy State gets a wrapped result.
+        legacy = (
+            isinstance(value, dict) and "dataset" not in value
+            and "company_id" not in value and "review_requests" in value
+        )
+        if not legacy:
+            return value, False
+        profile = value["company_profile"]
+        cid = profile["company_id"]
+        review = next((
+            r for r in value.get("review_requests", [])
+            if r.get("target_agent") == "market" and r.get("company_id", cid) == cid
+        ), None)
+        return {
+            "run_id": value["run_id"], "company_id": cid, "as_of": value["as_of"],
+            "company_profile": profile, "dataset": {"version": "market-rag-v1"},
+            "previous_result": value.get("market_analysis"), "review_request": review,
+        }, True
+
+    def prepare_input(self, worker_input: dict | WorkerInput) -> dict:
+        payload, _ = self._worker_input(worker_input)
+        if self.use_rag:
+            from .retrieval import prepare_market_input
+
+            return prepare_market_input(payload, preparer=self.preparer)
+        return parse_input(payload, "market").model_dump(mode="json")
 
     def __call__(self, worker_input: dict | WorkerInput) -> dict:
+        _, legacy = self._worker_input(worker_input)
+        result = self.evaluate_prepared(self.prepare_input(worker_input))
+        return {"market_analysis": result} if legacy else result
+
+    def evaluate_prepared(self, worker_input: dict | WorkerInput) -> dict:
+        """Evaluate selected context once; no retrieval, collection or retries."""
         request = parse_input(worker_input, "market")
         profile = {**request.company_profile, "company_id": request.company_id}
         sources, records, errors = provided_dataset(request, "market")
         source_map = {s["source_id"]: s for s in sources}
         required = required_market_context(profile)
         context = SupplementalContext(unresolved_fields=required)
-        if required and records:
+        context_records = [r for r in records if r.get("dimension") in (None, "context")]
+        if required and context_records:
             try:
                 material = [
                     {
                         **s,
                         "content": "\n".join(
                             record_text(r)
-                            for r in records
+                            for r in context_records
                             if s["source_id"] in r["source_ids"]
                         ),
                     }
@@ -157,7 +198,20 @@ class MarketNode:
         failed_dimensions = set()
         review_context = dict(request.review_request or {})
         if request.previous_result:
-            review_context["previous_result"] = request.previous_result
+            previous = request.previous_result
+            review_context["previous_result"] = {
+                "result_version": previous["result_version"],
+                "analysis_status": previous.get("analysis_status"),
+                "dimensions": {
+                    name: {
+                        "score": result.get("score"),
+                        "score_status": result.get("score_status"),
+                        "rationale": str(result.get("rationale") or "")[:2000],
+                    }
+                    for name, result in previous.get("data", {}).get("dimensions", {}).items()
+                    if name in DIMENSIONS and isinstance(result, dict)
+                },
+            }
         for dimension in DIMENSIONS:
             selected = [
                 r
@@ -173,9 +227,14 @@ class MarketNode:
                 seen.add(ev["evidence_id"])
                 evidence[ev["evidence_id"]] = ev
                 src = source_map[r["source_ids"][0]]
+                # Preserve full evidence in the result, but avoid sending the
+                # same passage twice as both statement and excerpt to the LLM.
+                prompt_evidence = dict(ev)
+                if prompt_evidence["statement"] == prompt_evidence["excerpt"]:
+                    prompt_evidence.pop("statement")
                 material.append(
                     {
-                        **ev,
+                        **prompt_evidence,
                         "document_title": src["title"],
                         "publisher": src["publisher"],
                         "published_at": src.get("published_at"),

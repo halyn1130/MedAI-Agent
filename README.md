@@ -38,7 +38,7 @@
 |---|---|---|
 | [입력·정규화](docs/readme/images/input.svg) | CSV 로딩, 식별자·공통 입력 정규화 | — |
 | [임상·인허가](docs/readme/images/clinical.svg) | 규제 기록·연구·회사 주장 대조 | C1 |
-| [시장·사업성](docs/market_agent.md) | 제공 데이터셋으로 시장 성장·수요·도입·수익화를 한 번 평가 | C2·C3·C4 |
+| [시장·사업성](docs/market_agent.md) | 고정 PDF의 관련 문맥을 로컬 RAG로 선별하고 시장 성장·수요·도입·수익화를 한 번 평가 | C2·C3·C4 |
 | [실적·성장성](docs/readme/images/traction.svg) | 매출·계약 검증, 상업화·성장 평가 | C5 |
 | [Risk](docs/readme/images/risk.svg) | 외부 자원 의존·핵심 역할 연속성·운영 사건 분석 | C6 변환용 근거 |
 | [투자 심사](docs/readme/images/review.svg) | 근거 검증, 보완 요청, 채점·선정·보고서 | 최종 판정 |
