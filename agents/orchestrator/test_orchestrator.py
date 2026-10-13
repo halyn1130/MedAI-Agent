@@ -6,10 +6,17 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
 from agents.orchestrator.graph import build_company_graph, build_graph
 from agents.orchestrator.routing import merge_datasets, plan_workers, slice_dataset
 
 AS_OF = "2026-10-13"
+
+
+@pytest.fixture(autouse=True)
+def _dataset_store(tmp_path, monkeypatch):
+    """데이터셋 저장소를 테스트마다 임시 폴더로 (store.ORCH_DATASET_STORE)."""
+    monkeypatch.setenv("ORCH_DATASET_STORE", str(tmp_path / "store"))
 
 
 def dataset(*kinds: str, untagged: int = 0) -> dict:
@@ -221,3 +228,84 @@ def test_payloads_match_worker_input_contracts():
             assert set(req["target_finding_ids"]) <= {x["finding_id"] for x in prev["findings"]}
             for k in ("run_id", "company_id", "as_of", "schema_version", "criteria_version"):
                 assert prev[k] == payload[k]
+
+
+# ── State 설계: 제어/페이로드 · 지속성 비용 · 재개/복구 ───────────────────────
+def test_control_and_payload_keys_are_separate():
+    from agents.orchestrator.graph import CONTROL_KEYS, PAYLOAD_KEYS
+    assert not set(CONTROL_KEYS) & set(PAYLOAD_KEYS)
+    assert {"plan", "review_round", "review_requests"} <= set(CONTROL_KEYS)
+    assert {"dataset_ref", "worker_results", "investment_review"} <= set(PAYLOAD_KEYS)
+
+
+def test_dataset_moves_out_of_state_but_workers_still_get_their_slice(tmp_path):
+    f = Fakes()
+    out = build_company_graph(f.workers()).invoke(company(ds=dataset("clinical", "traction")))
+    assert out["dataset"] is None and out["dataset_ref"]["records"] == 2
+    from pathlib import Path
+    assert Path(out["dataset_ref"]["uri"]).exists() and str(tmp_path) in out["dataset_ref"]["uri"]
+    first = [s for n, s in f.calls if n == "traction"][0]
+    assert [r["record_id"] for r in first["dataset"]["records"]] == ["r1"]       # Worker 계약: 본문 슬라이스
+    second = [s for n, s in f.calls if n == "traction"][1]
+    assert second["review_request"]["dataset_version"] == "ds-1"                 # 참조에서 version 유지
+
+
+def test_checkpoints_do_not_carry_dataset_records():
+    from langgraph.checkpoint.memory import InMemorySaver
+    g = build_company_graph(Fakes().workers(), checkpointer=InMemorySaver())
+    cfg: Any = {"configurable": {"thread_id": "t1"}}
+    g.invoke(company(ds=dataset("clinical", "traction", "market", "risk")), cfg)
+    history = list(g.get_state_history(cfg))
+    after_plan = [h for h in history if h.values.get("plan")]
+    assert after_plan and all(h.values.get("dataset") is None and h.values.get("dataset_ref") for h in after_plan)
+
+
+class Crash(BaseException):
+    """Worker 예외 처리(Exception)를 통과하는 중단 — 프로세스가 죽은 상황을 흉내 낸다."""
+
+
+def test_resume_skips_finished_companies(tmp_path):
+    from langgraph.checkpoint.sqlite import SqliteSaver
+    import sqlite3
+
+    from agents.orchestrator.store import externalize, invoke_resumable
+    db = tmp_path / "ckpt.sqlite"
+    companies = externalize([{k: v for k, v in company(cid).items() if k not in ("run_id", "as_of")}
+                             for cid in ("c001", "c002")])
+    cfg: Any = {"configurable": {"thread_id": "run-1"}, "max_concurrency": 1}
+    inputs: Any = {"run_id": "t", "as_of": AS_OF, "companies": companies}
+
+    f1 = Fakes()
+    crash = {"on": True}
+    def clinical(s):
+        if s["company_id"] == "c002" and crash["on"]:
+            raise Crash()
+        return f1.clinical(s)
+    g1 = build_graph({**f1.workers(), "clinical": clinical},
+                     checkpointer=SqliteSaver(sqlite3.connect(str(db), check_same_thread=False)))
+    with pytest.raises(Crash):
+        g1.invoke(inputs, cfg)
+    assert "c001" in {s["company_id"] for _, s in f1.calls}                    # c001은 끝났고 c002 도중 중단
+
+    f2 = Fakes()                                       # 새 프로세스처럼: 새 그래프·새 연결, 같은 파일·thread_id
+    g2 = build_graph(f2.workers(), checkpointer=SqliteSaver(sqlite3.connect(str(db), check_same_thread=False)))
+    out = invoke_resumable(g2, inputs, cfg)
+    assert {s["company_id"] for _, s in f2.calls} == {"c002"}                   # 끝난 c001은 다시 실행하지 않음
+    assert sorted(r["company_id"] for r in out["final_reviews"]) == ["c001", "c002"]
+
+
+def test_risk_common_result_read_directly_by_adapter():
+    from agents.investment_review.validate import validate_result
+    from agents.orchestrator.graph import to_agent_result
+    obs = {"kind": "risk_signal", "statement": "핵심 인력 이탈", "citations": [{"passage_id": "p1"}]}
+    res = {"company_id": "c001", "as_of": AS_OF, "analysis_status": "complete", "result_version": 1,
+           "data": {"areas": [{"category": "people", "observations": [obs], "unknowns": [],
+                               "due_diligence_questions": []}]},
+           "sources": [{"source_id": "s1", "published_at": "2026-01-01"}],
+           "evidence": [{"evidence_id": "c001:risk:ev001", "source_id": "s1"}],
+           "findings": [{"finding_id": "f1", "category": "people", "evidence_ids": ["c001:risk:ev001"]}],
+           "missing_items": []}
+    ar = to_agent_result("risk", res, "c001")
+    c6 = ar.criteria[0]
+    assert c6.score == 3.0 and c6.evidence_ids == ["c001:risk:ev001"] and ar.source_ids == ["s1"]
+    assert validate_result("c001", AS_OF, ar) == []                              # 근거 ID가 결과 안에 있음

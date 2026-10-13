@@ -4,6 +4,7 @@ playwright>=1.46.0
 pydantic>=2.7,<3
 python-dotenv>=1.0,<2
 langgraph>=1.2,<2
+langgraph-checkpoint-sqlite>=3,<4
 langchain>=0.3
 langchain-openai>=1.0,<2
 pypdf>=5,<7
