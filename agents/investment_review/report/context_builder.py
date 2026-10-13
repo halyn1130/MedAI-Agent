@@ -16,7 +16,7 @@ from ..policy import CRITERIA, CRITERION_OWNER, WEIGHTS
 CRITERION_NAME = {"C1": "임상 근거", "C2": "시장 성장", "C3": "고객 수요·도입", "C4": "수익화", "C5": "실적·성장", "C6": "운영 대비"}
 STATUS_KO = {"eligible": "적격", "ineligible": "부적격", "undetermined": "판단불가"}
 MAX_QUESTIONS = 2
-MAX_ITEMS = 2          # 기업별 시장 수치·인허가·연구·계약 개수 (5쪽 제한)
+MAX_ITEMS = 4          # 기업별 시장 수치·인허가·연구·계약 개수
 NOT_FOUND = {"not_found", "unknown", "not_applicable", None}
 
 
