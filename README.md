@@ -102,6 +102,7 @@ python -m pytest tests agents/risk -q
 - [설치·실행·테스트·폴더 구조](docs/readme/development.md)
 - [Risk Agent 입력·출력](docs/readme/risk.md)
 - [시장 평가 Node 입력·출력·데이터셋 ZIP](docs/market_agent.md)
+- [시장 평가 재현용 데이터·원본 ZIP·오프라인 검증 결과](data/market_evaluation/README.md)
 - [상세 평가 정책](docs/readme/evaluation_policy.md)
 - [실적·성장성 판단 기준](docs/readme/traction_growth.md)
 - [전체 흐름도](docs/readme/images/overview.svg)
