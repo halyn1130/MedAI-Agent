@@ -1,0 +1,37 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=ortho, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+csv [label=<<B>제공 후보 데이터셋</B>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+prep [label=<<B>01 데이터 입력·정규화</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">추가 수집 없음</FONT>>];
+workers [label=<<B>기업별 독립 State 구성</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기업별 병렬 실행</FONT>>];
+c [label=<<B>02 임상·인허가</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">자료 수집·분석</FONT>>];
+m [label=<<B>03 시장·사업성</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">자료 수집·RAG·분석</FONT>>];
+t [label=<<B>04 실적·성장성</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">자료 수집·분석</FONT>>];
+r [label=<<B>05 Risk</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">고정 근거 선택·재검토</FONT>>];
+join [label=<<B>06 결과 취합·근거 검증</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">제품·국가·기간·출처 대조</FONT>>];
+need [label=<<B>보완 필요하며</B><BR/><B>1회 한도 내인가?</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+supp [label=<<B>해당 Agent만 지정 항목 보완</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">미해결 사항 보존</FONT>>];
+judge [label=<<B>06 판정·점수 계산</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">proposed 정책 적용</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">적격 / 부적격 / 판단불가</FONT>>];
+all [label=<<B>전체 후보 결과 취합</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">실패·결측 기업도 포함</FONT>>];
+top [label=<<B>적격 기업 중 최대 K개 선정</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">적격 0개도 결과 보고</FONT>>];
+report [label=<<B>투자 검토 보고서</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">선정 이유 · 미선정 사유 · 근거·한계</FONT>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+csv -> prep [xlabel=""];
+prep -> workers [xlabel=""];
+{rank=same; c;m;t;r;}
+workers -> c [xlabel=""];
+c -> join [xlabel=""];
+workers -> m [xlabel=""];
+m -> join [xlabel=""];
+workers -> t [xlabel=""];
+t -> join [xlabel=""];
+workers -> r [xlabel=""];
+r -> join [xlabel=""];
+join -> need [xlabel=""];
+need -> supp [xlabel="예"];
+supp -> join [xlabel="보완 결과",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+need -> judge [xlabel="아니요 / 한도 종료"];
+judge -> all [xlabel=""];
+all -> top [xlabel=""];
+top -> report [xlabel=""];
+}

@@ -1,0 +1,24 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=ortho, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+input [label=<<B>고정 CSV 데이터셋</B>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+read [label=<<B>파일 로딩·컬럼 매핑</B>>];
+norm [label=<<B>기업명·식별자 정규화</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">중복 후보 확인</FONT>>];
+valid [label=<<B>기업을 식별할 수</B><BR/><B>있는가?</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+missing [label=<<B>입력 오류·미확인 기록</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">임의 정보 생성 금지</FONT>>, fillcolor="#FBEDEA", color="#CFA59B"];
+scope [label=<<B>기업·대표 제품·목표국·기준일 구성</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">제공된 값만 사용</FONT>>];
+opt [label=<<B>선택 입력 누락 허용</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">modality · hospital_type</FONT>>];
+out [label=<<B>company_profile · products · as_of</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기업별 공통 입력</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+end [label=<<B>02·03·04·05 분석에 전달</B>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+hold [label=<<B>판정에 필요한 식별 오류 전달</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">06에서 판단불가 사유 기록</FONT>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+input -> read [xlabel=""];
+read -> norm [xlabel=""];
+norm -> valid [xlabel=""];
+valid -> scope [xlabel="예"];
+valid -> missing [xlabel="아니요"];
+missing -> hold [xlabel=""];
+scope -> opt [xlabel=""];
+opt -> out [xlabel=""];
+out -> end [xlabel=""];
+}

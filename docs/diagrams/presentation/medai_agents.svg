@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1130" viewBox="0 0 1240 1130">
+<defs><marker id="gray" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#94a3b8"/></marker><marker id="blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#3b82f6"/></marker><marker id="gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#c99a40"/></marker></defs>
+<rect width="1240" height="1130" fill="white"/>
+<g font-family="Apple SD Gothic Neo, sans-serif" fill="#243247">
+<text x="620" y="45" text-anchor="middle" font-size="27" fill="#172554">MedAI-Agent</text>
+<text x="620" y="74" text-anchor="middle" font-size="17" fill="#64748b">Agent 구성과 데이터 보완 흐름</text>
+<rect x="75" y="325" width="1070" height="160" rx="14" fill="#f8faff" stroke="#e0e7ff" stroke-width="1.4"/>
+<text x="95" y="351" text-anchor="start" font-size="14" fill="#6366a0">전문 Worker · 선택된 분야 병렬 평가</text>
+<rect x="835" y="754" width="335" height="320" rx="14" fill="#f8fbff" stroke="#bfdbfe" stroke-width="1.4"/>
+<text x="852" y="779" text-anchor="start" font-size="14" fill="#2563eb">데이터 보완 · 최대 1회</text>
+<polyline points="570,198 570,230" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="570,314 570,365" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter"/>
+<polyline points="210,365 990,365" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter"/>
+<polyline points="210,365 210,380" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="210,464 210,505" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter"/>
+<polyline points="470,365 470,380" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="470,464 470,505" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter"/>
+<polyline points="730,365 730,380" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="730,464 730,505" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter"/>
+<polyline points="990,365 990,380" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="990,464 990,505" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter"/>
+<polyline points="210,505 990,505" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter"/>
+<polyline points="570,505 570,535" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="570,619 570,665" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="570,749 570,805" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="570,889 570,975" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gray)"/>
+<polyline points="420,577 35,577 35,272 420,272" fill="none" stroke="#c99a40" stroke-width="1.6" stroke-linejoin="miter" marker-end="url(#gold)"/>
+<text x="48" y="555" text-anchor="start" font-size="13" fill="#a16207">선택적 보완 · 최대 1라운드</text>
+<polyline points="720,847 855,847" fill="none" stroke="#3b82f6" stroke-width="1.6" stroke-linejoin="miter" stroke-dasharray="7 6" marker-end="url(#blue)"/>
+<text x="786" y="833" text-anchor="middle" font-size="13" fill="#2563eb">데이터 부족</text>
+<polyline points="1002,899 1002,961" fill="none" stroke="#3b82f6" stroke-width="1.6" stroke-linejoin="miter" stroke-dasharray="7 6" marker-end="url(#blue)"/>
+<text x="1015" y="932" text-anchor="start" font-size="13" fill="#2563eb">새 자료 있음</text>
+<polyline points="1002,805 1002,707 720,707" fill="none" stroke="#3b82f6" stroke-width="1.6" stroke-linejoin="miter" stroke-dasharray="7 6" marker-end="url(#blue)"/>
+<text x="860" y="694" text-anchor="middle" font-size="13" fill="#2563eb">새 자료 없음 · 재평가 생략</text>
+<polyline points="1150,1003 1205,1003 1205,644 690,644 690,665" fill="none" stroke="#3b82f6" stroke-width="1.6" stroke-linejoin="miter" stroke-dasharray="7 6" marker-end="url(#blue)"/>
+<text x="1135" y="632" text-anchor="middle" font-size="13" fill="#2563eb">재선정</text>
+<rect x="420" y="114" width="300" height="84" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.4"/>
+<text x="570.0" y="143" text-anchor="middle" font-size="17" fill="#243247">Data Collect</text>
+<text x="570.0" y="167" text-anchor="middle" font-size="14" fill="#475569">취합본 로딩 · 신규 수집</text>
+<rect x="420" y="230" width="300" height="84" rx="14" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1.4"/>
+<text x="570.0" y="259" text-anchor="middle" font-size="17" fill="#243247">Orchestrator</text>
+<text x="570.0" y="283" text-anchor="middle" font-size="14" fill="#475569">Worker 선택 · 입력 분배</text>
+<rect x="95" y="380" width="230" height="84" rx="14" fill="#fff" stroke="#d7dfeb" stroke-width="1.4"/>
+<text x="210.0" y="409" text-anchor="middle" font-size="17" fill="#243247">Clinical / Regulatory</text>
+<text x="210.0" y="433" text-anchor="middle" font-size="14" fill="#475569">임상 · 인허가 / C1</text>
+<rect x="355" y="380" width="230" height="84" rx="14" fill="#fff" stroke="#d7dfeb" stroke-width="1.4"/>
+<text x="470.0" y="409" text-anchor="middle" font-size="17" fill="#243247">Market</text>
+<text x="470.0" y="433" text-anchor="middle" font-size="14" fill="#475569">시장 · 수요 · 수익화 / C2·C3·C4</text>
+<rect x="615" y="380" width="230" height="84" rx="14" fill="#fff" stroke="#d7dfeb" stroke-width="1.4"/>
+<text x="730.0" y="409" text-anchor="middle" font-size="17" fill="#243247">Traction / Growth</text>
+<text x="730.0" y="433" text-anchor="middle" font-size="14" fill="#475569">상업화 실적 · 성장 / C5</text>
+<rect x="875" y="380" width="230" height="84" rx="14" fill="#fff" stroke="#d7dfeb" stroke-width="1.4"/>
+<text x="990.0" y="409" text-anchor="middle" font-size="17" fill="#243247">Risk</text>
+<text x="990.0" y="433" text-anchor="middle" font-size="14" fill="#475569">의존성 · 인력 · 운영 / C6</text>
+<rect x="420" y="535" width="300" height="84" rx="14" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.4"/>
+<text x="570.0" y="564" text-anchor="middle" font-size="17" fill="#243247">Quality Check</text>
+<text x="570.0" y="588" text-anchor="middle" font-size="14" fill="#475569">근거 · 충돌 · 결측 검증</text>
+<rect x="420" y="665" width="300" height="84" rx="14" fill="#f0fdfa" stroke="#5eead4" stroke-width="1.4"/>
+<text x="570.0" y="694" text-anchor="middle" font-size="17" fill="#243247">Finalize / Select</text>
+<text x="570.0" y="718" text-anchor="middle" font-size="14" fill="#475569">채점 · 판정 · 기업 선정</text>
+<rect x="420" y="805" width="300" height="84" rx="14" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.4"/>
+<text x="570.0" y="834" text-anchor="middle" font-size="17" fill="#243247">Aggregate Results</text>
+<text x="570.0" y="858" text-anchor="middle" font-size="14" fill="#475569">결과 취합 · 데이터 부족 판단</text>
+<text x="558" y="934" text-anchor="end" font-size="13" fill="#64748b">자료 충분 / 보완 한도 도달</text>
+<rect x="420" y="975" width="300" height="94" rx="14" fill="#f0fdfa" stroke="#5eead4" stroke-width="1.4"/>
+<text x="570.0" y="1004" text-anchor="middle" font-size="17" fill="#243247">Report</text>
+<text x="570.0" y="1028" text-anchor="middle" font-size="14" fill="#475569">확인 사실 중심 요약 · 선정 이유</text>
+<text x="570.0" y="1049" text-anchor="middle" font-size="14" fill="#475569">작성 → 품질 평가 · 재작성/재검토</text>
+<rect x="855" y="805" width="295" height="94" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.4"/>
+<text x="1002.5" y="834" text-anchor="middle" font-size="17" fill="#243247">Recollect Plan / Company</text>
+<text x="1002.5" y="858" text-anchor="middle" font-size="14" fill="#475569">요청 생성 → 기업별 병렬 재수집</text>
+<text x="1002.5" y="879" text-anchor="middle" font-size="14" fill="#475569">recollect.py · 데이터셋 저장</text>
+<rect x="855" y="961" width="295" height="94" rx="14" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1.4"/>
+<text x="1002.5" y="990" text-anchor="middle" font-size="17" fill="#243247">관련 Worker 재평가 · 재판정</text>
+<text x="1002.5" y="1014" text-anchor="middle" font-size="14" fill="#475569">기존 선택 Worker 중</text>
+<text x="1002.5" y="1035" text-anchor="middle" font-size="14" fill="#475569">새 자료가 붙은 Worker만</text>
+</g></svg>

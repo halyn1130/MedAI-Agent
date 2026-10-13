@@ -1,0 +1,40 @@
+// Logical graph reference. Published SVG/PNG use render_medai_agents.py
+// for fixed positions and orthogonal paths without overlapping labels.
+digraph Agents {
+ graph [rankdir=TB, newrank=true, bgcolor="#FFFFFF", pad=0.45, nodesep=0.65, ranksep=0.8, splines=ortho, fontname="Apple SD Gothic Neo", fontsize=25, fontcolor="#172554", label="MedAI-Agent\nAgent 구성과 데이터 보완 흐름", labelloc=t, labeljust=c];
+ node [shape=box, style="rounded,filled", fillcolor="#FFFFFF", color="#D7DFEB", fontname="Apple SD Gothic Neo", fontsize=13, fontcolor="#243247", margin="0.24,0.18", penwidth=1.1, width=2.25];
+ edge [color="#94A3B8", arrowsize=0.65, penwidth=1.2, fontname="Apple SD Gothic Neo", fontsize=10, fontcolor="#64748B"];
+ data [label="Data Collect\n취합본 로딩 · 신규 수집", fillcolor="#EFF6FF", color="#93C5FD", group=main];
+ orch [label="Orchestrator\nWorker 선택 · 입력 분배", fillcolor="#EEF2FF", color="#A5B4FC", group=main];
+ subgraph cluster_workers {
+ label="전문 Worker  /  선택된 분야 병렬 평가"; labeljust=l; fontsize=13; fontcolor="#6366A0"; color="#E0E7FF"; style="rounded,filled"; fillcolor="#F8FAFF"; margin=20;
+ clinical [label="Clinical / Regulatory\n임상 · 인허가\nC1 · 규제 게이트"];
+ market [label="Market\n시장 · 수요 · 수익화\nC2 · C3 · C4 / RAG"];
+ traction [label="Traction / Growth\n상업화 실적 · 성장\nC5"];
+ risk [label="Risk\n의존성 · 인력 · 운영\nC6 변환용 근거"];
+ {rank=same; clinical; market; traction; risk;}
+ clinical -> market -> traction -> risk [style=invis];
+ }
+ quality [label="Quality Check\n근거 · 충돌 · 결측 검증", fillcolor="#FFFBEB", color="#FCD34D", group=main];
+ final [label="Finalize / Select\n채점 · 판정 · 기업 선정", fillcolor="#F0FDFA", color="#5EEAD4", group=main];
+ aggregate [label="Aggregate Results\n결과 취합 · 데이터 부족 판단", fillcolor="#FFFBEB", color="#FCD34D", group=main];
+ report [label="Report\n확인 사실 중심 요약 · 선정 이유\n작성 → 품질 평가 · 재작성/재검토", fillcolor="#F0FDFA", color="#5EEAD4", group=main];
+ subgraph cluster_recollect {
+ label="데이터 보완  /  최대 1회"; labeljust=l; fontsize=13; fontcolor="#2563EB"; color="#BFDBFE"; style="rounded,filled"; fillcolor="#F8FBFF"; margin=20;
+ recollect [label="Recollect Plan / Company\n요청 생성 → 기업별 병렬 재수집\nrecollect.py · 데이터셋 저장", fillcolor="#EFF6FF", color="#93C5FD", group=collect];
+ reevaluate [label="관련 Worker 재평가 · 재판정\n기존 선택 Worker 중\n새 자료가 붙은 Worker만", fillcolor="#EEF2FF", color="#A5B4FC", group=collect];
+ recollect -> reevaluate [xlabel="새 자료 있음", color="#3B82F6", fontcolor="#2563EB", style=dashed];
+ }
+ {rank=same; aggregate; recollect;}
+ {rank=same; report; reevaluate;}
+ data -> orch [xlabel="기업별 입력"];
+ orch -> clinical; orch -> market; orch -> traction; orch -> risk;
+ clinical -> quality; market -> quality; traction -> quality; risk -> quality;
+ quality -> orch [xlabel="선택적 보완 · 최대 1라운드", color="#D6A34A", fontcolor="#A16207", constraint=false];
+ quality -> final;
+ final -> aggregate;
+ aggregate -> report [xlabel="자료 충분 / 보완 한도 도달"];
+ aggregate -> recollect [xlabel="데이터 부족", color="#3B82F6", fontcolor="#2563EB", style=dashed];
+ reevaluate -> final [xlabel="재선정", color="#3B82F6", fontcolor="#2563EB", style=dashed, constraint=false];
+ recollect -> final [xlabel="새 자료 없음\n재평가 생략", color="#3B82F6", fontcolor="#2563EB", style=dashed, constraint=false];
+}

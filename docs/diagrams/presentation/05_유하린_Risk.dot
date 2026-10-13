@@ -1,0 +1,24 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=polyline, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+input [label=<<B>기업 ID · 선택적 심사 질문</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">이전 분석 결과</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+load [label=<<B>load_dataset · 고정 자료 확인</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">manifest · SHA-256 · 기업 일치 · 중복 제거</FONT>>];
+select [label=<<B>select_evidence · 질문 기반 근거 선택</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">최초 최대 8개 · 보완 시 최대 8개 추가</FONT>>];
+analyze [label=<<B>analyze_risk · 세 영역 분석</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">관측 사실 · 조건부 영향 · 미확인 · 질문</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">캐시 재사용 · 최대 40개 원문 구간</FONT>>];
+review [label=<<B>review_result · 규칙 기반 검토</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">실패·무근거·미확인·진단·실사 질문 확인</FONT>>];
+need [label=<<B>보완 필요 · 새 자료 있음</B><BR/><B>실패 아님 · 내부 1회 한도 내?</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+retry [label=<<B>이전 결과·보완 질문 전달</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">회차 증가 · 근거 추가 선택</FONT>>];
+out [label=<<B>export_result · 결과 반환</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">areas · references · review_history · stop_reason</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">보완 실패 시 1차 결과를 partial로 보존</FONT>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+input -> load [xlabel=""];
+load -> select [xlabel=""];
+select -> analyze [xlabel=""];
+analyze -> review [xlabel=""];
+review -> need [xlabel=""];
+need -> retry [xlabel="예"];
+retry -> select [xlabel="보완",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+need -> out [xlabel="아니요 / 한도 종료"];
+note [label=<<B>외부 검색·C6 채점 없음</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">정보 부족 ≠ 위험 없음</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">외부 재호출 한도는 상위 그래프 관리</FONT>>, shape=note, fillcolor="#F7F7F7", color="#B3BDC9"];
+out -> note [xlabel="",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+graph [labelloc=t, label="05 · Agentic Risk | 유하린\n현행 구현 | 고정 자료 · 내부 보완 1회 · 실행당 GPT 최대 2회", fontname="Apple SD Gothic Neo", fontsize=20, fontcolor="#253750"];
+}

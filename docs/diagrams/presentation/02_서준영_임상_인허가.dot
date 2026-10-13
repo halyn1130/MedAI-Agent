@@ -1,0 +1,35 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=polyline, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+input [label=<<B>기업·제품·용도·목표국 입력</B>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+scope [label=<<B>제품·용도 수집 및 규제 적용 범위 조사</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">정식명·홈페이지·회사 주장 원문 수집</FONT>>];
+dec [label=<<B>규제 적용</B><BR/><B>여부 확인</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+official [label=<<B>공식 기록 직접 수집</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">허가·지정·등재·현재 조치</FONT>>];
+na [label=<<B>비적용 근거 기록</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">명칭·표기만으로 제외하지 않음</FONT>>];
+unk [label=<<B>범위 미확인 기록</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">공식 기록 조회 시도·결측 기록</FONT>>, fillcolor="#FBEDEA", color="#CFA59B"];
+study [label=<<B>논문·시험·회사 주장 직접 수집</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">규제 비대상도 효능 주장 검토</FONT>>];
+compare [label=<<B>제품·사용환경·연구 결과 대조</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">상충 근거와 한계 기록</FONT>>];
+validate [label=<<B>출처·사실·판단 연결 검증</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">C1 적용성·근거 수준·CL 플래그</FONT>>];
+out [label=<<B>clinical_analysis 반환</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">공식 상태 · 점수/unknown · 보완 항목</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+input -> scope [xlabel=""];
+scope -> dec [xlabel=""];
+{rank=same; official;na;unk;}
+dec -> official [xlabel="적용"];
+official -> study [xlabel=""];
+dec -> na [xlabel="비적용"];
+na -> study [xlabel=""];
+dec -> unk [xlabel="미확인"];
+unk -> study [xlabel=""];
+study -> compare [xlabel=""];
+compare -> validate [xlabel=""];
+validate -> out [xlabel=""];
+send [label=<<B>결과를 06 투자 심사에 전달</B>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+out -> send [xlabel=""];
+req [label=<<B>심사 보완 요청 수신</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기업당 최대 1라운드</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+patch [label=<<B>지정 항목만 추가 수집·수정</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기존 근거 ID·요청 외 결과 유지</FONT>>];
+send -> req [xlabel="요청이 있을 때",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+req -> patch [xlabel="",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+patch -> validate [xlabel="재검증 후 전체 결과 반환",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+graph [labelloc=t, label="02 · 임상·인허가 분석 | 서준영\n설계 목표 | 공식 상태와 임상 근거를 구분", fontname="Apple SD Gothic Neo", fontsize=20, fontcolor="#253750"];
+}

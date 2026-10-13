@@ -1,0 +1,35 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=ortho, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+input [label=<<B>제품유형 · 목표 고객 · 구매자</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">modality·병원유형은 선택</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+scope [label=<<B>시장 범위·사업유형별 체크 기준 설정</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">지역·기간·통화·단위 고정</FONT>>];
+search [label=<<B>영역별 직접 수집·RAG 검색</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">원문·페이지·발행일 보존</FONT>>];
+growth [label=<<B>시장 성장</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">market_growth</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">CAGR 기반</FONT>>];
+demand [label=<<B>고객·시장 수요</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">demand</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">DM1~DM5</FONT>>];
+adopt [label=<<B>도입·상용화 가능성</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">adoption</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">사업유형별 AD 체크</FONT>>];
+money [label=<<B>수익화</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">monetization</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">MO1~MO5</FONT>>];
+merge [label=<<B>근거 취합·타 분석과 사실 대조</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">공식 상태는 임상 · 실제 계약은 실적</FONT>>];
+validate [label=<<B>제안 정책으로 C2·C3·C4 계산</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">가중치·체크 기준은 팀 확정 전 proposed</FONT>>];
+out [label=<<B>market_analysis 반환</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">절대 규모 별도 · unknown 유지</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">시장 종합점수 중복 합산 금지</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+input -> scope [xlabel=""];
+scope -> search [xlabel=""];
+{rank=same; growth;demand;adopt;money;}
+search -> growth [xlabel=""];
+growth -> merge [xlabel=""];
+search -> demand [xlabel=""];
+demand -> merge [xlabel=""];
+search -> adopt [xlabel=""];
+adopt -> merge [xlabel=""];
+search -> money [xlabel=""];
+money -> merge [xlabel=""];
+merge -> validate [xlabel=""];
+validate -> out [xlabel=""];
+send [label=<<B>결과를 06 투자 심사에 전달</B>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+out -> send [xlabel=""];
+req [label=<<B>심사 보완 요청 수신</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기업당 최대 1라운드</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+patch [label=<<B>지정 항목만 추가 수집·수정</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기존 근거 ID·요청 외 결과 유지</FONT>>];
+send -> req [xlabel="요청이 있을 때",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+req -> patch [xlabel="",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+patch -> validate [xlabel="재검증 후 전체 결과 반환",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+}
