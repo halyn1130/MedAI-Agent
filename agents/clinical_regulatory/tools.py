@@ -7,13 +7,14 @@ import time
 import urllib.parse
 import xml.etree.ElementTree as ET
 from functools import lru_cache
-from typing import Any, Optional
+from typing import Optional
 
 import requests
 
 try:
+    from . import schema as S
     from .config import HTTP_TIMEOUT, MFDS_API_KEY, TRANSIENT_RETRY, WEB_RETRY, _CALL_SEM
-    from .context import ClinicalRun
+    from .context import CompanyView
     from .utils import (
         _cache_get,
         _cache_put,
@@ -21,13 +22,16 @@ try:
         _item_companies,
         _publisher_of,
         _Transient,
+        compare_to_as_of,
         date_from_url,
+        norm_date,
         same_company,
         source_type_of,
     )
 except ImportError:
+    import schema as S
     from config import HTTP_TIMEOUT, MFDS_API_KEY, TRANSIENT_RETRY, WEB_RETRY, _CALL_SEM
-    from context import ClinicalRun
+    from context import CompanyView
     from utils import (
         _cache_get,
         _cache_put,
@@ -35,23 +39,60 @@ except ImportError:
         _item_companies,
         _publisher_of,
         _Transient,
+        compare_to_as_of,
         date_from_url,
+        norm_date,
         same_company,
         source_type_of,
     )
 
 
 # ══════════════════════════════════════════════
-# 외부 호출 (예산·동시 실행 제한·일시 오류 재시도)
+# 기업 1곳 수집 컨텍스트 (출처 등록·조회 결과 재사용)
 # ══════════════════════════════════════════════
-def http_get_json(ctx: ClinicalRun, url: str, params: dict, allow_404: bool = False) -> tuple[Optional[dict], Optional[str]]:
+class CollectRun(CompanyView):
+    def __init__(self, company: S.CompanyInput, as_of: str, raw_profile: dict):
+        super().__init__(company, as_of)
+        self.raw_profile = raw_profile
+        self.url_to_sid: dict[str, str] = {}
+        self.memo: dict[tuple, dict] = {}
+        self.records: dict[tuple, dict] = {}   # (source_id, content) → DataRecord
+        self.issues: list[str] = []
+
+    def add_source(self, title: str, url: str, publisher: str, source_type: str,
+                   published_at: Optional[str] = None) -> Optional[str]:
+        """기준일 이후 공개 자료는 등록하지 않고 None 반환"""
+        pub = norm_date(published_at)
+        rel = compare_to_as_of(pub, self.as_of)
+        if rel == "after":
+            return None
+        if rel == "ambiguous":
+            pub = None  # 기준일 당시 존재를 확인할 수 없음 → 점수 근거에서 제외됨
+        with self._lock:
+            if url in self.url_to_sid:
+                sid = self.url_to_sid[url]
+                if source_type == "company":  # 홈페이지로 확인되면 유형 갱신
+                    self.sources[sid]["source_type"] = "company"
+                return sid
+        sid = self.new_id("src")
+        # publisher · source_type은 공통 계약 밖의 부가 필드. 평가 노드가 식약처 공식 기록 판별에 쓰므로 유지할 것
+        src = S.Source(source_id=sid, title=(title or url)[:300], url=url, publisher=publisher,
+                       source_type=source_type, published_at=pub, collected_at=self.checked_at).model_dump()
+        with self._lock:
+            self.sources[sid] = src
+            self.url_to_sid[url] = sid
+        return sid
+
+
+# ══════════════════════════════════════════════
+# 외부 호출 (동시 실행 제한·일시 오류 재시도)
+# ══════════════════════════════════════════════
+def http_get_json(ctx: CollectRun, url: str, params: dict, allow_404: bool = False) -> tuple[Optional[dict], Optional[str]]:
     cached = _cache_get("http", url, params)
     if cached is not None:
         return cached, None
     err = None
     for _ in range(1 + TRANSIENT_RETRY):
-        if not ctx.budget.take():
-            return None, "budget_exhausted"
         try:
             with _CALL_SEM:
                 r = requests.get(url, params=params, timeout=HTTP_TIMEOUT)
@@ -75,13 +116,6 @@ def _hit(tool: str, query: str, ok: bool, error: Optional[str], **payload) -> di
     return {"tool": tool, "query": query, "ok": ok, "error": error, **payload}
 
 
-def _track(ctx: ClinicalRun, hit: dict) -> dict:
-    with ctx._lock:
-        ctx.search_attempts += 1
-        ctx.search_ok += 1 if hit["ok"] else 0
-    return hit
-
-
 def _item_values(items: list[dict], field: str) -> list[str]:
     """응답 item들에서 field(대소문자 무시) 값을 모은다. 예: 품목허가 결과의 PRDLST_NM"""
     if not field:
@@ -101,7 +135,7 @@ def _extract_items(data: dict) -> list[dict]:
     return items if isinstance(items, list) else []
 
 
-def mfds_query(ctx: ClinicalRun, api: dict, param: str, value: str, match: Optional[list[str]] = None) -> dict:
+def mfds_query(ctx: CollectRun, api: dict, param: str, value: str, match: Optional[list[str]] = None) -> dict:
     """match가 주어지면 업체명이 정확히 같은 품목만 남긴다 (식약처 검색은 부분 일치라 다른 회사가 섞임)"""
     key = (api["name"], param, value, tuple(match or []))
     if key in ctx.memo:
@@ -109,7 +143,7 @@ def mfds_query(ctx: ClinicalRun, api: dict, param: str, value: str, match: Optio
     if not (MFDS_API_KEY and api["operation"] and param and value):
         hit = _hit(api["name"], value or "", False, "API 설정 없음 (.env 확인)", items=[])
         ctx.memo[key] = hit
-        return _track(ctx, hit)
+        return hit
     endpoint = f'{api["base"]}/{api["operation"]}'
     data, err = http_get_json(ctx, endpoint, {"serviceKey": MFDS_API_KEY, "pageNo": 1, "numOfRows": 20,
                                               "type": "json", param: value})
@@ -130,7 +164,7 @@ def mfds_query(ctx: ClinicalRun, api: dict, param: str, value: str, match: Optio
             sid = ctx.add_source(f"{api['name']} 조회: {value}", public_url, "식품의약품안전처", "official")
         hit = _hit(api["name"], value, True, None, source_id=sid, items=items)
     ctx.memo[key] = hit
-    return _track(ctx, hit)
+    return hit
 
 
 @lru_cache(maxsize=1)
@@ -142,18 +176,16 @@ def _tavily():
     return TavilyClient(api_key=key)
 
 
-def web_search(ctx: ClinicalRun, query: str, max_results: int = 5) -> dict:
+def web_search(ctx: CollectRun, query: str, max_results: int = 5) -> dict:
     key = ("web", query)
     if key in ctx.memo:
         return ctx.memo[key]
     client = _tavily()
     if client is None:
-        return _track(ctx, _hit("웹 검색", query, False, "TAVILY_API_KEY 없음", results=[]))
+        return _hit("웹 검색", query, False, "TAVILY_API_KEY 없음", results=[])
     err = None
     for attempt in range(1 + WEB_RETRY):
         cached = _cache_get("web", "tavily", {"q": query, "n": max_results})
-        if cached is None and not ctx.budget.take():
-            return _track(ctx, _hit("웹 검색", query, False, "budget_exhausted", results=[]))
         try:
             res = cached
             if res is None:
@@ -167,18 +199,17 @@ def web_search(ctx: ClinicalRun, query: str, max_results: int = 5) -> dict:
                 sid = ctx.add_source(x.get("title") or url, url, _publisher_of(url),
                                      source_type_of(url, ctx.company.homepage), pub_date)
                 if sid:  # 기준일 이후 자료는 제외됨
-                    ctx.source_text[sid] = ctx.source_text.get(sid, "") + " " + (x.get("title") or "") + " " + (x.get("content") or "")
                     results.append({"source_id": sid, "title": x.get("title"), "url": url,
                                     "published_at": ctx.sources[sid]["published_at"],
                                     "content": (x.get("content") or "")[:800]})
             hit = _hit("웹 검색", query, True, None, results=results)
             ctx.memo[key] = hit
-            return _track(ctx, hit)
+            return hit
         except Exception as e:
             err = f"{type(e).__name__}: {e}"[:300]
             time.sleep(min(30, 3 * 2 ** attempt))  # 요청 한도(429) 등 일시 오류는 기다렸다 재시도
     print(f"  [웹 검색 실패] {ctx.company.display_name}: {query} → {err}", file=sys.stderr)
-    return _track(ctx, _hit("웹 검색", query, False, err, results=[]))
+    return _hit("웹 검색", query, False, err, results=[])
 
 
 def _html_to_text(html: str) -> str:
@@ -188,7 +219,7 @@ def _html_to_text(html: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def fetch_page(ctx: ClinicalRun, url: str) -> dict:
+def fetch_page(ctx: CollectRun, url: str) -> dict:
     """페이지 본문 수집: Tavily extract → 실패 시 직접 요청"""
     key = ("page", url)
     if key in ctx.memo:
@@ -199,7 +230,7 @@ def fetch_page(ctx: ClinicalRun, url: str) -> dict:
         text = cached
     else:
         client = _tavily()
-        if client is not None and ctx.budget.take():
+        if client is not None:
             try:
                 with _CALL_SEM:
                     res = client.extract(urls=[url])
@@ -207,7 +238,7 @@ def fetch_page(ctx: ClinicalRun, url: str) -> dict:
                 text = (rows[0].get("raw_content") if rows else None) or None
             except Exception as e:
                 err = f"{type(e).__name__}: {e}"[:200]
-        if not text and ctx.budget.take():
+        if not text:
             try:
                 with _CALL_SEM:
                     r = requests.get(url, timeout=HTTP_TIMEOUT, headers={"User-Agent": "Mozilla/5.0"})
@@ -223,14 +254,12 @@ def fetch_page(ctx: ClinicalRun, url: str) -> dict:
     else:
         sid = ctx.add_source(url, url, _publisher_of(url), source_type_of(url, ctx.company.homepage),
                              date_from_url(url))
-        if sid:
-            ctx.source_text[sid] = ctx.source_text.get(sid, "") + " " + text[:20000]
         hit = _hit("페이지", url, True, None, source_id=sid, text=text[:20000])
     ctx.memo[key] = hit
-    return _track(ctx, hit)
+    return hit
 
 
-def _pubmed_abstracts(ctx: ClinicalRun, ids: list[str], extra: dict) -> dict[str, str]:
+def _pubmed_abstracts(ctx: CollectRun, ids: list[str], extra: dict) -> dict[str, str]:
     """efetch로 초록 원문 및 저자 소속을 가져온다 (연구 설계·표본 수·다기관·회사 소속 여부 판단용)"""
     if not ids:
         return {}
@@ -239,8 +268,6 @@ def _pubmed_abstracts(ctx: ClinicalRun, ids: list[str], extra: dict) -> dict[str
     cached = _cache_get("pubmed_xml", url, params)
     xml_text = cached
     if xml_text is None:
-        if not ctx.budget.take():
-            return {}
         try:
             with _CALL_SEM:
                 r = requests.get(url, params=params, timeout=HTTP_TIMEOUT)
@@ -270,7 +297,7 @@ def _pubmed_abstracts(ctx: ClinicalRun, ids: list[str], extra: dict) -> dict[str
     return out
 
 
-def pubmed_search(ctx: ClinicalRun, term: str, retmax: int = 5) -> dict:
+def pubmed_search(ctx: CollectRun, term: str, retmax: int = 5) -> dict:
     key = ("pubmed", term)
     if key in ctx.memo:
         return ctx.memo[key]
@@ -279,14 +306,14 @@ def pubmed_search(ctx: ClinicalRun, term: str, retmax: int = 5) -> dict:
     data, err = http_get_json(ctx, f"{eutils}/esearch.fcgi",
                               {"db": "pubmed", "term": term, "retmode": "json", "retmax": retmax, **extra})
     if err:
-        return _track(ctx, _hit("PubMed", term, False, err, papers=[]))
+        return _hit("PubMed", term, False, err, papers=[])
     ids = (data or {}).get("esearchresult", {}).get("idlist", [])
     papers = []
     if ids:
         summ, err = http_get_json(ctx, f"{eutils}/esummary.fcgi",
                                   {"db": "pubmed", "id": ",".join(ids), "retmode": "json", **extra})
         if err:
-            return _track(ctx, _hit("PubMed", term, False, err, papers=[]))
+            return _hit("PubMed", term, False, err, papers=[])
         result = (summ or {}).get("result", {})
         abstracts = _pubmed_abstracts(ctx, ids, extra)
         for i in ids:
@@ -297,24 +324,23 @@ def pubmed_search(ctx: ClinicalRun, term: str, retmax: int = 5) -> dict:
             sid = ctx.add_source(doc.get("title") or url, url, doc.get("source") or "PubMed", "research",
                                  doc.get("sortpubdate", "")[:10].replace("/", "-") or doc.get("pubdate"))
             if sid:
-                ctx.source_text[sid] = (doc.get("title") or "") + " " + abstracts.get(i, "")
                 papers.append({"source_id": sid, "pmid": i, "title": doc.get("title"),
                                "journal": doc.get("source"), "pubdate": doc.get("pubdate"),
                                "authors": [a.get("name") for a in doc.get("authors", [])][:6],
                                "abstract": abstracts.get(i, "")[:3000]})   # 초록 원문 (연구 유형 포함)
     hit = _hit("PubMed", term, True, None, papers=papers)
     ctx.memo[key] = hit
-    return _track(ctx, hit)
+    return hit
 
 
-def openfda_510k(ctx: ClinicalRun, applicant: str) -> dict:
+def openfda_510k(ctx: CollectRun, applicant: str) -> dict:
     key = ("openfda", applicant)
     if key in ctx.memo:
         return ctx.memo[key]
     data, err = http_get_json(ctx, "https://api.fda.gov/device/510k.json",
                               {"search": f'applicant:"{applicant}"', "limit": 10}, allow_404=True)
     if err:
-        return _track(ctx, _hit("openFDA 510(k)", applicant, False, err, results=[]))
+        return _hit("openFDA 510(k)", applicant, False, err, results=[])
     results = []
     for x in (data or {}).get("results", []):
         k = x.get("k_number", "")
@@ -327,24 +353,4 @@ def openfda_510k(ctx: ClinicalRun, applicant: str) -> dict:
                             "decision": x.get("decision_description")})
     hit = _hit("openFDA 510(k)", applicant, True, None, results=results)
     ctx.memo[key] = hit
-    return _track(ctx, hit)
-
-
-def _coverage_status(hits: list[dict], found: bool) -> str:
-    if found:
-        return "reviewed"
-    if not hits:
-        return "not_reviewed"
-    if any(h["ok"] for h in hits):
-        return "no_relevant_evidence_found"
-    if all(h.get("error") == "budget_exhausted" for h in hits):
-        return "not_reviewed"
-    return "search_failed"
-
-
-def _scope_of(hits: list[dict]) -> dict:
-    return {
-        "names": [h["query"] for h in hits if h["tool"].startswith(("식약처", "openFDA"))],
-        "queries": [h["query"] for h in hits if h["tool"] in ("웹 검색", "PubMed")],
-        "sources": [h["tool"] for h in hits],
-    }
+    return hit

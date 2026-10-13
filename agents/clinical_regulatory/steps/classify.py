@@ -2,26 +2,24 @@ from __future__ import annotations
 
 try:
     from .. import schema as S
-    from ..context import ClinicalAgentState
+    from ..context import ClinicalRun
     from ..llm import _company_brief, _product_brief, ask
 except ImportError:
     import schema as S
-    from context import ClinicalAgentState
+    from context import ClinicalRun
     from llm import _company_brief, _product_brief, ask
 
 
-def classify_node(state: ClinicalAgentState) -> dict:
+def classify_step(ctx: ClinicalRun) -> None:
     """1. 유형·범위: product_type과 regulatory_applicability를 분리"""
-    ctx = state["ctx"]
-    for p in ctx.company.products:  # 이전 판단이 없는 제품의 기본값
+    for p in ctx.company.products:  # 분류 실패 시 기본값
         ctx.classify.setdefault(p.product_id, {"product_type": "other", "regulatory_applicability": "unknown",
                                                "has_efficacy_claim": bool(p.claims), "rationale": "미분류"})
-    if "classify" not in ctx.steps:
-        return {}
-    pids = ctx.target_pids
+    pids = ctx.pids
     try:
         out: S.ClassifyOutput = ask(S.ClassifyOutput, "classify", {
-            "기업": _company_brief(ctx), "제품": [_product_brief(ctx, pid) for pid in pids]})
+            "기업": _company_brief(ctx), "제품": [_product_brief(ctx, pid) for pid in pids],
+            **ctx.review_payload()})
         for it in out.items:
             if it.product_id in pids:
                 ctx.classify[it.product_id] = it.model_dump()
@@ -41,11 +39,10 @@ def classify_node(state: ClinicalAgentState) -> dict:
 
         status = "reviewed"
     except Exception as e:
-        ctx.validation_issues.append(f"유형 분류 실패: {e}"[:200])
-        status = "search_failed"
+        ctx.add_error("classify_failed", e)
+        status = "partial"
     for pid in pids:
         p = ctx.product(pid)
         info_missing = not (p.name or p.intended_use or ctx.company.description)
-        ctx.set_coverage("classification", pid, None, "insufficient_information" if info_missing else status,
-                         note=ctx.classify[pid].get("rationale"))
-    return {}
+        ctx.set_coverage("classification", pid, None, "partial" if info_missing else status,
+                         note="제품명·용도 정보 부족" if info_missing else ctx.classify[pid].get("rationale"))
