@@ -1,6 +1,7 @@
 """05 risk_analysis(risk-company-3)를 그대로 읽는다.
 
 사용: areas[].observations/unknowns/due_diligence_questions, analysis_status, 상위 references.
+공통 Worker 형식이면 data.areas, 결과 안의 sources·evidence를 쓴다.
 - C6: 영역별 위험 신호(kind=risk_signal) 수로 채점한다. 규칙은 policy.C6_RULE.
       관찰이 있는 영역만 채점해 평균하고, 관찰이 있는 영역이 없으면 null.
 - G02: 분석이 실행됐으면 clear(현재 중단 여부를 확정하는 필드는 없음), 실패·자료 없음이면 not_checked.
@@ -29,13 +30,13 @@ def c6_from_areas(risk: dict) -> CriterionResult:
     if risk.get("analysis_status") not in RAN:
         return CriterionResult(**base, rationale=f"[{C6_RULE}] Risk 분석 상태 {risk.get('analysis_status')} → 채점 불가")
     scored, skipped, evidence = [], [], []
-    for area in risk.get("areas") or []:
+    for area in _areas(risk):
         if not area.get("observations"):
             skipped.append(area["category"])
             continue
         n = len(_signals(area))
         scored.append((area["category"], n, C6_AREA_SCORE_BY_SIGNALS.get(n, C6_AREA_SCORE_MANY_SIGNALS)))
-        evidence += [c["passage_id"] for o in area["observations"] for c in o.get("citations") or []]
+        evidence += _area_evidence(risk, area)
     if not scored:
         return CriterionResult(**base, rationale=f"[{C6_RULE}] 관찰이 있는 영역 없음 → 채점 불가")
     score = sum(s for _, _, s in scored) / len(scored)
@@ -53,13 +54,28 @@ def g02_from_status(risk: dict) -> GateResult:
                       reason="Risk 분석에서 현재 중단을 확정하는 근거 없음. 안전의 증명 아님")
 
 
+def _area_evidence(risk: dict, area: dict) -> list[str]:
+    """영역 관찰의 근거 ID. 공통 Worker 형식은 findings(category)의 evidence_ids, 기존 형식은 인용 passage_id."""
+    if risk.get("findings") is not None and risk.get("evidence") is not None:
+        return [e for f in risk["findings"] if f.get("category") == area["category"] for e in f.get("evidence_ids") or []]
+    return [c.get("passage_id") for o in area["observations"] for c in o.get("citations") or []]
+
+
+def _areas(risk: dict) -> list[dict]:
+    return risk.get("areas") or (risk.get("data") or {}).get("areas") or []
+
+
 def adapt_risk(risk: dict, references: Optional[list] = None) -> AgentResult:
-    areas = risk.get("areas") or []
+    """references가 없으면 결과 안의 sources(공통 Worker 형식)를 쓴다."""
+    if references is None:
+        references = risk.get("sources")
+    areas = _areas(risk)
     signals = [(a["category"], o) for a in areas for o in _signals(a)]
     return AgentResult(
         agent=AGENT, company_id=risk.get("company_id"), as_of=risk.get("as_of"),
         analysis_status=risk.get("analysis_status"),
-        evidence_ids=[p["passage_id"] for p in risk.get("passages") or []],
+        evidence_ids=[p["passage_id"] for p in risk.get("passages") or []]
+        + [e["evidence_id"] for e in risk.get("evidence") or []],
         source_published={r["source_id"]: r.get("published_at") for r in references or []},
         criteria=[c6_from_areas(risk)],
         gates=[g02_from_status(risk)],

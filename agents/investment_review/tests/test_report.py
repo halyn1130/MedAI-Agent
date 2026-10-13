@@ -114,8 +114,10 @@ class NarrativeTests(unittest.TestCase):
 
     def test_generate_report_with_llm(self):
         name = self.ctx["selected"][0]["name"]
-        narrative = Narrative(summary=f"LLM 요약이다. {self.names()} 선정.", criteria_guide="LLM 기준 안내다.",
-                              companies=[CompanyText(name=name, selection_reason="LLM 선정 이유다.", points="LLM 논점이다.")])
+        narrative = Narrative(summary=f"LLM 요약이다. 임상·시장·실적·운영을 보고 {self.names()} 선정.",
+                              criteria_guide="LLM 기준 안내다.",
+                              companies=[CompanyText(name=name, selection_reason="LLM 선정 이유다.",
+                                                     points="LLM 논점이다. 실사로 확인이 필요하다.")])
         md, check = generate_report(*self.args, llm=FakeLLM(narrative), fetch=None)
         for text in ("LLM 요약이다.", "LLM 기준 안내다.", "**선정 이유**: LLM 선정 이유다.", "**핵심 검토 논점**: LLM 논점이다."):
             self.assertIn(text, md)
@@ -123,13 +125,14 @@ class NarrativeTests(unittest.TestCase):
 
     def test_retry_with_feedback_replaces_failed_item(self):
         bad = Narrative(summary="이름 없는 요약이다.")
-        good = Narrative(summary=f"다시 쓴 요약이다. {self.names()} 선정.")
+        good = Narrative(summary=f"다시 쓴 요약이다. 임상·시장·실적·운영을 보고 {self.names()} 선정.")
         llm = FakeLLM([bad, good])
         md, check = generate_report(*self.args, llm=llm, fetch=None)
         self.assertEqual(len(llm.calls), 2)
         self.assertIn("누락", llm.calls[1][-1][1])                     # 재요청에 검증 사유 전달
         self.assertIn("다시 쓴 요약이다.", md)
         self.assertTrue(check["narrative"]["notes"][0].startswith("1차:"))
+        self.assertFalse([i for i in check["evaluation"]["quality_issues"] if i["kind"] == "report"])
 
     def test_llm_input_has_precomputed_values_and_no_sources(self):
         from ..report.writer import llm_input

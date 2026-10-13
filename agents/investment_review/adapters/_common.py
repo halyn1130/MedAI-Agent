@@ -24,8 +24,13 @@ def failure_issue(agent: str, company_id: Optional[str], status: Optional[str]) 
 
 
 def missing_texts(envelope: dict) -> list[str]:
+    """기존 형식(field·cause·impact)과 공통 형식(item·reason·required_for_assessment)을 모두 읽는다."""
     out = []
     for m in envelope.get("missing_items") or []:
+        if "item" in m:
+            required = "[평가 필수] " if m.get("required_for_assessment") else ""
+            out.append(f"{required}{m.get('item')}: {m.get('reason')}")
+            continue
         impact = f"[{m['impact']}] " if m.get("impact") else ""
         out.append(f"{impact}{m.get('field')}: {m.get('cause')}" + (f" — {m['detail']}" if m.get("detail") else ""))
     return out

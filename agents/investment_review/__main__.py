@@ -1,4 +1,4 @@
-"""06 전체 실행: 기업 목록 → 02~05 → 검증·보완 1회 → 판정 → 선정.
+"""06 전체 실행: 기업 목록 → 02~05 → 검증·보완 1회 → 판정 → 선정 → 보고서(취합 → 작성 ⇄ 평가).
 
     python -m agents.investment_review --out outputs/review            # 저장된 임상·Risk 결과 재사용
     python -m agents.investment_review --limit 3 --market-json m.json --traction-json t.json
@@ -11,15 +11,15 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import logging
 import os
+import uuid
 from datetime import date
 from pathlib import Path
 
 from .inputs import ROOT, DEFAULT_CSV, load_companies, saved_clinical, saved_json, saved_risk
 from .nodes import build_graph
-from .policy import DEFAULT_K, PARTIAL_POLICY, STRICT_POLICY, ZERO_FILL_POLICY
-
-POLICIES = {"zero_fill": ZERO_FILL_POLICY, "partial": PARTIAL_POLICY, "strict": STRICT_POLICY}
+from .policy import DEFAULT_K, POLICIES
 
 
 def _latest_risk_run() -> Path | None:
@@ -28,6 +28,8 @@ def _latest_risk_run() -> Path | None:
 
 
 def main() -> None:
+    from dotenv import load_dotenv
+    load_dotenv()  # OPENAI_API_KEY·REPORT_MODEL·REPORT_JUDGE_MODEL
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--csv", type=Path, default=DEFAULT_CSV)
     ap.add_argument("--as-of", default=date.today().isoformat())
@@ -44,6 +46,7 @@ def main() -> None:
     ap.add_argument("--max-concurrency", type=int, default=5)
     ap.add_argument("--no-report", action="store_true", help="보고서 생성 생략")
     ap.add_argument("--no-llm-report", action="store_true", help="보고서 LLM 서술 없이 템플릿 문장만")
+    ap.add_argument("--no-judge", action="store_true", help="보고서 품질 평가에서 LLM Judge 생략 (규칙 검사만)")
     args = ap.parse_args()
 
     companies = load_companies(args.csv)
@@ -71,12 +74,21 @@ def main() -> None:
 
     # 02 임상은 보완 결과를 CLINICAL_RESULT_DIR(기본: 실행 위치의 clinical_results/)에 저장한다 → 06 출력 폴더로
     os.environ.setdefault("CLINICAL_RESULT_DIR", str(args.out / "clinical_results"))
-    graph = build_graph(policy=POLICIES[args.policy], k=args.k)
-    out = graph.invoke({"run_id": f"review-{args.as_of}", "as_of": args.as_of,
-                        "companies": companies, "preloaded": preloaded},
-                       {"max_concurrency": args.max_concurrency})
-
     args.out.mkdir(parents=True, exist_ok=True)
+    run_id = f"review-{args.as_of}"
+    trace_id = f"{run_id}-{uuid.uuid4().hex[:8]}"   # State·결정 로그·LangSmith 메타데이터를 잇는 키
+    # 보고서 노드의 라우팅 결정 로그 → 출력 폴더 JSONL
+    handler = logging.FileHandler(args.out / "decision_log.jsonl", encoding="utf-8")
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    logging.getLogger("investment_review.report").addHandler(handler)
+    logging.getLogger("investment_review.report").setLevel(logging.INFO)
+    meta = {"run_id": run_id, "as_of": args.as_of, "criteria_version": POLICIES[args.policy].criteria_version,
+            "policy": args.policy, "k": args.k or DEFAULT_K}
+    graph = build_graph(policy=POLICIES[args.policy], k=args.k)
+    out = graph.invoke({"run_id": run_id, "as_of": args.as_of, "companies": companies, "preloaded": preloaded},
+                       {"max_concurrency": args.max_concurrency, "run_name": "investment_review",
+                        "metadata": {"run_id": run_id, "trace_id": trace_id}})
+
     path = args.out / "final_reviews.json"
     path.write_text(json.dumps(out["final_reviews"], ensure_ascii=False, indent=2), encoding="utf-8")
     # Agent별 최종 분석 결과: 다음 실행에서 --market-json 등으로 재사용
@@ -87,19 +99,20 @@ def main() -> None:
     (args.out / "risk_analysis.json").write_text(json.dumps(
         {cid: {"risk_analysis": a["risk_analysis"], "references": a.get("references", [])}
          for cid, a in analyses.items() if "risk_analysis" in a}, ensure_ascii=False), encoding="utf-8")
-    meta = {"as_of": args.as_of, "criteria_version": POLICIES[args.policy].criteria_version,
-            "policy": args.policy, "k": args.k or DEFAULT_K}
-    (args.out / "run_meta.json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
+    (args.out / "run_meta.json").write_text(json.dumps({k: v for k, v in meta.items() if k != "run_id"},
+                                                       ensure_ascii=False), encoding="utf-8")
     result, note = path, "보고서 생성 생략 (--no-report)"
     if not args.no_report:
         from .report.__main__ import write_report
-        check = write_report(args.out, out["final_reviews"], analyses, {c["company_id"]: c for c in companies},
-                             meta, None if args.no_llm_report else "auto")
+        check = write_report(args.out, out["final_reviews"], analyses, {c["company_id"]: c for c in companies}, meta,
+                             None if args.no_llm_report else "auto", judge=None if args.no_judge else "auto")
+        ev = check["evaluation"]
+        evaluation = f"품질 평가 {ev['status']} ({ev['attempts']}회 작성)"
         pdf = args.out / "final_report.pdf"
         if "pdf_error" in check or not pdf.exists():
-            result, note = args.out / "final_report.md", f"PDF 생성 실패: {check.get('pdf_error', 'PDF 없음')}"
+            result, note = args.out / "final_report.md", f"PDF 생성 실패: {check.get('pdf_error', 'PDF 없음')} · {evaluation}"
         else:
-            result, note = pdf, f"{check['pages']}쪽 · 검증 {'통과' if check['ok'] else check['issues']}"
+            result, note = pdf, f"{check['pages']}쪽 · 형식 {'통과' if check['ok'] else check['issues']} · {evaluation}"
     names = {c["company_id"]: c["company_name"] for c in companies}
     for r in out["final_reviews"]:
         total = "-" if r["total_score"] is None else f"{r['total_score']:.1f}"

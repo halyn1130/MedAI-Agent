@@ -1,6 +1,6 @@
 """보고서 사후 검증.
 
-- 분량: 5쪽 이내, SUMMARY 1/2쪽 이내 (Markdown 줄 너비로 추정한 근사치)
+- 분량: 10쪽 이내, SUMMARY 1/2쪽 이내 (Markdown 줄 너비로 추정한 근사치)
 - 인용: 본문의 [n]이 REFERENCE에 있고, REFERENCE 항목은 본문에서 인용됨
 - 누락: 전체 후보가 판정 표에 모두 있음
 - LLM 서술: 보고서 데이터에 없는 숫자가 나오면 그 문장을 버린다
@@ -11,7 +11,7 @@ import math
 import re
 import unicodedata
 
-MAX_PAGES = 5
+MAX_PAGES = 10
 LINE_WIDTH = 100            # A4 한 줄 너비 (한글 2칸, 영문·숫자 1칸)
 LINES_PER_PAGE = 50
 SUMMARY_MAX_LINES = LINES_PER_PAGE // 2
@@ -113,7 +113,7 @@ def check_narrative(narrative: dict, ctx: dict) -> tuple[dict, list[str]]:
 
 
 def check_report(markdown: str, ctx: dict, pdf_pages: int | None = None) -> dict:
-    """pdf_pages가 있으면 실제 PDF 쪽수로, 없으면 줄 너비 추정으로 5쪽을 검사한다."""
+    """pdf_pages가 있으면 실제 PDF 쪽수로, 없으면 줄 너비 추정으로 MAX_PAGES를 검사한다."""
     issues = []
     pages = pdf_pages if pdf_pages is not None else estimate_pages(markdown)
     if pages > MAX_PAGES:

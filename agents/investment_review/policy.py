@@ -83,3 +83,4 @@ PARTIAL_POLICY = Policy()                        # 완화 기준: 부분 판정 
 ZERO_FILL_POLICY = Policy(missing_as_zero=True)  # 완화 기준: 미확인 0점 처리
 STRICT_POLICY = Policy(min_coverage=None)        # 설계서 기준
 DEFAULT_POLICY = ZERO_FILL_POLICY
+POLICIES = {"zero_fill": ZERO_FILL_POLICY, "partial": PARTIAL_POLICY, "strict": STRICT_POLICY}

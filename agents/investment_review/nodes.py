@@ -11,6 +11,8 @@
 - 이미 결과가 있고 보완 요청이 없으면 Agent를 호출하지 않는다 (저장된 결과 재사용).
 - Agent가 예외를 던지면 그 분석만 failed로 기록하고 계속 진행한다.
 - agents 인자로 Agent를 바꿔 끼울 수 있다 (테스트·부분 실행).
+
+보고서(취합 → 작성 → 품질 평가)는 공통 State 기준 노드로 report/nodes.py에 있고, 이 그래프 결과를 받아 실행한다.
 """
 from __future__ import annotations
 
@@ -20,9 +22,8 @@ from typing import Annotated, Callable, Optional, TypedDict
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 
-from .adapters import adapt_clinical, adapt_market, adapt_risk, adapt_traction, not_run
-from .contract import AgentResult, InvestmentReview, ReportDraft
-from .judge import judge
+from .contract import AgentResult, InvestmentReview
+from .finalize import adapt_worker_results, finalize_review
 from .policy import DEFAULT_POLICY, Policy
 from .review_requests import build_review_requests
 from .selection import select
@@ -133,15 +134,12 @@ def _agent_node(agent: str, fn: AgentFn):
 
 
 # ── 06 노드 ────────────────────────────────────────────────────────────────
+def _worker_results(state: CompanyState) -> dict:
+    return {a: state.get(STATE_KEY[a]) for a in AGENTS if state.get(STATE_KEY[a])}
+
+
 def adapt_all(state: CompanyState) -> list[AgentResult]:
-    cid = state["company_id"]
-    out = []
-    for agent, adapt in (("clinical", adapt_clinical), ("market", adapt_market), ("traction", adapt_traction)):
-        env = state.get(STATE_KEY[agent])
-        out.append(adapt(env) if env else not_run(agent, cid))
-    risk = state.get("risk_analysis")
-    out.append(adapt_risk(risk, state.get("references")) if risk else not_run("risk", cid))
-    return out
+    return adapt_worker_results(state["company_id"], _worker_results(state), state.get("references"))
 
 
 def _review_node(policy: Policy):
@@ -164,19 +162,8 @@ def _route(state: CompanyState):
 
 def _finalize_node(policy: Policy):
     def node(state: CompanyState) -> dict:
-        results = adapt_all(state)
-        issues = validate(state["company_id"], state["as_of"], results, policy)
-        review = judge(state["company_id"], state["as_of"], [c for r in results for c in r.criteria],
-                       [g for r in results for g in r.gates], issues, policy)
-        review = review.model_copy(update={
-            "review_request_ids": state.get("review_request_ids", []),
-            "review_response_ids": [x.get("response_id") or x.get("request_id") for r in AGENTS
-                                    for x in (state.get(STATE_KEY[r]) or {}).get("review_responses", [])],
-            "remaining_unknowns": review.remaining_unknowns + [u for r in results for u in r.unknowns],
-            "report": ReportDraft(concerns=[f"[{r.agent}] {c}" for r in results for c in r.concerns],
-                                  due_diligence_questions=[q for r in results for q in r.due_diligence_questions]),
-            "source_ids": sorted({s for r in results for s in r.source_ids}),
-        })
+        review = finalize_review(state["company_id"], state["as_of"], adapt_all(state), _worker_results(state),
+                                 state.get("review_request_ids", []), policy)
         return {"investment_review": review.model_dump(mode="json")}
     return node
 

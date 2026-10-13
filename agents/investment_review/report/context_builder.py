@@ -40,10 +40,11 @@ class References:
 def _source_index(analyses: dict) -> tuple[dict, dict]:
     """evidence_id → source_ids, source_id → Source (네 분석 전체)."""
     ev, src = {}, {}
-    for key in ("clinical_analysis", "market_analysis", "traction_analysis"):
+    for key in ("clinical_analysis", "market_analysis", "traction_analysis", "risk_analysis"):
         env = analyses.get(key) or {}
         for e in env.get("evidence") or []:
-            ev[e["evidence_id"]] = e.get("source_ids") or []
+            # 기존 형식은 source_ids(list), 공통 Worker 형식은 source_id(str)
+            ev[e["evidence_id"]] = e.get("source_ids") or ([e["source_id"]] if e.get("source_id") else [])
         for s in env.get("sources") or []:
             src[s["source_id"]] = s
     for s in analyses.get("references") or []:
@@ -124,7 +125,7 @@ def _traction(env: dict, ev, src, refs) -> dict:
 
 def _risk(risk: dict, src, refs) -> dict:
     areas = []
-    for a in risk.get("areas") or []:
+    for a in risk.get("areas") or (risk.get("data") or {}).get("areas") or []:
         obs = sorted(a.get("observations") or [], key=lambda o: o.get("kind") != "risk_signal")[:1]  # 위험 신호 먼저
         shown = [{"statement": o["statement"], "signal": o.get("kind") == "risk_signal",
                   "refs": list(dict.fromkeys(n for c in o.get("citations") or []
@@ -198,7 +199,8 @@ def _reason(cid: str, c, a: dict) -> str:
             return text + f", 매출 연평균 성장률 {data['revenue_cagr']:.1%}(성장 {c5['growth_score']}점) → 상업화 70%·성장 30% 반영"
         return text + ", 3개년 매출 비교가 불가해 상업화 단계만 반영"
     if cid == "C6":
-        areas = ((a.get("risk_analysis") or {}).get("areas")) or []
+        risk = a.get("risk_analysis") or {}
+        areas = risk.get("areas") or (risk.get("data") or {}).get("areas") or []   # 기존 형식 / 공통 Worker 형식
         seen = [f"{AREA_TEXT[x['category']]} 관찰 {len(x['observations'])}건·위험 신호 "
                 f"{sum(o.get('kind') == 'risk_signal' for o in x['observations'])}건" for x in areas if x.get("observations")]
         if c.zero_filled or c.score is None or not seen:
@@ -273,6 +275,11 @@ def _dedupe(items: list[str], limit: int) -> list[str]:
     return list(dict.fromkeys(i for i in items if i))[:limit]
 
 
+def company_name(profile: dict, company_id: str) -> str:
+    """기업 프로필의 표시 이름. 기존 CSV 프로필은 company_name, 공통 company_profile은 legal_name."""
+    return profile.get("company_name") or profile.get("legal_name") or company_id
+
+
 def build_context(reviews: list[dict], analyses: dict[str, dict], companies: dict[str, dict], meta: dict) -> dict:
     """reviews: selection 결과(순위순). analyses: {company_id: {clinical_analysis, ...}}. companies: {company_id: 프로필}."""
     reviews_m = [InvestmentReview.model_validate(r) for r in reviews]
@@ -283,8 +290,9 @@ def build_context(reviews: list[dict], analyses: dict[str, dict], companies: dic
         ev, src = _source_index(a)
         p = companies.get(r.company_id, {})
         selected.append({
-            "company_id": r.company_id, "name": p.get("company_name", r.company_id), "category": p.get("대분류"),
-            "product": p.get("주요 제품/서비스"), "technology": p.get("핵심 기술"),
+            "company_id": r.company_id, "name": company_name(p, r.company_id), "category": p.get("대분류"),
+            "product": p.get("주요 제품/서비스") or next((x.get("name") for x in p.get("products") or [] if x.get("name")), None),
+            "technology": p.get("핵심 기술"),
             "rank": r.selection.rank, "total": r.total_score, "basis": r.score_basis,
             "criteria": _criteria_rows(r), "score_reasons": score_reasons(r, a),
             "market": _market(a.get("market_analysis") or {}, ev, src, refs),
@@ -299,7 +307,7 @@ def build_context(reviews: list[dict], analyses: dict[str, dict], companies: dic
             "review_requests": r.review_request_ids, "review_responses": len(r.review_response_ids),
         })
 
-    others = [{"company_id": r.company_id, "name": companies.get(r.company_id, {}).get("company_name", r.company_id),
+    others = [{"company_id": r.company_id, "name": company_name(companies.get(r.company_id, {}), r.company_id),
                "status": r.final_status.value, "total": r.total_score, "rank": r.selection.rank,
                "reasons": [c.value for c in r.reason_codes], "explanation": explain(r),
                "zero_filled": [CRITERION_NAME[c.criterion_id] for c in r.criterion_results if c.zero_filled],
