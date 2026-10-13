@@ -1,5 +1,9 @@
 {
+  "run_id": "run-2026-09-30",
+  "company_id": "sample-health-ai",
   "as_of": "2026-09-30",
+  "schema_version": "2.0",
+  "criteria_version": "proposed-2.0",
   "company_profile": {
     "company_id": "sample-health-ai",
     "company_name": "Sample Health AI",
@@ -13,5 +17,12 @@
       "KR"
     ],
     "core_problem": "manual medication review workload and preventable medication errors"
-  }
+  },
+  "dataset": {
+    "version": "market-dataset-v1",
+    "sources": [],
+    "records": []
+  },
+  "previous_result": null,
+  "review_request": null
 }

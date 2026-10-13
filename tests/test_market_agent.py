@@ -1,15 +1,18 @@
 from __future__ import annotations
 
-import hashlib
+import copy
 import json
 import sys
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
 import agents.market.agent as market_agent_module
-from agents.market.agent import MarketAgent
-from agents.market.providers import WebSearchResult
+from agents.market import MarketNode, WorkerResult
+from agents.market.providers import (
+    OpenAIStructuredMarketReasoner,
+)
 from agents.market.schema import (
     AssessmentCheck,
     CheckStatus,
@@ -19,7 +22,6 @@ from agents.market.schema import (
     SupplementalDraft,
     SupplementalFact,
 )
-from rag.market.retriever import EmptyRetriever, RetrievedChunk
 
 
 def complete_profile() -> dict:
@@ -35,55 +37,6 @@ def complete_profile() -> dict:
         "geography": ["KR"],
         "core_problem": "manual medication review workload",
     }
-
-
-class FakeSearch:
-    def __init__(self):
-        self.calls: list[str] = []
-
-    def search(self, query: str, *, as_of: str, max_results: int = 5):
-        self.calls.append(query)
-        return [
-            WebSearchResult(
-                title="Acme product page",
-                url=f"https://acme.example/{len(self.calls)}",
-                publisher="Acme",
-                content="Acme sells an annual subscription to hospital procurement teams in Korea.",
-                published_at="2025-01-01",
-            )
-        ]
-
-
-class FakeRetriever:
-    def __init__(self):
-        self.calls: list[str] = []
-
-    def retrieve(self, query: str, *, top_k: int = 5):
-        self.calls.append(query)
-        suffix = hashlib.sha256(query.encode()).hexdigest()[:10]
-        return [
-            RetrievedChunk(
-                chunk_id=f"chunk-{suffix}",
-                text=(
-                    "The comparable healthcare AI segment has an 18 percent CAGR. "
-                    "Customers report unmet need, procurement demand, feasible workflow integration, "
-                    "and recurring enterprise subscription purchasing."
-                ),
-                metadata={
-                    "document_id": "industry-report-1",
-                    "title": "Healthcare AI Adoption Report",
-                    "publisher": "Public Research Institute",
-                    "published_at": "2025-06-01",
-                    "region": "KR",
-                    "segment": "clinical decision support software",
-                    "source_type": "industry_report",
-                    "source_url": "https://research.example/report",
-                    "path": "reports/adoption.pdf",
-                    "page": 7,
-                },
-                score=0.91,
-            )
-        ]
 
 
 class FakeReasoner:
@@ -178,310 +131,365 @@ class FakeReasoner:
         )
 
 
-def build_agent(search=None, retriever=None, reasoner=None):
-    return MarketAgent(
-        search or FakeSearch(), retriever or FakeRetriever(), reasoner or FakeReasoner()
-    )
-
-
-def test_demo_cli_writes_documented_output_contract(tmp_path, monkeypatch):
-    from agents.market.__main__ import main
-
-    input_path = tmp_path / "input.json"
-    output_path = tmp_path / "output.json"
-    input_path.write_text(
-        json.dumps({"as_of": "2026-09-30", "company_profile": complete_profile()}),
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [
-            "python -m agents.market",
-            "--input",
-            str(input_path),
-            "--output",
-            str(output_path),
-            "--demo",
-        ],
-    )
-
-    main()
-
-    payload = json.loads(output_path.read_text(encoding="utf-8"))
-    assert set(payload) == {"market_analysis", "review_response"}
-    assert payload["market_analysis"]["agent"] == "market"
-    assert payload["market_analysis"]["company_id"] == "company-1"
-    assert payload["review_response"] is None
-
-
-def test_default_agent_is_shared_across_parallel_company_runs(monkeypatch, tmp_path):
-    monkeypatch.setattr(market_agent_module, "_DEFAULT_AGENT", None)
-    monkeypatch.setenv("OPENAI_API_KEY", "")
-    monkeypatch.setenv("MARKET_MODEL", "")
-    monkeypatch.setenv("TAVILY_API_KEY", "")
-    monkeypatch.setenv("MARKET_RAG_VECTORSTORE_DIR", str(tmp_path / "absent"))
-
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        agents = list(
-            pool.map(lambda _: market_agent_module.default_market_agent(), range(4))
-        )
-
-    assert len({id(agent) for agent in agents}) == 1
-    monkeypatch.setattr(market_agent_module, "_DEFAULT_AGENT", None)
-
-
-def test_complete_profile_skips_web_and_runs_four_dimensions():
-    search = FakeSearch()
-    reasoner = FakeReasoner()
-    agent = build_agent(search=search, reasoner=reasoner)
-
-    result = agent.run(complete_profile(), as_of="2026-09-30").market_analysis
-
-    assert search.calls == []
-    assert sorted(reasoner.dimension_calls) == [
-        "commercialization",
-        "demand",
-        "monetization",
-        "size_growth",
-    ]
-    assert result.data.dimensions.size_growth.score == 4
-    assert result.data.dimensions.demand.score == 5
-    assert result.data.overall_market_score == pytest.approx(4.75)
-    assert result.data.criteria_inputs.C2.score == 4
-    assert result.data.criteria_inputs.C3.score == 5
-    assert result.data.criteria_inputs.C4.score == 5
-
-
-def test_missing_profile_context_triggers_web_search_only_then_preserves_sources():
-    search = FakeSearch()
-    profile = {"company_id": "company-1", "company_name": "Acme Health AI"}
-
-    result = build_agent(search=search).run(profile, as_of="2026-09-30").market_analysis
-
-    assert search.calls
-    assert result.web_search_log
-    assert any(item.url.startswith("https://acme.example/") for item in result.sources)
-    assert result.data.supplemental_context.facts
-
-
-def test_each_dimension_node_writes_only_its_own_result_key_and_shared_lists():
-    agent = build_agent()
-    state = {
+def worker_input(profile=None, *, records=True):
+    return {
+        "run_id": "run-2026-09-30",
         "company_id": "company-1",
         "as_of": "2026-09-30",
-        "company_profile": complete_profile(),
-        "market_scope": FakeReasoner()
-        .define_scope(complete_profile(), {}, as_of="2026-09-30")
-        .model_dump(mode="json"),
-        "market_queries": {
-            "size_growth": ["query"],
-            "demand": ["query"],
-            "commercialization": ["query"],
-            "monetization": ["query"],
+        "schema_version": "2.0",
+        "criteria_version": "proposed-2.0",
+        "company_profile": profile if profile is not None else complete_profile(),
+        "dataset": {
+            "version": "dataset-v1",
+            "sources": [
+                {
+                    "source_id": "report-1",
+                    "title": "Healthcare AI Adoption Report",
+                    "url": "https://research.example/report",
+                    "publisher": "Research Institute",
+                    "published_at": "2025-06-01",
+                    "checked_at": "2025-06-02",
+                    "source_type": "research",
+                    "region": "KR",
+                    "segment": "clinical decision support software",
+                }
+            ]
+            if records
+            else [],
+            "records": [
+                {
+                    "record_id": "report-1:page-7",
+                    "source_id": "report-1",
+                    "page": 7,
+                    "locator": "page 7",
+                    "text": "Acme has an annual subscription to hospital procurement teams. Comparable CAGR is 18 percent; adoption demand and monetization evidence.",
+                }
+            ]
+            if records
+            else [],
         },
+        "previous_result": None,
         "review_request": None,
     }
-    result_keys = {
-        "size_growth_result",
-        "demand_result",
-        "commercialization_result",
-        "monetization_result",
-    }
-    for dimension in ("size_growth", "demand", "commercialization", "monetization"):
-        update = agent._dimension_node(dimension)(state)
-        assert set(update) & result_keys == {f"{dimension}_result"}
 
 
-def test_graph_fans_out_four_dimension_nodes_and_fans_in_to_merge():
-    graph = build_agent().build_graph().get_graph()
-    edges = {(edge.source, edge.target) for edge in graph.edges}
+@pytest.fixture(autouse=True)
+def no_external_data_calls(monkeypatch):
+    import requests
 
-    for dimension in ("size_growth", "demand", "commercialization", "monetization"):
-        node = f"analyze_{dimension}"
-        assert ("query_generation", node) in edges
-        assert (node, "merge") in edges
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Worker attempted an external data call")
 
-
-def test_rag_evidence_keeps_source_and_page_locator():
-    result = build_agent().run(complete_profile(), as_of="2026-09-30").market_analysis
-
-    assert result.evidence
-    assert {item.page for item in result.evidence} == {7}
-    assert all(item.locator == "page 7" for item in result.evidence)
-    assert all(item.source_ids for item in result.evidence)
-    assert result.findings[0].evidence_ids
+    monkeypatch.setattr(requests.sessions.Session, "request", forbidden)
 
 
-def test_missing_rag_evidence_is_unknown_not_zero():
-    result = (
-        build_agent(retriever=EmptyRetriever())
-        .run(complete_profile(), as_of="2026-09-30")
-        .market_analysis
-    )
-
-    for dimension in result.data.dimensions.model_dump().values():
-        assert dimension["score_status"] == "unknown"
-        assert dimension["score"] is None
-    assert result.data.overall_market_score is None
-
-
-def test_review_reruns_only_requested_dimension_and_stops_after_round_one():
+def test_single_pass_contract_and_existing_scoring():
     reasoner = FakeReasoner()
-    agent = build_agent(reasoner=reasoner)
-    first = agent.run(complete_profile(), as_of="2026-09-30").market_analysis
-    reasoner.dimension_calls.clear()
-    request = {
+    result = MarketNode(reasoner)(worker_input())
+    assert Counter(reasoner.dimension_calls) == Counter(
+        {d: 1 for d in ("size_growth", "demand", "commercialization", "monetization")}
+    )
+    assert set(result) == {
+        "run_id",
+        "company_id",
+        "as_of",
+        "schema_version",
+        "criteria_version",
+        "agent",
+        "dataset_version",
+        "result_version",
+        "analysis_status",
+        "data",
+        "sources",
+        "evidence",
+        "findings",
+        "missing_items",
+        "coverage",
+        "review_responses",
+        "errors",
+    }
+    assert result["agent"] == "market"
+    assert result["dataset_version"] == "dataset-v1"
+    assert result["analysis_status"] == "complete"
+    assert result["data"]["criteria_inputs"]["C2"]["score"] == 4
+    assert result["data"]["criteria_inputs"]["C3"]["score"] == 5
+    assert result["data"]["criteria_inputs"]["C4"]["score"] == 5
+    assert result["data"]["overall_market_score"] == pytest.approx(4.75)
+    assert {s["source_id"] for s in result["sources"]} == {"report-1"}
+    assert all(
+        e["source_ids"] == ["report-1"] and e["locator"] == "page 7"
+        for e in result["evidence"]
+    )
+    WorkerResult.model_validate(result)
+
+
+def test_missing_data_returns_contract_missing_items_and_null_scores():
+    reasoner = FakeReasoner()
+    result = MarketNode(reasoner)(worker_input(records=False))
+    assert reasoner.dimension_calls == []
+    assert result["analysis_status"] == "partial"
+    assert result["data"]["overall_market_score"] is None
+    assert all(
+        d["score"] is None and d["score_status"] == "unknown"
+        for d in result["data"]["dimensions"].values()
+    )
+    assert all(
+        set(m)
+        == {
+            "missing_id",
+            "item",
+            "reason",
+            "related_criterion_ids",
+            "required_for_assessment",
+        }
+        for m in result["missing_items"]
+    )
+    assert all(m["required_for_assessment"] for m in result["missing_items"])
+
+
+def test_missing_profile_is_supplemented_only_from_supplied_data():
+    profile = {"company_id": "company-1", "company_name": "Acme Health AI"}
+    result = MarketNode(FakeReasoner())(worker_input(profile))
+    facts = result["data"]["supplemental_context"]["facts"]
+    assert facts and all(f["source_ids"] == ["report-1"] for f in facts)
+    assert not any(m["item"] == "buyer" for m in result["missing_items"])
+
+
+def test_reexecution_always_evaluates_once_even_with_repeated_review_id_and_high_round():
+    reasoner = FakeReasoner()
+    node = MarketNode(reasoner)
+    payload = worker_input()
+    first = node(payload)
+    payload["previous_result"] = first
+    payload["run_id"] = "run-next"
+    payload["review_request"] = {
         "request_id": "review-1",
         "company_id": "company-1",
         "target_agent": "market",
-        "criterion_id": "C3",
-        "reason": "수요 근거 보완",
-        "blocker": "고객 수요 확인 필요",
-        "questions": [{"question_id": "q1", "text": "고객 수요 근거를 보완해줘"}],
-        "review_round": 1,
+        "review_round": 99,
         "dimensions": ["demand"],
-        "source_route": "rag",
     }
-
-    reviewed = agent.run(
-        complete_profile(),
-        as_of="2026-09-30",
-        review_request=request,
-        previous=first,
-    )
-
-    assert reasoner.dimension_calls == ["demand"]
-    assert reviewed.market_analysis.result_version == 2
-    assert reviewed.review_response is not None
-    assert reviewed.review_response.request_id == "review-1"
-
-    second_round = {**request, "request_id": "review-2", "review_round": 2}
-    state_update = agent(
-        {
-            "company_profile": complete_profile(),
-            "as_of": "2026-09-30",
-            "market_analysis": reviewed.market_analysis.model_dump(mode="json"),
-            "review_requests": [second_round],
-        }
-    )
-    assert state_update == {}
+    reasoner.dimension_calls.clear()
+    second = node(payload)
+    assert len(reasoner.dimension_calls) == 4
+    assert second["result_version"] == 2
+    assert second["run_id"] == "run-next"
+    assert second["review_responses"][0]["request_id"] == "review-1"
+    payload["previous_result"] = second
+    third = node(payload)
+    assert len(reasoner.dimension_calls) == 8
+    assert third["result_version"] == 3
 
 
-def test_review_removes_resolved_missing_item_for_target_dimension():
-    profile = complete_profile()
-    first = (
-        build_agent(retriever=EmptyRetriever())
-        .run(profile, as_of="2026-09-30")
-        .market_analysis
-    )
-    request = {
-        "request_id": "review-resolved-missing",
-        "company_id": "company-1",
-        "target_agent": "market",
-        "criterion_id": "C3",
-        "reason": "수요 근거 보완",
-        "blocker": "수요 근거 누락",
-        "questions": [{"question_id": "q1", "text": "수요 근거를 다시 찾아줘"}],
-        "review_round": 1,
-        "dimensions": ["demand"],
-        "source_route": "rag",
-    }
+def test_reexecution_with_empty_dataset_never_reuses_old_sources_or_scores():
+    node = MarketNode(FakeReasoner())
+    first = node(worker_input())
+    payload = worker_input(records=False)
+    payload["dataset"]["version"] = "empty-v2"
+    payload["previous_result"] = first
+    result = node(payload)
+    assert result["sources"] == [] and result["evidence"] == []
+    assert result["dataset_version"] == "empty-v2" and result["result_version"] == 2
+    assert result["data"]["overall_market_score"] is None
+    assert result["analysis_status"] == "partial"
 
-    reviewed = (
-        build_agent()
-        .run(
-            profile,
-            as_of="2026-09-30",
-            review_request=request,
-            previous=first,
-        )
-        .market_analysis
-    )
 
-    assert reviewed.data.dimensions.demand.score_status.value == "scored"
-    assert not [item for item in reviewed.missing_items if item.dimension == "demand"]
-    assert [
-        item for item in reviewed.missing_items if item.dimension == "commercialization"
+def test_failure_has_no_retry_and_keeps_other_domain_results():
+    class Failing(FakeReasoner):
+        def analyze_dimension(self, dimension, *args, **kwargs):
+            if dimension == "demand":
+                self.dimension_calls.append(dimension)
+                raise RuntimeError("provider unavailable")
+            return super().analyze_dimension(dimension, *args, **kwargs)
+
+    reasoner = Failing()
+    result = MarketNode(reasoner)(worker_input())
+    assert len(reasoner.dimension_calls) == 4
+    assert reasoner.dimension_calls.count("demand") == 1
+    assert result["data"]["dimensions"]["demand"]["score"] is None
+    assert result["data"]["dimensions"]["monetization"]["score"] == 5
+    assert result["errors"] == [
+        {"stage": "evaluation", "dimension": "demand", "error_type": "RuntimeError"}
     ]
+    assert result["analysis_status"] == "partial"
 
 
-def test_invalid_evidence_id_cannot_produce_a_known_check_score():
-    class BadEvidenceReasoner(FakeReasoner):
-        def analyze_dimension(
-            self,
-            dimension,
-            scope,
-            profile,
-            supplemental,
-            evidence,
-            rubric,
-            review_request=None,
-        ):
-            if dimension == "size_growth":
-                return super().analyze_dimension(
-                    dimension,
-                    scope,
-                    profile,
-                    supplemental,
-                    evidence,
-                    rubric,
-                    review_request,
-                )
-            return DimensionDraft(
-                rationale="잘못된 근거 ID",
-                checks=[
-                    AssessmentCheck(
-                        check_id=item["check_id"],
-                        status=CheckStatus.YES,
-                        rationale="잘못 연결됨",
-                        evidence_ids=["unknown-evidence"],
-                    )
-                    for item in rubric["checks"]
-                ],
-            )
-
-    result = (
-        build_agent(reasoner=BadEvidenceReasoner())
-        .run(complete_profile(), as_of="2026-09-30")
-        .market_analysis
-    )
-    assert result.data.dimensions.demand.score_status.value == "unknown"
-    assert result.data.dimensions.demand.score is None
-
-
-def test_cagr_from_a_different_period_is_not_scored():
-    class MismatchedPeriodReasoner(FakeReasoner):
-        def analyze_dimension(
-            self,
-            dimension,
-            scope,
-            profile,
-            supplemental,
-            evidence,
-            rubric,
-            review_request=None,
-        ):
-            draft = super().analyze_dimension(
-                dimension,
-                scope,
-                profile,
-                supplemental,
-                evidence,
-                rubric,
-                review_request,
-            )
-            if dimension == "size_growth":
-                draft.market_metrics[0].start_year = 2025
-                draft.market_metrics[0].end_year = 2030
+def test_invalid_evidence_ids_cannot_score_checks():
+    class BadEvidence(FakeReasoner):
+        def analyze_dimension(self, dimension, *args, **kwargs):
+            draft = super().analyze_dimension(dimension, *args, **kwargs)
+            for check in draft.checks:
+                check.evidence_ids = ["not-provided"]
             return draft
 
-    result = (
-        build_agent(reasoner=MismatchedPeriodReasoner())
-        .run(complete_profile(), as_of="2026-09-30")
-        .market_analysis
+    result = MarketNode(BadEvidence())(worker_input())
+    assert result["data"]["dimensions"]["demand"]["score"] is None
+    assert all(
+        c["status"] == "unknown"
+        for c in result["data"]["dimensions"]["demand"]["checks"]
     )
 
-    assert result.data.dimensions.size_growth.score_status.value == "unknown"
-    assert result.data.dimensions.size_growth.score is None
-    assert result.data.dimensions.size_growth.missing_item_ids
+
+def test_mismatched_cagr_period_remains_unknown():
+    class WrongPeriod(FakeReasoner):
+        def analyze_dimension(self, dimension, *args, **kwargs):
+            draft = super().analyze_dimension(dimension, *args, **kwargs)
+            for metric in draft.market_metrics:
+                metric.start_year, metric.end_year = 2025, 2030
+            return draft
+
+    result = MarketNode(WrongPeriod())(worker_input())
+    assert result["data"]["criteria_inputs"]["C2"]["score"] is None
+
+
+def test_cagr_keeps_metric_evidence_when_top_level_ids_are_omitted():
+    class MetricEvidenceOnly(FakeReasoner):
+        def analyze_dimension(self, dimension, *args, **kwargs):
+            draft = super().analyze_dimension(dimension, *args, **kwargs)
+            if dimension == "size_growth":
+                draft.evidence_ids = []
+            return draft
+
+    result = MarketNode(MetricEvidenceOnly())(worker_input())
+    c2 = result["data"]["criteria_inputs"]["C2"]
+    assert c2["score"] == 4 and c2["evidence_ids"]
+    assert set(c2["evidence_ids"]) <= {e["evidence_id"] for e in result["evidence"]}
+
+
+def test_all_domain_call_failures_return_failed_without_retry():
+    class FailedReasoner(FakeReasoner):
+        def analyze_dimension(self, dimension, *args, **kwargs):
+            self.dimension_calls.append(dimension)
+            raise RuntimeError("provider unavailable")
+
+    reasoner = FailedReasoner()
+    result = MarketNode(reasoner)(worker_input())
+    assert len(reasoner.dimension_calls) == 4
+    assert len(result["errors"]) == 4
+    assert result["analysis_status"] == "failed"
+
+
+def test_wrong_profile_excerpt_cannot_fill_missing_context():
+    class UnlinkedProfile(FakeReasoner):
+        def supplement(self, *args, **kwargs):
+            draft = super().supplement(*args, **kwargs)
+            for fact in draft.facts:
+                fact.excerpt = "quotation absent from all supplied material"
+            return draft
+
+    result = MarketNode(UnlinkedProfile())(worker_input(profile={}))
+    assert not result["data"]["supplemental_context"]["facts"]
+    assert any(m["item"] == "buyer" for m in result["missing_items"])
+
+
+def test_dataset_filters_future_and_other_company_records():
+    payload = worker_input()
+    payload["dataset"]["sources"].append(
+        {"source_id": "future", "published_at": "2027-01-01"}
+    )
+    payload["dataset"]["records"] = [
+        {"source_id": "future", "text": "future material"},
+        {
+            "source_id": "report-1",
+            "company_id": "another-company",
+            "text": "another company",
+        },
+        {"source_id": "not-provided", "text": "unknown source"},
+    ]
+    reasoner = FakeReasoner()
+    result = MarketNode(reasoner)(payload)
+    assert not reasoner.dimension_calls
+    assert not result["evidence"]
+    assert {s["source_id"] for s in result["sources"]} == {"report-1"}
+    assert result["errors"][0]["code"] == "unknown_source_id"
+
+
+def test_input_is_not_mutated_and_duplicate_records_do_not_duplicate_evidence():
+    payload = worker_input()
+    payload["dataset"]["records"].append(
+        copy.deepcopy(payload["dataset"]["records"][0])
+    )
+    before = copy.deepcopy(payload)
+    result = MarketNode(FakeReasoner())(payload)
+    assert payload == before
+    assert len(result["evidence"]) == 4
+
+
+def test_worker_never_imports_retrieval_or_search_on_reexecution(monkeypatch, tmp_path):
+    import builtins
+
+    original = builtins.__import__
+
+    def guarded(name, *args, **kwargs):
+        if name.startswith("rag.market") or name.startswith("tavily"):
+            raise AssertionError(f"Worker imported retrieval or collection: {name}")
+        return original(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", guarded)
+    monkeypatch.setattr(market_agent_module, "_DEFAULT_AGENT", None)
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setenv("MARKET_MODEL", "")
+    monkeypatch.setenv("TAVILY_API_KEY", "unused-key")
+    monkeypatch.setenv("MARKET_RAG_VECTORSTORE_DIR", str(tmp_path))
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        nodes = list(
+            pool.map(lambda _: market_agent_module.default_market_agent(), range(4))
+        )
+    assert len({id(node) for node in nodes}) == 1
+    payload = worker_input()
+    payload["previous_result"] = nodes[0](payload)
+    result = nodes[0](payload)
+    assert result["result_version"] == 2
+    monkeypatch.setattr(market_agent_module, "_DEFAULT_AGENT", None)
+
+
+def test_single_node_graph_has_no_collection_or_retry_edges():
+    node = MarketNode(FakeReasoner())
+    graph = node.build_graph()
+    assert {(e.source, e.target) for e in graph.get_graph().edges} == {
+        ("__start__", "evaluate"),
+        ("evaluate", "__end__"),
+    }
+    assert graph.invoke(worker_input())["agent"] == "market"
+
+
+def test_cli_emits_direct_worker_result(tmp_path, monkeypatch):
+    from agents.market.__main__ import main
+
+    inp, out = tmp_path / "input.json", tmp_path / "output.json"
+    inp.write_text(json.dumps(worker_input()), encoding="utf-8")
+    monkeypatch.setattr(
+        sys, "argv", ["market", "--input", str(inp), "--output", str(out), "--demo"]
+    )
+    main()
+    result = json.loads(out.read_text())
+    assert result["agent"] == "market" and "market_analysis" not in result
+    WorkerResult.model_validate(result)
+
+
+def test_model_provider_disables_sdk_retries(monkeypatch):
+    import langchain_openai
+
+    called = {}
+
+    class Chat:
+        def __init__(self, **kwargs):
+            called.update(kwargs)
+
+    monkeypatch.setattr(langchain_openai, "ChatOpenAI", Chat)
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    OpenAIStructuredMarketReasoner(model="test-model")
+    assert called["max_retries"] == 0
+
+
+@pytest.mark.parametrize("field,value", [("company_id", "other"), ("agent", "risk")])
+def test_rejects_previous_result_identity_mismatch(field, value):
+    payload = worker_input()
+    payload["previous_result"] = {
+        "company_id": "company-1",
+        "agent": "market",
+        "result_version": 1,
+        field: value,
+    }
+    with pytest.raises(ValueError):
+        MarketNode()(payload)

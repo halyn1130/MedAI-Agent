@@ -1,19 +1,12 @@
-"""External search and structured reasoning adapters.
-
-Imports for optional live services are lazy so unit tests and offline graph
-wiring do not require credentials or heavyweight SDKs.
-"""
+"""Structured reasoning over supplied material. No search providers."""
 
 from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass
 from datetime import date
 from typing import Any, Protocol, TypeVar
-from urllib.parse import urlparse
 
-import requests
 from pydantic import BaseModel
 
 from .schema import (
@@ -24,83 +17,11 @@ from .schema import (
     SupplementalDraft,
 )
 
+T = TypeVar("T", bound=BaseModel)
+
 
 class ProviderError(RuntimeError):
     pass
-
-
-@dataclass(frozen=True)
-class WebSearchResult:
-    title: str
-    url: str
-    publisher: str
-    content: str
-    published_at: str | None = None
-
-
-class WebSearchProvider(Protocol):
-    def search(
-        self, query: str, *, as_of: str, max_results: int = 5
-    ) -> list[WebSearchResult]: ...
-
-
-class TavilySearchProvider:
-    """Direct-URL search adapter matching the search service used by team agents."""
-
-    endpoint = "https://api.tavily.com/search"
-
-    def __init__(self, api_key: str | None = None, *, timeout: int = 30):
-        self.api_key = api_key or os.getenv("TAVILY_API_KEY")
-        if not self.api_key:
-            raise ValueError("TAVILY_API_KEY is required")
-        self.timeout = timeout
-
-    def search(
-        self, query: str, *, as_of: str, max_results: int = 5
-    ) -> list[WebSearchResult]:
-        payload = {
-            "query": query,
-            "max_results": max_results,
-            "search_depth": "advanced",
-            "include_raw_content": True,
-            "include_answer": False,
-            "end_date": as_of,
-        }
-        try:
-            response = requests.post(
-                self.endpoint,
-                headers={"Authorization": f"Bearer {self.api_key}"},
-                json=payload,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            rows = response.json().get("results", [])
-        except (requests.RequestException, ValueError, TypeError) as exc:
-            raise ProviderError("market web search failed") from exc
-        results: list[WebSearchResult] = []
-        for row in rows:
-            url = str(row.get("url") or "")
-            content = str(row.get("raw_content") or row.get("content") or "").strip()
-            if urlparse(url).scheme not in ("http", "https") or not content:
-                continue
-            published_at = str(row.get("published_date") or "")[:10] or None
-            results.append(
-                WebSearchResult(
-                    title=str(row.get("title") or url),
-                    url=url,
-                    publisher=urlparse(url).netloc.removeprefix("www."),
-                    content=content[:20_000],
-                    published_at=published_at,
-                )
-            )
-        return results
-
-
-class DisabledWebSearchProvider:
-    def search(
-        self, query: str, *, as_of: str, max_results: int = 5
-    ) -> list[WebSearchResult]:
-        return []
 
 
 class MarketReasoner(Protocol):
@@ -127,9 +48,6 @@ class MarketReasoner(Protocol):
     ) -> DimensionDraft: ...
 
 
-T = TypeVar("T", bound=BaseModel)
-
-
 class OpenAIStructuredMarketReasoner:
     """Structured-output reasoner; facts must cite IDs supplied in the prompt."""
 
@@ -143,7 +61,7 @@ class OpenAIStructuredMarketReasoner:
             raise RuntimeError(
                 "langchain-openai is required for live market analysis"
             ) from exc
-        self.chat = ChatOpenAI(model=model, temperature=0, timeout=90, max_retries=1)
+        self.chat = ChatOpenAI(model=model, temperature=0, timeout=90, max_retries=0)
 
     def _invoke(self, schema: type[T], system: str, payload: dict[str, Any]) -> T:
         try:
@@ -169,7 +87,7 @@ class OpenAIStructuredMarketReasoner:
         sources: list[dict[str, Any]],
     ) -> SupplementalDraft:
         system = """당신은 Healthcare AI 기업 정보 검증 담당자다.
-주어진 원문 검색 결과에서 requested_fields에 해당하는 기업별 사실만 추출한다.
+전달된 원문 자료에서 requested_fields에 해당하는 기업별 사실만 추출한다.
 각 fact는 반드시 제공된 source_id를 인용하고 가능한 경우 원문 그대로의 짧은 excerpt를 포함한다.
 검색 엔진이나 AI의 요약을 독립 근거로 만들지 말고, 출처에 없는 내용은 추측하지 않는다.
 확인하지 못한 필드는 unresolved_fields에 넣는다. 한국어로 작성한다."""
@@ -223,7 +141,9 @@ base_year는 분석 기준일의 연도, forecast_period는 기본적으로 그 
         review_request: dict[str, Any] | None = None,
     ) -> DimensionDraft:
         system = """당신은 Healthcare AI 시장·사업성 분석가다.
-제공된 RAG evidence만 시장·산업 근거로 사용한다. evidence_id가 없는 주장은 점수 근거로 쓰지 않는다.
+전달된 dataset의 evidence만 시장·산업 근거로 사용한다. evidence_id가 없는 주장은 점수 근거로 쓰지 않는다.
+review_request의 previous_result는 이전 판단을 검토하는 맥락이며 근거가 아니다. 새 평가도 이번 evidence만 인용한다.
+외부 검색·수집·추가 호출을 요청하지 않는다. 자료가 부족하면 missing_fields와 unknown으로 반환한다.
 출처의 지역, 세그먼트, 기준연도와 전망기간이 다른 수치를 직접 비교하지 않는다.
 자료 미발견은 부정 근거가 아니다. 판단 불가 체크는 unknown으로 유지한다.
 다른 Agent의 책임인 임상 적정성, 규제 최종판단, 실제 매출·계약 실적, 운영 리스크를 판정하지 않는다.

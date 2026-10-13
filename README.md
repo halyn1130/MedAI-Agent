@@ -38,14 +38,15 @@
 |---|---|---|
 | [입력·정규화](docs/readme/images/input.svg) | CSV 로딩, 식별자·공통 입력 정규화 | — |
 | [임상·인허가](docs/readme/images/clinical.svg) | 규제 기록·연구·회사 주장 대조 | C1 |
-| [시장·사업성](docs/readme/images/market.svg) | 시장 성장·수요·도입·수익화 분석 | C2·C3·C4 |
+| [시장·사업성](docs/market_agent.md) | 제공 데이터셋으로 시장 성장·수요·도입·수익화를 한 번 평가 | C2·C3·C4 |
 | [실적·성장성](docs/readme/images/traction.svg) | 매출·계약 검증, 상업화·성장 평가 | C5 |
 | [Risk](docs/readme/images/risk.svg) | 외부 자원 의존·핵심 역할 연속성·운영 사건 분석 | C6 변환용 근거 |
 | [투자 심사](docs/readme/images/review.svg) | 근거 검증, 보완 요청, 채점·선정·보고서 | 최종 판정 |
 
 - 실행 구조: 4개 분석 노드 병렬 처리 후 심사
 - 공통 근거 계약(설계): `Source → Evidence → Finding`
-- 시장 RAG(설계): `BAAI/bge-m3` Dense → FAISS → 범위 필터·검색
+- 시장(구현): 공통 v2 입출력 계약의 단일 평가 Node, 자체 검색·수집·자동 재시도 없음
+- 시장 재실행: 실행 대상과 반복 횟수는 Orchestrator가 관리
 - Risk(구현): 고정 자료 기반 LangGraph, 규칙 기반 근거 선택·분기, 외부 재검색 없음
 - Risk 보완 한도: 내부 1회, 실행당 모델 요청 최대 2회
 
@@ -100,6 +101,7 @@ python -m pytest tests agents/risk -q
 
 - [설치·실행·테스트·폴더 구조](docs/readme/development.md)
 - [Risk Agent 입력·출력](docs/readme/risk.md)
+- [시장 평가 Node 입력·출력·데이터셋 ZIP](docs/market_agent.md)
 - [상세 평가 정책](docs/readme/evaluation_policy.md)
 - [실적·성장성 판단 기준](docs/readme/traction_growth.md)
 - [전체 흐름도](docs/readme/images/overview.svg)
@@ -109,7 +111,7 @@ python -m pytest tests agents/risk -q
 | 영역 | Future Work |
 |---|---|
 | 임상·인허가 | 임상·규제 데이터 연동, 근거 정량 추출·충돌 검증 |
-| 시장·사업성 | 원문 품질·검색 고도화, 검색 성능 비교 평가 |
+| 시장·사업성 | 제공 원문 품질 개선, 평가 정확도 검증, 공통 Orchestrator 연결 |
 | 실적·성장성 | 법인·재무·고용 데이터 정합성 강화, 판정 정확도 평가 |
 | Risk | 후속 근거 확충, 판단 기준·보완 루프 개선, 정확도 평가 |
 | 투자 심사·보고서 | 평가 입력 통합·판정 일관성 강화, 보고서 수치·인용 정확도 검증 |
