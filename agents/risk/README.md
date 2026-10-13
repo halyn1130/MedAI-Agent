@@ -1,128 +1,94 @@
-# Risk Agent — 고정 데이터 기반 LangGraph
+# Risk — 전달 데이터 기반 단일 평가 노드
 
-공개 자료에서 외부 자원 의존, 핵심 역할 연속성, 운영 관련 사건을 정리합니다. 자료 부족은 위험이 없다는 의미가 아닙니다. 인용 연결 검사도 사실성 검증을 대신하지 않습니다.
+루트 `common_state.md`의 Worker 입출력·재검토 계약을 사용합니다. 외부 자원 의존, 핵심 역할 연속성, 운영 사건을 평가합니다. 자료 부족은 위험 없음이 아니며 원문 연결은 사실 검증을 대신하지 않습니다.
 
-## 흐름
+## 실행 경계
 
 ```text
-START → load_dataset → select_evidence → analyze_risk → review_result
-                            ↑                             │
-                            └── 보완 가능·새 자료 있음 ───┤
-                                                          └→ export_result → END
+별도 수집·로딩 → WorkerInput → Risk 평가 1회 → WorkerResult
+                                  ↑
+              Orchestrator의 재검토 요청 + 이전 결과
 ```
 
-[LangGraph StateGraph](https://docs.langchain.com/oss/python/langgraph/graph-api)로 구현했습니다. 외부 검색은 없습니다. 미확인 사항·검증 오류·실사 질문이 남으면 규칙 기반 검토 노드가 아직 사용하지 않은 자료를 선택해 최대 1회 보완합니다. 기본 모델 요청은 실행당 최대 2회이며, 캐시가 있거나 근거 구간이 없으면 호출하지 않습니다. 실패 결과도 캐시하므로 실패는 `analysis_status`로 확인해야 합니다.
+- Worker는 전달받은 `dataset`만 읽습니다. manifest 로딩, 검색, 재수집, 내부 재검토 루프가 없습니다.
+- 호출당 모델 요청 최대 1회이며 자동 재시도와 모델 응답 캐시는 없습니다. 관련 원문 구간이 없으면 호출하지 않습니다.
+- 기존 `collection/`은 별도 수집 도구입니다. 고정 자료 로딩·공통 입력 변환은 `collection/prepare_input.py`에서 수행합니다.
+- `evidence.py`는 현재 평가에 쓰는 근거 선택·응답 검증 함수입니다. 수집 전용 출처 모델은 `collection/schema.py`에 있습니다. 구형 Agent·배치 평가·캐시 실행 코드는 제거했습니다.
 
-## 파일
+## 입력과 반환
 
-| 파일 | 역할 |
-|---|---|
-| `agent.py` | State 정의, 다섯 노드, 조건부 루프, 상위 그래프용 RiskAgent |
-| `dataset.py` | manifest 기준 데이터 로딩·해시 검사 |
-| `company_analysis.py` | 기존 GPT 구조화 응답·근거 검사·캐시 로직 |
-| `__main__.py` | CLI |
-| `collection/` | 별도 데이터 수집·선별 도구. 기본 Agent에서 호출하지 않음 |
-| `legacy_agent.py`, `schema.py`, `providers.py`, `prompt.md` | 이전 검색·재검토 구현과 계약. 기본 Agent에서 사용하지 않음 |
-| `data/` | 고정 manifest, 원본 데이터, 모델 캐시 (Git 제외) |
+```python
+from agents.risk import evaluate_risk, risk_worker_node
 
-## 데이터 고정
+worker_input = {
+    'run_id': 'run-2026-09-30',
+    'company_id': 'c001',
+    'as_of': '2026-09-30',
+    'schema_version': '2.0',
+    'criteria_version': 'proposed-2.0',
+    'company_profile': {'legal_name': '기업명'},
+    'dataset': {'version': 'dataset-v1', 'sources': [], 'records': []},
+    'previous_result': None,
+    'review_request': None,
+}
+result = evaluate_risk(worker_input)  # WorkerResult
+update = risk_worker_node(worker_input)  # {'worker_results': {'risk': result}}
+```
 
-`full_20260930_032104/*/reviewed/state.json`의 42개 기업을 `data/frozen_manifest.json`에 등록했습니다. Agent는 등록된 파일을 읽고 SHA-256을 검사하며 원본을 수정하지 않습니다. 새 수집 실행은 이 목록에 자동 반영되지 않습니다. 고정은 입력 버전 관리이며 자료가 사실 검증되었다는 뜻은 아닙니다.
+반환 필드는 `run_id`, `company_id`, `as_of`, `schema_version`, `criteria_version`, `agent`, `dataset_version`, `result_version`, `analysis_status`, `data`, `sources`, `evidence`, `findings`, `missing_items`, `coverage`, `review_responses`, `errors`입니다.
 
-팀원에게는 manifest와 그 안의 상대 경로에 해당하는 파일을 함께 전달해야 합니다. Git만 clone하면 기업 데이터는 없습니다. manifest와 원본을 모두 바꾸는 행위까지 막는 파일시스템 잠금은 아닙니다.
+- `data.areas`에 세 영역의 observations·unknowns·due_diligence_questions를 유지합니다.
+- `findings.evidence_ids → evidence.record_id/source_id → dataset.records/sources`로 연결합니다. 인용문은 모델이 작성하지 않고 입력 구간에서 가져옵니다.
+- 입력의 출처 ID와 내용을 보존합니다. 같은 출처에 여러 레코드가 있어도 레코드별 근거를 구분합니다.
+- 실행 오류·잘못된 입력은 failed, 자료 부족·응답 일부 오류·미해결 질문은 partial입니다. complete는 저위험 판정이 아닙니다.
+- result_version은 첫 실행 1, 같은 실행·기업·평가 조건의 이전 결과가 있으면 1 증가합니다.
 
-## 실행
+## 재검토
 
-프로젝트 루트에서 의존성을 설치하고 `.env`에 `OPENAI_API_KEY`, `RISK_MODEL`을 설정합니다.
+```python
+worker_input['previous_result'] = result
+worker_input['review_request'] = {
+    'request_id': 'review-risk-01',
+    'attempt': 1,
+    'reason': '협력 사실에서 의존성을 추정했는지 확인',
+    'questions': [{'question_id': 'q01', 'question': '대체 가능성을 판단할 근거가 있는가?'}],
+    'target_finding_ids': [],
+    'dataset_version': 'dataset-v1',
+}
+revised = evaluate_risk(worker_input)
+```
+
+이전 결과의 기업·실행·기준일·계약 버전·평가 기준을 검증합니다. 해석 재검토는 이전 결과와 요청, 현재 데이터 버전이 같아야 합니다. 데이터가 보완되어 버전이 달라졌다면 `review_request=None`으로 새 데이터를 재평가합니다.
+
+이전 판단과 질문을 한 번의 모델 요청에 전달합니다. 모든 요청 질문에 대해 request_id·question_id·answer·finding_ids·resolved를 반환합니다. 누락·알 수 없는 근거 ID·답변 불가이면 resolved=false와 missing_items를 남깁니다. 출처 연결은 답변의 의미적 정확성을 보증하지 않습니다.
+
+전체 State에서는 `worker_results['risk']`와 `review_requests['risk']`를 자동으로 읽습니다. Worker는 자기 결과만 반환하고 요청 삭제·반복 횟수·수집 분기는 Orchestrator가 관리합니다. 병렬 실행에서는 worker_results를 키별로 병합하는 reducer가 필요합니다.
+
+## 별도 로딩과 CLI
+
+고정 Risk 자료를 사용하려면 평가 전에 입력 파일을 준비합니다.
 
 ```bash
-python -m pip install -r requirements.txt
-python -m agents.risk --company-id <company_id> --output outputs/risk_result.json
+python -m agents.risk.collection.prepare_input --company-id <고정데이터ID> --run-id run-2026-09-30 --output outputs/risk_input.json
+python -m agents.risk --input outputs/risk_input.json --output outputs/risk_result.json
 ```
 
-기업 ID는 manifest의 `companies` 키에서 확인합니다. `--manifest`로 다른 고정 데이터 목록을 지정할 수 있습니다. 기존 CLI의 `--input`, `--demo`, `--max-search-calls`, `--max-reviews`는 제거했습니다.
+평가 모델 호출에는 `.env`의 `OPENAI_API_KEY`, `RISK_MODEL`이 필요합니다. 실제 수집 CLI는 `python -m agents.risk.collection --help`에서 별도로 확인합니다.
 
-## 상위 LangGraph 연결
+통합 데이터셋 로더를 사용하는 경우 반환된 입력에 run_id·schema_version·criteria_version을 추가하고 전달하세요. Worker 안에서는 로더를 호출하지 않습니다.
 
-```python
-from agents.risk import RiskAgent
+## 검토 범위와 이행 주의
 
-builder.add_node("risk", RiskAgent())
-# 상위 State의 company_profile에는 manifest에 등록된 company_id가 있어야 합니다.
-# 병렬 노드들이 references에 기록하면 상위 State에 중복 ID를 병합하는 reducer를 둡니다.
-```
+- 기업명이 등장하는 원문 주변 최대 40개 구간을 평가합니다. 전체 자료를 읽었다고 해석하면 안 됩니다.
+- 미래 발행일 자료, 타 기업으로 명시된 자료, 모델 추출값, 시장 공통 자료는 Risk 근거에서 제외합니다. 기업명이 짧은 경우 사실 관측을 확정하지 않습니다.
+- 후보 자료·검색 결과의 기업 일치와 주장의 사실성은 별도 검증이 필요합니다.
+- 기존 `RiskAgent(manifest_path=..., max_reviews=...)`와 `risk_analysis/references` 출력 계약은 제거했습니다. `RiskAgent()`는 단일 노드의 호환 이름이고 `build_risk_graph()`는 선택적인 노드 1개짜리 래퍼입니다.
+- 기존 investment_review/nodes.py의 Risk 래퍼는 구형 manifest ID·risk_analysis 계약을 사용합니다. 상위 그래프는 공통 dataset 전달 및 worker_results 병합 방식으로 별도 이행해야 합니다. 이번 변경에서 상위 그래프 전체를 재설계하지 않았습니다.
 
-독립 실행:
-
-```python
-from agents.risk import build_risk_graph
-
-result = build_risk_graph().invoke({
-    "company_profile": {"company_id": "manifest에 등록된 ID"}
-})
-```
-
-공통 State에 돌려주는 dict:
-
-```python
-{
-    "risk_analysis": {
-        "schema_version": "risk-company-3",
-        "company_id": "...",
-        "company_name": "...",
-        "as_of": "...",
-        "dataset_sha256": "...",
-        "analysis_status": "complete | partial | failed | no_evidence",
-        "areas": [
-            # category, observations, unknowns, due_diligence_questions
-            # observations에는 statement, kind, conditional_impact, citations 등이 포함됨
-        ],
-        "diagnostics": [],
-        "passages": [],
-        "mode": "api | cache | no_evidence | blocked",
-        "cache_key": "...",
-        "usage": None,
-        "limitation": "..."
-    },
-    "references": []  # 분석 입력 구간에 포함된 원문 출처
-}
-```
-
-이 형식은 이전 `RiskAnalysis` Pydantic 모델의 `findings/coverage` 형식과 다릅니다. 다음 판단 Agent는 `risk_analysis.areas`를 읽어야 합니다. `review_requests["risk"]`에 company_id, attempt=1, questions를 넣고 같은 기업의 이전 risk_analysis를 전달하면 질문 기반 재검토도 가능합니다. 외부 호출의 반복 횟수는 상위 그래프가 관리해야 합니다. `complete`는 실행·형식 처리 상태이고 저위험 판정이 아닙니다.
-
-## API 없는 테스트
+## 검증
 
 ```bash
-python -m unittest agents.risk.test_graph agents.risk.test_company_analysis agents.risk.test_output_contract agents.risk.collection.test_collect agents.risk.collection.test_quality
-python -m unittest discover -s tests
+python -m unittest agents.risk.test_graph agents.risk.test_evidence agents.risk.collection.test_collect agents.risk.collection.test_quality
 ```
 
-가상 모델 응답으로 실제 그래프, 상위 그래프 연결, 해시 변경 차단, 무근거 입력, 실패 상태, 캐시 재사용을 검증합니다. 실제 데이터 재수집이나 유료 모델 호출은 하지 않습니다.
-
-
-## 보완 루프와 비용
-
-- 기본 최초 선택은 최대 8개 원문이며, 보완 시 최대 8개를 추가합니다. 질문 단어와 본문의 일치 수로 자료 순위를 정합니다. 정교한 의미 검색은 아닙니다.
-- `review_result`는 미확인 사항·실사 질문·검증 진단을 검사하는 규칙 기반 노드입니다. 사실성이나 판단 비약을 완전히 탐지하는 별도 LLM 심사관은 아닙니다.
-- 보완 프롬프트에는 이전 영역별 결과와 질문이 들어갑니다. 새 원문 없이 동일 요청을 반복하지 않습니다.
-- 종료 사유: `review_passed`, `no_new_evidence`, `review_limit`, `no_evidence`, `analysis_failed`.
-- `risk_analysis.review_history`에서 매 회차 질문·출처·분기·캐시 여부를 확인합니다. 보완 실패 시 1차 결과를 유지하되 partial과 오류를 기록합니다.
-- 최대 40개 원문 구간을 모델에 전달하므로 전체 고정 자료를 완전히 검토했다고 해석하면 안 됩니다.
-- `RiskAgent(max_reviews=0)`으로 내부 보완을 끌 수 있습니다. 외부 심사 루프에서도 상위 반복 한도를 반드시 설정하세요.
-- 입력 구간이나 프롬프트가 바뀌어 기존 캐시가 맞지 않으면 새 API 비용이 발생합니다. 이번 구현 검증은 가상 응답으로만 수행했습니다.
-
-외부 재검토 입력 예시:
-
-```python
-state = {
-    "company_profile": {"company_id": "고정 데이터 ID"},
-    "risk_analysis": previous_result,
-    "review_requests": {"risk": {
-        "company_id": "고정 데이터 ID",
-        "attempt": 1,
-        "reason": "협약 사실만으로 의존성을 판단했는지 재검토",
-        "questions": ["다른 협력 기관이나 대체 자원 관련 근거가 있는가?"]
-    }}
-}
-result = RiskAgent()(state)
-```
+가상 모델로 단일 호출, 재검토 질문·응답, 버전 검증, 인용 연결, 자료 없음, 실패 처리, 입력 불변성 및 상위 LangGraph 결과 병합을 검증합니다. 유료 호출·새 자료 수집은 하지 않습니다.

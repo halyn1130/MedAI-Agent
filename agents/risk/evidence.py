@@ -1,9 +1,6 @@
-"""One request per company, persistent raw-response cache, local evidence binding."""
+"""Shared evidence selection and response validation for the single-pass worker."""
 import hashlib
-import json
-import os
 import re
-from pathlib import Path
 from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
@@ -107,83 +104,3 @@ def validate_response(raw, chunks):
             coverage[c]={'unknowns':['분석 응답 누락'],'due_diligence_questions':[]}
     return accepted,coverage,details
 
-
-def analyze(state, cache_dir, caller=None, model=None):
-    model=model or os.environ.get('RISK_MODEL')
-    chunks=passages(state)
-    payload={'company_id':state['company_profile']['company_id'], 'company_name':state['company_profile']['company_name'],
-             'as_of':state['as_of'],'passages':chunks}
-    if state.get('risk_review_context'):
-        payload['review_context'] = state['risk_review_context']
-    key=hashlib.sha256(json.dumps({'model':model,'prompt':PROMPT,'schema':Reply.model_json_schema(),'input':payload},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
-    cache_dir=Path(cache_dir);cache_dir.mkdir(parents=True,exist_ok=True)
-    path=cache_dir/(key+'.json'); pending=cache_dir/(key+'.pending')
-    mode='no_evidence'; envelope={};errors=[]
-    if chunks:
-        if path.exists():envelope=json.loads(path.read_text());mode='cache'
-        elif pending.exists():
-            envelope={'error':{'code':'previous_attempt_interrupted'}};mode='blocked'
-        else:
-            if not model:raise ValueError('RISK_MODEL is required')
-            if caller is None:
-                from openai import OpenAI
-                from openai.lib._pydantic import to_strict_json_schema
-                client=OpenAI(max_retries=0,timeout=90)
-                def caller(data):
-                    response=client.chat.completions.create(model=model,
-                        messages=[{'role':'system','content':PROMPT},{'role':'user','content':json.dumps(data,ensure_ascii=False)}],
-                        response_format={'type':'json_schema','json_schema':{'name':'RiskCompany','strict':True,'schema':to_strict_json_schema(Reply)}},
-                        max_completion_tokens=6000)
-                    return response.model_dump(mode='json')
-            with pending.open('x') as f:f.write('request started; do not auto retry')
-            try:envelope={'response':caller(payload)}
-            except Exception as exc:
-                envelope={'error':{'code':'api_error','error_type':type(exc).__name__}}
-                status=getattr(exc,'status_code',None)
-                if isinstance(status,int):envelope['error']['http_status']=status
-            # Store provider response BEFORE parsing or validating model content.
-            tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(envelope,ensure_ascii=False));tmp.replace(path)
-            pending.unlink();mode='api'
-    if not chunks:
-        accepted={c:[] for c in CATS}
-        coverage={c:{'unknowns':['관련 원문 구간 미확보'],'due_diligence_questions':[]} for c in CATS}
-    elif 'error' in envelope:
-        accepted={c:[] for c in CATS};coverage={c:{'unknowns':['분석 실행 실패'],'due_diligence_questions':[]} for c in CATS};errors=[envelope['error']]
-    else:
-        try:
-            response=envelope['response'];choice=response['choices'][0]
-            if choice.get('finish_reason')!='stop':raise ValueError('unfinished response')
-            raw=json.loads(choice['message']['content'])
-        except Exception:
-            raw=None
-        accepted,coverage,errors=validate_response(raw,chunks)
-    if len(payload['company_name'].strip()) <= 2:
-        for c in CATS:
-            for i, item in enumerate(accepted[c]):
-                errors.append({'code':'short_company_name_identity_review','category':c,'item_index':i})
-            accepted[c]=[]
-            coverage.setdefault(c,{'unknowns':[],'due_diligence_questions':[]})['unknowns'].append('짧은 기업명의 동명이인·유사명 기업 일치 수동 확인 필요')
-    result={'schema_version':'risk-company-3','company_id':payload['company_id'],'company_name':payload['company_name'],
-        'as_of':state['as_of'],'mode':mode,'cache_key':key,'analysis_status':'no_evidence' if not chunks else 'partial' if errors else 'complete',
-        'areas':[{ 'category':c,'observations':accepted[c],**coverage.get(c,{'unknowns':['응답 형식 오류'],'due_diligence_questions':[]})} for c in CATS],
-        'diagnostics':errors,'passages':chunks,'usage':envelope.get('response',{}).get('usage'),
-        'limitation':'원문 연결은 의미 검증이 아닙니다. 공개 자료 검토이며 투자 위험 없음으로 해석하지 마세요.'}
-    if errors and not any(accepted.values()) and any(e['code'] in ('api_error','invalid_root','previous_attempt_interrupted') for e in errors):result['analysis_status']='failed'
-    return result
-
-
-def save_result(result, path):
-    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
-    path.write_text(json.dumps(result,ensure_ascii=False,indent=2))
-    lines=['# '+result['company_name'],'',f"실행 상태: {result['analysis_status']} / 처리: {result['mode']}",'',result['limitation'],'']
-    for a in result['areas']:
-        lines += ['## '+a['category'],'']
-        for o in a['observations']:
-            lines += ['- '+o['statement'], '  - 구분: '+o['kind']]
-            if o['conditional_impact']:lines+=['  - 조건부 영향: '+o['conditional_impact']]
-            for c in o['citations']:lines += [f"  - [{c['passage_id']}]({c['url']})"]
-        lines += ['- 미확인: '+x for x in a['unknowns']]
-        lines += ['- 실사 질문: '+x for x in a['due_diligence_questions']]
-        lines+=['']
-    if result['diagnostics']:lines+=['## 검증 보류','',json.dumps(result['diagnostics'],ensure_ascii=False)]
-    path.with_suffix('.md').write_text('\n'.join(lines))
