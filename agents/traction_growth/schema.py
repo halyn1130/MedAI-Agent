@@ -267,6 +267,7 @@ class Evidence(BaseModel):
     geography: Optional[str] = None
     evidence_status: EvidenceStatus
     date_uncertainty: Optional[str] = Field(None, description="월 단위 날짜가 24/36개월 경계에 걸릴 때 사유")
+    record_id: Optional[str] = Field(None, description="공통 데이터셋 DataRecord ID (common_state.md 원문 연결)")
 
 
 class Finding(BaseModel):
@@ -546,4 +547,109 @@ class ExtractionBatch(BaseModel):
 
 # 노드 반환 예:  return {"traction_analysis": envelope.model_dump(mode="json")}
 TractionAnalysis = AnalysisEnvelope  # 기존 import 호환용 별칭
+
+
+# ─────────────────────────────────────────────
+# 8) 공통 Worker 계약 (docs/common_state.md 초안 · 2026-10-13)
+#    Worker 입력 = 공통 데이터셋(Source·DataRecord) / 반환 = 공통 메타데이터 + 분야별 data
+#    data 는 위 TractionData 를 그대로 쓴다 (심사 어댑터가 data.criteria_inputs.C5 등을 읽음)
+# ─────────────────────────────────────────────
+class DatasetSource(BaseModel):
+    source_id: str
+    title: Optional[str] = None
+    url: Optional[str] = None
+    published_at: Optional[str] = None
+    collected_at: Optional[str] = None
+
+
+class DataRecord(BaseModel):
+    record_id: str
+    source_id: str
+    content: object = Field(description="원문 문자열 또는 구조화 자료(dict)")
+    locator: Optional[str] = None
+    tags: list[str] = Field(default_factory=list)
+
+
+class Dataset(BaseModel):
+    version: str
+    sources: list[DatasetSource] = Field(default_factory=list)
+    records: list[DataRecord] = Field(default_factory=list)
+
+
+class CommonReviewQuestion(BaseModel):
+    question_id: str
+    question: str
+
+
+class CommonReviewRequest(BaseModel):
+    request_id: str
+    attempt: int = 1
+    reason: str = ""
+    questions: list[CommonReviewQuestion] = Field(default_factory=list)
+    target_finding_ids: list[str] = Field(default_factory=list)
+    dataset_version: Optional[str] = None
+
+
+class CommonEvidence(BaseModel):
+    evidence_id: str
+    record_id: Optional[str] = None
+    source_id: Optional[str] = None
+    excerpt: Optional[str] = None
+    locator: Optional[str] = None
+
+
+class CommonMissingItem(BaseModel):
+    missing_id: str
+    item: str
+    reason: str
+    related_criterion_ids: list[str] = Field(default_factory=list)
+    required_for_assessment: bool
+
+
+class CommonCoverageStatus(str, Enum):
+    REVIEWED = "reviewed"            # 제공 자료를 검토함 (외부 검색 완료 아님)
+    PARTIAL = "partial"
+    NOT_REVIEWED = "not_reviewed"
+    NOT_APPLICABLE = "not_applicable"
+
+
+class CommonCoverage(BaseModel):
+    coverage_id: str
+    area: str
+    record_ids: list[str] = Field(default_factory=list)
+    status: CommonCoverageStatus
+    note: str = ""
+
+
+class CommonReviewResponse(BaseModel):
+    request_id: str
+    question_id: str
+    answer: str
+    finding_ids: list[str] = Field(default_factory=list)
+    resolved: bool
+
+
+class WorkerError(BaseModel):
+    code: str
+    message: str
+
+
+class WorkerResult(BaseModel):
+    run_id: Optional[str] = None
+    company_id: Optional[str] = None
+    as_of: Optional[str] = None
+    schema_version: str = SCHEMA_VERSION
+    criteria_version: str = CRITERIA_VERSION
+    agent: AgentName = AgentName.TRACTION
+    dataset_version: Optional[str] = None
+    result_version: int = 1
+    analysis_status: AnalysisStatus = AnalysisStatus.PARTIAL
+    data: TractionData = Field(default_factory=TractionData)
+    sources: list[DatasetSource] = Field(default_factory=list)
+    evidence: list[CommonEvidence] = Field(default_factory=list)
+    findings: list[Finding] = Field(default_factory=list)
+    missing_items: list[CommonMissingItem] = Field(default_factory=list)
+    coverage: list[CommonCoverage] = Field(default_factory=list)
+    review_responses: list[CommonReviewResponse] = Field(default_factory=list)
+    errors: list[WorkerError] = Field(default_factory=list)
 

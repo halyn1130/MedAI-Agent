@@ -57,7 +57,7 @@ dist/
 /data/chroma/
 /data/faiss/
 
-# Market RAG 원본 데이터셋은 별도 ZIP으로 전달
+# Market RAG 작업 폴더는 제외하고 공유용 원본 ZIP은 아래에서 허용
 /data/market_rag/**
 !/data/market_rag/.gitkeep
 !/data/market_rag/reports/
@@ -98,3 +98,6 @@ Desktop.ini
 # 4번 실적·성장성: 로컬 개발·테스트 폴더, 팀 공유용 캐시 zip
 dev/
 *.zip
+
+# 시장 평가 Node의 재현용 원본 자료 ZIP만 공유
+!/data/market_evaluation/source_documents.zip
