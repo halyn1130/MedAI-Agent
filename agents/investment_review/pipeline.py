@@ -13,6 +13,11 @@
 - agents/orchestrator 코드는 바꾸지 않고 함수(build_company_graph·_payload·_worker_node·_finalize_node)를 가져다 쓴다.
 
     python -m agents.investment_review.pipeline --input bundles.json --out outputs/pipeline
+    python -m agents.investment_review.pipeline --input bundles.json --checkpoint outputs/pipeline/checkpoints.sqlite
+    python -m agents.investment_review.pipeline --input bundles.json --checkpoint outputs/pipeline/checkpoints.sqlite \
+        --resume <thread_id>            # 중단된 실행 이어서 (끝난 기업·단계는 건너뜀)
+
+State 저장 비용: 기업 입력의 데이터셋 원문은 agents/orchestrator/store.py 파일 저장소로 옮기고 State에는 dataset_ref만 둔다.
 """
 from __future__ import annotations
 
@@ -21,6 +26,8 @@ from typing import Annotated, Any, Callable, Optional
 
 from langgraph.graph import START, StateGraph
 from langgraph.types import Send
+
+from agents.orchestrator.store import dataset_version
 
 from .contract import InvestmentReview
 from .policy import DEFAULT_POLICY, POLICIES
@@ -50,19 +57,20 @@ def _review_request(cs: dict, worker: str, issues: list[dict], attempt: int) -> 
             "attempt": attempt, "reason": "interpretation_error", "criterion_id": None, "blocker": False,
             "questions": [{"question_id": f"q{n:02d}", "question": t, "text": t} for n, t in enumerate(texts, 1)],
             "target_finding_ids": [], "related_evidence_ids": [],
-            "dataset_version": (cs.get("dataset") or {}).get("version"),
+            "dataset_version": dataset_version(cs),
             "previous_result_version": prev.get("result_version"), "as_of": cs["as_of"]}
 
 
 def build_pipeline(workers: Optional[dict[str, WorkerFn]] = None, policy_name: str = "zero_fill",
-                   cfg: Optional[ReportConfig] = None, **company_kwargs):
+                   cfg: Optional[ReportConfig] = None, checkpointer: Any = None, **company_kwargs):
     from agents.orchestrator.graph import (_finalize_node, _payload, _worker_node, build_company_graph,
                                            default_workers)
     policy = POLICIES.get(policy_name, DEFAULT_POLICY)
     workers = workers if workers is not None else default_workers()
     cfg = (cfg or ReportConfig(policy_name=policy_name)).resolved()
     cfg.rereview = True
-    company_graph = build_company_graph(workers, policy, **company_kwargs)
+    # 기업 그래프는 노드 안에서 호출하므로 자체 저장은 끄고, 기업 결과는 상위 그래프 체크포인트에 남긴다
+    company_graph = build_company_graph(workers, policy, checkpointer=False, **company_kwargs)
     finalize = _finalize_node(policy)
 
     def fan_out(state: dict):
@@ -131,16 +139,21 @@ def build_pipeline(workers: Optional[dict[str, WorkerFn]] = None, policy_name: s
     g.add_edge("company", "select")
     g.add_edge("select", "aggregate_results")
     g.add_edge("orchestrator_review", "select")
-    return g.compile()
+    return g.compile(checkpointer=checkpointer)
 
 
 def run_pipeline(companies: list[dict], run_id: str, as_of: str, cfg: ReportConfig,
-                 workers: Optional[dict[str, WorkerFn]] = None, max_concurrency: int = 5, **company_kwargs) -> dict:
-    graph = build_pipeline(workers, cfg.policy_name, cfg, **company_kwargs)
-    return graph.invoke({"run_id": run_id, "as_of": as_of, "companies": companies,
-                         "orchestration": {"retry_counts": {"report_rereview": 0}}},
-                        {"max_concurrency": max_concurrency, "run_name": "investment_pipeline",
-                         "metadata": {"run_id": run_id}})
+                 workers: Optional[dict[str, WorkerFn]] = None, max_concurrency: int = 5,
+                 checkpointer: Any = None, thread_id: Optional[str] = None, **company_kwargs) -> dict:
+    """checkpointer와 thread_id를 주면 단계마다 저장하고, 같은 thread_id로 다시 부르면 멈춘 곳부터 이어서 실행한다."""
+    from agents.orchestrator.store import externalize, invoke_resumable
+    graph = build_pipeline(workers, cfg.policy_name, cfg, checkpointer=checkpointer, **company_kwargs)
+    config: dict = {"max_concurrency": max_concurrency, "run_name": "investment_pipeline",
+                    "metadata": {"run_id": run_id, "thread_id": thread_id}}
+    if thread_id:
+        config["configurable"] = {"thread_id": thread_id}
+    return invoke_resumable(graph, {"run_id": run_id, "as_of": as_of, "companies": externalize(companies),
+                                    "orchestration": {"retry_counts": {"report_rereview": 0}}}, config)
 
 
 def main() -> None:
@@ -170,7 +183,11 @@ def main() -> None:
     ap.add_argument("--no-llm-report", action="store_true", help="보고서 LLM 서술 없이 템플릿 문장만")
     ap.add_argument("--no-judge", action="store_true", help="품질 평가에서 LLM Judge 생략 (규칙 검사만)")
     ap.add_argument("--no-pdf", action="store_true")
+    ap.add_argument("--checkpoint", type=Path, help="체크포인트 SQLite 파일 (지정하면 단계마다 저장 → 재개 가능)")
+    ap.add_argument("--resume", metavar="THREAD_ID", help="이 thread_id의 중단된 실행을 이어서 (--checkpoint 필요)")
     args = ap.parse_args()
+    if args.resume and not args.checkpoint:
+        ap.error("--resume 은 --checkpoint 와 함께 쓰세요")
     load_dotenv()
 
     args.out.mkdir(parents=True, exist_ok=True)
@@ -179,10 +196,17 @@ def main() -> None:
     logging.getLogger("investment_review.report").addHandler(handler)
     logging.getLogger("investment_review.report").setLevel(logging.INFO)
 
+    import uuid
+
+    from agents.orchestrator.store import make_checkpointer
     run_id = f"pipeline-{args.as_of}"
+    thread_id = args.resume or (f"{run_id}-{uuid.uuid4().hex[:8]}" if args.checkpoint else None)
+    if thread_id:
+        print(f"체크포인트: {args.checkpoint} · thread_id={thread_id} (중단되면 --resume {thread_id})")
     cfg = ReportConfig(policy_name=args.policy, k=args.k, llm=None if args.no_llm_report else "auto",
                        judge=None if args.no_judge else "auto", pubmed_cache=args.out / "pubmed_cache.json")
     out = run_pipeline(load_bundles(args.input), run_id, args.as_of, cfg, max_concurrency=args.max_concurrency,
+                       checkpointer=make_checkpointer(args.checkpoint), thread_id=thread_id,
                        max_review_rounds=args.max_review_rounds, enabled=args.workers)
 
     (args.out / "final_reviews.json").write_text(json.dumps(out["final_reviews"], ensure_ascii=False, indent=2),

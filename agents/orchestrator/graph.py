@@ -16,6 +16,13 @@
 - quality_check : 결과를 교차 검증하고(investment_review.validate), 보완이 필요하면 공통 형식 review_request를 만든다.
                   재실행 여부·횟수 상한(max_review_rounds)은 여기서만 결정한다.
 - finalize      : 채점·게이트·판정(investment_review.judge). 실행하지 않은 Worker는 not_run으로 넘기고 사유를 남긴다.
+
+State 설계 (노션 C. State Schema)
+- 제어 vs 페이로드: ControlState(라우팅·루프 판단용 작은 값)와 PayloadState(작업 입력·결과)를 타입으로 나눈다.
+  orchestrator·quality_check의 분기 판단은 제어 값(plan·review_round·review_requests)만 보고 한다.
+- 지속성 비용: 데이터셋 원문은 State에 두지 않고 store.put_dataset으로 파일에 저장, State에는 dataset_ref만 둔다.
+- 재개/복구: build_company_graph·build_graph에 checkpointer를 넘기면 단계마다 State가 저장되고,
+  같은 thread_id로 다시 실행하면 끝난 단계는 건너뛴다 (store.invoke_resumable).
 """
 from __future__ import annotations
 
@@ -34,6 +41,7 @@ from agents.investment_review.selection import select
 from agents.investment_review.validate import validate
 
 from .routing import WORKER_KO, WORKERS, plan_workers, slice_dataset
+from .store import dataset_version, load_dataset, put_dataset
 
 WorkerFn = Callable[[dict], dict]
 MAX_REVIEW_ROUNDS = 1       # 기업당 보완 라운드 상한 (Orchestrator가 소유)
@@ -49,26 +57,33 @@ class _CompanyKeys(TypedDict):
     as_of: str                       # 필수: 심사 기준일
 
 
-class CompanyState(_CompanyKeys, total=False):
-    # ① 실행 식별·버전 (company_id·as_of는 위 필수 키)
-    run_id: str
+class ControlState(_CompanyKeys, total=False):
+    """제어: 라우팅·계획·루프 판단에 쓰는 최소 상태. 작고, 단계마다 저장돼도 부담이 없다."""
+    run_id: str                                   # 외부 로그(LangSmith metadata·결정 로그)와 잇는 키
     schema_version: str
     criteria_version: str
-    # ② 입력: 기업 정보 + 수집된 데이터셋 {version, sources, records}
+    plan: dict                                    # {selected, skipped(사유), record_counts, unassigned, rule}
+    review_requests: dict                         # 이번 라운드 보완 요청 {worker: request} (없으면 {})
+    review_round: int                             # 보완 라운드 수 (상한 max_review_rounds)
+    review_history: Annotated[list, operator.add]  # 라운드별 이슈·요청·상한 도달 여부
+    worker_log: Annotated[list, operator.add]     # Worker 실행 기록 (상태·레코드 수·요청 ID)
+
+
+class PayloadState(TypedDict, total=False):
+    """페이로드: 작업 입력과 결과. 분기 판단에는 쓰지 않는다."""
     company_profile: dict
-    dataset: dict
-    # ③ Orchestrator 계획: {selected, skipped, record_counts, unassigned, rule}
-    plan: dict
-    # ④ Worker 결과 {worker: WorkerResult} — 병렬 쓰기를 merge 리듀서로 합침
-    worker_results: Annotated[dict, merge]
-    # ⑤ 이번 라운드 보완 요청 {worker: review_request} (없으면 {})
-    review_requests: dict
-    # ⑥ 루프 제어·이력
-    review_round: int
-    review_history: Annotated[list, operator.add]
-    worker_log: Annotated[list, operator.add]
-    # ⑦ 최종 판정
-    investment_review: dict
+    dataset_ref: dict                             # 데이터셋 원문 참조 {version, uri, sha, records, sources}
+    dataset: Optional[dict]                       # 인라인 원문(테스트·하위 호환). orchestrator가 참조로 바꾸고 비운다
+    worker_results: Annotated[dict, merge]        # {worker: WorkerResult}, 병렬 쓰기는 merge 리듀서로 합침
+    investment_review: dict                       # 최종 판정
+
+
+class CompanyState(ControlState, PayloadState, total=False):
+    pass
+
+
+CONTROL_KEYS = tuple(k for k in ControlState.__annotations__ if k not in _CompanyKeys.__annotations__)
+PAYLOAD_KEYS = tuple(PayloadState.__annotations__)
 
 
 class RunState(TypedDict, total=False):
@@ -76,7 +91,7 @@ class RunState(TypedDict, total=False):
     as_of: str
     schema_version: str
     criteria_version: str
-    companies: list[dict]        # [{company_id, company_profile, dataset}, ...]
+    companies: list[dict]        # [{company_id, company_profile, dataset_ref(또는 dataset)}, ...]
     reviews: Annotated[list, operator.add]
     analyses: Annotated[list, operator.add]
     final_reviews: list
@@ -101,7 +116,7 @@ def _failed_result(payload: dict, worker: str, error: Exception) -> dict:
     prev = payload.get("previous_result") or {}
     return {"run_id": payload.get("run_id"), "company_id": payload.get("company_id"), "as_of": payload.get("as_of"),
             "schema_version": payload.get("schema_version"), "criteria_version": payload.get("criteria_version"),
-            "agent": worker, "dataset_version": (payload.get("dataset") or {}).get("version"),
+            "agent": worker, "dataset_version": dataset_version(payload),
             "result_version": int(prev.get("result_version") or 0) + 1, "analysis_status": "failed",
             "data": {}, "sources": [], "evidence": [], "findings": [], "missing_items": [], "coverage": [],
             "review_responses": [],
@@ -137,7 +152,7 @@ def _payload(state: CompanyState, worker: str, request: Optional[dict] = None) -
     다른 키를 넣지 않는 이유: market WorkerInput은 extra="forbid"라 모르는 키가 있으면 검증 실패한다.
     """
     values = {k: state.get(k) for k in WORKER_INPUT_KEYS[:6]}
-    values.update(dataset=slice_dataset(state.get("dataset") or {}, worker, state.get("company_id")),
+    values.update(dataset=slice_dataset(load_dataset(cast(dict, state)), worker, state.get("company_id")),
                   previous_result=(state.get("worker_results") or {}).get(worker), review_request=request)
     return values
 
@@ -148,17 +163,6 @@ def _unknowns(result: dict) -> list[str]:
             for m in result.get("missing_items") or []]
 
 
-def _risk_view(result: dict) -> AgentResult:
-    """Risk WorkerResult(data.areas) → 기존 risk 어댑터 입력 형식(areas·passages)으로 맞춘다."""
-    areas = (result.get("data") or {}).get("areas") or []
-    passages = [{"passage_id": c["passage_id"]} for a in areas for o in a.get("observations") or []
-                for c in o.get("citations") or [] if c.get("passage_id")]
-    legacy = {"company_id": result.get("company_id"), "as_of": result.get("as_of"),
-              "analysis_status": result.get("analysis_status"), "areas": areas, "passages": passages}
-    ar = adapt_risk(legacy, result.get("sources"))
-    return ar.model_copy(update={"result_version": result.get("result_version")})
-
-
 def _clinical_view(result: dict) -> AgentResult:
     """공통 coverage의 not_applicable(규제 비대상 제품)을 검토 완료로 본다.
     기존 clinical 어댑터는 reviewed·no_relevant_evidence_found만 인정해, 비대상 제품이 있으면 G01이 not_checked가 된다."""
@@ -167,13 +171,14 @@ def _clinical_view(result: dict) -> AgentResult:
     return adapt_clinical({**result, "coverage": coverage})
 
 
-ADAPTERS = {"clinical": _clinical_view, "market": adapt_market, "traction": adapt_traction}
+# risk 어댑터는 공통 Worker 형식(data.areas·sources·findings/evidence)을 직접 읽는다
+ADAPTERS = {"clinical": _clinical_view, "market": adapt_market, "traction": adapt_traction, "risk": adapt_risk}
 
 
 def to_agent_result(worker: str, result: Optional[dict], company_id: str) -> AgentResult:
     if not result:
         return not_run(worker, company_id)
-    ar = _risk_view(result) if worker == "risk" else ADAPTERS[worker](result)
+    ar = ADAPTERS[worker](result)
     unknowns = _unknowns(result)
     return ar.model_copy(update={"unknowns": unknowns}) if unknowns else ar
 
@@ -199,7 +204,7 @@ def build_review_request(state: CompanyState, worker: str, issues: list, round_:
         "target_finding_ids": [f["finding_id"] for f in prev.get("findings") or []
                                if set(f.get("related_criterion_ids") or []) & set(criteria)],
         "related_evidence_ids": sorted({e for i in issues for e in i.related_ids}),
-        "dataset_version": (state.get("dataset") or {}).get("version"),
+        "dataset_version": dataset_version(cast(dict, state)),
         "previous_result_version": prev.get("result_version"), "as_of": state["as_of"],
     }
 
@@ -209,10 +214,14 @@ def _orchestrator_node(enabled: Iterable[str], min_records: int):
     enabled = tuple(enabled)
 
     def orchestrator(state: CompanyState) -> dict:
-        plan = plan_workers(state.get("dataset"), state.get("company_id"), enabled, min_records)
-        return {"plan": plan, "review_round": 0, "review_requests": {},
-                "schema_version": state.get("schema_version") or SCHEMA_VERSION,
-                "criteria_version": state.get("criteria_version") or CRITERIA_VERSION}
+        dataset = load_dataset(cast(dict, state))
+        plan = plan_workers(dataset, state.get("company_id"), enabled, min_records)
+        update: dict[str, Any] = {"plan": plan, "review_round": 0, "review_requests": {},
+                                  "schema_version": state.get("schema_version") or SCHEMA_VERSION,
+                                  "criteria_version": state.get("criteria_version") or CRITERIA_VERSION}
+        if state.get("dataset") is not None:      # 인라인 원문 → 파일 참조로 바꾸고 State에서는 비운다
+            update.update(dataset_ref=put_dataset(dataset), dataset=None)
+        return update
     return orchestrator
 
 
@@ -281,7 +290,8 @@ def _finalize_node(policy: Policy):
 # ── 그래프 조립 ───────────────────────────────────────────────────────────
 def build_company_graph(workers: Optional[dict[str, WorkerFn]] = None, policy: Policy = DEFAULT_POLICY,
                         max_review_rounds: int = MAX_REVIEW_ROUNDS, enabled: Iterable[str] = WORKERS,
-                        min_records: int = 1):
+                        min_records: int = 1, checkpointer: Any = None):
+    """checkpointer: None=상위 그래프 설정을 따름(단독 실행이면 저장 안 함), False=저장 안 함, 체크포인터 객체=저장."""
     workers = workers if workers is not None else default_workers()
     g = StateGraph(CompanyState)
     g.add_node("orchestrator", _orchestrator_node(enabled, min_records))
@@ -295,13 +305,17 @@ def build_company_graph(workers: Optional[dict[str, WorkerFn]] = None, policy: P
     g.add_conditional_edges("orchestrator", dispatch, [*WORKERS, "finalize"])
     g.add_conditional_edges("quality_check", route_after_quality, [*WORKERS, "finalize"])
     g.add_edge("finalize", END)
-    return g.compile()
+    return g.compile(checkpointer=checkpointer)
 
 
 def build_graph(workers: Optional[dict[str, WorkerFn]] = None, policy: Policy = DEFAULT_POLICY,
-                k: Optional[int] = None, **company_kwargs):
-    """전체 그래프: 기업별 그래프를 병렬 실행하고 적격 기업 중 최대 K개를 선정한다."""
-    company_graph = build_company_graph(workers, policy, **company_kwargs)
+                k: Optional[int] = None, checkpointer: Any = None, **company_kwargs):
+    """전체 그래프: 기업별 그래프를 병렬 실행하고 적격 기업 중 최대 K개를 선정한다.
+
+    checkpointer를 주면 기업 단위로 진행 상황이 저장된다. 끝난 기업은 재개 시 다시 실행하지 않는다.
+    (기업 그래프는 노드 안에서 호출되므로 자체 저장은 끄고(False), 기업 결과는 상위 그래프 체크포인트에 남긴다)
+    """
+    company_graph = build_company_graph(workers, policy, checkpointer=False, **company_kwargs)
 
     def fan_out(state: RunState):
         base = {k_: state.get(k_) for k_ in ("run_id", "as_of", "schema_version", "criteria_version")
@@ -328,4 +342,4 @@ def build_graph(workers: Optional[dict[str, WorkerFn]] = None, policy: Policy = 
     g.add_conditional_edges(START, fan_out, ["company", "select"])
     g.add_edge("company", "select")
     g.add_edge("select", END)
-    return g.compile()
+    return g.compile(checkpointer=checkpointer)

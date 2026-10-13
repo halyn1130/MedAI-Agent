@@ -3,6 +3,9 @@
     python -m agents.orchestrator --input inputs/ --out outputs/orchestrator
     python -m agents.orchestrator --input bundle.json --dry-run          # Worker 실행 없이 분기 계획만
     python -m agents.orchestrator --graph                               # 그래프 구조(Mermaid) 출력
+    python -m agents.orchestrator --input bundles.json --checkpoint outputs/orchestrator/checkpoints.sqlite
+    python -m agents.orchestrator --input bundles.json --checkpoint outputs/orchestrator/checkpoints.sqlite \
+        --resume <thread_id>                                            # 중단된 실행 이어서 (끝난 기업은 건너뜀)
 
 입력 (JSON 파일 또는 폴더 안의 *.json, 파일 하나에 기업 1곳 · 목록 · {company_id: 기업} 모두 가능)
     {"company_id": "c001", "company_profile": {...},
@@ -54,7 +57,11 @@ def main() -> None:
     ap.add_argument("--max-concurrency", type=int, default=5)
     ap.add_argument("--dry-run", action="store_true", help="분기 계획만 출력 (Worker 미실행, 비용 없음)")
     ap.add_argument("--graph", action="store_true", help="기업 그래프 Mermaid 출력")
+    ap.add_argument("--checkpoint", type=Path, help="체크포인트 SQLite 파일 (지정하면 단계마다 저장 → 재개 가능)")
+    ap.add_argument("--resume", metavar="THREAD_ID", help="이 thread_id의 중단된 실행을 이어서 (--checkpoint 필요)")
     args = ap.parse_args()
+    if args.resume and not args.checkpoint:
+        ap.error("--resume 은 --checkpoint 와 함께 쓰세요")
 
     if args.graph:
         from .graph import build_company_graph
@@ -72,13 +79,23 @@ def main() -> None:
     if args.dry_run:
         return
 
+    import uuid
+
     from dotenv import load_dotenv
     load_dotenv()
     from .graph import build_graph
+    from .store import externalize, invoke_resumable, make_checkpointer
+    run_id = f"orch-{args.as_of}"
+    thread_id = args.resume or f"{run_id}-{uuid.uuid4().hex[:8]}"
     graph = build_graph(policy=policies[args.policy], k=args.k, max_review_rounds=args.max_review_rounds,
-                        enabled=args.workers, min_records=args.min_records)
-    out = graph.invoke({"run_id": f"orch-{args.as_of}", "as_of": args.as_of, "companies": bundles},
-                       {"max_concurrency": args.max_concurrency})
+                        enabled=args.workers, min_records=args.min_records,
+                        checkpointer=make_checkpointer(args.checkpoint))
+    if args.checkpoint:
+        print(f"체크포인트: {args.checkpoint} · thread_id={thread_id} (중단되면 --resume {thread_id})")
+    # 데이터셋 원문은 파일 저장소로 옮기고 State에는 참조(dataset_ref)만 넣는다
+    config = {"max_concurrency": args.max_concurrency, "run_name": "orchestrator",
+              "metadata": {"run_id": run_id, "thread_id": thread_id}, "configurable": {"thread_id": thread_id}}
+    out = invoke_resumable(graph, {"run_id": run_id, "as_of": args.as_of, "companies": externalize(bundles)}, config)
 
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "final_reviews.json").write_text(json.dumps(out["final_reviews"], ensure_ascii=False, indent=2),

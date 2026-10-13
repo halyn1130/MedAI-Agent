@@ -46,17 +46,33 @@ graph TD
 - 다른 기업 자료(`company_id`·`company_ids` 불일치)는 세지 않습니다.
 - 데이터셋 전체에 표시가 하나도 없으면 판단 근거가 없으므로 4개 모두 실행합니다(보수적 기본값).
 
-## 3. State (기업 그래프 `CompanyState`)
+## 3. State (기업 그래프 `CompanyState` = `ControlState` + `PayloadState`)
 
-| # | 키 | 설명 | 리듀서 |
+| 구분 | 키 | 설명 | 리듀서 |
 |---|---|---|---|
-| ① | `run_id`, `company_id`(필수), `as_of`(필수), `schema_version`, `criteria_version` | 실행 식별·버전 | 덮어쓰기 |
-| ② | `company_profile`, `dataset{version, sources, records}` | 입력 | 덮어쓰기 |
-| ③ | `plan{selected, skipped, record_counts, unassigned, rule}` | Orchestrator 계획 | 덮어쓰기 |
-| ④ | `worker_results{worker: WorkerResult}` | 병렬 Worker 결과 | **merge** (dict 합치기) |
-| ⑤ | `review_requests{worker: request}` | 이번 라운드 보완 요청 | 덮어쓰기 |
-| ⑥ | `review_round`, `review_history`, `worker_log` | 루프 제어·이력 | 이력은 `operator.add` |
-| ⑦ | `investment_review` | 최종 판정 (+ `orchestration` 기록) | 덮어쓰기 |
+| 필수 | `company_id`, `as_of` | 심사 대상·기준일 | 덮어쓰기 |
+| **제어** | `run_id`, `schema_version`, `criteria_version` | 실행 식별·버전 (`run_id` = 외부 로그 연결 키) | 덮어쓰기 |
+| **제어** | `plan{selected, skipped, record_counts, unassigned, rule}` | Orchestrator 계획 (건너뛴 사유 포함) | 덮어쓰기 |
+| **제어** | `review_requests`, `review_round` | 이번 라운드 보완 요청, 라운드 수 | 덮어쓰기 |
+| **제어** | `review_history`, `worker_log` | 라운드별 이슈·요청·상한 도달, Worker 실행 기록 | `operator.add` |
+| 페이로드 | `company_profile` | 기업 정보 | 덮어쓰기 |
+| 페이로드 | `dataset_ref{version, uri, sha, records, sources}` | 데이터셋 원문 **참조** (원문은 `store.py` 파일 저장소) | 덮어쓰기 |
+| 페이로드 | `dataset` | 인라인 원문 (테스트·하위 호환). orchestrator가 참조로 바꾸고 `None`으로 비움 | 덮어쓰기 |
+| 페이로드 | `worker_results{worker: WorkerResult}` | 병렬 Worker 결과 | **merge** (dict 합치기) |
+| 페이로드 | `investment_review` | 최종 판정 (+ `orchestration` 기록) | 덮어쓰기 |
+
+### 노션 C. State Schema 7개 항목 대응
+| 항목 | 설계 반영 | 코드 |
+|---|---|---|
+| 제어 vs 페이로드 분리 | 라우팅·루프 판단은 제어 값(`plan`·`review_round`·`review_requests`)만 본다. 제어와 페이로드를 TypedDict로 나눔 | `graph.py` `ControlState`·`PayloadState`, `CONTROL_KEYS`·`PAYLOAD_KEYS` |
+| 관측성 위치 | 결정과 사유는 State(`plan.skipped`, `review_history`, `worker_log`)에, 실행 추적은 LangSmith | `graph.py` |
+| 지속성 비용 | 데이터셋 원문은 파일 저장소에, State에는 참조만. Worker에는 Send 순간에만 자기 몫을 잘라 보냄 | `store.py` `put_dataset`·`load_dataset`·`externalize` |
+| 상관 | `run_id`·`thread_id`를 LangSmith metadata로 전달, 요청 ID(`{기업}:{worker}:rr{n}`)로 요청↔응답 연결 | `__main__.py` config, `build_review_request` |
+| 재개/복구 | `--checkpoint`로 SQLite 체크포인터 저장, `--resume <thread_id>`로 멈춘 지점부터 재실행(끝난 기업은 건너뜀). 실패는 `failed`+`errors`로 State에 기록 | `store.py` `make_checkpointer`·`invoke_resumable` |
+| 동시 처리 | 병렬 Worker의 `worker_results`는 merge 리듀서, 이력은 `operator.add` | `graph.py` |
+| 종료 보장 | 보완 라운드 상한 `max_review_rounds`(기본 1), 상한 도달 시 `stopped_by_cap` 기록 | `_quality_node` |
+
+측정(실제 데이터 c001·c021, 2026-10-13): 데이터셋 원문 2개 1.9MB는 저장소에 한 번만 저장됐어요. 체크포인트 8개의 합계는 0.22MB였어요. 원문을 State에 두면 체크포인트마다 원문이 복사돼 약 15MB가 돼요(추정).
 
 Worker에는 State 전체가 아니라 `Send`로 **WorkerInput 9개 키만** 보냅니다.
 `{run_id, company_id, as_of, schema_version, criteria_version, company_profile, dataset(그 Worker 몫), previous_result, review_request}`
@@ -70,6 +86,8 @@ python -m agents.orchestrator --graph                                   # 구조
 python -m agents.orchestrator --input bundles.json --dry-run            # 분기 계획만 (비용 없음)
 python -m agents.orchestrator --input bundles.json --out outputs/orchestrator
 python -m pytest agents/orchestrator -q                                 # 테스트 (가짜 Worker)
+python -m agents.orchestrator --input bundles.json --checkpoint outputs/orchestrator/checkpoints.sqlite
+python -m agents.orchestrator --input bundles.json --checkpoint outputs/orchestrator/checkpoints.sqlite --resume <thread_id>
 ```
 
 - 입력 파일 하나에 기업 1곳, 기업 목록, `{company_id: 기업}` 형태 모두 쓸 수 있습니다.
