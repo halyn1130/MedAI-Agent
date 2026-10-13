@@ -7,11 +7,11 @@
 - coverage     : 선정 기업마다 4개 관점(시장·임상·실적·운영 리스크)이 있는가
 - format       : 쪽수·인용 번호·후보 누락 (checker.check_report)
 
-결과는 공통 State의 QualityIssue(common_state.md 6번)로 바꿔 반환한다 (to_quality_issues). 경로는 Orchestrator가 정한다.
+결과는 공통 State의 QualityIssue(common_state.md 6번)로 바꿔 반환한다 (to_quality_issues).
 - report         : LLM 서술(narrative) 문제. description이 '항목 키: [기준] 사유'라 작성 노드가 그 항목만 다시 쓴다.
-- missing_data   : 선정 기업의 출처 편중·출처 미연결 (data_limitations). 보고서 "4. 보완 이력·한계"에도 공개한다.
-- interpretation : Judge가 지적한 코드 본문(Worker 결과) 내용 문제
-- execution      : 쪽수·인용 번호·후보 누락·관점 섹션 누락 등 코드가 만든 형식 오류
+- interpretation : Judge가 지적한 Worker 결과 내용 문제. issue_id에 기업, target_workers에 Worker → Orchestrator 재검토.
+- execution      : 쪽수·인용 번호·후보 누락·관점 섹션 누락·데이터 한계 미공개 등 코드가 만든 형식 오류
+데이터 부족(출처 편중·출처 미연결, data_limitations)은 취합 노드가 판단해 unresolved_items에 남기고 보고서 4장에 공개한다.
 """
 from __future__ import annotations
 
@@ -55,6 +55,8 @@ class Issue(BaseModel):
     message: str
     fixable: bool
     source: str = "rule"         # rule / judge
+    company_id: str = ""         # Worker 결과 문제(interpretation)일 때 대상 기업
+    worker: str = ""             # 〃 대상 Worker (clinical / market / traction / risk)
 
 
 # ── 데이터 한계 (취합 단계에서 계산, 보고서 한계 섹션에 공개) ─────────────────────
@@ -170,6 +172,8 @@ class JudgeIssue(BaseModel):
     criterion: str = Field(description="groundedness | neutrality | bias")
     target: str = Field(description="문제 문장이 있는 narrative 키 그대로, 코드가 만든 본문이면 report")
     problem: str = Field(description="무엇을 어떻게 고쳐야 하는지 한 문장")
+    company_id: str = Field(default="", description="target이 report일 때 문제 기업의 ID (company_ids 값)")
+    worker: str = Field(default="", description="target이 report일 때 문제 관점의 Worker: clinical | market | traction | risk")
 
 
 class JudgeVerdict(BaseModel):
@@ -195,6 +199,7 @@ def judge_input(markdown: str, ctx: dict, narrative: dict) -> dict:
     return {"facts": {k: facts[k] for k in ("as_of", "candidates", "status", "k", "selected_list", "selected",
                                             "reason_counts", "zero_filled_top")},
             "item_names": EASY, "narrative": narrative,
+            "company_ids": {c["name"]: c["company_id"] for c in ctx["selected"]},
             "report_selected_section": _section(markdown, "2. 선정 기업")[:MAX_JUDGE_CHARS]}
 
 
@@ -222,7 +227,8 @@ def evaluate(markdown: str, ctx: dict, narrative: dict, writer_notes: list[str],
                     continue  # 통과한 기준의 사소한 지적은 반려 사유로 쓰지 않는다
                 fixable = i.target in narrative
                 issues.append(Issue(criterion=name, target=i.target if fixable else "report", message=i.problem,
-                                    fixable=fixable, source="judge"))
+                                    fixable=fixable, source="judge",
+                                    company_id="" if fixable else i.company_id, worker="" if fixable else i.worker))
             for name, score in scores.items():
                 if score < JUDGE_PASS and not any(i.criterion == name and i.source == "judge" for i in issues):
                     issues.append(Issue(criterion=name, target="report", source="judge", fixable=False,
@@ -251,23 +257,32 @@ def to_quality_issues(verdict: dict, ctx: dict) -> list[dict]:
     finding_ids, missing_ids, questions)."""
     out: list[dict] = []
 
-    def add(kind: str, description: str, workers=(), questions=()):
-        out.append({"issue_id": f"qi{len(out) + 1:02d}", "kind": kind, "target_workers": list(workers),
-                    "description": description, "finding_ids": [], "missing_ids": [], "questions": list(questions)})
+    def add(kind: str, description: str, workers=(), questions=(), company_id: str = ""):
+        n = f"qi{len(out) + 1:02d}"
+        out.append({"issue_id": f"{company_id}:{n}" if company_id else n, "kind": kind,
+                    "target_workers": list(workers), "description": description, "finding_ids": [],
+                    "missing_ids": [], "questions": list(questions)})
 
+    names = {c["company_id"]: c["name"] for c in ctx["selected"]}
     for name, c in verdict["criteria"].items():
         for i in c["issues"]:
             if i["fixable"]:
                 add("report", f"{i['target']}: [{CRITERION_KO[name]}] {i['message']}")
             elif i["source"] == "judge":
-                add("interpretation", f"[{CRITERION_KO[name]}] {i['message']}")
+                cid = i.get("company_id") if i.get("company_id") in names else ""
+                worker = i.get("worker") if i.get("worker") in VIEW_KO else ""
+                label = f"[{names[cid]}·{VIEW_KO[worker]}] " if cid and worker else ""
+                add("interpretation", f"{label}[{CRITERION_KO[name]}] {i['message']}", [worker] if worker else [],
+                    [i["message"]], cid)
             else:
                 add("execution", f"[{CRITERION_KO[name]}] {i['message']}")
-    names = {c["company_id"]: c["name"] for c in ctx["selected"]}
-    for lim in ctx.get("limitations") or []:
-        add("missing_data", f"[{CRITERION_KO[lim['criterion']]}] {lim['text']}", lim.get("workers") or [],
-            [QUESTION[lim["criterion"]].format(name=names.get(lim["company_id"], lim["company_id"]))])
     return out
+
+
+def issue_company(issue: dict) -> str:
+    """QualityIssue의 대상 기업 (issue_id = '{company_id}:qiNN'). 없으면 ''."""
+    head, sep, _ = issue["issue_id"].rpartition(":")
+    return head if sep else ""
 
 
 def quality_status(issues: list[dict]) -> str:

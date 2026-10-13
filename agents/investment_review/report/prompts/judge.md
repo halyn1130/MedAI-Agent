@@ -36,4 +36,6 @@
 - 3점 이하인 기준마다 근거가 된 문제를 1개 이상 쓴다. 4점 이상인 기준의 문제는 쓰지 않는다.
 - criterion: groundedness | neutrality | bias
 - target: 문제 문장이 있는 narrative 키를 그대로 쓴다(예: "points:c001"). report_selected_section의 문제면 "report".
+- target이 report이면 company_id(company_ids의 값)와 worker를 쓴다. worker는 문제 섹션의 담당이다:
+  고객 문제·시장 → market, 기술·임상·인허가 → clinical, 사업모델·실적·성장 → traction, 운영 리스크 → risk.
 - problem: 무엇을 어떻게 고쳐야 하는지 한 문장으로 쓴다. 문제 표현을 따옴표로 인용한다.

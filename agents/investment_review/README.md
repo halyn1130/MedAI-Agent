@@ -68,7 +68,7 @@ python -m agents.investment_review --as-of 2026-09-30 \
 | `final_reviews.json` | 기업별 판정·점수·선정 |
 | `*_analysis.json` | 02~05 분석 결과 (다음 실행에서 재사용) |
 | `report_check.json` | 쪽수·인용 검증 + 품질 평가 결과(`evaluation`: 기준별 통과·Judge 점수·시도 이력) |
-| `decision_log.jsonl` | 보고서 노드·임시 Orchestrator 결정·사유 (`run_id`로 연결) |
+| `decision_log.jsonl` | 보고서 노드·재검토 결정과 사유 (`run_id`로 연결) |
 | `clinical_results/` | 02 임상 보완 결과 |
 
 보고서만 다시 만들 때는 02~05를 호출하지 않습니다.
@@ -93,7 +93,8 @@ investment_review/
   finalize.py          # 기업 1개 Worker 결과 → InvestmentReview (기업별 그래프·보고서 취합 공용)
   inputs.py            # 기업 목록·저장된 결과 불러오기 (01 대체)
   adapters/            # 02~05 원래 형식 읽기 → AgentResult, stub(결과 없음)
-  report/              # nodes(취합·작성·품질 평가) · standalone(임시 Orchestrator) · evaluator · writer · renderer, CLI
+  pipeline.py          # 전체 그래프: Orchestrator 기업 그래프 → 선정 → 보고서 3노드 (+ orchestrator_review)
+  report/              # nodes(취합·작성·품질 평가) · standalone(보고서 단독) · evaluator · writer · renderer, CLI
   tests/fixtures/      # 02~05 실제 코드로 만든 출력 샘플 (build_fixtures.py)
 ```
 
@@ -166,7 +167,7 @@ investment_review/
                ├─ traction ─┼→ review ─(보완 요청·1회차)→ 요청받은 Agent만 재실행 → review
                └─ risk     ─┘           └─────────────→ finalize(판정) → END
 전체:   START → 기업별 그래프(병렬, Send) → select → END
-보고서: 위 결과 → evaluations → report/standalone.py 그래프
+보고서: 위 결과 → report/standalone.py 그래프 (Orchestrator 연결 전체 그래프는 pipeline.py)
 ```
 
 ```bash
@@ -186,32 +187,36 @@ python -m agents.investment_review --market-json m.json --traction-json t.json -
 
 ## 보고서
 
-보고서 노드 3개는 팀 공통 State(`common_state.md`) 기준의 자기 칸만 쓰고, 다음 경로·반복 횟수는 정하지 않는다(Orchestrator 담당). 목차와 내용은 설계서 27쪽 그대로다.
+Orchestrator(`agents/orchestrator`) 결과를 받아 결과 취합 → 보고서 작성 → 품질 평가를 한다. 전체 그래프는 [pipeline.py](pipeline.py)이고 Orchestrator 코드는 바꾸지 않고 가져다 쓴다.
 
 ```text
-evaluations(기업별 EvaluationState) → aggregate_results → write_report → review_quality → Orchestrator
+START ─(기업별 Send)→ company(Orchestrator 기업 그래프) → select → aggregate_results → write_report → review_quality
+                         ↑                                                  ↑                  │
+                         │                                                  └── report 이슈 ────┤ 재작성 ≤ 2회
+                         └──── orchestrator_review ←── interpretation 이슈 ─────────────────────┤ 재검토 ≤ 1회
+                                                                                                └→ END
 ```
 
-| 노드 ([report/nodes.py](report/nodes.py)) | 읽기 | 쓰기 |
+| 노드 | 읽기 | 쓰기 | 판단 |
+|---|---|---|---|
+| `aggregate_results` 결과 취합 ([report/nodes.py](report/nodes.py)) | `final_reviews`(Orchestrator 판정·선정), `company_states` | `aggregated_result` | 데이터 부족(출처 편중·출처 없는 관점·필수 결측) → `unresolved_items`, 보고서 4장에 공개. 수집 노드는 미구현 |
+| `write_report` 보고서 작성 | `aggregated_result`, `company_states`, `quality_review` | `report` | 반려된(kind=report) 항목만 다시 씀 |
+| `review_quality` 품질 평가 | `report`, `aggregated_result`, `company_states` | `quality_review` | 다음 경로 결정 (아래) |
+| `orchestrator_review` ([pipeline.py](pipeline.py)) | `quality_review`(interpretation), `company_states` | `company_states`, `orchestration` | 지적된 기업·Worker만 공통 형식 review_request로 재실행 → Orchestrator `finalize`로 재판정 → 선정부터 다시 |
+
+| 품질 평가 결과 | 다음 | `termination_reason` |
 |---|---|---|
-| `aggregate_results` 결과 취합 | `evaluations[].worker_results`·`company_profile`·`orchestration.retry_counts.worker_reviews` | `aggregated_result` (`based_on_results`, `summary`, `criteria_results.reviews`, `unresolved_items`, `analysis_status`) |
-| `write_report` 보고서 작성 | `aggregated_result`, `evaluations`, `quality_review`(kind=report 이슈) | `report` (`based_on_results`, `content`) |
-| `review_quality` 품질 평가 | `report`, `aggregated_result`, `evaluations` | `quality_review` (`based_on_results`, `status`, `issues: QualityIssue[]`) |
+| `pass` | END | — |
+| interpretation(Worker 결과 이상, 기업·Worker 지정) & 재검토 < 1회 | `orchestrator_review` | — |
+| report(서술 문제) & 재작성 < 2회 | `write_report` | — |
+| report 이슈 남음, 재작성 상한 | END | `report_revision_limit` |
+| interpretation 남음, 재검토 상한 / 보고서 단독 실행 | END | `rereview_limit` / `rereview_unavailable` |
+| execution만 남음 | END | `unresolved_non_report_issues` |
 
-- 보고서는 여러 기업 비교라 입력이 기업별 EvaluationState 목록(`evaluations`)이다. 기업 1개 실행 State는 바꾸지 않는다.
-- Worker 결과는 각 Agent의 기존 형식과 공통 Worker 반환 형식을 모두 읽는다(어댑터가 차이 흡수). 점수는 Worker의 `data` 안에서 읽는다.
-- 취합 노드가 C1~C6 판정·선정을 Worker 결과로 다시 계산한다(`finalize.py`, 기업별 그래프와 같은 함수).
-- 노드 내부 작업값(공통 계약 밖): `report_draft`(시도 번호·LLM 문장·검증 반려), `quality_detail`(기준별 점수·Judge 상태·시도 이력). 보고서 재료는 State에 두지 않고 노드마다 다시 만든다.
-- 기존 실행 결과는 `evaluations_from_analyses`로 EvaluationState 목록으로 바꿔 넣는다.
-
-**임시 Orchestrator** ([report/standalone.py](report/standalone.py)): 팀 Orchestrator 전까지 단독 실행용. 보고서 경로만 처리한다.
-
-| `quality_review` | 임시 Orchestrator | `termination_reason` |
-|---|---|---|
-| `pass` | 종료 | — |
-| kind=report 이슈 있음, 재작성 < 2회 | `write_report` (`retry_counts.report_revision` +1) | — |
-| kind=report 이슈 있음, 재작성 2회 도달 | 종료 | `report_revision_limit` |
-| 데이터 부족·해석·실행 이슈만 남음 | 종료 (수집·Worker 재검토는 팀 Orchestrator 경로) | `unresolved_non_report_issues` |
+- 판정·선정은 Orchestrator 결과를 그대로 쓴다(재판정 없음). 재검토 후에만 Orchestrator `finalize`로 다시 판정한다.
+- Worker 결과는 각 Agent의 기존 형식과 공통 Worker 반환 형식을 모두 읽는다.
+- 노드 내부 작업값(공통 계약 밖): `report_draft`(시도 번호·LLM 문장·검증 반려), `quality_detail`(기준별 점수·Judge 상태·다음 경로·시도 이력).
+- 저장된 결과로 보고서만 다시 만들 때는 [report/standalone.py](report/standalone.py) 그래프를 쓴다 (Worker 재검토 없음).
 
 ```text
 # 투자 검토 보고서
@@ -224,7 +229,8 @@ evaluations(기업별 EvaluationState) → aggregate_results → write_report �
 ```
 
 ```bash
-python -m agents.investment_review.report --run-dir outputs/investment_review              # LLM 서술 + Judge (기본)
+python -m agents.investment_review.pipeline --input bundles.json --out outputs/pipeline        # Orchestrator + 보고서
+python -m agents.investment_review.report --run-dir outputs/investment_review              # 저장된 결과로 보고서만
 python -m agents.investment_review.report --run-dir outputs/investment_review --no-judge   # 규칙 검사만
 python -m agents.investment_review.report --run-dir outputs/investment_review --no-llm     # 템플릿 문장만
 ```
@@ -243,12 +249,11 @@ python -m agents.investment_review.report --run-dir outputs/investment_review --
 - **Judge 통과 기준**: 기준별 1~5점 중 4점 이상. 4점 이상인 기준의 사소한 지적은 반려 사유로 쓰지 않는다. Judge 호출이 실패하면 규칙 검사로만 판정한다.
 - **QualityIssue 분류**
 
-| kind | 내용 | target_workers |
+| kind | 내용 | 대상 |
 |---|---|---|
-| `report` | LLM 서술 문제. description = `항목 키: [기준] 사유` → 작성 노드가 그 항목만 다시 씀 | — |
-| `missing_data` | 선정 기업 출처 편중·출처 없는 관점 (보고서 4장에도 공개) | 해당 관점 Worker |
-| `interpretation` | Judge가 지적한 코드 본문(Worker 결과) 내용 문제 | — |
-| `execution` | 쪽수·인용 번호·후보 누락·관점 섹션 누락 등 형식 오류 | — |
+| `report` | LLM 서술 문제. description = `항목 키: [기준] 사유` | 작성 노드 |
+| `interpretation` | Judge가 지적한 Worker 결과 내용 문제. `issue_id = {company_id}:qiNN`, `target_workers` = 문제 관점 Worker | Orchestrator 재검토 |
+| `execution` | 쪽수·인용 번호·후보 누락·관점 섹션 누락·데이터 한계 미공개 등 형식 오류 | — (종료) |
 
 - `status`: 이슈 없음 `pass`, execution 있음 `failed`, 그 외 `needs_revision`.
 
@@ -258,7 +263,7 @@ python -m agents.investment_review.report --run-dir outputs/investment_review --
 
 | 보고서 부분 | 작성 | 비고 |
 |---|---|---|
-| SUMMARY (6~7문장), 평가 기준 안내문, 선정 이유, 핵심 검토 논점 | LLM (`REPORT_MODEL`, 기본 `gpt-4.1`) | 품질 평가에서 kind=report로 반려되면 Orchestrator 경로로 재작성, 끝까지 실패한 항목은 템플릿 문장 |
+| SUMMARY (6~7문장), 평가 기준 안내문, 선정 이유, 핵심 검토 논점 | LLM (`REPORT_MODEL`, 기본 `gpt-4.1`) | 품질 평가에서 kind=report로 반려되면 그 항목만 재작성, 끝까지 실패한 항목은 템플릿 문장 |
 | 부적격·판단불가 사유 | 코드 (프롬프트 4번 규칙) | LLM은 38개 목록을 끝까지 쓰지 못하고 0점 항목 수를 잘못 셈 |
 | REFERENCE | 코드 (프롬프트 5번 규칙) | LLM은 발행연도·사이트명·URL을 자주 틀림. 논문 서지는 PubMed 조회 |
 | 표·수치·평가 근거 | 코드 | |

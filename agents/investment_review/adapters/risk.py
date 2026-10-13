@@ -36,8 +36,7 @@ def c6_from_areas(risk: dict) -> CriterionResult:
             continue
         n = len(_signals(area))
         scored.append((area["category"], n, C6_AREA_SCORE_BY_SIGNALS.get(n, C6_AREA_SCORE_MANY_SIGNALS)))
-        evidence += [c.get("passage_id") or c.get("evidence_id") for o in area["observations"]
-                     for c in o.get("citations") or []]
+        evidence += _area_evidence(risk, area)
     if not scored:
         return CriterionResult(**base, rationale=f"[{C6_RULE}] 관찰이 있는 영역 없음 → 채점 불가")
     score = sum(s for _, _, s in scored) / len(scored)
@@ -53,6 +52,13 @@ def g02_from_status(risk: dict) -> GateResult:
                           reason=NOT_RUN_TEXT.get(risk.get("analysis_status"), "운영 리스크 분석 결과 없음"))
     return GateResult(code="G02", status=GateStatus.CLEAR,
                       reason="Risk 분석에서 현재 중단을 확정하는 근거 없음. 안전의 증명 아님")
+
+
+def _area_evidence(risk: dict, area: dict) -> list[str]:
+    """영역 관찰의 근거 ID. 공통 Worker 형식은 findings(category)의 evidence_ids, 기존 형식은 인용 passage_id."""
+    if risk.get("findings") is not None and risk.get("evidence") is not None:
+        return [e for f in risk["findings"] if f.get("category") == area["category"] for e in f.get("evidence_ids") or []]
+    return [c.get("passage_id") for o in area["observations"] for c in o.get("citations") or []]
 
 
 def _areas(risk: dict) -> list[dict]:

@@ -199,7 +199,8 @@ def _reason(cid: str, c, a: dict) -> str:
             return text + f", 매출 연평균 성장률 {data['revenue_cagr']:.1%}(성장 {c5['growth_score']}점) → 상업화 70%·성장 30% 반영"
         return text + ", 3개년 매출 비교가 불가해 상업화 단계만 반영"
     if cid == "C6":
-        areas = ((a.get("risk_analysis") or {}).get("areas")) or []
+        risk = a.get("risk_analysis") or {}
+        areas = risk.get("areas") or (risk.get("data") or {}).get("areas") or []   # 기존 형식 / 공통 Worker 형식
         seen = [f"{AREA_TEXT[x['category']]} 관찰 {len(x['observations'])}건·위험 신호 "
                 f"{sum(o.get('kind') == 'risk_signal' for o in x['observations'])}건" for x in areas if x.get("observations")]
         if c.zero_filled or c.score is None or not seen:

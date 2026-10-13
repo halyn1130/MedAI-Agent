@@ -2,11 +2,11 @@
 import copy
 import unittest
 
-from ..report import generate_report, run_report, run_saved
+from ..report import generate_report, run_saved
 from ..report.context_builder import build_context
-from ..report.evaluator import JudgeIssue, JudgeVerdict, data_limitations, evaluate, note_key, to_quality_issues
-from ..report.nodes import (ReportConfig, aggregate_node, evaluations_from_analyses, quality_node, report_context,
-                            write_node)
+from ..report.evaluator import (JudgeIssue, JudgeVerdict, data_limitations, evaluate, issue_company, note_key,
+                                to_quality_issues)
+from ..report.nodes import ReportConfig, aggregate_node, company_states_from_analyses, quality_node, write_node
 from ..report.renderer import render
 from ..report.writer import CompanyText, Narrative
 from .test_report import AS_OF, META, FakeLLM, run
@@ -47,11 +47,17 @@ def to_common(worker_results: dict) -> dict:
         env.update(agent=w, findings=[], errors=[])
         out[w] = env
     risk = worker_results["risk"]
+    # 실제 Risk Worker처럼 관찰마다 finding, 인용 구간마다 evidence(새 ID)를 만든다
+    ev_id = {p["passage_id"]: f"{risk['company_id']}:risk:ev{n:03d}" for n, p in enumerate(risk.get("passages") or [], 1)}
+    findings = [{"finding_id": f"{risk['company_id']}:risk:fd{n:03d}", "category": a["category"], "claim": o["statement"],
+                 "evidence_ids": [ev_id[c["passage_id"]] for c in o.get("citations") or [] if c["passage_id"] in ev_id],
+                 "uncertainty": o.get("conditional_impact"), "related_criterion_ids": ["C6"]}
+                for n, (a, o) in enumerate(((a, o) for a in risk["areas"] for o in a["observations"]), 1)]
     out["risk"] = {"company_id": risk["company_id"], "as_of": risk["as_of"], "agent": "risk", "result_version": 1,
                    "analysis_status": risk["analysis_status"], "data": {"areas": risk["areas"]},
-                   "sources": risk["sources"], "findings": [], "missing_items": [], "coverage": [],
+                   "sources": risk["sources"], "findings": findings, "missing_items": [], "coverage": [],
                    "review_responses": [], "errors": [],
-                   "evidence": [{"evidence_id": p["passage_id"], "record_id": None, "source_id": p["source_id"],
+                   "evidence": [{"evidence_id": ev_id[p["passage_id"]], "record_id": None, "source_id": p["source_id"],
                                  "excerpt": p.get("text"), "locator": None} for p in risk.get("passages") or []]}
     return out
 
@@ -60,9 +66,9 @@ class Base(unittest.TestCase):
     def setUp(self):
         reviews, analyses, companies = run()
         self.args = (reviews, analyses, companies, META)
-        self.evaluations = evaluations_from_analyses(analyses, companies, reviews, "t", AS_OF)
+        self.states = company_states_from_analyses(analyses, companies, reviews, "t", AS_OF)
         self.state = {"run_id": "t", "as_of": AS_OF, "criteria_version": META["criteria_version"],
-                      "evaluations": self.evaluations}
+                      "final_reviews": reviews, "company_states": self.states}
         self.ctx = build_context(*self.args)
         self.ctx["limitations"] = data_limitations(self.ctx)
         self.cid = self.ctx["selected"][0]["company_id"]
@@ -97,34 +103,58 @@ class NodeContractTests(Base):
         self.assertIn(reviewed["quality_review"]["status"], ("pass", "needs_revision", "failed"))
         for issue in reviewed["quality_review"]["issues"]:
             self.assertEqual(set(issue), ISSUE_KEYS)
-            self.assertIn(issue["kind"], ("interpretation", "missing_data", "report", "execution"))
+            self.assertIn(issue["kind"], ("interpretation", "report", "execution"))
+        self.assertIn(reviewed["quality_detail"]["next"], ("finish", "write_report"))
 
     def test_based_on_results_records_versions(self):
         agg = aggregate_node(ReportConfig(fetch=None))(self.state)["aggregated_result"]
         self.assertEqual(agg["based_on_results"][self.cid]["clinical"], 2)     # 가짜 보완으로 result_version 2
         self.assertEqual(agg["based_on_results"][self.cid]["traction"], 1)
 
-    def test_aggregate_matches_previous_judgement(self):
-        reviews = aggregate_node(ReportConfig(fetch=None))(self.state)["aggregated_result"]["criteria_results"]["reviews"]
-        before = {r["company_id"]: (r["final_status"], r["total_score"], r["selection"]["rank"]) for r in self.args[0]}
-        after = {r["company_id"]: (r["final_status"], r["total_score"], r["selection"]["rank"]) for r in reviews}
-        self.assertEqual(after, before)
-        # 보완 요청 이력은 orchestration.retry_counts.worker_reviews에서 복원
-        self.assertEqual(sorted(len(r["review_request_ids"]) for r in reviews),
-                         sorted(len(r["review_request_ids"]) for r in self.args[0]))
+    def test_aggregate_uses_orchestrator_judgement(self):
+        agg = aggregate_node(ReportConfig(fetch=None))(self.state)["aggregated_result"]
+        self.assertEqual(agg["criteria_results"]["reviews"], self.args[0])        # 다시 판정하지 않음
+
+    def test_data_gaps_are_judged_at_aggregation(self):
+        agg = aggregate_node(ReportConfig(fetch=None))(self.state)["aggregated_result"]
+        gaps = [u for u in agg["unresolved_items"] if u["kind"] == "data_limitation"]
+        self.assertEqual(len(gaps), len(self.ctx["limitations"]))
+        self.assertTrue(all(g["workers"] and g["question"] for g in gaps))
 
     def test_reads_common_worker_format(self):
-        common = [{**ev, "worker_results": to_common(ev["worker_results"])} for ev in self.evaluations if
-                  "risk" in ev["worker_results"]]
-        old = [ev for ev in self.evaluations if "risk" in ev["worker_results"]]
         cfg = ReportConfig(fetch=None)
-        a = aggregate_node(cfg)({**self.state, "evaluations": old})["aggregated_result"]["criteria_results"]["reviews"]
-        b = aggregate_node(cfg)({**self.state, "evaluations": common})["aggregated_result"]["criteria_results"]["reviews"]
-        self.assertEqual([(r["company_id"], r["final_status"], r["total_score"]) for r in b],
-                         [(r["company_id"], r["final_status"], r["total_score"]) for r in a])
-        state = {**self.state, "evaluations": common}
+        common = {cid: {**cs, "worker_results": to_common(cs["worker_results"])}
+                  for cid, cs in self.states.items() if "risk" in cs["worker_results"]}
+        state = {**self.state, "company_states": common,
+                 "final_reviews": [r for r in self.args[0] if r["company_id"] in common]}
         state.update(aggregate_node(cfg)(state))
-        self.assertIn("## REFERENCE", write_node(cfg)(state)["report"]["content"])
+        old = {**self.state, "company_states": {c: self.states[c] for c in common}, "final_reviews": state["final_reviews"]}
+        old.update(aggregate_node(cfg)(old))
+        self.assertEqual(write_node(cfg)(state)["report"]["content"], write_node(cfg)(old)["report"]["content"])
+
+
+class RealWorkerFormatTests(unittest.TestCase):
+    """팀원 Worker 코드가 실제로 만든 공통 형식 출력 (오프라인 가짜 모델)."""
+
+    def test_risk_worker_result(self):
+        from agents.risk.evaluator import evaluate_risk
+        from agents.risk.test_graph import fixture, reply
+        from ..adapters import adapt_risk
+        from ..validate import validate_result
+        res = evaluate_risk(fixture(), caller=reply)
+        r = adapt_risk(res)
+        self.assertEqual(r.criteria[0].score_status.value, "scored")
+        self.assertTrue(r.criteria[0].evidence_ids)
+        self.assertTrue(set(r.criteria[0].evidence_ids) <= set(r.evidence_ids))   # 근거가 결과 안에 있음
+        codes = [i.issue_id.split(":")[2] for i in validate_result(res["company_id"], res["as_of"], r)]
+        self.assertNotIn("unknown_evidence", codes)
+
+    def test_market_worker_result(self):
+        from agents.market.agent import MarketNode
+        from tests.test_market_agent import FakeReasoner, worker_input
+        from ..adapters import adapt_market
+        r = adapt_market(MarketNode(FakeReasoner())(worker_input()))
+        self.assertEqual([c.score_status.value for c in r.criteria], ["scored"] * 3)
 
 
 # ── 품질 평가 기준 ─────────────────────────────────────────────────────────
@@ -157,15 +187,12 @@ class RuleTests(Base):
         self.assertFalse(v["criteria"]["groundedness"]["passed"])
         self.assertEqual(note_key(v["feedback"][0]), f"points:{self.cid}")
 
-    def test_data_limitations_become_missing_data_issues(self):
+    def test_data_limitations_disclosed_not_quality_issues(self):
         self.assertTrue(self.ctx["limitations"])
         md = render(self.ctx, {})
         for lim in self.ctx["limitations"]:
-            self.assertIn(lim["text"], md.split("## 4. 보완 이력·한계")[1].split("## 5.")[0])   # 보고서에도 공개
-        issues = to_quality_issues(self.evaluate({}), self.ctx)
-        missing = [i for i in issues if i["kind"] == "missing_data"]
-        self.assertEqual(len(missing), len(self.ctx["limitations"]))
-        self.assertTrue(all(i["target_workers"] and i["questions"] for i in missing))
+            self.assertIn(lim["text"], md.split("## 4. 보완 이력·한계")[1].split("## 5.")[0])   # 보고서에 공개
+        self.assertEqual(to_quality_issues(self.evaluate({}), self.ctx), [])
 
     def test_issue_kinds(self):
         v = self.evaluate({"summary": "시장만 봤다."})
@@ -189,11 +216,13 @@ class JudgeTests(Base):
 
     def test_low_score_on_code_section_is_interpretation(self):
         judge = FakeJudge(JudgeVerdict(groundedness=5, neutrality=5, bias=2, issues=[
-            JudgeIssue(criterion="bias", target="report", problem="회사 발표에 편중")]))
+            JudgeIssue(criterion="bias", target="report", problem="회사 발표에 편중", company_id=self.cid, worker="risk")]))
         v = self.evaluate({"summary": self.summary}, judge)
         self.assertEqual(v["feedback"], [])
-        kinds = [i["kind"] for i in to_quality_issues(v, {**self.ctx, "limitations": []})]
-        self.assertEqual(kinds, ["interpretation"])
+        issues = to_quality_issues(v, self.ctx)
+        self.assertEqual([i["kind"] for i in issues], ["interpretation"])
+        self.assertEqual((issue_company(issues[0]), issues[0]["target_workers"]), (self.cid, ["risk"]))
+        self.assertEqual(issues[0]["questions"], ["회사 발표에 편중"])
 
     def test_judge_failure_falls_back_to_rules(self):
         class Broken(FakeJudge):
@@ -221,9 +250,8 @@ class LoopTests(Base):
         self.assertEqual(len(llm.calls), 2)
         self.assertIn("[중립성]", llm.calls[1][-1][1])                # 반려 사유를 작성 노드에 전달
         self.assertEqual(self.report_issues(out), [])
-        self.assertEqual(out["orchestration"]["retry_counts"]["report_revision"], 1)
-        # 남은 이슈는 데이터 부족뿐 → 보고서 Loop가 아니라 Orchestrator 수집 경로 대상
-        self.assertEqual(out["orchestration"]["termination_reason"], "unresolved_non_report_issues")
+        self.assertEqual(out["quality_review"]["status"], "pass")
+        self.assertEqual([h["next"] for h in out["quality_detail"]["history"]], ["write_report", "finish"])
         self.assertIn("총점 순위 1위다.", out["report"]["content"])
 
     def test_only_rejected_item_is_replaced(self):
@@ -237,7 +265,7 @@ class LoopTests(Base):
         llm = FakeLLM(self.narrative(select="유망한 기업이다."))
         out, _ = run_saved(*self.args, llm=llm, fetch=None, revision_limit=2)
         self.assertEqual(len(llm.calls), 3)                            # 최초 1회 + 재작성 2회
-        self.assertEqual(out["orchestration"]["termination_reason"], "report_revision_limit")
+        self.assertEqual(out["quality_detail"]["termination_reason"], "report_revision_limit")
 
     def test_non_report_issue_does_not_rewrite(self):
         judge = FakeJudge(JudgeVerdict(groundedness=5, neutrality=5, bias=2, issues=[
@@ -246,6 +274,14 @@ class LoopTests(Base):
         out, _ = run_saved(*self.args, llm=llm, fetch=None, judge=judge)
         self.assertEqual(len(llm.calls), 1)
         self.assertIn("interpretation", {i["kind"] for i in out["quality_review"]["issues"]})
+        self.assertEqual(out["quality_detail"]["termination_reason"], "unresolved_non_report_issues")
+
+    def test_rereview_unavailable_without_workers(self):
+        judge = FakeJudge(JudgeVerdict(groundedness=2, neutrality=5, bias=5, issues=[
+            JudgeIssue(criterion="groundedness", target="report", problem="실적 이상", company_id=self.cid,
+                       worker="traction")]))
+        out, _ = run_saved(*self.args, fetch=None, judge=judge)
+        self.assertEqual(out["quality_detail"]["termination_reason"], "rereview_unavailable")
 
     def test_template_only_never_rewrites(self):
         md, check = generate_report(*self.args, fetch=None)
@@ -253,11 +289,10 @@ class LoopTests(Base):
         for key in ("pages", "issues", "ok", "narrative", "references"):   # 기존 report_check 키 유지
             self.assertIn(key, check)
 
-    def test_pass_when_no_issues(self):
-        evaluations = [ev for ev in self.evaluations if ev["company_id"] not in {c["company_id"] for c in self.ctx["selected"]}]
-        out = run_report(evaluations, "t", AS_OF, META["criteria_version"], ReportConfig(fetch=None))
-        self.assertEqual(out["quality_review"]["status"], "pass")      # 선정 기업 없음 → 데이터 한계 없음
-        self.assertEqual(out["orchestration"]["status"], "complete")
+    def test_template_report_passes(self):
+        out, _ = run_saved(*self.args, fetch=None)
+        self.assertEqual(out["quality_review"]["status"], "pass")
+        self.assertIsNone(out["quality_detail"]["termination_reason"])
 
 
 if __name__ == "__main__":
