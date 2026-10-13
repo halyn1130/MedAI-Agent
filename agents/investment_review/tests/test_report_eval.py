@@ -153,7 +153,7 @@ class RealWorkerFormatTests(unittest.TestCase):
         from agents.market.agent import MarketNode
         from tests.test_market_agent import FakeReasoner, worker_input
         from ..adapters import adapt_market
-        r = adapt_market(MarketNode(FakeReasoner())(worker_input()))
+        r = adapt_market(MarketNode(FakeReasoner(), use_rag=False)(worker_input()))   # 시장 테스트와 같은 방식
         self.assertEqual([c.score_status.value for c in r.criteria], ["scored"] * 3)
 
 
