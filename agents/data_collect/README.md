@@ -34,6 +34,7 @@ python -m agents.orchestrator --input outputs/bundles       # Orchestrator 실�
 | `load.py` | 취합 데이터셋 한 파일 → 기업별 입력 | 없음 |
 | `collect.py` | 분야별 수집 코드를 불러 기업 1곳의 데이터셋을 새로 수집 | 있음 |
 | `update.py` | 취합 데이터셋에서 한 분야의 레코드를 새 수집 결과로 교체, 기업 ID 변경 | 없음 |
+| `recollect.py` | 데이터 부족 시 재수집 노드. `collection_request`의 질문으로 추가 자료를 찾아 데이터셋에 덧붙임 | 있음 |
 
 ### 취합 데이터셋에서 꺼낼 때 (`load.py`)
 
@@ -68,6 +69,52 @@ python -m agents.data_collect.update --input collected_dataset.json --output out
 
 입력 파일은 고치지 않고 새 파일을 씁니다. 변경 내용은 파일의 `revisions`에 기록됩니다.
 
+### 데이터 부족 시 재수집 (`recollect.py`)
+
+Orchestrator가 "데이터 부족"으로 판단했을 때 부르는 노드입니다. 이 노드는 `dataset`만 갱신하고,
+기존 Worker 결과의 무효화·재평가·재수집 횟수 관리는 Orchestrator가 합니다.
+
+```python
+from agents.data_collect.recollect import data_recollect_node
+graph.add_node("collect", data_recollect_node)     # quality_check → collect → orchestrator
+```
+
+- **읽는 State**: `company_id`, `company_profile`, `as_of`, `dataset`, `collection_request`
+  ```json
+  {"request_id": "collect-01", "attempt": 1, "based_on_dataset_version": "<dataset.version>",
+   "target_workers": ["traction"],
+   "items": [{"worker": "traction", "missing_id": "c002:traction:mi01", "question": "공급 계약 체결 기사"}]}
+  ```
+- **돌려주는 값**: `dataset`, `collection_result`
+
+  | `collection_result.status` | 의미 | Orchestrator가 할 일 |
+  |---|---|---|
+  | `updated` | 새 자료 추가, `dataset.version` 변경 | `updated_workers`(또는 전체)를 재평가 |
+  | `no_new_data` | 새 자료 없음, version 유지 | 같은 평가를 반복하지 않고 미해결로 종료 |
+  | `stale_request` | 요청의 기준 버전이 현재 데이터셋과 다름 | 요청을 다시 만들기 |
+  | `failed` | 검색이 모두 실패 | 종료 또는 장애 처리 |
+
+- **수집 방식**: 항목마다 `<기업명> <question>`으로 웹 검색(Tavily)합니다. 요청 1건당 검색은 최대 6회입니다.
+  기준일 이후 자료, 기업명이 본문에 없는 자료, 그 Worker가 이미 가진 출처는 넣지 않습니다.
+  항목별로 검색 결과 수와 제외 사유(`skipped`)를 남깁니다.
+- **새 레코드**: tags가 `[<worker>, "recollected", ...]`이라 기존 분기·배분 규칙을 그대로 탑니다.
+- **질문이 곧 검색어입니다.** "공급 계약 체결 기사"처럼 검색하기 좋은 문구일수록 결과가 좋습니다.
+  `build_collection_request()`는 Worker 결과의 `missing_items`를 그대로 질문으로 옮기는 보조 함수라 검색 품질이 낮을 수 있습니다.
+- **한계**: 질문 기반 웹 검색만 합니다. 식약처·DART 같은 전용 API 재조회는 하지 않습니다.
+- **보고서 파이프라인과 연결**: 취합 노드가 모은 `aggregated_result.unresolved_items`를 기업별 요청으로 바꿉니다.
+  ```python
+  from agents.data_collect.recollect import collect_additional, requests_from_unresolved
+
+  versions = {cid: cs["dataset"]["version"] for cid, cs in state["company_states"].items()}
+  requests = requests_from_unresolved(state["aggregated_result"]["unresolved_items"], versions, attempt=1)
+  for cid, request in requests.items():
+      cs = state["company_states"][cid]
+      out = collect_additional(cid, cs["company_profile"], cs["dataset"], request, cs["as_of"])
+      # out["collection_result"]["status"] == "updated" 이면 out["dataset"]으로 updated_workers를 재평가
+  ```
+
+단독 확인: `python -m agents.data_collect.recollect --bundle outputs/bundles/c002.json --request request.json --out out.json`
+
 ## 현재 취합 데이터셋 (`collected-0398548d442651bb`)
 
 - 기업 42개. 임상·실적은 2026-10-13, 리스크는 2026-09-30 기준, 시장은 공통 자료 193건.
@@ -76,5 +123,6 @@ python -m agents.data_collect.update --input collected_dataset.json --output out
 
 ## 남은 과제
 
-- **재수집**: 데이터 부족 시 `collection_request`의 질문으로 추가 수집하는 경로는 아직 없습니다.
+- **재수집 연결**: 재수집 노드는 있지만 그래프에 아직 연결되지 않았습니다.
+  `investment_review/pipeline.py`에 품질 평가 뒤 "데이터 부족 → 재수집 → 해당 기업 재평가" 경로와 횟수 상한이 필요합니다.
 - **리스크 자료 갱신**: 리스크는 9월 30일 수집분입니다.

@@ -101,3 +101,11 @@ dev/
 
 # 시장 평가 Node의 재현용 원본 자료 ZIP만 공유
 !/data/market_evaluation/source_documents.zip
+
+# 시장 원본 ZIP을 푼 폴더 (ZIP만 공유)
+/data/market_evaluation/source_documents/
+
+# 임상·인허가 로컬 실행 입력·결과 (결과 예시는 clinical_results/에만 둔다)
+/agents/clinical_regulatory/clinical_inputs/
+/agents/clinical_regulatory/clinical_worker_results/
+/agents/clinical_regulatory/clinical_worker_results.json
