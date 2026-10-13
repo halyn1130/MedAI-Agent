@@ -103,7 +103,7 @@ def test_bge_model_is_loaded_once_across_parallel_graph_nodes(monkeypatch):
     loads = 0
 
     class FakeModel:
-        def __init__(self, model_name, device=None):
+        def __init__(self, model_name, device=None, local_files_only=False):
             nonlocal loads
             time.sleep(0.01)
             loads += 1
@@ -116,3 +116,18 @@ def test_bge_model_is_loaded_once_across_parallel_graph_nodes(monkeypatch):
 
     assert loads == 1
     assert len({id(model) for model in models}) == 1
+
+
+def test_bge_local_runtime_does_not_download_a_model(monkeypatch):
+    import sentence_transformers
+
+    called = {}
+
+    class LocalModel:
+        def __init__(self, model_name, **kwargs):
+            called.update(kwargs)
+
+    monkeypatch.setattr(sentence_transformers, "SentenceTransformer", LocalModel)
+    embeddings = BgeM3Embeddings(local_files_only=True)
+    assert isinstance(embeddings.model, LocalModel)
+    assert called["local_files_only"] is True

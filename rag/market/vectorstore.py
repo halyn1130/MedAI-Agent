@@ -23,7 +23,10 @@ def _metadata(metadata: dict[str, Any]) -> dict[str, str | int | float | bool]:
 
 
 class ChromaMarketVectorStore:
-    def __init__(self, persist_dir: Path, collection_name: str = "market_rag"):
+    def __init__(
+        self, persist_dir: Path, collection_name: str = "market_rag", *,
+        create_if_missing: bool = True,
+    ):
         try:
             import chromadb
             from chromadb.config import Settings
@@ -31,14 +34,21 @@ class ChromaMarketVectorStore:
             raise RuntimeError(
                 "chromadb is required for the persistent market vector store"
             ) from exc
-        persist_dir.mkdir(parents=True, exist_ok=True)
+        if create_if_missing:
+            persist_dir.mkdir(parents=True, exist_ok=True)
+        elif not (persist_dir / "chroma.sqlite3").is_file():
+            raise FileNotFoundError(f"market RAG index not found: {persist_dir}")
         self.client = chromadb.PersistentClient(
             path=str(persist_dir), settings=Settings(anonymized_telemetry=False)
         )
         self.collection_name = collection_name
-        self.collection = self.client.get_or_create_collection(
-            name=collection_name,
-            metadata={"hnsw:space": "cosine", "domain": "healthcare_ai_market"},
+        self.collection = (
+            self.client.get_or_create_collection(
+                name=collection_name,
+                metadata={"hnsw:space": "cosine", "domain": "healthcare_ai_market"},
+            )
+            if create_if_missing
+            else self.client.get_collection(name=collection_name)
         )
 
     def rebuild(self) -> None:
