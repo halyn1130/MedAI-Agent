@@ -30,10 +30,17 @@
 
 출력: state["traction_analysis"] = AnalysisEnvelope dict (기존과 동일 계약 → 심사 어댑터 수정 불필요)
 
-보완(재분석) 요청
-    Orchestrator가 "해석 불명확"으로 review_requests 를 보내면, 이전 결과(traction_analysis)와
-    입력 자료로 다시 판정하고 review_responses 에 응답을 남긴다. 추가 검색은 하지 않는다
-    (자료 부족 → 재수집은 01 수집 노드의 몫).
+단순 워커 원칙 (2026-10-13)
+    - 호출되면 주어진 입력으로 **정확히 한 번** 평가해서 반환한다.
+    - 노드는 실행 여부를 스스로 판단하지 않는다: 결과 재사용·건너뛰기, 재분석 횟수 상한, 중복 요청 제거,
+      여러 요청 반복 처리 없음 → 모두 Orchestrator가 결정 (종료 보장도 Orchestrator State에서 관리).
+    - 자체 검색·수집·재시도 루프 없음. LLM 호출은 원문(docs) 해석에만 사용.
+
+재분석 지시: state["traction_request"]  (ReviewRequest 1건, 없으면 최초 평가)
+    Orchestrator가 "해석 불명확"으로 지시를 넣어 이 노드를 다시 호출하면, 이전 결과(traction_analysis)와
+    입력 자료로 다시 판정해 result_version+1, review_responses 에 응답을 남긴다.
+    지시가 있는데 이전 결과가 없으면 ValueError → Orchestrator의 Fallback(재시도/제외)이 처리.
+    (자료 부족 → 재수집은 01 수집 노드의 몫)
 
 실행 (프로젝트 루트)
     # 저장된 기존 결과(Envelope)를 입력 자료로 되돌려 평가만 다시 실행 — 수집 노드 없이 바로 테스트
@@ -746,31 +753,17 @@ def evaluate_traction(profile: dict, inputs: Optional[dict], *, as_of: Optional[
 
 
 def traction_evaluate_node(state: dict) -> dict:
-    """메인 그래프 워커 노드.
+    """메인 그래프 워커 노드 — 주어진 입력으로 한 번 평가해서 반환한다.
 
-    읽기: company_profile, traction_inputs, as_of, run_id, traction_analysis(이전 결과), review_requests
+    읽기: company_profile, traction_inputs, as_of, run_id,
+          traction_request(재분석 지시 1건, 선택), traction_analysis(재분석일 때만 이전 결과로 사용)
     쓰기: traction_analysis
-    - 재분석 요청이 없고 결과가 있으면 아무것도 바꾸지 않는다(재사용).
-    - 재분석 요청이 있으면 이전 결과 + 입력 자료로 다시 판정한다(기업당 S.MAX_REVIEW_ROUNDS회).
+    실행·재실행·횟수·중복 판단은 하지 않는다 (Orchestrator 몫).
     """
-    profile = state.get("company_profile") or state.get("current_company") or {}
-    cid = company_id_of(profile)
-    inputs = state.get("traction_inputs")
-    prev = state.get("traction_analysis")
-    if prev and prev.get("company_id") != cid:
-        prev = None
-    reqs = [r for r in state.get("review_requests") or []
-            if r.get("target_agent") == "traction" and r.get("company_id") == cid]
-    kw = {"as_of": state.get("as_of"), "run_id": state.get("run_id")}
-
-    if not reqs:
-        return {} if prev else {"traction_analysis": evaluate_traction(profile, inputs, **kw)}
-    env = prev or evaluate_traction(profile, inputs, **kw)
-    done = {x["request_id"] for x in env.get("review_responses", [])}
-    for r in reqs:
-        if r.get("review_round", 1) > S.MAX_REVIEW_ROUNDS or r["request_id"] in done:
-            continue
-        env = evaluate_traction(profile, inputs, request=r, previous=env)
+    req = state.get("traction_request")
+    env = evaluate_traction(state.get("company_profile") or {}, state.get("traction_inputs"),
+                            as_of=state.get("as_of"), run_id=state.get("run_id"),
+                            request=req, previous=state.get("traction_analysis") if req else None)
     return {"traction_analysis": env}
 
 
