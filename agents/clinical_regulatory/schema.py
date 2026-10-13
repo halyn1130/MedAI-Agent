@@ -1,16 +1,19 @@
 """
-임상·인허가 분석 (AGENT 02 / clinical) - Pydantic 스키마  v2.0
+임상·인허가 평가 (Worker: clinical) - Pydantic 스키마  v3.0
 
 구성
-1) 공통 계약 (COMMON CONTRACT 2.0)
-   Source · Evidence · Finding · MissingItem · Coverage
-   ReviewRequest · ReviewResponse · AnalysisEnvelope
+1) 공통 계약 (공통 State 및 Worker 입출력 계약 초안)
+   Source · DataRecord · Evidence · Finding · MissingItem · Coverage
+   ReviewResponse · WorkerError · WorkerResult
    ※ 조 공통 스키마 파일이 생기면 이 부분은 그 파일에서 import 하도록 교체한다.
+   ※ 공통 필드 외에 임상에서 쓰는 부가 필드는 각 모델에 "임상 부가"로 표시했다.
 2) 임상·인허가 data 객체
    ProductAssessment · RegulatoryRecord · ProgramRecord(지정·등재)
    ClinicalStudy · ClaimCheck · RedFlag · CriterionInput · ClinicalData
 3) 입력 정규화 모델
 4) LLM 중간 출력 모델 (내부용)
+5) 수집 단계(collection.py)용 LLM 출력 모델
+6) 기존 06 심사(investment_review) 호환용 ReviewRequest
 """
 
 from __future__ import annotations
@@ -28,28 +31,10 @@ CRITERIA_VERSION = "proposed-2.0"
 AgentName = Literal["clinical", "market", "traction", "risk"]
 AnalysisStatus = Literal["complete", "partial", "failed"]
 ScoreStatus = Literal["scored", "unknown", "not_applicable"]
-SourceType = Literal["official", "company", "partner", "research", "news", "other"]
 EvidenceStatus = Literal["confirmed", "partial", "unverified"]
-CoverageStatus = Literal[
-    "reviewed",
-    "insufficient_information",
-    "no_relevant_evidence_found",
-    "not_reviewed",
-    "search_failed",
-]
-MissingCause = Literal["input_missing", "not_found", "search_failed", "not_reviewed"]
-MissingRoute = Literal[
-    "profile", "clinical", "market", "traction", "risk", "due_diligence", "none"
-]
+CoverageStatus = Literal["reviewed", "partial", "not_reviewed", "not_applicable"]  # reviewed = 제공 자료를 검토함
 Impact = Literal["high", "medium", "low"]
 CriterionId = Literal["C1", "C2", "C3", "C4", "C5", "C6"]
-
-ReviewReason = Literal[
-    "missing_evidence", "conflict", "stale_information", "interpretation_error"
-]
-Resolution = Literal["resolved", "partially_resolved", "unresolved", "search_failed"]
-ChangeType = Literal["facts_updated", "interpretation_updated", "both", "unchanged"]
-QuestionStatus = Literal["answered", "partially_answered", "unanswered"]
 
 
 # ══════════════════════════════════════════════
@@ -58,25 +43,33 @@ QuestionStatus = Literal["answered", "partially_answered", "unanswered"]
 class Source(BaseModel):
     source_id: str
     title: str
-    url: str
-    publisher: str
-    source_type: SourceType
-    published_at: Optional[str] = None  # 발행일 미상이면 null
-    checked_at: str  # 실제 확인일
-    original_source_id: Optional[str] = None  # 재인용일 때 원출처
+    url: Optional[str] = None
+    published_at: Optional[str] = None  # 공개일 미상이면 null
+    collected_at: Optional[str] = None  # 수집 시점
+    publisher: Optional[str] = None  # 임상 수집 부가
+    source_type: Optional[str] = None  # 임상 수집 부가: official | company | research | news | other
+
+
+class DataRecord(BaseModel):
+    record_id: str
+    source_id: str
+    content: Any  # 원문 또는 구조화 자료
+    locator: Optional[str] = None
+    tags: list[str] = Field(default_factory=list)  # 자료 배분용 보조 정보
 
 
 class Evidence(BaseModel):
     evidence_id: str
-    company_id: str
-    product_id: Optional[str] = None
-    statement: str
-    source_ids: list[str]
-    locator: Optional[str] = None
+    record_id: str
+    source_id: str
     excerpt: Optional[str] = None
+    locator: Optional[str] = None
+    # 임상 부가
+    product_id: Optional[str] = None
+    statement: Optional[str] = None  # 이 근거가 뒷받침하는 사실 한 문장
     event_date: Optional[str] = None
     geography: Optional[str] = None
-    evidence_status: EvidenceStatus
+    evidence_status: Optional[EvidenceStatus] = None
 
 
 class Finding(BaseModel):
@@ -89,19 +82,11 @@ class Finding(BaseModel):
 
 
 class MissingItem(BaseModel):
-    item_id: str
-    field: str
-    cause: MissingCause
-    route: MissingRoute
-    impact: Impact
-    detail: str
-
-
-class SearchScope(BaseModel):
-    names: list[str] = Field(default_factory=list)  # 조회한 기업명·제품명
-    queries: list[str] = Field(default_factory=list)  # 실행한 검색어
-    sources: list[str] = Field(default_factory=list)  # 조회한 기관·DB
-    period: Optional[str] = None
+    missing_id: str
+    item: str
+    reason: str
+    related_criterion_ids: list[CriterionId] = Field(default_factory=list)
+    required_for_assessment: bool = False
 
 
 class Coverage(BaseModel):
@@ -114,86 +99,45 @@ class Coverage(BaseModel):
         "clinical_studies",
         "claim_check",
     ]
+    record_ids: list[str] = Field(default_factory=list)  # 이 범위에서 검토한 자료
+    status: CoverageStatus
+    note: Optional[str] = None
+    # 임상 부가
     product_id: Optional[str] = None
     country: Optional[str] = None
-    status: CoverageStatus
-    search_scope: SearchScope = Field(default_factory=SearchScope)
-    checked_at: str
-    note: Optional[str] = None
-
-
-class ReviewQuestion(BaseModel):
-    question_id: str
-    text: str
-
-
-class SearchBudget(BaseModel):
-    max_calls: int = 5
-
-
-class ReviewContext(BaseModel):
-    search_period: Optional[str] = None
-    preferred_sources: list[str] = Field(default_factory=list)
-    previous_search_history: list[Any] = Field(default_factory=list)
-    related_results: list[Any] = Field(default_factory=list)
-
-
-class ReviewRequest(BaseModel):
-    request_id: str
-    company_id: str
-    product_ids: list[str] = Field(default_factory=list)
-    target_agent: AgentName
-    finding_ids: list[str] = Field(default_factory=list)
-    criterion_id: Optional[CriterionId] = None
-    reason: ReviewReason
-    blocker: bool = False
-    questions: list[ReviewQuestion] = Field(default_factory=list)
-    related_evidence_ids: list[str] = Field(default_factory=list)
-    previous_result_version: int
-    as_of: str
-    review_round: int = 1
-    search_budget: SearchBudget = Field(default_factory=SearchBudget)
-    completion_conditions: list[str] = Field(default_factory=list)
-    context: ReviewContext = Field(default_factory=ReviewContext)
-
-
-class QuestionResult(BaseModel):
-    question_id: str
-    status: QuestionStatus
-    answer: str
-    evidence_ids: list[str] = Field(default_factory=list)
 
 
 class ReviewResponse(BaseModel):
-    response_id: str
     request_id: str
-    company_id: str
-    result_version: int
-    resolution: Resolution
-    change_type: ChangeType
-    updated_finding_ids: list[str] = Field(default_factory=list)
-    new_source_ids: list[str] = Field(default_factory=list)
-    question_results: list[QuestionResult] = Field(default_factory=list)
-    remaining_unknowns: list[str] = Field(default_factory=list)
-    limitations: list[str] = Field(default_factory=list)
+    question_id: str
+    answer: str
+    finding_ids: list[str] = Field(default_factory=list)
+    resolved: bool = False
 
 
-class AnalysisEnvelope(BaseModel):
+class WorkerError(BaseModel):
+    code: str
+    message: str
+
+
+class WorkerResult(BaseModel):
     run_id: str
     company_id: str
     as_of: str
     schema_version: str = SCHEMA_VERSION
     criteria_version: str = CRITERIA_VERSION
     agent: AgentName
+    dataset_version: Optional[str] = None
     result_version: int
     analysis_status: AnalysisStatus
     data: dict  # 담당별 객체 (여기서는 ClinicalData)
-    sources: list[Source] = Field(default_factory=list)
+    sources: list[dict] = Field(default_factory=list)  # 실제 참조한 Source (데이터셋 내용 그대로)
     evidence: list[Evidence] = Field(default_factory=list)
     findings: list[Finding] = Field(default_factory=list)
     missing_items: list[MissingItem] = Field(default_factory=list)
     coverage: list[Coverage] = Field(default_factory=list)
     review_responses: list[ReviewResponse] = Field(default_factory=list)
+    errors: list[WorkerError] = Field(default_factory=list)
 
 
 # ══════════════════════════════════════════════
@@ -334,12 +278,6 @@ class ClinicalData(BaseModel):
         default_factory=dict
     )  # {"C1": ...}
     validation_issues: list[str] = Field(default_factory=list)  # 자체 검증 결과 (확장)
-    id_keys: dict[str, str] = Field(
-        default_factory=dict
-    )  # 보완 시 Finding·Flag ID 유지용 (내부)
-    collected_profile: dict = Field(
-        default_factory=dict
-    )  # 자체 수집한 기업·제품 정보 (다른 담당 참고용)
 
 
 # ══════════════════════════════════════════════
@@ -411,7 +349,7 @@ class RegRecordDraft(BaseModel):
     valid_until: Optional[str] = None
     statement: str = Field(description="이 기록을 한 문장으로 요약한 사실")
     excerpt: Optional[str] = Field(default=None, description="원자료 발췌")
-    source_ids: list[str]
+    record_ids: list[str] = Field(description="근거가 된 입력 자료의 record_id")
     evidence_status: EvidenceStatus
 
 
@@ -431,7 +369,7 @@ class ProgramDraft(BaseModel):
     effective_at: Optional[str] = None
     statement: str
     excerpt: Optional[str] = None
-    source_ids: list[str]
+    record_ids: list[str] = Field(description="근거가 된 입력 자료의 record_id")
     evidence_status: EvidenceStatus
 
 
@@ -457,7 +395,7 @@ class StudyDraft(BaseModel):
     statement: str
     excerpt: Optional[str] = None
     event_date: Optional[str] = None
-    source_ids: list[str]
+    record_ids: list[str] = Field(description="근거가 된 입력 자료의 record_id")
     evidence_status: EvidenceStatus
 
 
@@ -476,17 +414,15 @@ class ClaimExtraction(BaseModel):
     checks: list[ClaimCheckDraft] = Field(default_factory=list)
 
 
-class QuestionAnswerDraft(BaseModel):
+class ReviewAnswerDraft(BaseModel):
     question_id: str
-    status: QuestionStatus
     answer: str
-    evidence_ids: list[str] = Field(default_factory=list)
+    finding_ids: list[str] = Field(default_factory=list)
+    resolved: bool = Field(description="제공 자료로 질문에 답했으면 true")
 
 
 class ReviewAnswerOutput(BaseModel):
-    answers: list[QuestionAnswerDraft] = Field(default_factory=list)
-    remaining_unknowns: list[str] = Field(default_factory=list)
-    limitations: list[str] = Field(default_factory=list)
+    answers: list[ReviewAnswerDraft] = Field(default_factory=list)
 
 
 # ══════════════════════════════════════════════
@@ -535,3 +471,47 @@ class CollectedClaim(BaseModel):
 
 class ClaimCollection(BaseModel):
     claims: list[CollectedClaim] = Field(default_factory=list)
+
+
+# ══════════════════════════════════════════════
+# 6) 기존 06 심사(investment_review) 호환용 보완 요청 형식
+#    평가 노드는 쓰지 않는다. 06이 새 계약으로 옮기면 삭제한다.
+# ══════════════════════════════════════════════
+ReviewReason = Literal[
+    "missing_evidence", "conflict", "stale_information", "interpretation_error"
+]
+
+
+class ReviewQuestion(BaseModel):
+    question_id: str
+    text: str
+
+
+class SearchBudget(BaseModel):
+    max_calls: int = 5
+
+
+class ReviewContext(BaseModel):
+    search_period: Optional[str] = None
+    preferred_sources: list[str] = Field(default_factory=list)
+    previous_search_history: list[Any] = Field(default_factory=list)
+    related_results: list[Any] = Field(default_factory=list)
+
+
+class ReviewRequest(BaseModel):
+    request_id: str
+    company_id: str
+    product_ids: list[str] = Field(default_factory=list)
+    target_agent: AgentName
+    finding_ids: list[str] = Field(default_factory=list)
+    criterion_id: Optional[CriterionId] = None
+    reason: ReviewReason
+    blocker: bool = False
+    questions: list[ReviewQuestion] = Field(default_factory=list)
+    related_evidence_ids: list[str] = Field(default_factory=list)
+    previous_result_version: int
+    as_of: str
+    review_round: int = 1
+    search_budget: SearchBudget = Field(default_factory=SearchBudget)
+    completion_conditions: list[str] = Field(default_factory=list)
+    context: ReviewContext = Field(default_factory=ReviewContext)

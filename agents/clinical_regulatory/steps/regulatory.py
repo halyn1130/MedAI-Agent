@@ -1,18 +1,16 @@
 from __future__ import annotations
 
+import json
 import re
 from typing import Optional
 
 try:
     from .. import schema as S
-    from ..config import MFDS_ITEM, MFDS_ITEM_MAX_PER_COMPANY, MFDS_PERMIT
-    from ..context import ClinicalAgentState, ClinicalRun
+    from ..context import ClinicalRun
     from ..llm import _company_brief, _product_brief, ask
-    from ..tools import _coverage_status, _item_values, _scope_of, mfds_query, openfda_510k, web_search
     from ..utils import (
         _clean,
         _company_core,
-        _dedupe,
         _mentioned_products,
         _norm_txt,
         _pkey,
@@ -22,14 +20,11 @@ try:
     )
 except ImportError:
     import schema as S
-    from config import MFDS_ITEM, MFDS_ITEM_MAX_PER_COMPANY, MFDS_PERMIT
-    from context import ClinicalAgentState, ClinicalRun
+    from context import ClinicalRun
     from llm import _company_brief, _product_brief, ask
-    from tools import _coverage_status, _item_values, _scope_of, mfds_query, openfda_510k, web_search
     from utils import (
         _clean,
         _company_core,
-        _dedupe,
         _mentioned_products,
         _norm_txt,
         _pkey,
@@ -94,12 +89,12 @@ def _procedure_from_number(rn: str) -> Optional[str]:
     return {"허": "approval", "인": "certification", "신": "notification"}.get(m.group(1)) if m else None
 
 
-def _mentions_target(ctx: ClinicalRun, pid: str, statement: str, excerpt: Optional[str], source_ids: list[str],
+def _mentions_target(ctx: ClinicalRun, pid: str, excerpt: Optional[str], record_ids: list[str],
                      allow_official: bool = False) -> bool:
     """근거가 이 회사·제품을 실제로 언급하는지 (일반 제도 설명 페이지를 근거로 쓰는 것 방지)"""
-    if allow_official and any(ctx.sources.get(s, {}).get("publisher") == "식품의약품안전처" for s in source_ids):
-        return True  # 업체명 필터를 거친 식약처 API 결과
-    raw = " ".join([ctx.sources.get(s, {}).get("title", "") + " " + ctx.source_text.get(s, "") for s in source_ids])
+    if allow_official and any(ctx.is_mfds(r) for r in record_ids):
+        return True  # 업체명 필터를 거친 식약처 기록
+    raw = " ".join(ctx.record_text(r) for r in record_ids)
     if excerpt:
         raw += " " + excerpt
     text = _norm_txt(raw).lower()
@@ -109,92 +104,60 @@ def _mentions_target(ctx: ClinicalRun, pid: str, statement: str, excerpt: Option
     return any(k and len(k) >= 2 and k in text for k in keys)
 
 
-def _record_key(r: dict) -> tuple:
-    return (r["product_id"], r["country"], r.get("record_number") or f'{r.get("authority")}|{r.get("procedure_type")}')
+def _permit_items(ctx: ClinicalRun) -> list[dict]:
+    """식약처 기록 레코드의 품목 목록 (content가 JSON일 때)"""
+    items: list[dict] = []
+    for r in ctx.records_for("regulatory"):
+        if not ctx.is_mfds(r["record_id"]):
+            continue
+        content = r.get("content")
+        if isinstance(content, str):
+            try:
+                content = json.loads(content)
+            except ValueError:
+                continue
+        items += [it for it in (content if isinstance(content, list) else [content]) if isinstance(it, dict)]
+    return items
 
 
-def regulatory_node(state: ClinicalAgentState) -> dict:
-    """2. 공식 상태: 제품·국가별 기관 기록"""
-    ctx = state["ctx"]
-    if "regulatory" not in ctx.steps:
-        return {}
-    prev_records = [r for r in ctx.reg_records if r["product_id"] in ctx.target_pids]
-    ctx.reg_records = [r for r in ctx.reg_records if r["product_id"] not in ctx.target_pids]
-
+def regulatory_step(ctx: ClinicalRun) -> None:
+    """2. 공식 상태: 제품·국가별 기관 기록 (수집된 원자료에서 추출)"""
     # 비대상으로 분류됐어도 식약처 품목허가에 같은 품목이 있으면 규제 대상 (예: 초단파자극기, 보행분석계)
-    match_names = _dedupe([ctx.company.legal_name, ctx.company.display_name, *ctx.company.aliases])
-    company_items: list[dict] = []
-    for n in ctx.company_names()[:2]:
-        company_items += mfds_query(ctx, MFDS_PERMIT, MFDS_PERMIT["company_param"], n, match=match_names).get("items", [])
-    item_names = [_pkey(v) for it in company_items for k, v in it.items()
+    item_names = [_pkey(v) for it in _permit_items(ctx) for k, v in it.items()
                   if isinstance(v, str) and re.search(r"prdlst|prduct|mdl|품목|모델", k, re.I)]
-    for pid in ctx.target_pids:
+    for pid in ctx.pids:
         if ctx.classify[pid]["regulatory_applicability"] == "out_of_scope":
             key = _pkey(ctx.product(pid).name)
             if key and any(key == n or (len(key) >= 4 and (key in n or n in key)) for n in item_names if n):
                 ctx.classify[pid] = {**ctx.classify[pid], "regulatory_applicability": "in_scope",
                                      "rationale": "식약처 품목허가 기록이 있어 규제 대상으로 재판정"}
 
-    groups: dict[tuple, list[dict]] = {}
-    for pid in ctx.target_pids:
-        appl = ctx.classify[pid]["regulatory_applicability"]
-        for country in ctx.product(pid).target_countries:
-            if appl == "out_of_scope":
-                continue
-            hits: list[dict] = []
-            names = ctx.company_names()
-            if country == "KR":
-                found = None
-                match = _dedupe([ctx.company.legal_name, ctx.company.display_name, *ctx.company.aliases])
-                for n in names:
-                    h = mfds_query(ctx, MFDS_PERMIT, MFDS_PERMIT["company_param"], n, match=match)
-                    hits.append(h)
-                    if h.get("items"):
-                        found = n
-                        break
-                for pn in ctx.product_names(pid):
-                    hits.append(mfds_query(ctx, MFDS_PERMIT, MFDS_PERMIT["product_param"], pn, match=match))
-                # 품목허가 결과의 품목명을 품목정보 API에 넣어 사용 목적·취소 이력 조회 (허가 → 상세 연결)
-                permit_items = [it for h in hits if h["tool"] == MFDS_PERMIT["name"] for it in h.get("items", [])]
-                item_names = _item_values(permit_items, MFDS_ITEM["product_param"])
-                for nm in item_names[:MFDS_ITEM_MAX_PER_COMPANY]:
-                    hits.append(mfds_query(ctx, MFDS_ITEM, MFDS_ITEM["product_param"], nm, match=match))
-                if not item_names:  # 품목명을 못 얻으면 업체명으로 시도 (변수가 설정된 경우)
-                    for n in ([found] if found else names[:2]):
-                        h = mfds_query(ctx, MFDS_ITEM, MFDS_ITEM["company_param"], n, match=match)
-                        hits.append(h)
-                        if h.get("items"):
-                            break
-                pn = (ctx.product_names(pid) or [""])[0]
-                hits.append(web_search(ctx, f"{ctx.company.display_name} {pn} 식약처 허가 인증".strip()))
-            elif country == "US":
-                for n in _dedupe([ctx.company.english_name, ctx.company.legal_name])[:2]:
-                    hits.append(openfda_510k(ctx, n))
-                pn = (ctx.product_names(pid) or [ctx.company.display_name])[0]
-                hits.append(web_search(ctx, f"{pn} FDA 510(k) clearance"))
-            else:
-                pn = (ctx.product_names(pid) or [ctx.company.display_name])[0]
-                hits.append(web_search(ctx, f"{pn} {country} medical device regulatory approval"))
-            groups[(pid, country)] = hits
+    groups = {(pid, country): ctx.records_for("regulatory", pid, country)
+              for pid in ctx.pids if ctx.classify[pid]["regulatory_applicability"] != "out_of_scope"
+              for country in ctx.product(pid).target_countries}
 
     drafts: list[S.RegRecordDraft] = []
-    if groups and any(h["ok"] for hs in groups.values() for h in hs):
+    failed = False
+    if any(groups.values()):
         try:
             out: S.RegulatoryExtraction = ask(S.RegulatoryExtraction, "regulatory", {
                 "기업": _company_brief(ctx),
-                "제품·국가별 원자료": [{"product": _product_brief(ctx, pid), "country": c, "hits": hs}
-                                  for (pid, c), hs in groups.items()],
+                "제품·국가별 원자료": [{"product": _product_brief(ctx, pid), "country": c,
+                                   "records": [ctx.record_view(r) for r in rs]}
+                                  for (pid, c), rs in groups.items() if rs],
+                **ctx.review_payload(),
             })
             drafts = out.records
         except Exception as e:
-            ctx.validation_issues.append(f"허가 기록 추출 실패: {e}"[:200])
+            ctx.add_error("regulatory_extraction_failed", e)
+            failed = True
 
     found_keys: set[tuple] = set()
     seen_numbers: set[tuple] = set()
     for d in drafts:
         if d.status in ("not_found", "not_applicable", "unknown"):
             continue
-        source_titles = [ctx.sources.get(s, {}).get("title", "") for s in d.source_ids]
+        source_titles = [ctx.record_title(r) for r in d.record_ids]
         d.product_id = _reassign_product(ctx, d.product_id, d.statement, d.excerpt, d.permitted_use, *source_titles)
         permit_info = f"{d.permitted_use or ''} {d.statement or ''} {' '.join(source_titles)}"
         if _is_mismatched_item(ctx.product(d.product_id), permit_info):
@@ -210,10 +173,10 @@ def regulatory_node(state: ClinicalAgentState) -> dict:
 
         if (d.product_id, d.country) not in groups:
             continue
-        if not _mentions_target(ctx, d.product_id, d.statement, d.excerpt, d.source_ids, allow_official=True):
+        if not _mentions_target(ctx, d.product_id, d.excerpt, d.record_ids, allow_official=True):
             continue  # 해당 회사·제품을 언급하지 않는 일반 자료는 근거로 쓰지 않음
         rn = _clean(d.record_number)
-        official = any(ctx.sources.get(x, {}).get("publisher") == "식품의약품안전처" for x in d.source_ids)
+        official = any(ctx.is_mfds(r) for r in d.record_ids)
         if rn and not official:
             rn = None  # H) 허가번호는 식약처 원자료에서만 인정 (기사 속 '제40호' 등으로 번호를 만들지 않음)
 
@@ -245,42 +208,40 @@ def regulatory_node(state: ClinicalAgentState) -> dict:
         eff = strip_fake_jan1(norm_date(d.effective_at), (d.statement or "") + " " + (d.excerpt or ""))
         if compare_to_as_of(eff, ctx.as_of) == "after":
             continue  # 기준일 당시 존재하지 않던 기록
-        eid = ctx.add_evidence(d.product_id, d.statement, d.source_ids, d.evidence_status, d.excerpt,
-                               eff, d.country)
-        if not eid:
-            continue  # 출처가 확인되지 않은 기록은 버림
+        eids = ctx.add_evidence(d.product_id, d.statement, d.record_ids, d.evidence_status, d.excerpt,
+                                eff, d.country)
+        if not eids:
+            continue  # 근거 레코드가 확인되지 않은 기록은 버림
         rec = {"product_id": d.product_id, "country": d.country, "authority": d.authority,
                "procedure_type": d.procedure_type, "record_number": d.record_number,
                "permitted_use": d.permitted_use, "status": d.status, "effective_at": eff,
-               "valid_until": norm_date(d.valid_until), "evidence_ids": [eid]}
-        rid = ctx.reuse_id(prev_records, "record_id", _record_key, _record_key(rec)) or ctx.new_id("reg")
+               "valid_until": norm_date(d.valid_until), "evidence_ids": eids}
+        rid = ctx.new_id("reg")
         ctx.reg_records.append(S.RegulatoryRecord(record_id=rid, **rec).model_dump())
         found_keys.add((d.product_id, d.country))
 
     authority = {"KR": "식품의약품안전처", "US": "U.S. FDA"}
-    for pid in ctx.target_pids:
+    for pid in ctx.pids:
         appl = ctx.classify[pid]["regulatory_applicability"]
         for country in ctx.product(pid).target_countries:
             if appl == "out_of_scope":
                 rec = {"product_id": pid, "country": country, "authority": "해당 없음", "procedure_type": "unknown",
                        "status": "not_applicable", "evidence_ids": []}
-                rid = ctx.reuse_id(prev_records, "record_id", _record_key, _record_key(rec)) or ctx.new_id("reg")
-                ctx.reg_records.append(S.RegulatoryRecord(record_id=rid, **rec).model_dump())
-                ctx.set_coverage("regulatory", pid, country, "reviewed", note="규제 비대상으로 조회하지 않음")
+                ctx.reg_records.append(S.RegulatoryRecord(record_id=ctx.new_id("reg"), **rec).model_dump())
+                ctx.set_coverage("regulatory", pid, country, "not_applicable", note="규제 비대상")
                 continue
-            hits = groups.get((pid, country), [])
-            found = (pid, country) in found_keys
-            status = _coverage_status(hits, found)
-            if not found:
-                rec_status = "not_found" if any(h["ok"] for h in hits) else "unknown"
-                rec = {"product_id": pid, "country": country, "authority": authority.get(country, "미상"),
-                       "procedure_type": "unknown",
-                       "status": rec_status,
-                       "evidence_ids": []}
-                rid = ctx.reuse_id(prev_records, "record_id", _record_key, _record_key(rec)) or ctx.new_id("reg")
-                ctx.reg_records.append(S.RegulatoryRecord(record_id=rid, **rec).model_dump())
-                ctx.set_coverage("regulatory", pid, country, "reviewed" if rec_status == "not_found" else status, **_scope_of(hits),
-                                 note="조회 범위 내 미발견 (무허가를 뜻하지 않음)" if rec_status == "not_found" else "조회 실패로 상태 불명")
+            records = groups.get((pid, country), [])
+            if (pid, country) in found_keys:
+                ctx.set_coverage("regulatory", pid, country, "reviewed", records)
+                continue
+            # 자료를 검토했는데 기록이 없으면 not_found, 자료가 없거나 해석에 실패했으면 unknown
+            reviewed = bool(records) and not failed
+            rec = {"product_id": pid, "country": country, "authority": authority.get(country, "미상"),
+                   "procedure_type": "unknown", "status": "not_found" if reviewed else "unknown", "evidence_ids": []}
+            ctx.reg_records.append(S.RegulatoryRecord(record_id=ctx.new_id("reg"), **rec).model_dump())
+            if reviewed:
+                ctx.set_coverage("regulatory", pid, country, "reviewed", records,
+                                 note="제공 자료에서 미발견 (무허가를 뜻하지 않음)")
             else:
-                ctx.set_coverage("regulatory", pid, country, status, **_scope_of(hits))
-    return {}
+                ctx.set_coverage("regulatory", pid, country, "partial" if records else "not_reviewed", records,
+                                 note="자료 해석 실패" if records else "제공된 자료 없음")

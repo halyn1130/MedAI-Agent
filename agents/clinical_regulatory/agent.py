@@ -1,28 +1,28 @@
 """
-AGENT 02 / CLINICAL & REGULATORY - 임상·인허가 분석 (v2.0)
+WORKER / CLINICAL & REGULATORY - 임상·인허가 평가 노드 (v3.0)
 
-제품의 규제 적용 범위, 공식 상태, 임상 근거와 회사 주장의 일치 여부를 제품·국가별로 확인한다.
-최종 투자 여부는 결정하지 않는다.
+제품의 규제 적용 범위, 공식 상태, 임상 근거와 회사 주장의 일치 여부를 제품·국가별로 평가한다.
+외부 조회·재수집·보완 루프는 하지 않는다. 전달받은 데이터셋으로 한 번 평가해 반환하고,
+실행 대상 선택·재실행·재수집은 Orchestrator가 결과(missing_items · coverage · errors)를 보고 결정한다.
 
 ──────────────────────────────────────────────
-전체 그래프 연결 (오케스트레이터)
+입출력 (공통 State 및 Worker 입출력 계약 초안)
 ──────────────────────────────────────────────
 등록:  main.add_node("clinical", clinical_analysis_node)
 
 읽기
-- company_id + company_profile        : 기업 1곳 실행 (기업별 State)
-  또는 companies {company_id: profile} : 여러 기업 일괄 실행 (동시 5개)
-- clinical_analysis {company_id: Envelope} : 이전 결과 (보완 시 사용)
-- review_requests [ReviewRequest]    : target_agent == "clinical" 인 것만 처리
-- run_id, as_of                      : 공통 실행 정보 (없으면 기본값)
+- run_id, company_id, as_of, schema_version, criteria_version
+- company_profile : legal_name, aliases, products[product_id, name, intended_use, claims 등]
+- dataset         : {version, sources[Source], records[DataRecord]}
+- previous_result : 재평가 시 이 Worker의 이전 결과 (없으면 worker_results["clinical"])
+- review_request  : 재검토 요청 (없으면 review_requests["clinical"])
 
 쓰기
-- clinical_analysis {company_id: Envelope}   → dict 병합 Reducer 필요
-- source_registry  {source_id: Source}       → 공통 출처 레지스트리 병합
+- {"worker_results": {"clinical": WorkerResult}}
 
-처리 순서 (서브그래프)
-0.collect(CSV만 입력 시 자체 수집) → prepare → 1.classify → 2.regulatory → 3.institutional → 4.studies → 5.claims
-        → score(C1·레드플래그·Finding·결측) → 6.validate → respond(보완 시) → assemble
+평가 순서 (LLM 호출은 1~5단계에서 각 1회, 재검토 요청이 있으면 답변 1회 추가)
+1.classify → 2.regulatory → 3.institutional → 4.studies → 5.claims
+        → score(C1·레드플래그·Finding·부족 정보) → 6.validate → respond(재검토 질문 답변) → assemble
 """
 from __future__ import annotations
 
@@ -31,135 +31,85 @@ import json
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
-from langgraph.graph import END, START, StateGraph
-
 try:
     from . import schema as S
-    from .config import AGENT, COMPANY_CONCURRENCY, MAX_REVIEW_ROUNDS, RESULT_DIR
-    from .context import ClinicalAgentState, ClinicalRun, normalize_profile
-    from .nodes import (
-        assemble_node,
-        claims_node,
-        classify_node,
-        collect_node,
-        institutional_node,
-        prepare_node,
-        regulatory_node,
-        respond_node,
-        score_node,
-        studies_node,
-        validate_node,
+    from .config import AGENT, COMPANY_CONCURRENCY, RESULT_DIR
+    from .context import ClinicalRun, normalize_profile
+    from .steps import (
+        assemble,
+        claims_step,
+        classify_step,
+        institutional_step,
+        regulatory_step,
+        respond_step,
+        score_step,
+        studies_step,
+        validate_step,
     )
     from .utils import today
 except ImportError:
     import schema as S
-    from config import AGENT, COMPANY_CONCURRENCY, MAX_REVIEW_ROUNDS, RESULT_DIR
-    from context import ClinicalAgentState, ClinicalRun, normalize_profile
-    from nodes import (
-        assemble_node,
-        claims_node,
-        classify_node,
-        collect_node,
-        institutional_node,
-        prepare_node,
-        regulatory_node,
-        respond_node,
-        score_node,
-        studies_node,
-        validate_node,
+    from config import AGENT, COMPANY_CONCURRENCY, RESULT_DIR
+    from context import ClinicalRun, normalize_profile
+    from steps import (
+        assemble,
+        claims_step,
+        classify_step,
+        institutional_step,
+        regulatory_step,
+        respond_step,
+        score_step,
+        studies_step,
+        validate_step,
     )
     from utils import today
 
-
-# ══════════════════════════════════════════════
-# LangGraph 서브그래프 구성
-# ══════════════════════════════════════════════
-@lru_cache(maxsize=1)
-def build_clinical_graph():
-    """임상·인허가 분석 LangGraph 워크플로우 빌드"""
-    g = StateGraph(ClinicalAgentState)
-
-    # 1. 노드 등록
-    for name, fn in [
-        ("collect", collect_node),
-        ("prepare", prepare_node),
-        ("classify", classify_node),
-        ("regulatory", regulatory_node),
-        ("institutional", institutional_node),
-        ("studies", studies_node),
-        ("claims", claims_node),
-        ("score", score_node),
-        ("validate", validate_node),
-        ("respond", respond_node),
-        ("assemble", assemble_node),
-    ]:
-        g.add_node(name, fn)
-
-    # 2. 엣지 연결 (순차 파이프라인)
-    order = [
-        "collect",
-        "prepare",
-        "classify",
-        "regulatory",
-        "institutional",
-        "studies",
-        "claims",
-        "score",
-        "validate",
-        "respond",
-        "assemble",
-    ]
-    g.add_edge(START, order[0])
-    for a, b in zip(order, order[1:]):
-        g.add_edge(a, b)
-    g.add_edge(order[-1], END)
-
-    return g.compile()
+STEPS = (classify_step, regulatory_step, institutional_step, studies_step, claims_step, score_step, validate_step,
+         respond_step)
 
 
 # ══════════════════════════════════════════════
-# 기업 1곳 실행
+# 기업 1곳 평가
 # ══════════════════════════════════════════════
-def _failed_envelope(company_id: str, as_of: str, run_id: str, previous: Optional[dict], error: str) -> dict:
-    prev = previous or {}
-    env = S.AnalysisEnvelope(
-        run_id=run_id, company_id=company_id, as_of=as_of, agent=AGENT,
-        result_version=int(prev.get("result_version", 0)) + 1, analysis_status="failed",
-        data=S.ClinicalData(clinical_summary=f"분석 실패: {error}", validation_issues=[error]).model_dump()
-        if not prev else prev.get("data", {}),
-        sources=prev.get("sources", []), evidence=prev.get("evidence", []), findings=prev.get("findings", []),
-        missing_items=prev.get("missing_items", []), coverage=prev.get("coverage", []),
-        review_responses=prev.get("review_responses", []),
-    )
-    return env.model_dump()
+def evaluate_company(company_id: str, company_profile: dict, dataset: dict, as_of: str, run_id: str,
+                     previous: Optional[dict] = None, review_request: Optional[dict] = None) -> dict:
+    """전달받은 데이터셋만으로 한 번 평가해 WorkerResult를 반환한다."""
+    ctx = ClinicalRun(normalize_profile(company_id, company_profile), as_of, run_id, dataset, previous, review_request)
+    for step in STEPS:
+        step(ctx)
+    return assemble(ctx)
 
 
-def run_company(company_id: str, raw_profile: dict, as_of: str, run_id: str,
-                previous: Optional[dict], raw_requests: list[dict]) -> dict:
+# ══════════════════════════════════════════════
+# 그래프에 등록할 노드 함수
+# ══════════════════════════════════════════════
+def clinical_analysis_node(state: dict) -> dict:
+    cid = state["company_id"]
+    as_of = state.get("as_of") or today()
+    run_id = state.get("run_id") or f"run-{as_of}"
+    dataset = state.get("dataset") or {}
+    previous = state.get("previous_result") or (state.get("worker_results") or {}).get(AGENT) or {}
+    review = state.get("review_request") or (state.get("review_requests") or {}).get(AGENT) or {}
     try:
-        collected = ((previous or {}).get("data") or {}).get("collected_profile") or {}
-        company = normalize_profile(company_id, {**raw_profile, **collected})
-        reqs, over = [], []
-        for r in raw_requests:
-            try:
-                req = S.ReviewRequest(**r)
-            except Exception:
-                continue  # 형식 불일치 요청 무시
-            (reqs if 1 <= req.review_round <= MAX_REVIEW_ROUNDS else over).append(req)
-        ctx = ClinicalRun(company, as_of, run_id, previous, reqs, over)
-        ctx.raw_profile = raw_profile
-        out = build_clinical_graph().invoke({"ctx": ctx})
-        return out["envelope"]
-    except Exception as e:
-        return _failed_envelope(company_id, as_of, run_id, previous, f"{type(e).__name__}: {e}"[:300])
+        result = evaluate_company(cid, state.get("company_profile") or {}, dataset, as_of, run_id, previous, review)
+    except Exception as e:  # noqa: BLE001 - 실패도 결과로 반환해 누락과 구분한다
+        result = S.WorkerResult(
+            run_id=run_id, company_id=cid, as_of=as_of, agent=AGENT, dataset_version=dataset.get("version"),
+            result_version=int(previous.get("result_version", 0)) + 1, analysis_status="failed",
+            data=S.ClinicalData().model_dump(),
+            errors=[S.WorkerError(code="worker_failed", message=f"{type(e).__name__}: {e}"[:300])],
+        ).model_dump()
+    for key in ("schema_version", "criteria_version"):  # 요청의 버전을 그대로 돌려준다
+        if state.get(key):
+            result[key] = state[key]
+    return {"worker_results": {AGENT: result}}
 
 
 # ══════════════════════════════════════════════
-# 전체 그래프에 등록할 노드 함수 (오케스트레이터 연동)
+# 단독 실행용 결과 저장·불러오기
 # ══════════════════════════════════════════════
 def _save_company_result(cid: str, env: dict) -> None:
     if not RESULT_DIR:
@@ -177,44 +127,11 @@ def load_saved_results(result_dir: str) -> dict[str, dict]:
     for f in d.glob("*.json"):
         try:
             env = json.loads(f.read_text(encoding="utf-8"))
-            failed_search = any(c.get("status") == "search_failed" for c in env.get("coverage", []))
-            if env.get("analysis_status") != "failed" and not failed_search:  # 실패·조회 실패 기업은 다시 분석
+            if env.get("analysis_status") != "failed":  # 실패한 기업은 다시 평가
                 out[f.stem] = env
         except Exception:
             continue
     return out
-
-
-def clinical_analysis_node(state: dict) -> dict:
-    as_of = state.get("as_of") or today()
-    run_id = state.get("run_id") or f"run-{as_of}"
-    if state.get("company_id") and state.get("company_profile"):
-        companies = {state["company_id"]: state["company_profile"]}
-    else:
-        companies = state.get("companies") or {}
-    prev_all: dict = state.get("clinical_analysis") or {}
-    requests_all = [r for r in (state.get("review_requests") or []) if r.get("target_agent") == AGENT]
-
-    jobs = []
-    for cid, profile in companies.items():
-        prev = prev_all.get(cid)
-        answered = {rr["request_id"] for rr in (prev or {}).get("review_responses", [])}
-        reqs = [r for r in requests_all if r.get("company_id") == cid and r.get("request_id") not in answered]
-        if prev and not reqs:
-            continue  # 이미 분석했고 새 요청 없음
-        jobs.append((cid, profile, prev, reqs))
-
-    updates: dict[str, dict] = {}
-    with ThreadPoolExecutor(max_workers=COMPANY_CONCURRENCY) as pool:
-        futures = {pool.submit(run_company, cid, prof, as_of, run_id, prev, reqs): cid
-                   for cid, prof, prev, reqs in jobs}
-        for fut, cid in futures.items():
-            updates[cid] = fut.result()
-            print(f"[clinical] {cid} → {updates[cid]['analysis_status']} (v{updates[cid]['result_version']})")
-            _save_company_result(cid, updates[cid])
-
-    registry = {s["source_id"]: s for env in updates.values() for s in env["sources"]}
-    return {"clinical_analysis": updates, "source_registry": registry}
 
 
 # ══════════════════════════════════════════════
@@ -237,29 +154,39 @@ def load_companies_from_csv(path: str) -> dict[str, dict]:
 def print_check(envs: dict[str, dict]) -> None:
     """실행 결과 점검용 요약 출력"""
     for cid, env in envs.items():
-        d, cp = env["data"], env["data"].get("collected_profile", {})
+        d = env["data"]
         cov = {}
         for c in env["coverage"]:
             cov.setdefault(c["area"], set()).add(c["status"])
         print(f"\n=== {cid} | {env['analysis_status']} ===")
-        print("  정식명:", cp.get("legal_name"), "| 홈페이지:", cp.get("homepage"))
-        print("  제품:", [(p.get("name"), p.get("model"), f"주장 {len(p.get('claims', []))}건") for p in cp.get("products", [])])
         print("  허가:", [(r["country"], r["procedure_type"], r["status"], r.get("record_number")) for r in d["regulatory_records"]])
         print("  C1:", d.get("criteria_inputs", {}).get("C1", {}).get("score"), "| 플래그:", [f["code"] for f in d["red_flags"]])
         print("  검토 상태:", {k: sorted(v) for k, v in cov.items()})
-        if d["validation_issues"]:
-            print("  검증 메모:", d["validation_issues"][:3])
+        print("  부족 정보:", [m["item"] for m in env["missing_items"]])
+        if d["validation_issues"] or env["errors"]:
+            print("  검증 메모:", d["validation_issues"][:3], "| 오류:", [e["code"] for e in env["errors"]])
+
+
+def collect_and_evaluate(cid: str, profile: dict) -> dict:
+    """단독 실행에서 데이터 로더 역할을 대신한다: 수집(데이터셋 생성) → 평가 노드"""
+    try:
+        from .collection import collect_clinical_data
+    except ImportError:
+        from collection import collect_clinical_data
+    as_of = today()
+    collected = collect_clinical_data(cid, profile, as_of)
+    state = {"run_id": f"run-{as_of}", "company_id": cid, "as_of": as_of,
+             "company_profile": collected["company_profile"], "dataset": collected["dataset"]}
+    return clinical_analysis_node(state)["worker_results"][AGENT]
 
 
 if __name__ == "__main__":
     # 사용: python agent.py startup_list.csv [개수] [기업명,기업명,...]
-    #  - 기업별 결과를 clinical_results/ 에 바로 저장하고, 다시 실행하면 끝난 기업은 건너뜀
-    #  - 처음부터 다시 하려면 clinical_results/ 폴더를 지우고 실행
+    #  - 기업별 결과를 RESULT_DIR(기본 clinical_worker_results/)에 바로 저장하고, 다시 실행하면 끝난 기업은 건너뜀
+    #  - 처음부터 다시 하려면 그 폴더를 지우거나 --force
     csv_path = sys.argv[1] if len(sys.argv) > 1 else "startup_list.csv"
     limit = int(sys.argv[2]) if len(sys.argv) > 2 else 3
     names = set(sys.argv[3].split(",")) if len(sys.argv) > 3 else None
-    if not RESULT_DIR:
-        RESULT_DIR = "clinical_results"
     companies = load_companies_from_csv(csv_path)
     if names:
         companies = {cid: row for cid, row in companies.items() if row.get("기업명") in names}
@@ -274,11 +201,16 @@ if __name__ == "__main__":
         done = {cid: env for cid, env in load_saved_results(RESULT_DIR).items() if cid in companies}
     if done:
         print(f"이미 분석된 {len(done)}개 기업은 건너뜀 ({RESULT_DIR}/)")
-    result = clinical_analysis_node({"companies": companies, "clinical_analysis": done})
-    merged = {**done, **result["clinical_analysis"]}
-    merged = {cid: merged[cid] for cid in companies if cid in merged}  # CSV 순서대로
 
-    out_path = Path("clinical_analysis.json")
+    todo = {cid: row for cid, row in companies.items() if cid not in done}
+    results: dict[str, dict] = {}
+    with ThreadPoolExecutor(max_workers=COMPANY_CONCURRENCY) as pool:
+        futures = {pool.submit(collect_and_evaluate, cid, row): cid for cid, row in todo.items()}
+        for fut, cid in futures.items():
+            results[cid] = fut.result()
+            _save_company_result(cid, results[cid])
+
+    merged = {**done, **results}
+    merged = {cid: merged[cid] for cid in companies if cid in merged}  # CSV 순서대로
+    out_path = Path("clinical_worker_results.json")  # 저장 형식: {company_id: WorkerResult}
     out_path.write_text(json.dumps(merged, ensure_ascii=False, indent=2), encoding="utf-8")
-    # print_check(result["clinical_analysis"])
-    print(f"\n완료: 전체 {len(merged)}개 기업 (이번 실행 {len(result['clinical_analysis'])}개) → {out_path}")

@@ -1,19 +1,26 @@
-"""Market and business viability analysis agent.
+"""Market evaluation node using the common v2 worker input/output contract."""
 
-The package keeps its public surface deliberately small so the future top-level
-graph can integrate it without importing implementation details.
-"""
-
-from .agent import MarketAgent, build_market_graph, market_agent_node, run_market
+from .agent import (
+    MarketAgent,
+    MarketNode,
+    build_market_graph,
+    market_agent_node,
+    run_market,
+)
+from .contract import Dataset, WorkerInput, WorkerResult
 from .schema import AnalysisEnvelope, MarketAgentOutput, ReviewRequest
 
 market_node = market_agent_node
 
 __all__ = [
     "AnalysisEnvelope",
+    "Dataset",
     "MarketAgent",
     "MarketAgentOutput",
+    "MarketNode",
     "ReviewRequest",
+    "WorkerInput",
+    "WorkerResult",
     "build_market_graph",
     "market_agent_node",
     "market_node",

@@ -1,8 +1,7 @@
-"""Contracts for the market and business viability agent.
+"""Market data models and the common v2 worker result contract.
 
-The repository does not yet expose a shared schema package.  These models keep
-the README's proposed common contract and the existing traction agent envelope
-shape without changing either teammate's implementation.
+The market worker returns AnalysisEnvelope directly. It contains dataset_version,
+coverage and errors; collection logs and scheduling limits are not worker output.
 """
 
 from __future__ import annotations
@@ -11,6 +10,8 @@ from enum import Enum
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from .contract import WorkerResult
 
 SCHEMA_VERSION = "2.0"
 CRITERIA_VERSION = "proposed-2.0"
@@ -57,22 +58,6 @@ class SourceType(str, Enum):
     OTHER = "other"
 
 
-class SearchStatus(str, Enum):
-    FOUND = "found"
-    NOT_FOUND = "not_found"
-    ERROR = "error"
-    SKIPPED = "skipped"
-
-
-class MissingCause(str, Enum):
-    INPUT_MISSING = "input_missing"
-    NOT_FOUND = "not_found"
-    SEARCH_FAILED = "search_failed"
-    RETRIEVAL_EMPTY = "retrieval_empty"
-    CONFLICT = "conflict"
-    NOT_REVIEWED = "not_reviewed"
-
-
 class Source(Model):
     source_id: str
     title: str
@@ -103,41 +88,6 @@ class Finding(Model):
     evidence_ids: list[str] = Field(default_factory=list)
     uncertainty: str | None = None
     related_criterion_ids: list[str] = Field(default_factory=list)
-
-
-class MissingItem(Model):
-    item_id: str
-    field: str
-    cause: MissingCause
-    route: Literal["profile", "web", "rag", "due_diligence", "none"]
-    impact: str
-    detail: str = ""
-    dimension: str | None = None
-
-
-class RetrievalLog(Model):
-    query: str
-    dimension: str
-    searched_at: str
-    status: SearchStatus
-    source_ids: list[str] = Field(default_factory=list)
-    chunk_ids: list[str] = Field(default_factory=list)
-    top_k: int = Field(default=5, ge=1)
-    error: str | None = None
-
-
-class WebSearchLog(Model):
-    query: str
-    purpose: str
-    searched_at: str
-    status: SearchStatus
-    source_url: str | None = None
-    source_title: str | None = None
-    publisher: str | None = None
-    checked_at: str
-    extracted_fact: str | None = None
-    source_id: str | None = None
-    error: str | None = None
 
 
 class SupplementalFact(Model):
@@ -172,13 +122,6 @@ class MarketScope(Model):
     base_year: int
     forecast_period: str
     assumptions: list[str] = Field(default_factory=list)
-
-
-class MarketQueries(Model):
-    size_growth: list[str] = Field(default_factory=list)
-    demand: list[str] = Field(default_factory=list)
-    commercialization: list[str] = Field(default_factory=list)
-    monetization: list[str] = Field(default_factory=list)
 
 
 class MarketMetric(Model):
@@ -270,23 +213,16 @@ class ReviewQuestion(Model):
     text: str
 
 
-class ReviewRequest(Model):
+class ReviewRequest(BaseModel):
+    """Review context only. Scheduling metadata is owned by the orchestrator."""
+
+    model_config = ConfigDict(extra="allow")
     request_id: str
     company_id: str
     target_agent: Literal["market"] = "market"
-    finding_ids: list[str] = Field(default_factory=list)
-    criterion_id: str
-    reason: str
-    blocker: str
+    criterion_id: str | None = None
+    reason: str = ""
     questions: list[ReviewQuestion] = Field(default_factory=list)
-    related_evidence_ids: list[str] = Field(default_factory=list)
-    review_round: int = Field(default=1, ge=1)
-    completion_conditions: list[str] = Field(default_factory=list)
-    related_results: list[str] = Field(default_factory=list)
-    dimensions: list[
-        Literal["size_growth", "demand", "commercialization", "monetization"]
-    ] = Field(default_factory=list)
-    source_route: Literal["auto", "web", "rag", "both"] = "auto"
 
 
 class QuestionResult(Model):
@@ -301,7 +237,7 @@ class ReviewResponse(Model):
     request_id: str
     company_id: str
     result_version: int
-    resolution: Literal["resolved", "partially_resolved", "unresolved", "search_failed"]
+    resolution: Literal["resolved", "partially_resolved", "unresolved"]
     updated_finding_ids: list[str] = Field(default_factory=list)
     new_source_ids: list[str] = Field(default_factory=list)
     question_results: list[QuestionResult] = Field(default_factory=list)
@@ -309,48 +245,12 @@ class ReviewResponse(Model):
     limitations: list[str] = Field(default_factory=list)
 
 
-class AnalysisEnvelope(Model):
-    run_id: str
-    company_id: str
-    as_of: str
-    schema_version: str = SCHEMA_VERSION
-    criteria_version: str = CRITERIA_VERSION
+class AnalysisEnvelope(WorkerResult):
     agent: Literal["market"] = AGENT_NAME
-    result_version: int = Field(default=1, ge=1)
-    analysis_status: AnalysisStatus = AnalysisStatus.COMPLETE
     data: MarketData
-    sources: list[Source] = Field(default_factory=list)
-    evidence: list[Evidence] = Field(default_factory=list)
-    findings: list[Finding] = Field(default_factory=list)
-    missing_items: list[MissingItem] = Field(default_factory=list)
-    retrieval_log: list[RetrievalLog] = Field(default_factory=list)
-    web_search_log: list[WebSearchLog] = Field(default_factory=list)
-    review_responses: list[ReviewResponse] = Field(default_factory=list)
-
-    @model_validator(mode="after")
-    def reference_integrity(self):
-        source_ids = {source.source_id for source in self.sources}
-        evidence_ids = {item.evidence_id for item in self.evidence}
-        if len(source_ids) != len(self.sources):
-            raise ValueError("duplicate source_id")
-        if len(evidence_ids) != len(self.evidence):
-            raise ValueError("duplicate evidence_id")
-        for item in self.evidence:
-            if not set(item.source_ids) <= source_ids:
-                raise ValueError(
-                    f"evidence {item.evidence_id} references an unknown source"
-                )
-        for finding in self.findings:
-            if not set(finding.evidence_ids) <= evidence_ids:
-                raise ValueError(
-                    f"finding {finding.finding_id} references unknown evidence"
-                )
-        return self
 
 
-class MarketAgentOutput(Model):
-    market_analysis: AnalysisEnvelope
-    review_response: ReviewResponse | None = None
+MarketAgentOutput = AnalysisEnvelope
 
 
 # Structured outputs used by an injected LLM reasoner.
