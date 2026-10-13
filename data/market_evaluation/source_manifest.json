@@ -1,0 +1,69 @@
+{
+  "dataset_version": "market-dataset-v1",
+  "source_count": 6,
+  "record_count": 193,
+  "page_stats": {
+    "pdf_files": 6,
+    "physical_pages": 202,
+    "indexed_pages": 200,
+    "empty_text_pages": 7
+  },
+  "collection_performed": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 538,
+      "sha256": "372f5042ae6f0634650a5cdc2fc54ec37a849a5bdb5459395d9c6f29bab4aa06"
+    },
+    {
+      "path": "data/market_rag/metadata.csv",
+      "bytes": 2058,
+      "sha256": "9d235188500aa8c0b6d0fabbb3251b6872ca198265d722b868426723f71973ff"
+    },
+    {
+      "path": "data/market_rag/reports/medical_ai_usage_study_ch1.pdf",
+      "bytes": 5513410,
+      "sha256": "647c4a6781e07f51062db135a24f1d664f3b1b51721ac3c20bc749b7b2eb5757"
+    },
+    {
+      "path": "data/market_rag/reports/medical_ai_usage_study_ch2.pdf",
+      "bytes": 667174,
+      "sha256": "718e17a5d8a6917896e714f38703396871abdec7bd9224fb32a22e7d6001da99"
+    },
+    {
+      "path": "data/market_rag/reports/medical_ai_usage_study_ch3.pdf",
+      "bytes": 761863,
+      "sha256": "ae596623ff5a65a28ae0fccae5c243a23d0ca034ae5c2aa7021485431f0068e4"
+    },
+    {
+      "path": "data/market_rag/reports/medical_ai_usage_study_ch4.pdf",
+      "bytes": 470397,
+      "sha256": "0324c2098e9c1dbb2532909cdcd5e6cae32b699b633b8748017bcd835d281b29"
+    },
+    {
+      "path": "data/market_rag/reports/medical_ai_usage_study_ch5.pdf",
+      "bytes": 538372,
+      "sha256": "2720e37efd6cb93238095fc5bb34ccbe29e6691a7a2c3f13889d43f7ec4b0c1f"
+    },
+    {
+      "path": "data/market_rag/reports/medical_ai_usage_study_ch6.pdf",
+      "bytes": 1926650,
+      "sha256": "96cd9890f860afb9abef8238645d63689558aa816adf37f2e553d1da61c75c79"
+    },
+    {
+      "path": "dataset.json",
+      "bytes": 550187,
+      "sha256": "0ab83cbcfc4cec182aa466a93ee06ce5326d79736c8d1776d90a1cd19219f432"
+    },
+    {
+      "path": "worker_input.schema.json",
+      "bytes": 2126,
+      "sha256": "e8c0dad6d71caca1c15c754b58aedc2f3210c65e63938c2534bee58eeafac0ad"
+    },
+    {
+      "path": "worker_result.schema.json",
+      "bytes": 3290,
+      "sha256": "8002200dfc081db868bbbda5a5b94df3dd6b60dd727dd1699bc467ebffc88619"
+    }
+  ]
+}
