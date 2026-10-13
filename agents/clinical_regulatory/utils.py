@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import re
@@ -282,3 +283,20 @@ def _is_product_claim(text: str) -> bool:
     if re.search(r"(회사|기업|스타트업|업체)(입니다|이다|다)\.?$", t):
         return False  # 회사 소개 문장
     return bool(_CLAIM_KEYS.search(t))
+
+
+# ══════════════════════════════════════════════
+# 단독 실행용 입력
+# ══════════════════════════════════════════════
+def load_companies_from_csv(path: str) -> dict[str, dict]:
+    companies: dict[str, dict] = {}
+    seen: dict[str, str] = {}
+    with open(path, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            name = (row.get("기업명") or "").strip()
+            if not name:
+                continue
+            cid = seen.get(name) or f"c{len(seen) + 1:03d}"
+            seen[name] = cid
+            companies[cid] = row  # 중복 기업은 마지막 행 사용
+    return companies

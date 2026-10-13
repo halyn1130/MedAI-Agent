@@ -11,7 +11,7 @@ load_dotenv()
 # ══════════════════════════════════════════════
 # 설정 (권장 기본안 · 팀 합의 후 조정)
 # ══════════════════════════════════════════════
-AGENT = "clinical"
+WORKER = "clinical"   # Worker 이름 (worker_results 키 · ID 접두사 · 자료 배분 태그)
 COMPANY_CONCURRENCY = int(os.getenv("COMPANY_CONCURRENCY", "5"))
 CALL_CONCURRENCY = int(os.getenv("CALL_CONCURRENCY", "8"))
 HTTP_TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
@@ -49,5 +49,6 @@ _CALL_SEM = threading.Semaphore(CALL_CONCURRENCY)
 # 파일 캐시: CLINICAL_CACHE=on 이면 외부 조회 응답을 저장하고, 같은 조회는 파일에서 읽는다
 CACHE_ON = os.getenv("CLINICAL_CACHE", "off").lower() in ("on", "1", "true")
 CACHE_DIR = Path(os.getenv("CLINICAL_CACHE_DIR", ".cache/clinical"))
-# 단독 실행 시 기업별 결과 저장 위치 (기존 clinical_results/ 는 이전 형식이라 따로 둔다)
+# 단독 실행 시 기업별 저장 위치 (기존 clinical_results/ 는 이전 형식이라 따로 둔다)
+INPUT_DIR = os.getenv("CLINICAL_INPUT_DIR", "clinical_inputs")   # 기업별 평가 입력 {as_of, company_profile, dataset, issues}
 RESULT_DIR = os.getenv("CLINICAL_RESULT_DIR", "clinical_worker_results")

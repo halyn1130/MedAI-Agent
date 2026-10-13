@@ -12,10 +12,10 @@ from typing import Optional
 import requests
 
 try:
-    from . import schema as S
-    from .config import HTTP_TIMEOUT, MFDS_API_KEY, TRANSIENT_RETRY, WEB_RETRY, _CALL_SEM
-    from .context import CompanyView
-    from .utils import (
+    from .. import schema as S
+    from ..config import HTTP_TIMEOUT, MFDS_API_KEY, TRANSIENT_RETRY, WEB_RETRY, _CALL_SEM
+    from ..context import CompanyView
+    from ..utils import (
         _cache_get,
         _cache_put,
         _dedupe,
