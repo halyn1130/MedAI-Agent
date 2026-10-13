@@ -1,22 +1,21 @@
 from __future__ import annotations
 
 try:
-    from ..context import ClinicalAgentState
+    from ..context import ClinicalRun
     from ..utils import compare_to_as_of
 except ImportError:
-    from context import ClinicalAgentState
+    from context import ClinicalRun
     from utils import compare_to_as_of
 
 
-def validate_node(state: ClinicalAgentState) -> dict:
-    """6. 자체 검증 (의미 재검색 없음 · 결측은 심사에 반환)"""
-    ctx = state["ctx"]
+def validate_step(ctx: ClinicalRun) -> None:
+    """6. 자체 검증 (결측은 오케스트레이터에 반환)"""
     issues = ctx.validation_issues
-    ev_ids, src_ids = set(ctx.evidence), set(ctx.sources)
+    ev_ids = set(ctx.evidence)
     pids = {p.product_id for p in ctx.company.products}
     for e in ctx.evidence.values():
-        if not set(e["source_ids"]) <= src_ids:
-            issues.append(f"{e['evidence_id']}: 존재하지 않는 source_id 참조")
+        if e["record_id"] not in ctx.records or e["source_id"] not in ctx.sources:
+            issues.append(f"{e['evidence_id']}: 데이터셋에 없는 record_id·source_id 참조")
     groups = [("regulatory_records", ctx.reg_records), ("designation_records", ctx.designations),
               ("reimbursement_records", ctx.reimbursements), ("clinical_studies", ctx.studies),
               ("claim_checks", ctx.claim_checks), ("red_flags", ctx.red_flags)]
@@ -45,4 +44,3 @@ def validate_node(state: ClinicalAgentState) -> dict:
         issues.append("criteria_inputs.C1.product_scores가 모든 제품을 포함하지 않음")
     if not ctx.summary:
         issues.append("clinical_summary 비어 있음")
-    return {}

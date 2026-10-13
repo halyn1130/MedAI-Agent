@@ -18,9 +18,9 @@ except ImportError:
 def _scoreable(ctx: ClinicalRun, study: dict) -> bool:
     """발행일이 기준일 이전으로 확인된 출처가 있어야 점수 근거로 사용"""
     for eid in study["evidence_ids"]:
-        for sid in ctx.evidence.get(eid, {}).get("source_ids", []):
-            if compare_to_as_of(ctx.sources.get(sid, {}).get("published_at"), ctx.as_of) == "before":
-                return True
+        sid = ctx.evidence.get(eid, {}).get("source_id")
+        if compare_to_as_of(ctx.sources.get(sid, {}).get("published_at"), ctx.as_of) == "before":
+            return True
     return False
 
 
@@ -30,8 +30,7 @@ def _is_company_affiliated_study(ctx: ClinicalRun, study: dict) -> bool:
     for eid in study.get("evidence_ids", []):
         ev = ctx.evidence.get(eid, {})
         texts += [ev.get("statement", ""), ev.get("excerpt", "")]
-        for sid in ev.get("source_ids", []):
-            texts += [ctx.sources.get(sid, {}).get("title", ""), ctx.source_text.get(sid, "")]
+    texts += [ctx.record_text(rid) for rid in ctx.evidence_records(study.get("evidence_ids", []))]
     blob = _norm_txt(" ".join(t for t in texts if t)).lower()
     c_names = ctx.company_names()
     return any(
@@ -44,10 +43,8 @@ def _is_company_affiliated_study(ctx: ClinicalRun, study: dict) -> bool:
 def _study_names_product(ctx: ClinicalRun, study: dict) -> bool:
     """논문 제목·요약 근거에 제품명(브랜드·모델)이 실제로 나오는지 (동등성 근거 없는 회사 연구는 합치지 않음)"""
     pnames = ctx.product_names(study["product_id"])
-    texts = []  # LLM이 쓴 endpoint·result·statement는 제외 (제품명을 끼워 넣을 수 있음)
-    for eid in study.get("evidence_ids", []):
-        for sid in ctx.evidence.get(eid, {}).get("source_ids", []):
-            texts += [ctx.sources.get(sid, {}).get("title", ""), ctx.source_text.get(sid, "")]
+    # LLM이 쓴 endpoint·result·statement는 제외 (제품명을 끼워 넣을 수 있음)
+    texts = [ctx.record_text(rid) for rid in ctx.evidence_records(study.get("evidence_ids", []))]
     combined_raw = " ".join(t for t in texts if t)
     blob = _pkey(combined_raw)
 
@@ -171,51 +168,46 @@ def aggregate_c1(ctx: ClinicalRun, per: dict[str, dict]) -> dict:
 
 
 def _build_missing(ctx: ClinicalRun, per: dict[str, dict]) -> list[dict]:
-    items: list[tuple] = []  # (field, cause, route, impact, detail)
+    """평가에 부족한 정보. 재수집 여부는 오케스트레이터가 판단한다."""
+    items: list[tuple] = []  # (item, reason, related_criterion_ids, required_for_assessment)
     c = ctx.company
-    # 입력(CSV)이 고정이고 이 담당이 직접 수집했으므로, 수집 실패는 공개자료 미발견 → 실사 경로
-    in_cause, in_route = ("not_found", "due_diligence") if ctx.self_collected else ("input_missing", "profile")
     if not c.legal_name:
-        items.append(("company_profile.legal_name", in_cause, in_route, "high",
-                      "법인 정식명을 확인하지 못해 식약처 DB를 표시명으로만 조회함"))
+        items.append(("법인 정식명", "정식명이 없어 식약처 기록을 표시명으로만 대조함", [], True))
     for p in c.products:
-        pid, appl = p.product_id, ctx.classify[p.product_id]["regulatory_applicability"]
+        pid, name = p.product_id, p.name or p.product_id
+        appl = ctx.classify[pid]["regulatory_applicability"]
         has_record = any(r["product_id"] == pid and r["status"] not in ("not_found", "unknown", "not_applicable")
                          for r in ctx.reg_records)
         if appl != "out_of_scope" and not p.model and not has_record:  # 허가 기록을 찾았으면 모델명 없어도 문제 없음
-            items.append((f"products[{pid}].model", in_cause, in_route, "medium", "모델명이 없어 품목 매칭 정확도가 낮음"))
+            items.append((f"{name} 모델명", "모델명이 없어 품목 매칭 정확도가 낮음", [], False))
         if not p.claims and (appl != "out_of_scope" or ctx.classify[pid].get("has_efficacy_claim")):
-            others = any(q.claims for q in c.products if q.product_id != pid)
-            items.append((f"products[{pid}].claims", in_cause, in_route, "low" if others else "medium",
-                          "이 제품에 대한 회사 주장 원문을 찾지 못해 주장 대조 불가"))
+            items.append((f"{name} 회사 주장 원문", "회사 주장 원문이 없어 주장 대조 불가", ["C1"], False))
         primary = p.target_countries[0] if p.target_countries else "KR"
         for r in ctx.reg_records:
             if r["product_id"] == pid and r["status"] == "not_found" and appl != "out_of_scope":
-                cov = ctx.coverage.get(("regulatory", pid, r["country"]), {})
-                names = ", ".join(cov.get("search_scope", {}).get("names", [])) or "-"
-                items.append((f"regulatory_records[{pid}][{r['country']}]", "not_found", "due_diligence",
-                              "high" if r["country"] == primary else "medium",
-                              f"조회 범위 내 미발견 (조회명: {names}, 확인일 {ctx.checked_at}). 공개자료로 해결되지 않으면 실사 필요"))
+                items.append((f"{name} [{r['country']}] 허가·인증·신고 기록",
+                              "제공 자료에서 확인되지 않음 (무허가를 뜻하지 않음)", [], r["country"] == primary))
         if per[pid]["status"] == "unknown" and appl != "out_of_scope":
-            items.append((f"criteria_inputs.C1[{pid}]", "not_found", "due_diligence", "high", per[pid]["rationale"]))
-    impact_by_area = {"classification": "high", "regulatory": "high", "clinical_studies": "high",
-                      "claim_check": "medium", "designation": "medium", "reimbursement": "medium"}
+            items.append((f"{name} 임상 근거", per[pid]["rationale"], ["C1"], True))
+    label = {"classification": "유형·규제 범위 판단 자료", "regulatory": "허가·인증·신고 자료",
+             "designation": "지정 자료", "reimbursement": "평가·등재 자료",
+             "clinical_studies": "임상 연구 자료", "claim_check": "회사 주장 원문"}
+    required = {"classification", "regulatory", "clinical_studies"}
+    criteria = {"clinical_studies": ["C1"], "claim_check": ["C1"]}
+    names = {p.product_id: p.name or p.product_id for p in c.products}
     for cov in ctx.coverage.values():
-        if cov["status"] in ("search_failed", "not_reviewed"):
-            field = f"{cov['area']}[{cov.get('product_id')}]" + (f"[{cov['country']}]" if cov.get("country") else "")
-            impact = impact_by_area[cov["area"]]
-            if cov["area"] == "regulatory" and cov.get("country") not in (None, "KR"):
-                impact = "medium"
-            items.append((field, cov["status"], "clinical", impact,
-                          "외부 조회 실패" if cov["status"] == "search_failed" else "호출 예산·단계 제외로 검토하지 않음"))
+        if cov["status"] in ("partial", "not_reviewed"):
+            scope = names.get(cov["product_id"], "") + (f" [{cov['country']}]" if cov.get("country") else "")
+            items.append((f"{scope} {label[cov['area']]}".strip(), cov.get("note") or "검토하지 못함",
+                          criteria.get(cov["area"], []),
+                          cov["area"] in required and cov.get("country") in (None, "KR")))
     out, seen = [], set()
-    for field, cause, route, impact, detail in items:
-        if (field, cause) in seen:
+    for item, reason, crit, req in items:
+        if item in seen:
             continue
-        seen.add((field, cause))
-        iid = next((m["item_id"] for m in ctx.prev_missing if m["field"] == field), None) or ctx.new_id("mi")
-        out.append(S.MissingItem(item_id=iid, field=field, cause=cause, route=route, impact=impact,
-                                 detail=detail).model_dump())
+        seen.add(item)
+        out.append(S.MissingItem(missing_id=ctx.new_id("mi"), item=item, reason=reason,
+                                 related_criterion_ids=crit, required_for_assessment=req).model_dump())
     return out
 
 
@@ -238,7 +230,7 @@ def _build_summary(ctx: ClinicalRun, per: dict[str, dict], names: dict[str, str]
     lines.append(f"- C1 잠정 집계: {c1['score'] if c1['score'] is not None else '없음'} ({c1['score_status']})")
     if ctx.red_flags:
         lines.append("- 레드플래그 후보: " + "; ".join(f"{f['code']}({f['materiality']})" for f in ctx.red_flags))
-    high = [m["field"] for m in ctx.missing_items if m["impact"] == "high"]
+    high = [m["item"] for m in ctx.missing_items if m["required_for_assessment"]]
     if high:
         lines.append("- 주요 한계: " + ", ".join(high))
     return "\n".join(lines)

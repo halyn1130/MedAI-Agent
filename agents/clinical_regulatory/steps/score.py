@@ -2,18 +2,18 @@ from __future__ import annotations
 
 try:
     from .. import schema as S
-    from ..context import ClinicalAgentState
+    from ..context import ClinicalRun
     from ..scoring import _build_missing, _build_summary, aggregate_c1, c1_for_product
     from ..utils import _dedupe
 except ImportError:
     import schema as S
-    from context import ClinicalAgentState
+    from context import ClinicalRun
     from scoring import _build_missing, _build_summary, aggregate_c1, c1_for_product
     from utils import _dedupe
 
 
-def score_node(state: ClinicalAgentState) -> dict:
-    ctx = state["ctx"]
+def score_step(ctx: ClinicalRun) -> None:
+    """C1·레드플래그·Finding·결측 (코드 규칙)"""
     core_pid = max(ctx.company.products, key=lambda p: p.scope_weight).product_id if ctx.company.products else None
     cov_by_pid: dict[str, list[dict]] = {}
     for c in ctx.coverage.values():
@@ -33,13 +33,8 @@ def score_node(state: ClinicalAgentState) -> dict:
         covs = cov_by_pid.get(pid, [])
         not_found = any(x["product_id"] == pid and x["status"] == "not_found" and x["country"] in p.target_countries
                         for x in ctx.reg_records)
-        bad = [c for c in covs if c["status"] in ("insufficient_information", "not_reviewed", "search_failed")]
-        if covs and all(c["status"] == "search_failed" for c in covs):
-            a_status = "failed"
-        elif bad or not_found:
-            a_status = "partial"
-        else:
-            a_status = "complete"
+        bad = [c for c in covs if c["status"] in ("partial", "not_reviewed")]
+        a_status = "partial" if (bad or not_found) else "complete"
         reg_ev = [e for x in ctx.reg_records if x["product_id"] == pid for e in x["evidence_ids"]]
         ctx.product_assessments.append(S.ProductAssessment(
             product_id=pid, regulatory_applicability=info["regulatory_applicability"],
@@ -48,12 +43,11 @@ def score_node(state: ClinicalAgentState) -> dict:
         ).model_dump())
     ctx.c1 = aggregate_c1(ctx, per)
 
-    # ── Finding (ID 유지) ───────────────────────
+    # ── Finding ────────────────────────────────
     findings: list[dict] = []
 
     def add_finding(key: str, category: str, claim: str, ev: list[str], uncertainty=None, criteria=None) -> str:
-        fid = ctx.prev_keys.get(f"finding|{key}") or ctx.new_id("fd")
-        ctx.id_keys[f"finding|{key}"] = fid
+        fid = ctx.new_id("fd")
         findings.append(S.Finding(finding_id=fid, category=category, claim=claim, evidence_ids=_dedupe(ev),
                                   uncertainty=uncertainty, related_criterion_ids=criteria or []).model_dump())
         return fid
@@ -65,8 +59,8 @@ def score_node(state: ClinicalAgentState) -> dict:
             desc += f" ({r['record_number']})"
         if r.get("permitted_use"):
             desc += f" / 사용 목적: \"{r['permitted_use']}\""
-        unc = "조회 범위 내 미발견. 무허가를 뜻하지 않음" if r["status"] == "not_found" else (
-            "조회 실패로 상태 불명" if r["status"] == "unknown" else None)
+        unc = "제공 자료에서 미발견. 무허가를 뜻하지 않음" if r["status"] == "not_found" else (
+            "검토할 자료가 없어 상태 불명" if r["status"] == "unknown" else None)
         add_finding(f"regulatory|{r['record_id']}", "regulatory", desc, r["evidence_ids"], unc)
     for kind, recs in (("designation", ctx.designations), ("reimbursement", ctx.reimbursements)):
         for r in recs:
@@ -93,9 +87,7 @@ def score_node(state: ClinicalAgentState) -> dict:
     def add_flag(key: str, code: str, materiality: str, desc: str, ev: list[str]) -> None:
         fid_find = add_finding(f"red_flag|{key}", f"red_flag:{code}", desc, ev,
                                criteria=["C1"] if code in ("CL01", "CL03") else [])
-        flag_id = ctx.prev_keys.get(f"flag|{key}") or ctx.new_id("rf")
-        ctx.id_keys[f"flag|{key}"] = flag_id
-        flags.append(S.RedFlag(flag_id=flag_id, finding_id=fid_find, code=code, status="candidate",
+        flags.append(S.RedFlag(flag_id=ctx.new_id("rf"), finding_id=fid_find, code=code, status="candidate",
                                materiality=materiality, description=desc, evidence_ids=_dedupe(ev)).model_dump())
 
     for c in ctx.claim_checks:
@@ -118,9 +110,8 @@ def score_node(state: ClinicalAgentState) -> dict:
     ctx.red_flags = flags
     ctx.findings = findings
 
-    # ── 결측 항목 (ID 유지) ─────────────────────
+    # ── 결측 항목 ──────────────────────────────
     ctx.missing_items = _build_missing(ctx, per)
 
     # ── 사람이 읽는 요약 (구조화 필드에서 생성 → 모순 방지) ──
     ctx.summary = _build_summary(ctx, per, names)
-    return {}

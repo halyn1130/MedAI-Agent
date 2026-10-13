@@ -1,191 +1,37 @@
 from __future__ import annotations
 
+import json
 import re
 import threading
-from typing import Any, Callable, Optional, TypedDict
+from typing import Any, Optional
 
 try:
     from . import schema as S
     from .config import AGENT, DEFAULT_TARGET_COUNTRIES
-    from .utils import _clean, _core_name, _dedupe, compare_to_as_of, norm_date, today
+    from .utils import _clean, _core_name, _dedupe, norm_date, today
 except ImportError:
     import schema as S
     from config import AGENT, DEFAULT_TARGET_COUNTRIES
-    from utils import _clean, _core_name, _dedupe, compare_to_as_of, norm_date, today
+    from utils import _clean, _core_name, _dedupe, norm_date, today
 
 
 # ══════════════════════════════════════════════
-# 호출 예산
+# 기업·제품 조회와 ID 발급 (수집·평가 공통)
 # ══════════════════════════════════════════════
-class Budget:
-    """보완 요청의 search_budget.max_calls. 최초 실행은 제한 없음(None)."""
-
-    def __init__(self, max_calls: Optional[int]):
-        self.max_calls, self.used = max_calls, 0
-        self._lock = threading.Lock()
-
-    def take(self) -> bool:
-        with self._lock:
-            if self.max_calls is not None and self.used >= self.max_calls:
-                return False
-            self.used += 1
-            return True
-
-
-# ══════════════════════════════════════════════
-# 기업 1곳 실행 컨텍스트
-# ══════════════════════════════════════════════
-_ID_RE = re.compile(r":(src|ev|fd|reg|des|rmb|st|rf|mi|cv|rr)(\d+)$")
-
-
-class ClinicalRun:
-    def __init__(self, company: S.CompanyInput, as_of: str, run_id: str,
-                 previous: Optional[dict], requests_: list[S.ReviewRequest], over_limit: list[S.ReviewRequest]):
+class CompanyView:
+    def __init__(self, company: S.CompanyInput, as_of: str):
         self.company = company
         self.cid = company.company_id
-        self.as_of, self.run_id, self.checked_at = as_of, run_id, today()
-        self.previous = previous or {}
-        self.requests = requests_
-        self.over_limit = over_limit
-        self.mode = "review" if (requests_ or over_limit) else "initial"
-        self.budget = Budget(sum(r.search_budget.max_calls for r in requests_) if requests_ else None)
+        self.as_of, self.checked_at = as_of, today()
         self._lock = threading.Lock()
-
-        prev, pdata = self.previous, self.previous.get("data") or {}
-        self.prev_data = pdata
-        self.prev_keys: dict[str, str] = dict(pdata.get("id_keys", {}))   # 보완 시 Finding·Flag ID 유지
-        self.id_keys: dict[str, str] = {}
-        self.sources: dict[str, dict] = {s["source_id"]: s for s in prev.get("sources", [])}
-        self.url_to_sid = {s["url"]: s["source_id"] for s in self.sources.values()}
-        self.evidence: dict[str, dict] = {e["evidence_id"]: e for e in prev.get("evidence", [])}
-        self.prev_findings: list[dict] = prev.get("findings", [])
-        self.prev_missing: list[dict] = prev.get("missing_items", [])
-        self.coverage: dict[tuple, dict] = {(c["area"], c.get("product_id"), c.get("country")): c
-                                            for c in prev.get("coverage", [])}
-        self.classify: dict[str, dict] = {
-            pa["product_id"]: {"product_type": pa["product_type"],
-                               "regulatory_applicability": pa["regulatory_applicability"],
-                               "has_efficacy_claim": None, "rationale": "이전 결과 유지"}
-            for pa in pdata.get("product_assessments", [])
-        }
-        self.reg_records: list[dict] = list(pdata.get("regulatory_records", []))
-        self.designations: list[dict] = list(pdata.get("designation_records", []))
-        self.reimbursements: list[dict] = list(pdata.get("reimbursement_records", []))
-        self.studies: list[dict] = list(pdata.get("clinical_studies", []))
-        self.claim_checks: list[dict] = list(pdata.get("claim_checks", []))
-
-        self.counters = self._init_counters()
-        self.steps: list[str] = []
-        self.target_pids: list[str] = []
-        self.new_source_ids: list[str] = []
-        self.search_attempts, self.search_ok = 0, 0
-        self.validation_issues: list[str] = []
-        self.memo: dict[tuple, dict] = {}
-        self.source_text: dict[str, str] = {}   # source_id → 검색 결과 본문·초록 (LLM이 쓴 문장이 아닌 원문)
-        # score 단계 결과
-        self.product_assessments: list[dict] = []
-        self.red_flags: list[dict] = []
-        self.findings: list[dict] = []
-        self.missing_items: list[dict] = []
-        self.c1: dict = {}
-        self.summary = ""
-        self.review_responses: list[dict] = []
-        self.raw_profile: dict = {}
-        self.collected: dict = dict(pdata.get("collected_profile", {}))
-        self.self_collected = bool(self.collected)
-
-    # ── ID ─────────────────────────────────────
-    def _init_counters(self) -> dict[str, int]:
-        counters: dict[str, int] = {}
-        ids = [s for s in self.sources] + [e for e in self.evidence]
-        ids += [f["finding_id"] for f in self.prev_findings] + [m["item_id"] for m in self.prev_missing]
-        ids += [c["coverage_id"] for c in self.coverage.values()]
-        for key in ("regulatory_records", "designation_records", "reimbursement_records"):
-            ids += [r["record_id"] for r in self.prev_data.get(key, [])]
-        ids += [s["study_id"] for s in self.prev_data.get("clinical_studies", [])]
-        ids += [f["flag_id"] for f in self.prev_data.get("red_flags", [])]
-        ids += [r["response_id"] for r in self.previous.get("review_responses", [])]
-        for i in ids:
-            m = _ID_RE.search(i or "")
-            if m:
-                counters[m.group(1)] = max(counters.get(m.group(1), 0), int(m.group(2)))
-        return counters
+        self.counters: dict[str, int] = {}
+        self.sources: dict[str, dict] = {}
 
     def new_id(self, kind: str) -> str:
         with self._lock:
             self.counters[kind] = self.counters.get(kind, 0) + 1
             return f"{self.cid}:{AGENT}:{kind}{self.counters[kind]:02d}"
 
-    @staticmethod
-    def reuse_id(prev_items: list[dict], id_field: str, key_fn: Callable[[dict], Any], key: Any) -> Optional[str]:
-        for it in prev_items:
-            if key_fn(it) == key:
-                return it[id_field]
-        return None
-
-    # ── Source · Evidence ──────────────────────
-    def add_source(self, title: str, url: str, publisher: str, source_type: str,
-                   published_at: Optional[str] = None) -> Optional[str]:
-        """기준일 이후 공개 자료는 등록하지 않고 None 반환"""
-        pub = norm_date(published_at)
-        rel = compare_to_as_of(pub, self.as_of)
-        if rel == "after":
-            return None
-        if rel == "ambiguous":
-            pub = None  # 기준일 당시 존재를 확인할 수 없음 → 점수 근거에서 제외됨
-        with self._lock:
-            if url in self.url_to_sid:
-                sid = self.url_to_sid[url]
-                self.sources[sid]["checked_at"] = self.checked_at
-                if source_type == "company":  # 홈페이지로 확인되면 유형 갱신
-                    self.sources[sid]["source_type"] = "company"
-                return sid
-        sid = self.new_id("src")
-        src = S.Source(source_id=sid, title=(title or url)[:300], url=url, publisher=publisher,
-                       source_type=source_type, published_at=pub, checked_at=self.checked_at).model_dump()
-        with self._lock:
-            self.sources[sid] = src
-            self.url_to_sid[url] = sid
-            self.new_source_ids.append(sid)
-        return sid
-
-    def add_evidence(self, product_id: Optional[str], statement: str, source_ids: list[str], status: str,
-                     excerpt: Optional[str] = None, event_date: Optional[str] = None,
-                     geography: Optional[str] = None, locator: Optional[str] = None) -> Optional[str]:
-        valid = [s for s in source_ids if s in self.sources]
-        if not valid or not statement:
-            return None
-        for e in self.evidence.values():  # 같은 사실은 기존 ID 재사용
-            if e["product_id"] == product_id and e["statement"] == statement and set(e["source_ids"]) == set(valid):
-                return e["evidence_id"]
-        eid = self.new_id("ev")
-        self.evidence[eid] = S.Evidence(
-            evidence_id=eid, company_id=self.cid, product_id=product_id, statement=statement,
-            source_ids=valid, locator=locator, excerpt=(excerpt or None) and excerpt[:500],
-            event_date=norm_date(event_date), geography=geography, evidence_status=status,
-        ).model_dump()
-        return eid
-
-    # ── Coverage ───────────────────────────────
-    def set_coverage(self, area: str, pid: Optional[str], country: Optional[str], status: str,
-                     names=None, queries=None, sources=None, note: Optional[str] = None) -> None:
-        key = (area, pid, country)
-        old = self.coverage.get(key)
-        cid = old["coverage_id"] if old else self.new_id("cv")
-        self.coverage[key] = S.Coverage(
-            coverage_id=cid, area=area, product_id=pid, country=country, status=status,
-            search_scope=S.SearchScope(names=_dedupe(names or []), queries=_dedupe(queries or []),
-                                       sources=_dedupe(sources or [])),
-            checked_at=self.checked_at, note=note,
-        ).model_dump()
-
-    def tried_names(self) -> set[str]:
-        out: set[str] = set()
-        for c in self.coverage.values():
-            out |= set(c.get("search_scope", {}).get("names", []))
-        return out
-
-    # ── 편의 ───────────────────────────────────
     def product(self, pid: str) -> S.ProductInput:
         return next(p for p in self.company.products if p.product_id == pid)
 
@@ -236,21 +82,141 @@ class ClinicalRun:
             words = [w.strip() for w in re.split(r"[\s,]+", c.english_name) if len(w.strip()) >= 3]
             common_words = {"inc", "ltd", "corp", "corporation", "company", "co", "the", "and"}
             eng_tokens = [w for w in words if w.lower() not in common_words]
-        if self.mode == "initial":
-            return _dedupe(raw + cores + eng_tokens)
-        # 보완: 이전에 조회하지 않은 표기를 우선
-        variants = []
-        for core in cores:
-            variants += [core, f"주식회사 {core}", f"(주){core}", f"{core}(주)", f"{core} 주식회사"]
-        variants += [c.english_name, *eng_tokens]
-        tried = self.tried_names()
-        fresh = [v for v in _dedupe(variants) if v not in tried]
-        return fresh or _dedupe(variants)
+        return _dedupe(raw + cores + eng_tokens)
 
 
-class ClinicalAgentState(TypedDict, total=False):
-    ctx: ClinicalRun
-    envelope: dict
+# ══════════════════════════════════════════════
+# 기업 1곳 평가 컨텍스트 (전달받은 데이터셋을 읽기만 하고 외부 조회는 하지 않는다)
+# ══════════════════════════════════════════════
+class ClinicalRun(CompanyView):
+    def __init__(self, company: S.CompanyInput, as_of: str, run_id: str, dataset: dict,
+                 previous: Optional[dict] = None, review_request: Optional[dict] = None):
+        super().__init__(company, as_of)
+        self.run_id = run_id
+        self.dataset_version = dataset.get("version")
+        self.sources = {s["source_id"]: s for s in dataset.get("sources") or []}
+        self.records: dict[str, dict] = {r["record_id"]: r for r in dataset.get("records") or []
+                                         if r.get("source_id") in self.sources}
+        self.previous = previous or {}
+        self.review_request = review_request or {}
+        self.pids: list[str] = [p.product_id for p in company.products]
+
+        self.evidence: dict[str, dict] = {}
+        self.coverage: dict[tuple, dict] = {}
+        self.classify: dict[str, dict] = {}
+        self.reg_records: list[dict] = []
+        self.designations: list[dict] = []
+        self.reimbursements: list[dict] = []
+        self.studies: list[dict] = []
+        self.claim_checks: list[dict] = []
+        self.validation_issues: list[str] = []
+        self.errors: list[dict] = []
+        # score 단계 결과
+        self.product_assessments: list[dict] = []
+        self.red_flags: list[dict] = []
+        self.findings: list[dict] = []
+        self.missing_items: list[dict] = []
+        self.c1: dict = {}
+        self.summary = ""
+        self.review_responses: list[dict] = []
+
+    # ── 데이터셋 레코드 ─────────────────────────
+    def records_for(self, area: str, pid: Optional[str] = None, country: Optional[str] = None) -> list[dict]:
+        """tags로 이 범위에 배분된 레코드를 고른다.
+        area 태그가 없는 레코드는 모든 영역에, product·country 태그가 없는 레코드는 모든 제품·국가에 쓴다."""
+        out = []
+        for r in self.records.values():
+            tags = r.get("tags") or []
+            areas = [t for t in tags if t.startswith("area:")]
+            if areas:
+                if f"area:{area}" not in areas:
+                    continue
+            elif tags and AGENT not in tags:
+                continue  # 다른 Worker에 배분된 자료
+            products = [t for t in tags if t.startswith("product:")]
+            if pid and products and f"product:{pid}" not in products:
+                continue
+            countries = [t for t in tags if t.startswith("country:")]
+            if country and countries and f"country:{country}" not in countries:
+                continue
+            out.append(r)
+        return out
+
+    def record_view(self, r: dict) -> dict:
+        """LLM 입력용: 레코드 내용과 출처 정보를 함께 보여준다"""
+        src = self.sources[r["source_id"]]
+        return {"record_id": r["record_id"], "title": src.get("title"), "url": src.get("url"),
+                "published_at": src.get("published_at"), "locator": r.get("locator"), "content": r.get("content")}
+
+    def record_title(self, rid: str) -> str:
+        return self.sources.get(self.records.get(rid, {}).get("source_id"), {}).get("title") or ""
+
+    def record_text(self, rid: str) -> str:
+        """출처 제목 + 레코드 원문 (LLM이 쓴 문장이 아닌 원자료)"""
+        content = self.records.get(rid, {}).get("content")
+        if content is not None and not isinstance(content, str):
+            content = json.dumps(content, ensure_ascii=False)
+        return f"{self.record_title(rid)} {content or ''}"
+
+    def is_mfds(self, rid: str) -> bool:
+        """식약처 공식 기록인지 (업체명으로 걸러 조회한 기관 DB 자료)"""
+        r = self.records.get(rid, {})
+        src = self.sources.get(r.get("source_id"), {})
+        url = src.get("url") or ""
+        return (any(t.startswith("tool:mfds") for t in r.get("tags") or [])
+                or "apis.data.go.kr/1471000" in url or "mfds.go.kr" in url
+                or src.get("publisher") == "식품의약품안전처")
+
+    # ── Evidence ───────────────────────────────
+    def add_evidence(self, product_id: Optional[str], statement: str, record_ids: list[str], status: str,
+                     excerpt: Optional[str] = None, event_date: Optional[str] = None,
+                     geography: Optional[str] = None) -> list[str]:
+        """근거가 된 레코드마다 Evidence를 하나씩 만든다. 데이터셋에 없는 record_id는 버린다."""
+        if not statement:
+            return []
+        eids = []
+        for rid in _dedupe([r for r in record_ids if r in self.records]):
+            same = next((e["evidence_id"] for e in self.evidence.values() if e["record_id"] == rid
+                         and e["product_id"] == product_id and e["statement"] == statement), None)
+            if same:  # 같은 사실은 기존 ID 재사용
+                eids.append(same)
+                continue
+            eid = self.new_id("ev")
+            rec = self.records[rid]
+            self.evidence[eid] = S.Evidence(
+                evidence_id=eid, record_id=rid, source_id=rec["source_id"],
+                excerpt=(excerpt or None) and excerpt[:500], locator=rec.get("locator"),
+                product_id=product_id, statement=statement, event_date=norm_date(event_date),
+                geography=geography, evidence_status=status,
+            ).model_dump()
+            eids.append(eid)
+        return eids
+
+    def evidence_records(self, evidence_ids: list[str]) -> list[str]:
+        return _dedupe([self.evidence[e]["record_id"] for e in evidence_ids if e in self.evidence])
+
+    # ── Coverage ───────────────────────────────
+    def set_coverage(self, area: str, pid: Optional[str], country: Optional[str], status: str,
+                     records: Optional[list[dict]] = None, note: Optional[str] = None) -> None:
+        self.coverage[(area, pid, country)] = S.Coverage(
+            coverage_id=self.new_id("cv"), area=area, record_ids=[r["record_id"] for r in records or []],
+            status=status, note=note, product_id=pid, country=country,
+        ).model_dump()
+
+    # ── 오류 · 재검토 ───────────────────────────
+    def add_error(self, code: str, error: Exception) -> None:
+        self.errors.append(S.WorkerError(code=code, message=f"{type(error).__name__}: {error}"[:300]).model_dump())
+
+    def review_payload(self) -> dict:
+        """재검토 요청이 있으면 LLM 입력에 덧붙인다 (같은 자료를 지적 사항에 비추어 다시 판단)"""
+        req = self.review_request
+        if not req:
+            return {}
+        targets = set(req.get("target_finding_ids") or [])
+        return {"재검토 요청": {
+            "reason": req.get("reason"), "questions": req.get("questions") or [],
+            "이전 결과의 대상 Finding": [f for f in self.previous.get("findings") or [] if f.get("finding_id") in targets],
+        }}
 
 
 # ══════════════════════════════════════════════
