@@ -1,0 +1,30 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=ortho, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+input [label=<<B>네 분석 결과·근거·실행 상태</B>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+valid [label=<<B>대상·기간·스키마·근거 충돌 검증</B>>];
+need [label=<<B>보완 필요하며</B><BR/><B>1회 한도 내인가?</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+req [label=<<B>해당 Agent에 질문·근거·예산 전달</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">보완 결과 취합</FONT>>];
+gate [label=<<B>G01·G02</B><BR/><B>현재 중대 차단 확인?</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+score [label=<<B>C1~C6 가중 총점 계산</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">proposed-2.0 정책 적용</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">중복 합산·임의 결측 보정 금지</FONT>>];
+pass [label=<<B>총점 ≥ 60이며</B><BR/><B>모든 적용 항목 ≥ 2?</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+yes [label=<<B>적격</B>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+no [label=<<B>부적격</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">차단 또는 점수 미달 사유</FONT>>, fillcolor="#FBEDEA", color="#CFA59B"];
+all [label=<<B>전체 기업 결과 취합</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">적격 기업 중 최대 K개 선정</FONT>>];
+report [label=<<B>보고서 생성</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">선정·미선정 이유 · 점수·근거</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">미확인·보완 이력·실사 질문</FONT>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+input -> valid [xlabel=""];
+valid -> need [xlabel=""];
+need -> req [xlabel="예"];
+req -> valid [xlabel="보완 후",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+need -> gate [xlabel="아니요 / 종료"];
+gate -> no [xlabel="예"];
+gate -> score [xlabel="아니요"];
+score -> pass [xlabel=""];
+pass -> yes [xlabel="예"];
+pass -> no [xlabel="아니요"];
+{rank=same; yes;no;}
+yes -> all [xlabel=""];
+no -> all [xlabel=""];
+all -> report [xlabel=""];
+}

@@ -1,0 +1,30 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=polyline, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+input [label=<<B>기업·대표 제품·투자 단계 입력</B>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+search [label=<<B>공시·거래 상대·실증·고용 자료 수집</B>>];
+extract [label=<<B>매출·계약·고객·고용 관측값 추출</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기간·단위·제품 귀속 기록</FONT>>];
+verify [label=<<B>독립 근거·중복·철회 여부 확인</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">허가·투자 유치를 매출로 인정하지 않음</FONT>>];
+stage [label=<<B>상업화 단계 S</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">A 매출 / B 유료 계약</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">C 실증 / D MOU·수상</FONT>>];
+growth [label=<<B>성장 추이 T</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">비교 가능한 3개 결산연도 CAGR</FONT><BR/><FONT POINT-SIZE="12" COLOR="#627187">비교 불가=unknown</FONT>>];
+validate [label=<<B>C5·RF1~RF4 코드 계산</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">성장 미확인 대체 규칙 명시</FONT>>];
+out [label=<<B>traction_analysis 반환</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">관측값·근거·점수·한계</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+input -> search [xlabel=""];
+search -> extract [xlabel=""];
+extract -> verify [xlabel=""];
+{rank=same; stage;growth;}
+verify -> stage [xlabel=""];
+verify -> growth [xlabel=""];
+stage -> validate [xlabel=""];
+growth -> validate [xlabel=""];
+validate -> out [xlabel=""];
+send [label=<<B>결과를 06 투자 심사에 전달</B>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+out -> send [xlabel=""];
+req [label=<<B>심사 보완 요청 수신</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기업당 최대 1라운드</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+patch [label=<<B>지정 항목만 추가 수집·수정</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">기존 근거 ID·요청 외 결과 유지</FONT>>];
+send -> req [xlabel="요청이 있을 때",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+req -> patch [xlabel="",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+patch -> validate [xlabel="재검증 후 전체 결과 반환",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+graph [labelloc=t, label="04 · 실적·성장성 분석 | 변현준\n직접 자료 수집 | 관측값 구조화 · 코드 계산", fontname="Apple SD Gothic Neo", fontsize=20, fontcolor="#253750"];
+}

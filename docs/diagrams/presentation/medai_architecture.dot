@@ -1,0 +1,60 @@
+digraph MedAI {
+ graph [rankdir=TB, bgcolor="#F8FAFC", pad="0.45", nodesep="0.35", ranksep="0.55", fontname="Apple SD Gothic Neo", fontsize=25, fontcolor="#0F172A", label="MedAI-Agent  |  전체 시스템 구조\n의료 AI 스타트업 투자 검토 · 현재 구현 + 데이터 보완 경로 설계", labelloc=t, compound=true];
+ node [shape=box, style="rounded,filled", fillcolor="white", color="#CBD5E1", penwidth=1.3, fontname="Apple SD Gothic Neo", fontsize=13, fontcolor="#0F172A", margin="0.2,0.14"];
+ edge [color="#64748B", penwidth=1.4, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#475569"];
+ subgraph cluster_data {
+ label="A  데이터 준비  ·  agents/data_collect"; fontsize=17; style="rounded,filled"; color="#BFDBFE"; fillcolor="#EFF6FF";
+ collect [label="[14] Collect · 추가 수집\n부족 항목으로 collection_request 생성", fillcolor="#DBEAFE", color="#2563EB", style="rounded,dashed,filled"];
+ saved [label="[01] 기존 취합 데이터셋\n기업 확정 자료 + 공통 자료"];
+ fresh [label="[02] 기업 CSV → 분야별 수집\n임상 프로필 보강 · 공시 · 뉴스 · 고정 시장 자료"];
+ bundle [label="[03] 기업별 입력 JSON\ncompany_profile · dataset · as_of", fillcolor="#DBEAFE", color="#60A5FA"];
+ {rank=same; saved; fresh;} saved -> bundle [label="취합본 로딩"]; fresh -> bundle [label="취합본 없음 / 재수집 요청"];
+ }
+ subgraph cluster_company {
+ label="B  기업별 평가  ·  Orchestrator-Workers"; fontsize=17; style="rounded,filled"; color="#A5B4FC"; fillcolor="#EEF2FF";
+ fan [label="[04] 기업별 Send · 병렬 실행"];
+ plan [label="[05] Orchestrator\n자료 태그·기업 정보로 Worker 선택", fillcolor="#E0E7FF", color="#818CF8"];
+ dispatch [label="[06] 선택된 Worker에 입력 전달\n최초 평가 또는 요청 대상만 재평가"];
+ retry [label="[13] 해석·평가 보완 요청\n같은 데이터 + 이전 결과 + 질문", fillcolor="#FEF3C7", color="#FBBF24"];
+ update [label="[15] 새 자료 확인 · 데이터셋 버전 갱신\n영향받는 평가·후속 결과 무효화", fillcolor="#DBEAFE", color="#2563EB", style="rounded,dashed,filled"];
+ clinical [label="[07] 임상·인허가\nC1 · 규제 근거"];
+ market [label="[08] 시장·사업성\nC2 · C3 · C4"];
+ traction [label="[09] 실적·성장성\nC5"];
+ risk [label="[10] 운영 리스크\nC6 변환용 근거"];
+ {rank=same; clinical; market; traction; risk;}
+ qc [label="[12] 결과 병합 → Quality Check\n근거·충돌·결측 검증", fillcolor="#E0E7FF"];
+ fin [label="[16] Finalize\n채점 · 게이트 · 기업별 판정"];
+ fan -> plan;
+ plan -> dispatch;
+ dispatch -> clinical; dispatch -> market; dispatch -> traction; dispatch -> risk;
+ clinical -> qc; market -> qc; traction -> qc; risk -> qc;
+ qc -> retry [label="① 해석·평가 문제", color="#D97706", fontcolor="#B45309"];
+ retry -> dispatch [label="같은 자료로 재평가 · 기본 최대 1회", color="#D97706", fontcolor="#B45309", constraint=false];
+ qc -> collect [label="② 데이터 부족 → 수집 단계로 복귀", color="#2563EB", fontcolor="#2563EB", style=dashed, constraint=false];
+ collect -> update [label="새 근거 확보", color="#2563EB", style=dashed];
+ update -> plan [label="갱신 자료로 Worker 재선택", color="#2563EB", fontcolor="#2563EB", style=dashed, constraint=false];
+ collect -> fin [label="추가 근거 없음 / 수집 실패", color="#2563EB", fontcolor="#2563EB", style=dashed];
+ qc -> fin [label="보완 없음 / 한도 도달"];
+ plan -> fin [label="실행 대상 없음", style=dashed];
+ }
+ bundle -> fan;
+ rag [label="[11] 시장 RAG\nPDF → 청크 → BGE-M3 임베딩\nChromaDB → 질의별 근거 검색", fillcolor="#ECFDF5", color="#34D399"];
+ rag -> market [label="검색 근거"];
+ subgraph cluster_report {
+ label="C  선정 · 보고서  ·  investment_review.pipeline"; fontsize=17; style="rounded,filled"; color="#99F6E4"; fillcolor="#F0FDFA";
+ select [label="[17] Select\n기업 비교 · 적격 기업 최대 K개 선정", fillcolor="#CCFBF1"];
+ aggregate [label="[18] Aggregate Results\n분석 결과 · 판정 · 출처 취합"];
+ writer [label="[19] Write Report\nLLM 서술 · 근거 인용 · 문서 작성"];
+ judge [label="[20] Review Quality\n규칙 검사 + LLM Judge", fillcolor="#CCFBF1"];
+ review [label="[21] Orchestrator Review\n대상 기업·Worker 재평가 → 재판정", fillcolor="#FEF3C7", color="#FBBF24"];
+ select -> aggregate -> writer -> judge;
+ judge -> writer [label="보고서 문제 · 재작성 최대 2회", color="#D97706", fontcolor="#B45309", constraint=false];
+ judge -> review [label="해석 문제 · 재검토 최대 1회", color="#D97706", fontcolor="#B45309"];
+ review -> select [label="변경 결과로 다시 선정·취합", color="#D97706", constraint=false];
+ }
+ fin -> select;
+ output [label="[22] 최종 산출물\nfinal_reviews.json · worker_results.json\nfinal_report.md / PDF · report_check.json\ndecision_log.jsonl", fillcolor="#0F172A", fontcolor="white", color="#0F172A"];
+ judge -> output [label="통과 또는 반복 한도 도달 · 미해결 사유 기록"];
+ note [label="파란 점선 = 연결 예정인 데이터 보완 경로\nrecollect.py 수집 모듈은 구현되어 있음\n두 문제가 겹치면 데이터 보완 우선 · 수집 횟수 제한 필요", style="rounded,dashed,filled", fillcolor="#F1F5F9", fontsize=12];
+ {rank=same; output; note;}
+}

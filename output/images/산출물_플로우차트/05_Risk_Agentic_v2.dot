@@ -1,0 +1,21 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.32", nodesep="0.42", ranksep="0.50", splines=ortho, dpi=210, outputorder=edgesfirst];
+node [shape=box, style="rounded,filled", fillcolor="#F0F5FC", color="#93ACCC", penwidth=1.15, fontname="Apple SD Gothic Neo", fontsize=14, fontcolor="#253750", margin="0.22,0.18", width=3.2, height=0.72];
+edge [color="#8392A5", penwidth=1.25, arrowsize=0.7, fontname="Apple SD Gothic Neo", fontsize=11, fontcolor="#596A80"];
+input [label=<<B>기업 ID · 선택적 심사 질문</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">이전 분석 결과</FONT>>, shape=parallelogram, style=filled, fillcolor="#F4F6F9", color="#A3AFBF", width=3.6];
+load [label=<<B>load_dataset · 고정 자료 로딩</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">manifest · SHA-256 · 기업 일치 확인</FONT>>];
+select [label=<<B>select_evidence · 근거 선택</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">질문 단어 일치 순위 · 최대 8개 추가</FONT>>];
+analyze [label=<<B>analyze_risk · LLM 구조화 분석</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">3개 영역 · 원문 연결 검사 · 캐시</FONT>>];
+review [label=<<B>review_result · 규칙 기반 검토</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">미확인 · 진단 오류 · 실사 질문 확인</FONT>>];
+gate [label=<<B>보완 필요 · 미사용 자료 있음</B><BR/><B>실패 아님 · 내부 1회 한도 내?</B>>, shape=diamond, style=filled, fillcolor="#FFF5DD", color="#CFB777", width=3.0, height=1.05];
+context [label=<<B>이전 결과와 보완 질문 구성</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">선택 자료 누적 · attempt 증가</FONT>>];
+export [label=<<B>export_result · 결과 반환</B><BR/><FONT POINT-SIZE="12" COLOR="#627187">areas · references · review_history</FONT>>, shape=box, style="rounded,filled", fillcolor="#E7F3ED", color="#8CB7A0"];
+input -> load [xlabel=""];
+load -> select [xlabel=""];
+select -> analyze [xlabel=""];
+analyze -> review [xlabel=""];
+review -> gate [xlabel=""];
+gate -> context [xlabel="예"];
+context -> select [xlabel="재분석",style=dashed,color="#9B90B6",fontcolor="#82719D"];
+gate -> export [xlabel="아니요 / 종료"];
+}
