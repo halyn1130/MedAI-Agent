@@ -27,6 +27,7 @@ PDF는 설치된 Google Chrome을 사용합니다. Chrome이 없으면 `python -
 | `RISK_MODEL` | 05 | **비어 있으면 05 보완이 실패합니다.** 예: `gpt-4.1-nano` |
 | `MARKET_RAG_DATA_DIR` | 03 RAG | PDF와 `metadata.csv`가 있는 폴더. 압축을 `data/market_rag/market_rag_dataset/`에 풀었다면 그 경로로 지정합니다 |
 | `REPORT_MODEL` | 06 보고서 문장 작성 | 없으면 `gpt-4.1` |
+| `REPORT_JUDGE_MODEL` | 06 보고서 품질 평가 (LLM Judge) | 없으면 `gpt-4o` |
 
 ### 3. Git에 없는 데이터
 
@@ -66,7 +67,8 @@ python -m agents.investment_review --as-of 2026-09-30 \
 | `final_report.pdf`, `final_report.md` | 투자 검토 보고서 |
 | `final_reviews.json` | 기업별 판정·점수·선정 |
 | `*_analysis.json` | 02~05 분석 결과 (다음 실행에서 재사용) |
-| `report_check.json` | 쪽수·인용 검증 결과 |
+| `report_check.json` | 쪽수·인용 검증 + 품질 평가 결과(`evaluation`: 기준별 통과·Judge 점수·시도 이력) |
+| `decision_log.jsonl` | 보고서 노드 라우팅 결정·사유 (`trace_id`로 LangSmith와 연결) |
 | `clinical_results/` | 02 임상 보완 결과 |
 
 보고서만 다시 만들 때는 02~05를 호출하지 않습니다.
@@ -90,7 +92,7 @@ investment_review/
   nodes.py             # LangGraph: 기업별 그래프 + 전체 그래프
   inputs.py            # 기업 목록·저장된 결과 불러오기 (01 대체)
   adapters/            # 02~05 원래 형식 읽기 → AgentResult, stub(결과 없음)
-  report/              # context_builder → writer(선택) → checker → renderer, CLI
+  report/              # nodes(취합 → 작성 ⇄ 평가) · context_builder · writer · evaluator · renderer, CLI
   tests/fixtures/      # 02~05 실제 코드로 만든 출력 샘플 (build_fixtures.py)
 ```
 
@@ -98,7 +100,7 @@ investment_review/
 
 ```text
 기업별: adapters → validate → (review_requests → 보완 1회) → gates → scoring → judge
-전체:   selection → report
+전체:   selection → aggregate(데이터 취합) → write_report(보고서 작성) ⇄ evaluate_report(보고서 평가)
 ```
 
 ## 읽는 형식
@@ -162,7 +164,8 @@ investment_review/
                ├─ market   ─┤
                ├─ traction ─┼→ review ─(보완 요청·1회차)→ 요청받은 Agent만 재실행 → review
                └─ risk     ─┘           └─────────────→ finalize(판정) → END
-전체:   START → 기업별 그래프(병렬, Send) → select → END
+전체:   START → 기업별 그래프(병렬, Send) → select → aggregate → write_report → evaluate_report ─(retry)→ write_report
+                                                                                         └→ END
 ```
 
 ```bash
@@ -182,37 +185,81 @@ python -m agents.investment_review --market-json m.json --traction-json t.json -
 
 ## 보고서
 
-`report/`가 구조화 → (선택) LLM 서술 → 검증 → 렌더링 순서로 `final_report.md`를 만듭니다. 목차는 설계서 27쪽을 따릅니다.
+보고서는 전체 그래프 안의 노드 3개로 만든다 ([report/nodes.py](report/nodes.py)). 목차는 설계서 27쪽을 따른다.
+
+```text
+select → aggregate → write_report → evaluate_report ─(retry)→ write_report
+                                                   └─(passed · unfixable · max_attempts)→ END
+```
+
+| 노드 | 처리 | 코드 |
+|---|---|---|
+| `aggregate` 데이터 취합 | `final_reviews` + 02~05 결과 + 기업 프로필 → `report_context`. PubMed 서지 조회, 선정 기업별 데이터 한계 계산 | `context_builder.build_context`, `evaluator.data_limitations` |
+| `write_report` 보고서 작성 | LLM 서술 → 숫자·코드 검증(`check_narrative`) → Markdown 렌더링. 재작성 때는 반려된 항목만 바꾸고 통과한 항목은 유지 | `writer.write`, `renderer.render` |
+| `evaluate_report` 보고서 평가 | 규칙 검사 + LLM Judge(Hybrid) → `report_status` | `evaluator.evaluate` |
 
 ```text
 # 투자 검토 보고서
 ## 1. SUMMARY              전체 결과 요약 (1/2쪽 이내)
 ## 2. 선정 기업             기업별 고객 문제·시장 / 기술·임상·인허가 / 사업모델·실적 / 운영 리스크 + C1~C6 비교표
 ## 3. 전체 후보 판정        모든 후보의 판정·총점·사유·0점 처리 항목
-## 4. 보완 이력·한계
+## 4. 보완 이력·한계        + 근거 편중·출처 점검 (품질 평가가 찾은 데이터 한계)
 ## 5. 추가 실사 질문
 ## REFERENCE               본문에서 [n]으로 인용한 원문 출처만
 ```
 
 ```bash
-python -m agents.investment_review.report --run-dir outputs/investment_review            # 프롬프트(LLM) 문장 (기본)
-python -m agents.investment_review.report --run-dir outputs/investment_review --no-llm   # 템플릿 문장만
+python -m agents.investment_review.report --run-dir outputs/investment_review              # LLM 서술 + Judge (기본)
+python -m agents.investment_review.report --run-dir outputs/investment_review --no-judge   # 규칙 검사만
+python -m agents.investment_review.report --run-dir outputs/investment_review --no-llm     # 템플릿 문장만
 ```
 
-문장은 [report/prompts/writer.md](report/prompts/writer.md) 프롬프트를 따릅니다. 틀리기 쉬운 부분은 프롬프트 규칙을 코드로 구현했습니다.
+### 품질 평가 기준
+
+| 기준 | 규칙 검사 (결정적) | LLM Judge (`REPORT_JUDGE_MODEL`, 기본 `gpt-4o`) |
+|---|---|---|
+| Groundedness 근거성 | 입력에 없는 숫자(`check_narrative` 반려), `[n]` ↔ REFERENCE 연결, 출처 없는 사실·관점 | 서술이 입력 사실로 추적되는가 |
+| 중립성 | 평가어·권유 표현 금지 목록 (`SUBJECTIVE`) | 점수에 근거하지 않은 우열·추천이 있는가 |
+| 편향 통제 | 선정 기업별 출처 2건·발행처 2곳 이상, 회사 자체 발표 50% 이하, 논점에 확인 필요 사항 포함 | 유리한 근거만 골랐는가 |
+| 관점 커버리지 | 선정 기업마다 시장·임상·실적·운영 리스크 4개 섹션, 요약에 4개 분야 언급 | — |
+| 형식 | 10쪽 이내, SUMMARY 1/2쪽, 인용 번호, 후보 누락 (`check_report`) | — |
+
+- **중립성 정의**: 평가 정책 점수에 따른 순위·총점·선정("총점 67점으로 1위다")은 허용한다. 점수에 근거하지 않은 주관적 추천·우열 표현("혁신적", "선도", "유망", "타사보다 뛰어나다")만 금지한다. 이 보고서는 정해진 기준으로 후보를 선정하는 것이 목적이므로, 순위 자체를 금지하면 보고서 목적과 충돌한다.
+- **Judge 통과 기준**: 기준별 1~5점 중 4점 이상. 4점 이상인 기준의 사소한 지적은 반려 사유로 쓰지 않는다. Judge 호출이 실패하면 규칙 검사로만 판정한다.
+- **Loop 조건**: 반려 사유는 고칠 수 있는 것(LLM 서술 문제 → `fixable`)과 없는 것(데이터·코드 문제)으로 나눈다.
+
+| `report_status` | 조건 | 다음 |
+|---|---|---|
+| `passed` | 모든 기준 통과 | END |
+| `retry` | 고칠 수 있는 반려가 있고 시도 < `MAX_REPORT_ATTEMPTS`(3) | `write_report` (반려 사유를 feedback으로 전달) |
+| `unfixable` | 미달이지만 모두 데이터·형식 문제 | END. 다시 써도 바뀌지 않으므로 Loop하지 않음 |
+| `max_attempts` | 시도 상한 도달 | END. 마지막 보고서 사용 |
+
+- 출처 편중·출처 미연결 같은 데이터 한계는 취합 단계에서 계산해 "4. 보완 이력·한계"에 공개한다. 공개되어 있으면 통과, 빠지면 미달이다.
+
+### 보고서 State
+
+| 구분 | 필드 | 설계 |
+|---|---|---|
+| 제어 | `trace_id`, `report_attempt`, `max_report_attempts`, `eval_feedback`, `report_status` | 라우팅·종료에 필요한 최소값 |
+| 페이로드 | `report_context`, `narrative`, `report_markdown`, `eval_result` | 시도마다 덮어씀 (누적 없음) |
+| 이력 | `eval_history` (reducer `operator.add`) | 시도별 요약. 시도 상한만큼만 쌓임 |
+| 관측성 | `decision_log.jsonl` | 결정·사유는 State 밖 logger로, `trace_id`로 연결 |
+
+### 문장 작성 규칙
+
+문장은 [report/prompts/writer.md](report/prompts/writer.md) 프롬프트를 따른다. 틀리기 쉬운 부분은 프롬프트 규칙을 코드로 구현했다.
 
 | 보고서 부분 | 작성 | 비고 |
 |---|---|---|
-| SUMMARY (6~7문장), 평가 기준 안내문, 선정 이유, 핵심 검토 논점 | LLM (`REPORT_MODEL`, 기본 `gpt-4.1`) | 검증 실패 시 사유를 알려 1회 재요청, 그래도 실패하면 템플릿 문장 |
+| SUMMARY (6~7문장), 평가 기준 안내문, 선정 이유, 핵심 검토 논점 | LLM (`REPORT_MODEL`, 기본 `gpt-4.1`) | 검증·평가에서 반려되면 품질 평가 Loop로 재작성, 끝까지 실패한 항목은 템플릿 문장 |
 | 부적격·판단불가 사유 | 코드 (프롬프트 4번 규칙) | LLM은 38개 목록을 끝까지 쓰지 못하고 0점 항목 수를 잘못 셈 |
 | REFERENCE | 코드 (프롬프트 5번 규칙) | LLM은 발행연도·사이트명·URL을 자주 틀림. 논문 서지는 PubMed 조회 |
 | 표·수치·평가 근거 | 코드 | |
 
-- LLM 입력에는 매출(억 원), 부적격 사유별 기업 수, 0점 처리 항목의 쉬운 이름·개수 등을 미리 계산해 넣습니다. 사실 검증 전인 운영 관찰은 넣지 않습니다.
-- 검증(`checker.check_narrative`): 입력에 없는 숫자(프롬프트 기준값 100·60·2 예외), 6자리 이상 날것 숫자, 코드·변수명, 요약의 선정 기업 이름 누락.
-- **숫자·코드로 잡을 수 없는 의미 오류는 남을 수 있습니다** (예: 같은 점수의 3·4위를 "공동 3위"로 씀). 제출 전 사람이 읽어 확인합니다. `gpt-4o-mini`는 이런 오류가 많아 기본값으로 쓰지 않습니다.
-- **PDF**: `final_report.pdf`(A4)도 함께 만듭니다 (`report/pdf.py`, `--no-pdf`로 생략). Markdown → HTML(`markdown-it-py`) → Playwright로 Chrome 인쇄. 5쪽을 넘으면 인쇄 배율을 95%·90%로 줄여 다시 만들고, 5쪽 검사는 실제 쪽수(`pypdf`)로 합니다. 설치된 Google Chrome을 먼저 쓰고, 없으면 `python -m playwright install chromium`이 필요합니다.
-- 전체 실행(`python -m agents.investment_review`)도 끝에 보고서를 만듭니다 (`--no-report`, `--no-llm-report`).
+- LLM 입력에는 매출(억 원), 부적격 사유별 기업 수, 0점 처리 항목의 쉬운 이름·개수 등을 미리 계산해 넣는다. 사실 검증 전인 운영 관찰은 넣지 않는다.
+- **PDF**: `final_report.pdf`(A4)도 함께 만든다 (`report/pdf.py`, `--no-pdf`로 생략). Markdown → HTML(`markdown-it-py`) → Playwright로 Chrome 인쇄. 10쪽을 넘으면 인쇄 배율을 95%·90%로 줄여 다시 만들고, 쪽수 검사는 실제 쪽수(`pypdf`)로 한다.
+- 전체 실행(`python -m agents.investment_review`)은 그래프 안에서 보고서를 만든다 (`--no-report`, `--no-llm-report`, `--no-judge`).
 
 ## 테스트
 

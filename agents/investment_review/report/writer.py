@@ -108,13 +108,14 @@ def llm_input(ctx: dict) -> dict:
 
 def write(ctx: dict, llm: Any = "auto", feedback: Optional[list[str]] = None) -> Optional[dict]:
     """{"summary", "criteria_guide", "select:<id>", "points:<id>", "reason:<id>"} 또는 None.
-    feedback: 이전 출력이 검증에 걸린 이유. 주면 고쳐 쓰도록 요청한다."""
+    feedback: 이전 출력이 검증(check_narrative)·품질 평가(evaluator)에서 반려된 이유. 주면 고쳐 쓰도록 요청한다."""
     llm = get_llm() if llm == "auto" else llm
     if llm is None:
         return None
     messages = [("system", PROMPT), ("user", json.dumps(llm_input(ctx), ensure_ascii=False))]
     if feedback:
-        messages.append(("user", "이전 출력이 아래 이유로 사용되지 않았다. 규칙과 입력값을 지켜 다시 써라.\n- "
+        messages.append(("user", "이전 출력이 검증·품질 평가에서 아래 이유로 반려됐다('항목 키: [기준] 사유'). "
+                         "해당 항목을 규칙과 입력값을 지켜 다시 쓰고, 나머지 항목도 함께 출력하라.\n- "
                          + "\n- ".join(feedback)))
     try:
         out: Narrative = llm.with_structured_output(Narrative).invoke(messages)

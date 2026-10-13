@@ -1,4 +1,4 @@
-"""06 LangGraph: 기업별 그래프(02~05 실행 → 검증 → 보완 1회 → 판정)와 전체 그래프(기업 병렬 → 선정).
+"""06 LangGraph: 기업별 그래프(02~05 실행 → 검증 → 보완 1회 → 판정)와 전체 그래프(기업 병렬 → 선정 → 보고서).
 
 기업 그래프
     START ─┬─ clinical ─┐
@@ -11,6 +11,10 @@
 - 이미 결과가 있고 보완 요청이 없으면 Agent를 호출하지 않는다 (저장된 결과 재사용).
 - Agent가 예외를 던지면 그 분석만 failed로 기록하고 계속 진행한다.
 - agents 인자로 Agent를 바꿔 끼울 수 있다 (테스트·부분 실행).
+
+전체 그래프
+    START → 기업별 그래프(병렬, Send) → select → [aggregate → write_report ⇄ evaluate_report] → END
+- report 인자를 주면 select 뒤에 보고서 노드 3개를 붙인다 (report/nodes.py). 없으면 select → END.
 """
 from __future__ import annotations
 
@@ -24,6 +28,7 @@ from .adapters import adapt_clinical, adapt_market, adapt_risk, adapt_traction, 
 from .contract import AgentResult, InvestmentReview, ReportDraft
 from .judge import judge
 from .policy import DEFAULT_POLICY, Policy
+from .report.nodes import ReportFields, add_report_nodes
 from .review_requests import build_review_requests
 from .selection import select
 from .validate import validate
@@ -48,7 +53,8 @@ class CompanyState(TypedDict, total=False):
     investment_review: dict
 
 
-class RunState(TypedDict, total=False):
+class RunState(ReportFields, total=False):
+    """보고서 필드(trace_id·meta·report_* 등)는 ReportFields에서 받는다."""
     run_id: str
     as_of: str
     companies: list[dict]            # 기업 프로필 목록 (company_id 필수)
@@ -195,8 +201,10 @@ def build_company_graph(agents: Optional[dict[str, AgentFn]] = None, policy: Pol
     return g.compile()
 
 
-def build_graph(agents: Optional[dict[str, AgentFn]] = None, policy: Policy = DEFAULT_POLICY, k: Optional[int] = None):
-    """전체 그래프: 기업별 그래프를 병렬 실행하고 적격 기업 중 최대 K개를 선정한다."""
+def build_graph(agents: Optional[dict[str, AgentFn]] = None, policy: Policy = DEFAULT_POLICY, k: Optional[int] = None,
+                report: Optional[dict] = None):
+    """전체 그래프: 기업별 그래프를 병렬 실행하고 적격 기업 중 최대 K개를 선정한다.
+    report: add_report_nodes 인자 {llm, judge, pubmed_cache, fetch}. 주면 선정 뒤 보고서를 만든다 (입력 State에 meta 필요)."""
     company_graph = build_company_graph(agents, policy)
 
     def fan_out(state: RunState):
@@ -220,5 +228,8 @@ def build_graph(agents: Optional[dict[str, AgentFn]] = None, policy: Policy = DE
     g.add_node("select", selection)
     g.add_conditional_edges(START, fan_out, ["company", "select"])
     g.add_edge("company", "select")
-    g.add_edge("select", END)
+    if report is None:
+        g.add_edge("select", END)
+    else:
+        g.add_edge("select", add_report_nodes(g, **report))
     return g.compile()

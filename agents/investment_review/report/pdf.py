@@ -34,7 +34,7 @@ ol { padding-left: 18px; }
 .reference li { word-break: break-all; }
 """
 
-SCALES = (1.0, 0.95, 0.9)   # 5쪽 제한을 넘을 때 쓰는 인쇄 배율 (0.9 = 본문 약 7.7pt)
+SCALES = (1.0, 0.95, 0.9)   # 쪽수 제한(checker.MAX_PAGES)을 넘을 때 쓰는 인쇄 배율 (0.9 = 본문 약 7.7pt)
 
 FOOTER = ('<div style="font-size:7pt;color:#6b7280;width:100%;text-align:center;">'
           '<span class="pageNumber"></span> / <span class="totalPages"></span></div>')
