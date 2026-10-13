@@ -132,7 +132,7 @@ class NarrativeTests(unittest.TestCase):
         self.assertIn("누락", llm.calls[1][-1][1])                     # 재요청에 검증 사유 전달
         self.assertIn("다시 쓴 요약이다.", md)
         self.assertTrue(check["narrative"]["notes"][0].startswith("1차:"))
-        self.assertEqual(check["evaluation"]["status"], "passed")
+        self.assertFalse([i for i in check["evaluation"]["quality_issues"] if i["kind"] == "report"])
 
     def test_llm_input_has_precomputed_values_and_no_sources(self):
         from ..report.writer import llm_input

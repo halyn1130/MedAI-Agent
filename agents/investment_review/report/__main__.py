@@ -11,9 +11,9 @@ from pathlib import Path
 
 from ..inputs import load_companies
 from ..policy import DEFAULT_K
-from . import run_report
+from . import run_saved
 from .checker import MAX_PAGES, check_report
-from .nodes import report_check
+from .nodes import report_check, report_context
 from .pdf import to_pdf
 
 
@@ -49,8 +49,8 @@ def save_report(run_dir: Path, markdown: str, check: dict, ctx: dict, pdf: bool 
 
 def write_report(run_dir: Path, reviews, analyses, companies: dict, meta: dict, llm=None, pdf: bool = True,
                  judge=None) -> dict:
-    out = run_report(reviews, analyses, companies, meta, llm, pubmed_cache=run_dir / "pubmed_cache.json", judge=judge)
-    return save_report(run_dir, out["report_markdown"], report_check(out), out["report_context"], pdf)
+    out, cfg = run_saved(reviews, analyses, companies, meta, llm, pubmed_cache=run_dir / "pubmed_cache.json", judge=judge)
+    return save_report(run_dir, out["report"]["content"], report_check(out), report_context(out, cfg), pdf)
 
 
 def main() -> None:

@@ -19,9 +19,7 @@ from pathlib import Path
 
 from .inputs import ROOT, DEFAULT_CSV, load_companies, saved_clinical, saved_json, saved_risk
 from .nodes import build_graph
-from .policy import DEFAULT_K, PARTIAL_POLICY, STRICT_POLICY, ZERO_FILL_POLICY
-
-POLICIES = {"zero_fill": ZERO_FILL_POLICY, "partial": PARTIAL_POLICY, "strict": STRICT_POLICY}
+from .policy import DEFAULT_K, POLICIES
 
 
 def _latest_risk_run() -> Path | None:
@@ -84,16 +82,12 @@ def main() -> None:
     handler.setFormatter(logging.Formatter("%(message)s"))
     logging.getLogger("investment_review.report").addHandler(handler)
     logging.getLogger("investment_review.report").setLevel(logging.INFO)
-    meta = {"as_of": args.as_of, "criteria_version": POLICIES[args.policy].criteria_version,
+    meta = {"run_id": run_id, "as_of": args.as_of, "criteria_version": POLICIES[args.policy].criteria_version,
             "policy": args.policy, "k": args.k or DEFAULT_K}
-    report = None if args.no_report else {"llm": None if args.no_llm_report else "auto",
-                                          "judge": None if args.no_judge else "auto",
-                                          "pubmed_cache": args.out / "pubmed_cache.json"}
-    graph = build_graph(policy=POLICIES[args.policy], k=args.k, report=report)
-    out = graph.invoke({"run_id": run_id, "trace_id": trace_id, "as_of": args.as_of, "meta": meta,
-                        "companies": companies, "preloaded": preloaded},
+    graph = build_graph(policy=POLICIES[args.policy], k=args.k)
+    out = graph.invoke({"run_id": run_id, "as_of": args.as_of, "companies": companies, "preloaded": preloaded},
                        {"max_concurrency": args.max_concurrency, "run_name": "investment_review",
-                        "metadata": {"trace_id": trace_id}})
+                        "metadata": {"run_id": run_id, "trace_id": trace_id}})
 
     path = args.out / "final_reviews.json"
     path.write_text(json.dumps(out["final_reviews"], ensure_ascii=False, indent=2), encoding="utf-8")
@@ -105,12 +99,13 @@ def main() -> None:
     (args.out / "risk_analysis.json").write_text(json.dumps(
         {cid: {"risk_analysis": a["risk_analysis"], "references": a.get("references", [])}
          for cid, a in analyses.items() if "risk_analysis" in a}, ensure_ascii=False), encoding="utf-8")
-    (args.out / "run_meta.json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
+    (args.out / "run_meta.json").write_text(json.dumps({k: v for k, v in meta.items() if k != "run_id"},
+                                                       ensure_ascii=False), encoding="utf-8")
     result, note = path, "보고서 생성 생략 (--no-report)"
     if not args.no_report:
-        from .report.__main__ import save_report
-        from .report.nodes import report_check
-        check = save_report(args.out, out["report_markdown"], report_check(out), out["report_context"])
+        from .report.__main__ import write_report
+        check = write_report(args.out, out["final_reviews"], analyses, {c["company_id"]: c for c in companies}, meta,
+                             None if args.no_llm_report else "auto", judge=None if args.no_judge else "auto")
         ev = check["evaluation"]
         evaluation = f"품질 평가 {ev['status']} ({ev['attempts']}회 작성)"
         pdf = args.out / "final_report.pdf"

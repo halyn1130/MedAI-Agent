@@ -1,95 +1,169 @@
-"""보고서 LangGraph 노드: 데이터 취합 → 보고서 작성 → 보고서 평가 (미달 시 작성으로 Loop).
+"""보고서 노드 3개: 결과 취합 → 보고서 작성 → 품질 평가. 공통 State(common_state.md) 기준.
 
-    (select) → aggregate → write_report → evaluate_report ─(retry: 고칠 수 있는 미달 & 시도 < 상한)→ write_report
-                                                         └─(passed · unfixable · max_attempts)──────→ END
+각 노드는 공통 State의 자기 칸만 쓰고, 다음 경로·반복 횟수는 정하지 않는다 (Orchestrator 담당).
 
-- aggregate      : final_reviews + 02~05 분석 결과 + 기업 프로필 → report_context (build_context, PubMed 서지, 데이터 한계)
-- write_report   : LLM 서술(writer) → 숫자·코드 검증(check_narrative) → Markdown(render). 반려된 항목만 다시 쓴다.
-- evaluate_report: 규칙 검사 + LLM Judge (evaluator.evaluate) → report_status 결정
+| 노드            | 읽기                                              | 쓰기                                  |
+|-----------------|---------------------------------------------------|---------------------------------------|
+| aggregate_results | evaluations[].worker_results·company_profile·orchestration | aggregated_result                     |
+| write_report    | aggregated_result, evaluations, quality_review(재작성 시) | report (+ report_draft)               |
+| review_quality  | report, aggregated_result, evaluations            | quality_review (+ quality_detail)     |
+
+보고서는 여러 기업을 비교하므로 입력은 기업별 EvaluationState 목록(evaluations)이다. 기업 1개 실행 State는 바꾸지 않는다.
 
 State 설계
-- 페이로드: report_context(취합 1회), narrative·report_markdown(시도마다 덮어씀, 누적 없음), eval_result(마지막 평가)
-- 제어   : report_attempt·max_report_attempts(종료 보장), eval_feedback(작성 노드에 넘기는 반려 사유),
-           report_status(passed / retry / unfixable / max_attempts)
-- eval_history: 시도별 평가 요약. reducer로 누적하지만 시도 상한만큼만 쌓인다.
-- 라우팅 결정·사유는 State가 아니라 logger(JSON)로 남기고 trace_id로 LangSmith·외부 로그와 잇는다.
+- 공통 칸: aggregated_result·report·quality_review는 common_state.md 형식 그대로 쓴다.
+- 노드 내부 작업값(공통 계약 밖, 보고서 노드만 읽고 씀):
+  report_draft   = {attempt, narrative, notes}  반려된 항목만 다시 쓰려면 이전 문장이 필요하다.
+  quality_detail = {format, criteria, judge, history}  기준별 점수·Judge 상태·시도 이력 (report_check.json용).
+- 보고서 재료(report_context)는 State에 두지 않고 노드마다 aggregated_result + evaluations로 다시 만든다 (체크포인트 크기).
+- 결정·사유는 logger(JSON)로 남기고 run_id로 외부 로그와 잇는다.
 """
 from __future__ import annotations
 
 import json
 import logging
-import operator
+from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Annotated, Any, Callable, Optional, TypedDict
+from typing import Any, Callable, Optional, TypedDict
 
-from langgraph.graph import END, START, StateGraph
-
+from ..contract import InvestmentReview
+from ..finalize import WORKERS, adapt_worker_results, finalize_review
+from ..policy import CRITERIA_VERSION, DEFAULT_K, POLICIES, SCHEMA_VERSION
+from ..selection import select
 from .checker import check_narrative
 from .citations import fetch_pubmed, pubmed_metadata
 from .context_builder import build_context
-from .evaluator import data_limitations, evaluate, get_judge, note_key
+from .evaluator import data_limitations, evaluate, get_judge, note_key, quality_status, to_quality_issues
 from .renderer import render
 from .writer import get_llm, write
 
-MAX_REPORT_ATTEMPTS = 3
 log = logging.getLogger("investment_review.report")
 
 
-class ReportFields(TypedDict, total=False):
-    """전체 그래프(RunState)와 보고서 단독 그래프(ReportState)가 함께 쓰는 보고서 필드."""
-    # ── 제어 ──
-    trace_id: str
-    meta: dict                                   # as_of·criteria_version·policy·k
-    report_attempt: int
-    max_report_attempts: int
-    eval_feedback: list[str]
-    report_status: str
-    # ── 페이로드 ──
-    report_context: dict
-    narrative: dict
-    writer_notes: list[str]
-    report_markdown: str
-    eval_result: dict
-    eval_history: Annotated[list, operator.add]
+class ReportStageState(TypedDict, total=False):
+    # ── 공통 메타데이터 (EvaluationState와 같은 이름·의미) ──
+    run_id: str
+    as_of: str
+    schema_version: str
+    criteria_version: str
+    # ── 입력: 기업별 EvaluationState (company_id·company_profile·worker_results·orchestration) ──
+    evaluations: list[dict]
+    # ── 공통 칸 ──
+    aggregated_result: Optional[dict]
+    report: Optional[dict]
+    quality_review: Optional[dict]
+    orchestration: dict                          # Orchestrator만 갱신 (지금은 standalone.py의 임시 Orchestrator)
+    # ── 보고서 노드 내부 작업값 ──
+    report_draft: dict
+    quality_detail: dict
 
 
-class ReportState(ReportFields, total=False):
-    final_reviews: list
-    analyses: dict                               # {company_id: {clinical_analysis, ...}}
-    companies: dict                              # {company_id: 프로필}
+@dataclass
+class ReportConfig:
+    """실행 설정. State가 아니라 노드 생성 시 넘긴다."""
+    policy_name: str = "zero_fill"
+    k: Optional[int] = None
+    llm: Any = None                              # 보고서 작성 모델. None=템플릿, "auto"=REPORT_MODEL
+    judge: Any = None                            # 품질 평가 Judge. None=규칙만, "auto"=REPORT_JUDGE_MODEL
+    pubmed_cache: Optional[Path] = None
+    fetch: Optional[Callable] = fetch_pubmed
+
+    def resolved(self) -> "ReportConfig":
+        return ReportConfig(self.policy_name, self.k, get_llm() if self.llm == "auto" else self.llm,
+                            get_judge() if self.judge == "auto" else self.judge, self.pubmed_cache, self.fetch)
 
 
 def _log(state: dict, node: str, decision: str, reason: str) -> None:
-    log.info(json.dumps({"trace_id": state.get("trace_id"), "node": node, "attempt": state.get("report_attempt"),
+    log.info(json.dumps({"run_id": state.get("run_id"), "node": node,
+                         "attempt": (state.get("report_draft") or {}).get("attempt"),
                          "decision": decision, "reason": reason}, ensure_ascii=False))
 
 
-def _by_id(items) -> dict:
-    """전체 그래프는 list(기업별 결과), 보고서 CLI는 {company_id: ...}를 넘긴다."""
-    return items if isinstance(items, dict) else {x["company_id"]: x for x in items or []}
+# ── 취합 ────────────────────────────────────────────────────────────────────
+def _request_ids(ev: dict) -> list[str]:
+    """보완 요청 이력 = orchestration.retry_counts.worker_reviews (Worker별 재검토 횟수)."""
+    counts = ((ev.get("orchestration") or {}).get("retry_counts") or {}).get("worker_reviews") or {}
+    return [f"{ev['company_id']}:{w}:rr{n}" for w in WORKERS for n in range(1, (counts.get(w) or 0) + 1)]
 
 
-def aggregate_node(pubmed_cache: Optional[Path] = None, fetch: Optional[Callable] = fetch_pubmed):
-    def aggregate(state: dict) -> dict:
-        ctx = build_context(state.get("final_reviews") or [], _by_id(state.get("analyses")),
-                            _by_id(state.get("companies")), state["meta"])
-        ctx["pubmed"] = pubmed_metadata(ctx["references"], pubmed_cache, fetch or (lambda _ids: {}))
-        ctx["limitations"] = data_limitations(ctx)
-        _log(state, "aggregate", "context_ready",
-             f"선정 {len(ctx['selected'])}개 · 출처 {len(ctx['references'])}건 · 데이터 한계 {len(ctx['limitations'])}건")
-        return {"report_context": ctx, "report_attempt": 0, "eval_feedback": [], "narrative": {}}
-    return aggregate
+def _unresolved(ev: dict) -> list[dict]:
+    out = []
+    for w, res in (ev.get("worker_results") or {}).items():
+        for m in (res or {}).get("missing_items") or []:
+            if m.get("required_for_assessment") or ("item" not in m and m.get("impact") in ("high", "blocking")):
+                out.append({"company_id": ev["company_id"], "worker": w,
+                            "missing_id": m.get("missing_id") or m.get("item_id"),
+                            "item": m.get("item") or m.get("field"), "reason": m.get("reason") or m.get("cause")})
+    return out
 
 
-def write_node(llm: Any = None):
-    """llm=None이면 템플릿 문장만. 반려 사유(eval_feedback)가 있으면 그 항목만 바꾸고 통과한 항목은 유지한다."""
+def based_on_results(evaluations: list[dict]) -> dict:
+    return {ev["company_id"]: {w: (r or {}).get("result_version") or 1 for w, r in (ev.get("worker_results") or {}).items()}
+            for ev in evaluations}
+
+
+def _analysis_status(evaluations: list[dict]) -> str:
+    statuses = [(ev.get("worker_results") or {}).get(w, {}).get("analysis_status") if (ev.get("worker_results") or {}).get(w)
+                else None for ev in evaluations for w in WORKERS]
+    if not statuses or all(s in (None, "failed") for s in statuses):
+        return "failed"
+    return "complete" if all(s == "complete" for s in statuses) else "partial"
+
+
+def aggregate_node(cfg: ReportConfig):
+    policy = POLICIES[cfg.policy_name]
+
+    def aggregate_results(state: dict) -> dict:
+        evaluations = state.get("evaluations") or []
+        reviews = []
+        for ev in evaluations:
+            cid, wr = ev["company_id"], ev.get("worker_results") or {}
+            results = adapt_worker_results(cid, wr)
+            reviews.append(finalize_review(cid, state["as_of"], results, wr, _request_ids(ev), policy))
+        ranked = select(reviews, policy, cfg.k)
+        status = Counter(r.final_status.value for r in ranked)
+        selected = sum(r.selection.selected for r in ranked)
+        summary = (f"후보 {len(ranked)}개 · 적격 {status.get('eligible', 0)} · 부적격 {status.get('ineligible', 0)} · "
+                   f"판단불가 {status.get('undetermined', 0)} · 선정 {selected}개")
+        result = {"based_on_results": based_on_results(evaluations), "summary": summary,
+                  "criteria_results": {"reviews": [r.model_dump(mode="json") for r in ranked]},
+                  "unresolved_items": [u for ev in evaluations for u in _unresolved(ev)],
+                  "analysis_status": _analysis_status(evaluations)}
+        _log(state, "aggregate_results", result["analysis_status"], summary)
+        return {"aggregated_result": result}
+    return aggregate_results
+
+
+# ── 보고서 재료 (State에 저장하지 않고 매번 만든다) ─────────────────────────────
+def report_context(state: dict, cfg: ReportConfig, fetch: Optional[Callable] = None) -> dict:
+    evaluations = state.get("evaluations") or []
+    analyses = {}
+    for ev in evaluations:
+        wr = ev.get("worker_results") or {}
+        analyses[ev["company_id"]] = {f"{w}_analysis": wr[w] for w in WORKERS if wr.get(w)} | {
+            "references": (wr.get("risk") or {}).get("sources") or []}
+    profiles = {ev["company_id"]: ev.get("company_profile") or {} for ev in evaluations}
+    meta = {"as_of": state["as_of"], "criteria_version": state.get("criteria_version") or CRITERIA_VERSION,
+            "policy": cfg.policy_name, "k": cfg.k or DEFAULT_K}
+    ctx = build_context(state["aggregated_result"]["criteria_results"]["reviews"], analyses, profiles, meta)
+    ctx["pubmed"] = pubmed_metadata(ctx["references"], cfg.pubmed_cache, fetch or (lambda _ids: {}))
+    ctx["limitations"] = data_limitations(ctx)
+    return ctx
+
+
+# ── 보고서 작성 ─────────────────────────────────────────────────────────────
+def write_node(cfg: ReportConfig):
+    """quality_review에 kind=report 이슈가 있으면 그 항목만 다시 쓰고, 통과한 항목은 유지한다."""
     def write_report(state: dict) -> dict:
-        ctx = state["report_context"]
-        prev = dict(state.get("narrative") or {})
-        feedback = state.get("eval_feedback") or []
+        ctx = report_context(state, cfg, cfg.fetch)
+        draft = state.get("report_draft") or {}
+        prev = dict(draft.get("narrative") or {})
+        feedback = [i["description"] for i in (state.get("quality_review") or {}).get("issues") or []
+                    if i["kind"] == "report"]
         narrative, notes = prev, []
-        if llm is not None:
-            raw = write(ctx, llm, feedback=feedback or None)
+        if cfg.llm is not None:
+            raw = write(ctx, cfg.llm, feedback=feedback or None)
             if raw is None:
                 notes.append("LLM 서술 없음(모델 미설정 또는 호출 실패) → 템플릿 문장")
             else:
@@ -102,71 +176,69 @@ def write_node(llm: Any = None):
                     notes = [n for n in notes if note_key(n) not in prev or note_key(n) in failed]
                 else:
                     narrative = clean
-        return {"narrative": narrative, "writer_notes": notes, "report_markdown": render(ctx, narrative),
-                "report_attempt": state.get("report_attempt", 0) + 1}
+        attempt = draft.get("attempt", 0) + 1
+        _log(state, "write_report", "written", f"{attempt}차 작성 · 반영한 반려 {len(feedback)}건 · 서술 {len(narrative)}개")
+        return {"report": {"based_on_results": state["aggregated_result"]["based_on_results"],
+                           "content": render(ctx, narrative)},
+                "report_draft": {"attempt": attempt, "narrative": narrative, "notes": notes}}
     return write_report
 
 
-def evaluate_node(judge: Any = None):
-    def evaluate_report(state: dict) -> dict:
-        verdict = evaluate(state["report_markdown"], state["report_context"], state.get("narrative") or {},
-                           state.get("writer_notes") or [], judge)
-        attempt = state["report_attempt"]
-        cap = state.get("max_report_attempts") or MAX_REPORT_ATTEMPTS
-        if verdict["passed"]:
-            status, reason = "passed", "모든 기준 통과"
-        elif not verdict["feedback"]:
-            status, reason = "unfixable", "작성 노드가 고칠 수 없는 미달(데이터·형식) → 종료, 한계는 보고서에 공개"
-        elif attempt >= cap:
-            status, reason = "max_attempts", f"시도 상한 {cap}회 도달 → 마지막 보고서로 종료"
-        else:
-            status, reason = "retry", f"반려 {len(verdict['feedback'])}건 → 보고서 작성으로 재요청"
-        failed = [k for k, v in verdict["criteria"].items() if not v["passed"]]
-        _log(state, "evaluate_report", status, f"{reason} · 미달 기준 {failed or '없음'}")
-        summary = {"attempt": attempt, "status": status, "failed_criteria": failed, "feedback": verdict["feedback"],
-                   "writer_notes": state.get("writer_notes") or [], "judge": verdict["judge"],
+# ── 품질 평가 ───────────────────────────────────────────────────────────────
+def quality_node(cfg: ReportConfig):
+    def review_quality(state: dict) -> dict:
+        ctx = report_context(state, cfg)                       # PubMed는 작성 노드가 만든 캐시만 사용
+        draft = state.get("report_draft") or {}
+        verdict = evaluate(state["report"]["content"], ctx, draft.get("narrative") or {}, draft.get("notes") or [],
+                           cfg.judge)
+        issues = to_quality_issues(verdict, ctx)
+        status = quality_status(issues)
+        kinds = dict(Counter(i["kind"] for i in issues))
+        _log(state, "review_quality", status, f"이슈 {kinds or '없음'}")
+        detail = state.get("quality_detail") or {}
+        summary = {"attempt": draft.get("attempt"), "status": status, "issue_kinds": kinds,
+                   "failed_criteria": [k for k, v in verdict["criteria"].items() if not v["passed"]],
+                   "report_issues": [i["description"] for i in issues if i["kind"] == "report"],
+                   "writer_notes": draft.get("notes") or [], "judge": verdict["judge"],
                    "judge_scores": {k: v["judge_score"] for k, v in verdict["criteria"].items() if v["judge_score"]}}
-        return {"eval_result": verdict, "eval_feedback": verdict["feedback"], "report_status": status,
-                "eval_history": [summary]}
-    return evaluate_report
+        return {"quality_review": {"based_on_results": state["report"]["based_on_results"], "status": status,
+                                   "issues": issues},
+                "quality_detail": {"format": verdict["format"], "criteria": verdict["criteria"], "judge": verdict["judge"],
+                                   "history": (detail.get("history") or []) + [summary]}}
+    return review_quality
 
 
-def route_after_eval(state: dict) -> str:
-    return "write_report" if state.get("report_status") == "retry" else END
-
-
-def add_report_nodes(g: StateGraph, llm: Any = None, judge: Any = None, pubmed_cache: Optional[Path] = None,
-                     fetch: Optional[Callable] = fetch_pubmed) -> str:
-    """그래프에 보고서 노드 3개를 붙이고 시작 노드 이름을 돌려준다. llm·judge="auto"면 환경변수 모델."""
-    llm = get_llm() if llm == "auto" else llm
-    judge = get_judge() if judge == "auto" else judge
-    g.add_node("aggregate", aggregate_node(pubmed_cache, fetch))
-    g.add_node("write_report", write_node(llm))
-    g.add_node("evaluate_report", evaluate_node(judge))
-    g.add_edge("aggregate", "write_report")
-    g.add_edge("write_report", "evaluate_report")
-    g.add_conditional_edges("evaluate_report", route_after_eval, ["write_report", END])
-    return "aggregate"
-
-
-def build_report_graph(llm: Any = None, judge: Any = None, pubmed_cache: Optional[Path] = None,
-                       fetch: Optional[Callable] = fetch_pubmed):
-    """보고서만 다시 만들 때 쓰는 단독 그래프 (02~05 미호출)."""
-    g = StateGraph(ReportState)
-    g.add_edge(START, add_report_nodes(g, llm, judge, pubmed_cache, fetch))
-    return g.compile()
+# ── 입력 변환·결과 정리 ─────────────────────────────────────────────────────
+def evaluations_from_analyses(analyses: dict[str, dict], companies: dict[str, dict], reviews: list[dict],
+                              run_id: str, as_of: str) -> list[dict]:
+    """기존 실행 결과(기업별 *_analysis, risk references, final_reviews) → 기업별 EvaluationState.
+    risk 출처는 결과 안 sources로, 보완 요청 이력은 orchestration.retry_counts.worker_reviews로 옮긴다."""
+    ids = [r["company_id"] for r in reviews] or list(companies)
+    requests = {r["company_id"]: r.get("review_request_ids") or [] for r in reviews}
+    out = []
+    for cid in ids:
+        a = analyses.get(cid) or {}
+        wr = {w: a[f"{w}_analysis"] for w in ("clinical", "market", "traction") if a.get(f"{w}_analysis")}
+        if a.get("risk_analysis"):
+            wr["risk"] = {**a["risk_analysis"], "sources": a.get("references") or []}
+        out.append({"run_id": run_id, "company_id": cid, "as_of": as_of, "schema_version": SCHEMA_VERSION,
+                    "criteria_version": CRITERIA_VERSION, "company_profile": companies.get(cid) or {"company_id": cid},
+                    "worker_results": wr,
+                    "orchestration": {"retry_counts": {"worker_reviews": dict(Counter(i.split(":")[1] for i in requests.get(cid, [])))}}})
+    return out
 
 
 def report_check(out: dict) -> dict:
-    """그래프 결과 → report_check.json. 기존 키(pages·issues·ok·narrative)는 그대로 두고 evaluation을 더한다."""
-    verdict = out["eval_result"]
-    history = out.get("eval_history") or []
-    return {**verdict["format"],
-            "narrative": {"used": sorted(out.get("narrative") or {}),
+    """최종 State → report_check.json. 기존 키(pages·issues·ok·narrative)는 그대로 두고 evaluation을 더한다."""
+    detail, review = out["quality_detail"], out["quality_review"]
+    history = detail.get("history") or []
+    orch = out.get("orchestration") or {}
+    return {**detail["format"],
+            "narrative": {"used": sorted((out.get("report_draft") or {}).get("narrative") or {}),
                           "notes": [f"{h['attempt']}차: {n}" for h in history for n in h["writer_notes"]]},
-            "evaluation": {"passed": verdict["passed"], "status": out.get("report_status"), "attempts": len(history),
-                           "judge": verdict["judge"],
+            "evaluation": {"status": review["status"], "passed": review["status"] == "pass", "attempts": len(history),
+                           "termination_reason": orch.get("termination_reason"), "judge": detail["judge"],
                            "criteria": {k: {"passed": v["passed"], "judge_score": v["judge_score"],
                                             "issues": [f"{i['target']}: {i['message']}" for i in v["issues"]]}
-                                        for k, v in verdict["criteria"].items()},
-                           "data_limitations": verdict["warnings"], "history": history}}
+                                        for k, v in detail["criteria"].items()},
+                           "quality_issues": review["issues"], "history": history}}

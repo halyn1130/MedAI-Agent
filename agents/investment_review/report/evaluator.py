@@ -7,10 +7,11 @@
 - coverage     : 선정 기업마다 4개 관점(시장·임상·실적·운영 리스크)이 있는가
 - format       : 쪽수·인용 번호·후보 누락 (checker.check_report)
 
-반려 사유(issue)는 두 종류다.
-- fixable=True : LLM 서술(narrative) 문제. 보고서 작성 노드에 feedback으로 돌려보내 다시 쓴다.
-- fixable=False: 데이터·코드 문제. 다시 써도 바뀌지 않으므로 Loop하지 않는다.
-  데이터 한계(출처 편중·출처 미연결)는 취합 단계에서 data_limitations로 계산해 보고서 "4. 보완 이력·한계"에 공개한다.
+결과는 공통 State의 QualityIssue(common_state.md 6번)로 바꿔 반환한다 (to_quality_issues). 경로는 Orchestrator가 정한다.
+- report         : LLM 서술(narrative) 문제. description이 '항목 키: [기준] 사유'라 작성 노드가 그 항목만 다시 쓴다.
+- missing_data   : 선정 기업의 출처 편중·출처 미연결 (data_limitations). 보고서 "4. 보완 이력·한계"에도 공개한다.
+- interpretation : Judge가 지적한 코드 본문(Worker 결과) 내용 문제
+- execution      : 쪽수·인용 번호·후보 누락·관점 섹션 누락 등 코드가 만든 형식 오류
 """
 from __future__ import annotations
 
@@ -89,15 +90,19 @@ def data_limitations(ctx: dict) -> list[dict]:
         if items and (ratio := sum(_is_self(r, c["name"]) for r in items) / len(items)) > MAX_SELF_RATIO:
             bias.append(f"회사 자체 발표 비중 {ratio:.0%}")
         if bias:
-            out.append({"company_id": c["company_id"], "criterion": "bias", "text": f"{c['name']}: {' · '.join(bias)}"})
-        grounded = []
-        if empty := [VIEW_KO[v] for v, refs in facts.items() if not any(refs)]:
-            grounded.append(f"출처가 연결된 사실이 없는 관점 {', '.join(empty)}")
-        if uncited := sum(1 for refs in facts.values() for r in refs if not r):
-            grounded.append(f"출처가 연결되지 않은 사실 {uncited}건")
+            out.append({"company_id": c["company_id"], "criterion": "bias", "text": f"{c['name']}: {' · '.join(bias)}",
+                        "workers": [v for v, refs in facts.items() if any(refs)] or list(facts)})
+        grounded, workers = [], []
+        if empty := [v for v, refs in facts.items() if not any(refs)]:
+            grounded.append(f"출처가 연결된 사실이 없는 관점 {', '.join(VIEW_KO[v] for v in empty)}")
+            workers += empty
+        uncited = {v: sum(1 for r in refs if not r) for v, refs in facts.items()}
+        if n := sum(uncited.values()):
+            grounded.append(f"출처가 연결되지 않은 사실 {n}건")
+            workers += [v for v, k in uncited.items() if k and v not in workers]
         if grounded:
             out.append({"company_id": c["company_id"], "criterion": "groundedness",
-                        "text": f"{c['name']}: {' · '.join(grounded)}"})
+                        "text": f"{c['name']}: {' · '.join(grounded)}", "workers": workers})
     return out
 
 
@@ -234,3 +239,39 @@ def evaluate(markdown: str, ctx: dict, narrative: dict, writer_notes: list[str],
     warnings = [f"[{CRITERION_KO[lim['criterion']]}] {lim['text']}" for lim in ctx.get("limitations") or []]
     return {"passed": not issues, "criteria": criteria, "feedback": feedback, "warnings": warnings,
             "format": fmt, "judge": judge_state}
+
+
+# ── 공통 State QualityIssue로 변환 ───────────────────────────────────────────
+QUESTION = {"bias": "{name}의 판단을 뒷받침할 다른 발행처의 독립 출처를 확보할 수 있는가?",
+            "groundedness": "{name}의 해당 관점 사실을 뒷받침할 출처를 확보할 수 있는가?"}
+
+
+def to_quality_issues(verdict: dict, ctx: dict) -> list[dict]:
+    """evaluate 결과 + 데이터 한계 → QualityIssue 목록 (issue_id, kind, target_workers, description,
+    finding_ids, missing_ids, questions)."""
+    out: list[dict] = []
+
+    def add(kind: str, description: str, workers=(), questions=()):
+        out.append({"issue_id": f"qi{len(out) + 1:02d}", "kind": kind, "target_workers": list(workers),
+                    "description": description, "finding_ids": [], "missing_ids": [], "questions": list(questions)})
+
+    for name, c in verdict["criteria"].items():
+        for i in c["issues"]:
+            if i["fixable"]:
+                add("report", f"{i['target']}: [{CRITERION_KO[name]}] {i['message']}")
+            elif i["source"] == "judge":
+                add("interpretation", f"[{CRITERION_KO[name]}] {i['message']}")
+            else:
+                add("execution", f"[{CRITERION_KO[name]}] {i['message']}")
+    names = {c["company_id"]: c["name"] for c in ctx["selected"]}
+    for lim in ctx.get("limitations") or []:
+        add("missing_data", f"[{CRITERION_KO[lim['criterion']]}] {lim['text']}", lim.get("workers") or [],
+            [QUESTION[lim["criterion"]].format(name=names.get(lim["company_id"], lim["company_id"]))])
+    return out
+
+
+def quality_status(issues: list[dict]) -> str:
+    """pass | needs_revision | failed (실행 오류가 있으면 failed)."""
+    if any(i["kind"] == "execution" for i in issues):
+        return "failed"
+    return "needs_revision" if issues else "pass"
