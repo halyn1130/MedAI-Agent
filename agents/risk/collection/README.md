@@ -27,7 +27,7 @@ python -m agents.risk.collection.quality --input-dir <기업폴더> --output-dir
 
 기본 저장 위치는 기존과 같은 `agents/risk/data/run_*/`입니다. `--output-dir`로 변경할 수 있습니다. 수집 단계에서는 GPT를 호출하지 않습니다. 선별 통과는 사실 확인이나 리스크 부재를 의미하지 않습니다.
 
-수집과 GPT 분석을 모두 실행하는 기존 `python -m agents.risk.run_all` 명령은 유지합니다.
+수집·평가 통합 실행기 `run_all`은 제거했습니다. 수집 후 `prepare_input`으로 입력을 준비하고 `python -m agents.risk --input ... --output ...`으로 별도 평가합니다.
 
 ```bash
 python -m unittest agents.risk.collection.test_collect agents.risk.collection.test_quality
