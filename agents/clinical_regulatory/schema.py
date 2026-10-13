@@ -28,7 +28,7 @@ CRITERIA_VERSION = "proposed-2.0"
 # ══════════════════════════════════════════════
 # 1) 공통 계약 enum
 # ══════════════════════════════════════════════
-AgentName = Literal["clinical", "market", "traction", "risk"]
+WorkerName = Literal["clinical", "market", "traction", "risk"]
 AnalysisStatus = Literal["complete", "partial", "failed"]
 ScoreStatus = Literal["scored", "unknown", "not_applicable"]
 EvidenceStatus = Literal["confirmed", "partial", "unverified"]
@@ -126,7 +126,7 @@ class WorkerResult(BaseModel):
     as_of: str
     schema_version: str = SCHEMA_VERSION
     criteria_version: str = CRITERIA_VERSION
-    agent: AgentName
+    agent: WorkerName
     dataset_version: Optional[str] = None
     result_version: int
     analysis_status: AnalysisStatus
@@ -502,7 +502,7 @@ class ReviewRequest(BaseModel):
     request_id: str
     company_id: str
     product_ids: list[str] = Field(default_factory=list)
-    target_agent: AgentName
+    target_agent: WorkerName
     finding_ids: list[str] = Field(default_factory=list)
     criterion_id: Optional[CriterionId] = None
     reason: ReviewReason

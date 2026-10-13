@@ -2,11 +2,11 @@ from __future__ import annotations
 
 try:
     from .. import schema as S
-    from ..config import AGENT
+    from ..config import WORKER
     from ..context import ClinicalRun
 except ImportError:
     import schema as S
-    from config import AGENT
+    from config import WORKER
     from context import ClinicalRun
 
 
@@ -27,7 +27,7 @@ def assemble(ctx: ClinicalRun) -> dict:
         validation_issues=ctx.validation_issues,
     ).model_dump()
     return S.WorkerResult(
-        run_id=ctx.run_id, company_id=ctx.cid, as_of=ctx.as_of, agent=AGENT,
+        run_id=ctx.run_id, company_id=ctx.cid, as_of=ctx.as_of, agent=WORKER,
         dataset_version=ctx.dataset_version, result_version=int(ctx.previous.get("result_version", 0)) + 1,
         analysis_status=status, data=data,
         sources=_referenced_sources(ctx), evidence=list(ctx.evidence.values()), findings=ctx.findings,

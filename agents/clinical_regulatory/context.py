@@ -7,11 +7,11 @@ from typing import Any, Optional
 
 try:
     from . import schema as S
-    from .config import AGENT, DEFAULT_TARGET_COUNTRIES
+    from .config import WORKER, DEFAULT_TARGET_COUNTRIES
     from .utils import _clean, _core_name, _dedupe, norm_date, today
 except ImportError:
     import schema as S
-    from config import AGENT, DEFAULT_TARGET_COUNTRIES
+    from config import WORKER, DEFAULT_TARGET_COUNTRIES
     from utils import _clean, _core_name, _dedupe, norm_date, today
 
 
@@ -30,7 +30,7 @@ class CompanyView:
     def new_id(self, kind: str) -> str:
         with self._lock:
             self.counters[kind] = self.counters.get(kind, 0) + 1
-            return f"{self.cid}:{AGENT}:{kind}{self.counters[kind]:02d}"
+            return f"{self.cid}:{WORKER}:{kind}{self.counters[kind]:02d}"
 
     def product(self, pid: str) -> S.ProductInput:
         return next(p for p in self.company.products if p.product_id == pid)
@@ -131,7 +131,7 @@ class ClinicalRun(CompanyView):
             if areas:
                 if f"area:{area}" not in areas:
                     continue
-            elif tags and AGENT not in tags:
+            elif tags and WORKER not in tags:
                 continue  # 다른 Worker에 배분된 자료
             products = [t for t in tags if t.startswith("product:")]
             if pid and products and f"product:{pid}" not in products:
