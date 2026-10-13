@@ -76,11 +76,16 @@ def llm_input(ctx: dict) -> dict:
                                 if not r["zero_filled"] and r["score"] is not None],
             "facts": {
                 "regulatory": [f"{r['country']} {r['authority']} {r['procedure']} {r['status']}" for r in c["clinical"]["regulatory"]],
-                "studies": [s.get("design") for s in c["clinical"]["studies"]],
+                "studies": [" · ".join(x for x in (s.get("design"), "다기관" if s.get("multicenter") else "",
+                                                    "전향적" if s.get("prospective") else "") if x)
+                            for s in c["clinical"]["studies"]],
+                "market_growth": [f"{m.get('segment') or '시장'} 연평균 성장률 {(m['value'] / 100 if m['value'] > 1.5 else m['value']):.1%}"
+                                  for m in c["market"]["metrics"] if m["type"] == "cagr"],
                 "commercial_stage": c["traction"]["stage"],
                 "revenue": [f"{r['year']}년 {_money(r['value'], r['currency'])}" for r in c["traction"]["revenue"]],
                 "revenue_cagr": f"{c['traction']['revenue_cagr']:.1%}" if c["traction"]["revenue_cagr"] is not None else None,
-                "contracts": [x["counterparty"] for x in c["traction"]["contracts"]],
+                "contracts": [f"{x['counterparty']} ({'유상 확인' if x.get('paid') else '유상 여부 미확인'})"
+                              for x in c["traction"]["contracts"]],
                 "target_customer": c["market"].get("target_customer"),
                 "core_problem": c["market"].get("core_problem"),
             },

@@ -2,7 +2,7 @@
 
 | 노드              | 읽기                                                  | 쓰기                                  | 다음 경로 |
 |-------------------|-------------------------------------------------------|---------------------------------------|-----------|
-| aggregate_results | final_reviews(Orchestrator 판정·선정), company_states | aggregated_result                     | write_report |
+| aggregate_results | final_reviews(Orchestrator 판정·선정), company_states | aggregated_result                     | route_after_aggregate |
 | write_report      | aggregated_result, company_states, quality_review     | report (+ report_draft)               | review_quality |
 | review_quality    | report, aggregated_result, company_states             | quality_review (+ quality_detail)     | route_after_quality |
 
@@ -11,7 +11,10 @@ route_after_quality (품질 평가 노드가 결정)
 - interpretation(Worker 결과 이상) & 재검토 < 상한 → orchestrator_review (해당 기업·Worker 재검토, pipeline.py)
 - report(서술 문제) & 재작성 < 상한             → write_report (반려된 항목만 다시 씀)
 - 그 외                                        → END (사유는 quality_detail.termination_reason)
-데이터 부족은 취합 노드가 판단해 aggregated_result.unresolved_items에 남기고 보고서 4장에 공개한다 (수집 노드 미구현).
+route_after_aggregate (취합 노드가 결정, cfg.collect=True일 때)
+- 데이터 부족(unresolved_items) & 수집 < 상한 → recollect_plan (재수집 → 해당 Worker 재평가 → 재판정, pipeline.py)
+- 그 외                                     → write_report
+남은 데이터 부족은 aggregated_result.unresolved_items에 남기고 보고서 4장에 공개한다.
 
 입력
 - final_reviews : Orchestrator select 결과 (기업별 InvestmentReview + orchestration). 판정은 다시 계산하지 않는다.
@@ -47,6 +50,7 @@ from .writer import get_llm, write
 WORKERS = ("clinical", "market", "traction", "risk")
 REPORT_REVISION_LIMIT = 2      # 재작성 상한 (최초 작성 제외) → 최대 3회 작성
 REREVIEW_LIMIT = 1             # 보고서 평가 → Orchestrator 재검토 상한
+COLLECTION_LIMIT = 1           # 취합 → 데이터 재수집 상한
 log = logging.getLogger("investment_review.report")
 
 
@@ -81,6 +85,8 @@ class ReportConfig:
     rereview: bool = False                       # interpretation → Orchestrator 재검토 경로 사용 (pipeline.py)
     revision_limit: int = REPORT_REVISION_LIMIT
     rereview_limit: int = REREVIEW_LIMIT
+    collect: bool = False                        # 데이터 부족 → 재수집 경로 사용 (pipeline.py)
+    collection_limit: int = COLLECTION_LIMIT
 
     def resolved(self) -> "ReportConfig":
         from dataclasses import replace
@@ -157,10 +163,29 @@ def aggregate_node(cfg: ReportConfig):
                   "criteria_results": {"reviews": reviews},
                   "unresolved_items": data_gaps + [u for cid, cs in states.items() for u in _required_missing(cid, cs)],
                   "analysis_status": _analysis_status(states)}
-        _log(state, "aggregate_results", "data_gaps" if data_gaps else "sufficient",
-             f"{summary} · 데이터 부족 {len(data_gaps)}건 (수집 노드 없음 → 보고서 4장에 공개)")
+        step = "recollect_plan" if _needs_collection(state, cfg, result["unresolved_items"]) else "write_report"
+        done = _collections(state)
+        _log(state, "aggregate_results", step,
+             f"{summary} · 출처 점검 {len(data_gaps)}건 · 데이터 부족 {len(result['unresolved_items'])}건 · "
+             f"재수집 {done}/{cfg.collection_limit if cfg.collect else 0}회")
         return {"aggregated_result": result}
     return aggregate_results
+
+
+def _collections(state: dict) -> int:
+    return ((state.get("orchestration") or {}).get("retry_counts") or {}).get("collection", 0)
+
+
+def _needs_collection(state: dict, cfg: ReportConfig, unresolved: list[dict]) -> bool:
+    return bool(cfg.collect and unresolved and _collections(state) < cfg.collection_limit)
+
+
+def route_after_aggregate(cfg: ReportConfig):
+    """취합 노드 다음: 데이터 부족이면 재수집, 아니면 보고서 작성."""
+    def route(state: dict) -> str:
+        unresolved = (state.get("aggregated_result") or {}).get("unresolved_items") or []
+        return "recollect_plan" if _needs_collection(state, cfg, unresolved) else "write_report"
+    return route
 
 
 # ── 보고서 작성 ─────────────────────────────────────────────────────────────
@@ -255,12 +280,15 @@ def route_after_quality(state: dict) -> str:
 
 
 def add_report_nodes(g: StateGraph, cfg: ReportConfig) -> None:
-    """aggregate_results → write_report → review_quality → (write_report | orchestrator_review | END).
-    cfg.rereview=True면 그래프에 orchestrator_review 노드가 있어야 한다 (pipeline.py)."""
+    """aggregate_results → (recollect_plan | write_report) → review_quality → (write_report | orchestrator_review | END).
+    cfg.collect=True면 recollect_plan, cfg.rereview=True면 orchestrator_review 노드가 그래프에 있어야 한다 (pipeline.py)."""
     g.add_node("aggregate_results", aggregate_node(cfg))
     g.add_node("write_report", write_node(cfg))
     g.add_node("review_quality", quality_node(cfg))
-    g.add_edge("aggregate_results", "write_report")
+    if cfg.collect:
+        g.add_conditional_edges("aggregate_results", route_after_aggregate(cfg), ["recollect_plan", "write_report"])
+    else:
+        g.add_edge("aggregate_results", "write_report")
     g.add_edge("write_report", "review_quality")
     targets = ["write_report", END] + (["orchestrator_review"] if cfg.rereview else [])
     g.add_conditional_edges("review_quality", route_after_quality, targets)
@@ -292,6 +320,7 @@ def report_check(out: dict) -> dict:
             "evaluation": {"status": review["status"], "passed": review["status"] == "pass", "attempts": len(history),
                            "termination_reason": detail.get("termination_reason"),
                            "rereviews": ((out.get("orchestration") or {}).get("retry_counts") or {}).get("report_rereview", 0),
+                           "collections": _collections(out), "collection_log": out.get("collection_log") or [],
                            "judge": detail["judge"],
                            "criteria": {k: {"passed": v["passed"], "judge_score": v["judge_score"],
                                             "issues": [f"{i['target']}: {i['message']}" for i in v["issues"]]}

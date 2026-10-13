@@ -2,6 +2,7 @@
 
     python -m agents.investment_review.report --run-dir outputs/investment_review             # LLM 서술 + 품질 평가 Loop
     python -m agents.investment_review.report --run-dir outputs/investment_review --no-llm    # 템플릿 문장, 규칙 평가만
+    python -m agents.investment_review.report --run-dir outputs/pipeline_full                 # 전체 그래프 실행 결과로
 """
 from __future__ import annotations
 
@@ -18,8 +19,16 @@ from .pdf import to_pdf
 
 
 def load_run(run_dir: Path) -> tuple[list[dict], dict[str, dict], dict]:
+    """기존 06 실행(*_analysis.json)과 전체 그래프 실행(pipeline.py의 worker_results.json) 결과를 모두 읽는다."""
     reviews = json.loads((run_dir / "final_reviews.json").read_text(encoding="utf-8"))
     analyses: dict[str, dict] = {}
+    path = run_dir / "worker_results.json"
+    if path.exists():
+        for cid, x in json.loads(path.read_text(encoding="utf-8")).items():
+            wr = x.get("worker_results") or {}
+            analyses[cid] = {f"{w}_analysis": wr[w] for w in ("clinical", "market", "traction", "risk") if wr.get(w)}
+            if wr.get("risk"):
+                analyses[cid]["references"] = wr["risk"].get("sources") or []
     for key in ("clinical_analysis", "market_analysis", "traction_analysis"):
         path = run_dir / f"{key}.json"
         if path.exists():

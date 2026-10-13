@@ -40,8 +40,18 @@ def _scored(cid: str, w: str, score: float = 5.0) -> dict:
 class EligibleFakes:
     """모든 항목을 근거와 함께 채점하는 가짜 Worker → 적격 기업. 호출(입력)을 기록한다."""
 
-    def __init__(self):
+    def __init__(self, missing=()):
         self.calls = []
+        self.missing = set(missing)          # {(company_id, worker)}: 데이터가 새로 오기 전까지 평가 필수 결측을 낸다
+
+    def _gap(self, s, worker, res):
+        """missing에 있는 기업·Worker는 재수집 자료(recollected 태그)가 데이터셋에 없으면 필수 결측을 남긴다."""
+        recollected = any("recollected" in (r.get("tags") or []) for r in s["dataset"].get("records") or [])
+        if (s["company_id"], worker) in self.missing and not recollected:
+            res["missing_items"] = [{"missing_id": f"{s['company_id']}:{worker}:mi01", "item": "최근 공급 계약",
+                                     "reason": "제공 자료로 확인하지 못함", "related_criterion_ids": ["C5"],
+                                     "required_for_assessment": True}]
+        return res
 
     def clinical(self, s):
         self.calls.append(("clinical", s))
@@ -63,7 +73,8 @@ class EligibleFakes:
         cid = s["company_id"]
         data = {"criteria_inputs": {"C5": _scored(cid, "traction")}, "red_flags": [], "open_questions": ["계약 조건 확인"],
                 "revenue_by_year": {"2025": {"value": 5e8, "currency": "KRW", "evidence_ids": [f"{cid}:traction:e1"]}}}
-        return {"worker_results": {"traction": _result(s, "traction", data, _ev(cid, "traction"), (), _src(cid, "traction"))}}
+        res = _result(s, "traction", data, _ev(cid, "traction"), (), _src(cid, "traction"))
+        return {"worker_results": {"traction": self._gap(s, "traction", res)}}
 
     def risk(self, s):
         self.calls.append(("risk", s))
@@ -97,17 +108,44 @@ def interpretation(cid: str, worker: str) -> JudgeVerdict:
 PASS = JudgeVerdict(groundedness=5, neutrality=5, bias=5)
 
 
-class PipelineTests(unittest.TestCase):
-    def run_pipeline(self, judge=None, llm=None, **cfg):
-        self.fakes = EligibleFakes()
+class FakeCollector:
+    """recollect.collect_additional 대역 (외부 검색 없음). status=updated면 요청한 Worker 태그로 레코드 1건을 덧붙인다."""
+
+    def __init__(self, status="updated"):
+        self.status, self.calls = status, []
+
+    def __call__(self, company_id, profile, dataset, request, as_of):
+        self.calls.append((company_id, request))
+        result = {"request_id": request["request_id"], "attempt": request["attempt"], "status": self.status,
+                  "based_on_dataset_version": request["based_on_dataset_version"], "dataset_version": dataset["version"],
+                  "added_records": 0, "updated_workers": [], "items": []}
+        if self.status != "updated":
+            return {"dataset": dataset, "collection_result": result}
+        workers = request["target_workers"]
+        src = {"source_id": f"{company_id}:recollect:s1", "title": "기사", "url": f"https://news.example/{company_id}",
+               "published_at": "2026-05-01"}
+        rec = {"record_id": f"{company_id}:recollect:r1", "source_id": src["source_id"], "content": "공급 계약 체결",
+               "tags": [*workers, "recollected"], "company_ids": [company_id]}
+        new = {**dataset, "version": f"{dataset['version']}+r1", "sources": [*dataset["sources"], src],
+               "records": [*dataset["records"], rec]}
+        result.update(dataset_version=new["version"], added_records=1, updated_workers=workers)
+        return {"dataset": new, "collection_result": result}
+
+
+class RunMixin:
+    def run_pipeline(self, judge=None, llm=None, missing=(), collector=None, **cfg):
+        self.fakes = EligibleFakes(missing)
+        self.collector = collector or FakeCollector("no_new_data")
         companies = [bundle("c001", "가나다"), bundle("c002", "라마바")]
         return run_pipeline(companies, "t", AS_OF, ReportConfig(fetch=None, judge=judge, llm=llm, **cfg),
-                            workers=self.fakes.workers())
+                            workers=self.fakes.workers(), collector=self.collector)
 
+
+class PipelineTests(RunMixin, unittest.TestCase):
     def test_graph_nodes(self):
         nodes = set(build_pipeline(EligibleFakes().workers()).get_graph().nodes)
         self.assertTrue({"company", "select", "aggregate_results", "write_report", "review_quality",
-                         "orchestrator_review"} <= nodes)
+                         "orchestrator_review", "recollect_plan", "recollect_company"} <= nodes)
 
     def test_report_after_orchestrator(self):
         out = self.run_pipeline()
@@ -151,6 +189,47 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(len(llm.calls), 2)
         self.assertEqual(self.fakes.names().count("traction"), 2)               # Worker 재실행 없음
         self.assertEqual([h["next"] for h in report_check(out)["evaluation"]["history"]], ["write_report", "finish"])
+
+
+class CollectionTests(RunMixin, unittest.TestCase):
+    def traction_calls(self, cid="c001"):
+        return [s for n, s in self.fakes.calls if n == "traction" and s["company_id"] == cid]
+
+    def test_data_gap_goes_to_collection_then_rerun(self):
+        out = self.run_pipeline(missing={("c001", "traction")}, collector=FakeCollector("updated"))
+        self.assertEqual([c for c, _ in self.collector.calls], ["c001"])          # 부족한 기업만 수집
+        req = self.collector.calls[0][1]
+        self.assertEqual(req["target_workers"], ["traction"])
+        self.assertEqual(req["items"][0]["question"], "최근 공급 계약")
+        calls = self.traction_calls()
+        self.assertEqual(len(calls), 2)                                            # 최초 + 새 자료로 재평가
+        self.assertTrue(any("recollected" in (r.get("tags") or []) for r in calls[-1]["dataset"]["records"]))
+        self.assertIsNotNone(calls[-1]["previous_result"])
+        self.assertEqual(self.fakes.names().count("clinical"), 2)                  # 다른 Worker는 재평가 안 함
+        state = out["company_states"]["c001"]
+        self.assertTrue(state["dataset_ref"]["version"].endswith("+r1"))           # 갱신된 데이터셋을 저장소에 다시 저장
+        self.assertEqual(state["collection_history"][0]["rerun"], ["traction"])
+        self.assertEqual(state["worker_results"]["traction"]["result_version"], 2)
+        check = report_check(out)["evaluation"]
+        self.assertEqual((check["collections"], check["collection_log"][0]["status"]), (1, "updated"))
+        self.assertIn("## REFERENCE", out["report"]["content"])                    # 재판정 뒤 보고서 생성
+
+    def test_no_new_data_skips_rerun(self):
+        out = self.run_pipeline(missing={("c001", "traction")}, collector=FakeCollector("no_new_data"))
+        self.assertEqual(len(self.collector.calls), 1)
+        self.assertEqual(len(self.traction_calls()), 1)                            # 같은 평가를 반복하지 않음
+        self.assertEqual(report_check(out)["evaluation"]["collection_log"][0]["status"], "no_new_data")
+        self.assertTrue(any(u["kind"] == "missing_item" for u in out["aggregated_result"]["unresolved_items"]))
+
+    def test_collection_limit(self):
+        out = self.run_pipeline(missing={("c001", "traction")}, collector=FakeCollector("no_new_data"))
+        self.assertEqual(len(self.collector.calls), 1)                             # 부족이 남아도 재수집은 1회
+        self.assertEqual(report_check(out)["evaluation"]["collections"], 1)
+
+    def test_sufficient_data_goes_straight_to_report(self):
+        out = self.run_pipeline()
+        self.assertEqual(self.collector.calls, [])
+        self.assertEqual(report_check(out)["evaluation"]["collections"], 0)
 
 
 if __name__ == "__main__":
