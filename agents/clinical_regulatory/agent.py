@@ -26,7 +26,6 @@ WORKER / CLINICAL & REGULATORY - 임상·인허가 평가 노드 (v3.0)
 """
 from __future__ import annotations
 
-import csv
 import json
 import os
 import sys
@@ -36,7 +35,7 @@ from typing import Optional
 
 try:
     from . import schema as S
-    from .config import AGENT, COMPANY_CONCURRENCY, RESULT_DIR
+    from .config import WORKER, COMPANY_CONCURRENCY, INPUT_DIR, RESULT_DIR
     from .context import ClinicalRun, normalize_profile
     from .steps import (
         assemble,
@@ -49,10 +48,10 @@ try:
         studies_step,
         validate_step,
     )
-    from .utils import today
+    from .utils import load_companies_from_csv, today
 except ImportError:
     import schema as S
-    from config import AGENT, COMPANY_CONCURRENCY, RESULT_DIR
+    from config import WORKER, COMPANY_CONCURRENCY, INPUT_DIR, RESULT_DIR
     from context import ClinicalRun, normalize_profile
     from steps import (
         assemble,
@@ -65,7 +64,7 @@ except ImportError:
         studies_step,
         validate_step,
     )
-    from utils import today
+    from utils import load_companies_from_csv, today
 
 STEPS = (classify_step, regulatory_step, institutional_step, studies_step, claims_step, score_step, validate_step,
          respond_step)
@@ -91,13 +90,13 @@ def clinical_analysis_node(state: dict) -> dict:
     as_of = state.get("as_of") or today()
     run_id = state.get("run_id") or f"run-{as_of}"
     dataset = state.get("dataset") or {}
-    previous = state.get("previous_result") or (state.get("worker_results") or {}).get(AGENT) or {}
-    review = state.get("review_request") or (state.get("review_requests") or {}).get(AGENT) or {}
+    previous = state.get("previous_result") or (state.get("worker_results") or {}).get(WORKER) or {}
+    review = state.get("review_request") or (state.get("review_requests") or {}).get(WORKER) or {}
     try:
         result = evaluate_company(cid, state.get("company_profile") or {}, dataset, as_of, run_id, previous, review)
     except Exception as e:  # noqa: BLE001 - 실패도 결과로 반환해 누락과 구분한다
         result = S.WorkerResult(
-            run_id=run_id, company_id=cid, as_of=as_of, agent=AGENT, dataset_version=dataset.get("version"),
+            run_id=run_id, company_id=cid, as_of=as_of, agent=WORKER, dataset_version=dataset.get("version"),
             result_version=int(previous.get("result_version", 0)) + 1, analysis_status="failed",
             data=S.ClinicalData().model_dump(),
             errors=[S.WorkerError(code="worker_failed", message=f"{type(e).__name__}: {e}"[:300])],
@@ -105,7 +104,7 @@ def clinical_analysis_node(state: dict) -> dict:
     for key in ("schema_version", "criteria_version"):  # 요청의 버전을 그대로 돌려준다
         if state.get(key):
             result[key] = state[key]
-    return {"worker_results": {AGENT: result}}
+    return {"worker_results": {WORKER: result}}
 
 
 # ══════════════════════════════════════════════
@@ -135,22 +134,8 @@ def load_saved_results(result_dir: str) -> dict[str, dict]:
 
 
 # ══════════════════════════════════════════════
-# 단독 테스트: python agent.py startup_list.csv 3
+# 단독 실행: python agent.py startup_list.csv 3
 # ══════════════════════════════════════════════
-def load_companies_from_csv(path: str) -> dict[str, dict]:
-    companies: dict[str, dict] = {}
-    seen: dict[str, str] = {}
-    with open(path, encoding="utf-8-sig") as f:
-        for row in csv.DictReader(f):
-            name = (row.get("기업명") or "").strip()
-            if not name:
-                continue
-            cid = seen.get(name) or f"c{len(seen) + 1:03d}"
-            seen[name] = cid
-            companies[cid] = row  # 중복 기업은 마지막 행 사용
-    return companies
-
-
 def print_check(envs: dict[str, dict]) -> None:
     """실행 결과 점검용 요약 출력"""
     for cid, env in envs.items():
@@ -167,26 +152,28 @@ def print_check(envs: dict[str, dict]) -> None:
             print("  검증 메모:", d["validation_issues"][:3], "| 오류:", [e["code"] for e in env["errors"]])
 
 
-def collect_and_evaluate(cid: str, profile: dict) -> dict:
-    """단독 실행에서 데이터 로더 역할을 대신한다: 수집(데이터셋 생성) → 평가 노드"""
-    try:
-        from .collection import collect_clinical_data
-    except ImportError:
-        from collection import collect_clinical_data
-    as_of = today()
-    collected = collect_clinical_data(cid, profile, as_of)
-    state = {"run_id": f"run-{as_of}", "company_id": cid, "as_of": as_of,
-             "company_profile": collected["company_profile"], "dataset": collected["dataset"]}
-    return clinical_analysis_node(state)["worker_results"][AGENT]
+def evaluate_from_file(cid: str) -> Optional[dict]:
+    """단독 실행에서 데이터 로더 역할을 대신한다: 입력 파일을 State로 만들어 평가 노드 호출 (수집은 하지 않는다)"""
+    path = Path(INPUT_DIR) / f"{cid}.json"
+    if not path.exists():
+        return None
+    loaded = json.loads(path.read_text(encoding="utf-8"))
+    state = {"run_id": f"run-{loaded['as_of']}", "company_id": cid, "as_of": loaded["as_of"],
+             "company_profile": loaded["company_profile"], "dataset": loaded["dataset"]}
+    return clinical_analysis_node(state)["worker_results"][WORKER]
 
 
 if __name__ == "__main__":
     # 사용: python agent.py startup_list.csv [개수] [기업명,기업명,...]
+    #  - 그래프 밖에서 평가 노드만 돌려 보는 용도. State 대신 INPUT_DIR(기본 clinical_inputs/)의
+    #    기업별 입력 파일(company_profile · dataset)을 읽는다. 입력이 없는 기업은 건너뜀
+    #    (입력 만들기: python -m collection startup_list.csv)
     #  - 기업별 결과를 RESULT_DIR(기본 clinical_worker_results/)에 바로 저장하고, 다시 실행하면 끝난 기업은 건너뜀
     #  - 처음부터 다시 하려면 그 폴더를 지우거나 --force
-    csv_path = sys.argv[1] if len(sys.argv) > 1 else "startup_list.csv"
-    limit = int(sys.argv[2]) if len(sys.argv) > 2 else 3
-    names = set(sys.argv[3].split(",")) if len(sys.argv) > 3 else None
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    csv_path = args[0] if args else "startup_list.csv"
+    limit = int(args[1]) if len(args) > 1 else 3
+    names = set(args[2].split(",")) if len(args) > 2 else None
     companies = load_companies_from_csv(csv_path)
     if names:
         companies = {cid: row for cid, row in companies.items() if row.get("기업명") in names}
@@ -205,12 +192,16 @@ if __name__ == "__main__":
     todo = {cid: row for cid, row in companies.items() if cid not in done}
     results: dict[str, dict] = {}
     with ThreadPoolExecutor(max_workers=COMPANY_CONCURRENCY) as pool:
-        futures = {pool.submit(collect_and_evaluate, cid, row): cid for cid, row in todo.items()}
+        futures = {pool.submit(evaluate_from_file, cid): cid for cid in todo}
         for fut, cid in futures.items():
-            results[cid] = fut.result()
-            _save_company_result(cid, results[cid])
+            result = fut.result()
+            if result is None:
+                print(f"{cid} {todo[cid].get('기업명')}: 입력 없음 ({INPUT_DIR}/{cid}.json) → 건너뜀")
+                continue
+            results[cid] = result
+            _save_company_result(cid, result)
 
     merged = {**done, **results}
     merged = {cid: merged[cid] for cid in companies if cid in merged}  # CSV 순서대로
-    out_path = Path("clinical_worker_results.json")  # 저장 형식: {company_id: WorkerResult}
+    out_path = Path(f"{RESULT_DIR.rstrip('/')}.json")  # 저장 형식: {company_id: WorkerResult}
     out_path.write_text(json.dumps(merged, ensure_ascii=False, indent=2), encoding="utf-8")

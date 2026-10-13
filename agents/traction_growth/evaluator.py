@@ -47,7 +47,7 @@ import json
 import os
 from pathlib import Path
 import re
-from typing import Any, Optional
+from typing import Any, Mapping, Optional, cast
 import uuid
 
 from langgraph.graph import END, START, StateGraph
@@ -104,7 +104,8 @@ def get_llm() -> Optional[Any]:
 
     # 일부 모델은 temperature 변경을 허용하지 않음(기본값 1만 지원) → 환경변수로 지정할 때만 전달
     t = os.environ.get("TRACTION_LLM_TEMPERATURE")
-    return init_chat_model(model, **({"temperature": float(t)} if t else {}))
+    kwargs: dict[str, Any] = {"temperature": float(t)} if t else {}
+    return init_chat_model(model, **kwargs)
 
 
 def _squash(s: Optional[str]) -> str:
@@ -366,7 +367,7 @@ class Builder:
 # ─────────────────────────────────────────────
 # 판정 노드: 규칙 적용 → Envelope
 # ─────────────────────────────────────────────
-def assemble(ctx: Ctx, state: dict) -> dict:
+def assemble(ctx: Ctx, state: Mapping[str, Any]) -> dict:
     prev = ctx.previous if ctx.mode == "review" else None
     cid, as_of = ctx.company_id, ctx.as_of
     b = Builder(cid, prev)
@@ -516,7 +517,7 @@ def assemble(ctx: Ctx, state: dict) -> dict:
     # ── missing_items
     missing = []
 
-    def add_m(field_, cause, route, impact, detail=""):
+    def add_m(field_: str, cause: str, route: str, impact: str, detail: Optional[str] = "") -> None:
         missing.append({"item_id": f"{cid}:traction:m{len(missing) + 1:02d}", "field": field_, "cause": cause,
                         "route": route, "impact": impact, "detail": detail or ""})
 
@@ -579,8 +580,9 @@ def assemble(ctx: Ctx, state: dict) -> dict:
     return S.AnalysisEnvelope.model_validate(env).model_dump(mode="json")
 
 
-def review_response(ctx: Ctx, prev: dict, findings: list, b: Builder, new_logs: list, version: int) -> dict:
-    req = ctx.request
+def review_response(ctx: Ctx, prev: Optional[dict], findings: list, b: Builder, new_logs: list, version: int) -> dict:
+    prev = prev or {}
+    req = ctx.request or {}
     before = {f["finding_id"]: f["claim"] for f in prev.get("findings", [])}
     after = {f["finding_id"]: f["claim"] for f in findings}
     targets = req.get("finding_ids") or list(after)
@@ -690,7 +692,7 @@ def dataset_to_state(dataset: dict, homepage_host: str = "") -> tuple[dict, dict
     sources = {s["source_id"]: s for s in dataset.get("sources") or []}
     facts, docs = [], []
     by_kind: dict[str, list[str]] = {k: [] for k in FACT_KINDS}
-    info = {"fact_records": [], "doc_records": [], "skipped": []}
+    info: dict[str, Any] = {"fact_records": [], "doc_records": [], "skipped": []}
     for r in select_records(dataset):
         s = sources.get(r.get("source_id"))
         if s is None:
@@ -701,7 +703,7 @@ def dataset_to_state(dataset: dict, homepage_host: str = "") -> tuple[dict, dict
                "publisher": host_of(s.get("url") or "") or None, "source_type": stype,
                "published_at": s.get("published_at")}
         c = r.get("content")
-        if _is_fact(c):
+        if isinstance(c, dict) and _is_fact(c):
             facts.append({"kind": c["kind"], "record": dict(c["record"]), "source": src,
                           "status": c.get("status") or "partial", "statement": c.get("statement") or str(c["record"]),
                           "excerpt": c.get("excerpt"), "locator": r.get("locator") or c.get("locator"),
@@ -729,7 +731,11 @@ def dataset_to_state(dataset: dict, homepage_host: str = "") -> tuple[dict, dict
 def build_eval_graph(ctx: Ctx):
     g = StateGraph(TGState)
     g.add_node("extract", make_extract(ctx))               # 원문 → fact (LLM, 발췌 대조로 환각 차단)
-    g.add_node("judge", lambda state: {"envelope": assemble(ctx, state)})   # 규칙 판정 (LLM 없음)
+
+    def judge(state: TGState) -> dict:                     # 규칙 판정 (LLM 없음)
+        return {"envelope": assemble(ctx, state)}
+
+    g.add_node("judge", judge)
     g.add_edge(START, "extract")
     g.add_edge("extract", "judge")
     g.add_edge("judge", END)
@@ -836,12 +842,14 @@ def evaluate_worker(worker_input: dict, llm: Any = "auto") -> dict:
         homepage = host_of(profile.get("homepage") or "")
         start, info = dataset_to_state(dataset, homepage)
         as_of_d, _ = parse_date(meta["as_of"])
+        if as_of_d is None:
+            raise WorkerInputError("INVALID_INPUT", f"as_of 날짜 형식 오류: {meta['as_of']}")
         ctx = Ctx(profile=profile, as_of=as_of_d, run_id=meta["run_id"] or uuid.uuid4().hex[:12],
                   company_id=meta["company_id"], names=names,
                   invest_stage=profile.get("invest_stage") or profile.get("최근 투자단계"), homepage_host=homepage,
                   llm=(get_llm() if start["docs"] else None) if llm == "auto" else llm,
                   run_dart=False, run_news=False, run_nps=False)
-        out = build_eval_graph(ctx).invoke(start)
+        out = build_eval_graph(ctx).invoke(cast(TGState, start))
         env, llm_status = out["envelope"], (out.get("status") or {}).get("llm")
     except WorkerInputError as e:
         return _result(meta, status="failed", version=version, errors=[{"code": e.code, "message": str(e)}],
@@ -927,7 +935,7 @@ def dataset_from_envelope(env: dict, version: str = "dataset-from-envelope") -> 
 # CLI
 # ─────────────────────────────────────────────
 def _profiles() -> dict[str, dict]:
-    from agents.investment_review.inputs import load_companies
+    from ..investment_review.inputs import load_companies   # 상대 import: VS Code 작업 폴더 위치와 무관하게 해석
     return {c["company_id"]: c for c in load_companies()}
 
 

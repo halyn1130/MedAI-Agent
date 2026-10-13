@@ -1,9 +1,12 @@
 """
 임상·인허가 자료 수집 (평가 노드 밖: 초기 데이터 로더·수집 노드에서 호출)
 
-평가 노드(agent.clinical_analysis_node)는 외부 조회를 하지 않는다.
-이 파일은 공통 데이터셋 계약(Source · DataRecord) 형식으로 임상·인허가 자료를 만들어 준다.
+평가 노드(agent.clinical_analysis_node)는 이 폴더(collection/)를 import하지 않고 외부 조회도 하지 않는다.
+이 폴더는 공통 데이터셋 계약(Source · DataRecord) 형식으로 임상·인허가 자료를 만들어 준다.
+  - collect.py : 무엇을 조회할지 정하고 데이터셋으로 정리
+  - tools.py   : 실제 외부 호출 (식약처 · Tavily · PubMed · openFDA)
 
+    from agents.clinical_regulatory.collection import collect_clinical_data
     out = collect_clinical_data(company_id, company_profile, as_of)
     state["company_profile"] = out["company_profile"]   # 정식명·제품·회사 주장 원문이 채워진 프로필
     state["dataset"] = out["dataset"]                   # {version, sources, records} (다른 자료와 합쳐도 됨)
@@ -25,32 +28,35 @@ tags (평가 노드가 자료를 배분할 때 읽는다)
   (tool:mfds_* 는 식약처 공식 기록. content는 품목 목록 JSON)
 
 단계별 함수(collect_profile, collect_regulatory, collect_institutional, collect_studies)는 따로 호출할 수 있다.
-단독 실행: python collection.py startup_list.csv 기업명
+단독 실행: python -m collection startup_list.csv [개수] [기업명,기업명,...]
+          → INPUT_DIR(기본 clinical_inputs/)에 기업별 평가 입력(company_profile · dataset)을 저장
 """
 from __future__ import annotations
 
-import csv
 import hashlib
 import json
 import re
-import sys
 import urllib.parse
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from typing import Optional
 
 try:
-    from . import schema as S
-    from .config import (
-        AGENT,
+    from .. import schema as S
+    from ..config import (
+        WORKER,
         COLLECT_MAX_PAGES,
+        COMPANY_CONCURRENCY,
+        INPUT_DIR,
         DEFAULT_TARGET_COUNTRIES,
         MFDS_ITEM,
         MFDS_ITEM_MAX_PER_COMPANY,
         MFDS_PERMIT,
     )
-    from .context import normalize_profile
-    from .llm import ask
+    from ..context import normalize_profile
+    from ..llm import ask
     from .tools import CollectRun, _item_values, fetch_page, mfds_query, openfda_510k, pubmed_search, web_search
-    from .utils import (
+    from ..utils import (
         _clean,
         _company_core,
         _core_name,
@@ -62,6 +68,7 @@ try:
         _norm_txt,
         _pkey,
         homepage_hint,
+        load_companies_from_csv,
         norm_date,
         same_company,
         source_slug,
@@ -71,8 +78,10 @@ try:
 except ImportError:
     import schema as S
     from config import (
-        AGENT,
+        WORKER,
         COLLECT_MAX_PAGES,
+        COMPANY_CONCURRENCY,
+        INPUT_DIR,
         DEFAULT_TARGET_COUNTRIES,
         MFDS_ITEM,
         MFDS_ITEM_MAX_PER_COMPANY,
@@ -80,7 +89,7 @@ except ImportError:
     )
     from context import normalize_profile
     from llm import ask
-    from tools import CollectRun, _item_values, fetch_page, mfds_query, openfda_510k, pubmed_search, web_search
+    from collection.tools import CollectRun, _item_values, fetch_page, mfds_query, openfda_510k, pubmed_search, web_search
     from utils import (
         _clean,
         _company_core,
@@ -93,6 +102,7 @@ except ImportError:
         _norm_txt,
         _pkey,
         homepage_hint,
+        load_companies_from_csv,
         norm_date,
         same_company,
         source_slug,
@@ -119,7 +129,7 @@ def _add_record(ctx: CollectRun, source_id: Optional[str], content: str, tags: l
 def _add_hits(ctx: CollectRun, hits: list[dict], area: str, pid: Optional[str] = None,
               country: Optional[str] = None) -> None:
     # 평가 노드(context.ClinicalRun.records_for)가 읽는 태그. 수집 노드에서도 그대로 유지할 것
-    tags = [AGENT, f"area:{area}"] + ([f"product:{pid}"] if pid else []) + ([f"country:{country}"] if country else [])
+    tags = [WORKER, f"area:{area}"] + ([f"product:{pid}"] if pid else []) + ([f"country:{country}"] if country else [])
     for h in hits:
         if not h["ok"]:
             continue
@@ -401,6 +411,7 @@ def collect_clinical_data(company_id: str, company_profile: dict, as_of: Optiona
     digest = hashlib.sha1(json.dumps([[r["source_id"], r["content"]] for r in records],
                                      ensure_ascii=False).encode("utf-8")).hexdigest()[:10]
     return {
+        "company_id": company_id, "as_of": as_of,
         "company_profile": ctx.company.model_dump(),
         "dataset": {"version": f"clinical-{digest}",   # 내용이 바뀌면 값이 바뀐다
                     "sources": [s for sid, s in ctx.sources.items() if sid in used], "records": records},
@@ -408,8 +419,28 @@ def collect_clinical_data(company_id: str, company_profile: dict, as_of: Optiona
     }
 
 
-if __name__ == "__main__":
-    csv_path, name = sys.argv[1], sys.argv[2]
-    with open(csv_path, encoding="utf-8-sig") as f:
-        row = next(r for r in csv.DictReader(f) if (r.get("기업명") or "").strip() == name)
-    print(json.dumps(collect_clinical_data("c001", row), ensure_ascii=False, indent=2))
+def collect_and_save(company_id: str, company_profile: dict, as_of: Optional[str] = None) -> dict:
+    out = collect_clinical_data(company_id, company_profile, as_of)
+    d = Path(INPUT_DIR)
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"{company_id}.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+    return out
+
+
+def main(argv: list[str]) -> None:
+    """python -m collection startup_list.csv [개수] [기업명,기업명,...] [--force]
+    이미 저장된 기업은 건너뛴다. 다시 수집하려면 --force"""
+    args = [a for a in argv if not a.startswith("--")]
+    companies = load_companies_from_csv(args[0])
+    if len(args) > 2:
+        companies = {cid: row for cid, row in companies.items() if row.get("기업명") in set(args[2].split(","))}
+    companies = dict(list(companies.items())[:int(args[1]) if len(args) > 1 else len(companies)])
+    if "--force" not in argv:
+        companies = {cid: row for cid, row in companies.items() if not (Path(INPUT_DIR) / f"{cid}.json").exists()}
+    with ThreadPoolExecutor(max_workers=COMPANY_CONCURRENCY) as pool:
+        futures = {pool.submit(collect_and_save, cid, row): cid for cid, row in companies.items()}
+        for fut, cid in futures.items():
+            out = fut.result()
+            ds = out["dataset"]
+            print(f"{cid} {companies[cid].get('기업명')}: 출처 {len(ds['sources'])} · 레코드 {len(ds['records'])}"
+                  + (f" · 문제 {out['issues']}" if out["issues"] else ""))
