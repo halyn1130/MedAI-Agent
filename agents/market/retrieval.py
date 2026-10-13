@@ -64,6 +64,15 @@ def market_queries(request: WorkerInput) -> dict[str, list[str]]:
     return queries
 
 
+def _is_company_record(raw: dict, company_id: str) -> bool:
+    """This company's own supplied fact (company_id), or a re-collected record
+    (agents/data_collect/recollect.py) marked with company_ids and the market tag.
+    The tag check keeps other workers' company records out when a whole dataset is forwarded."""
+    if raw.get("company_id") == company_id:
+        return True
+    return company_id in (raw.get("company_ids") or []) and "market" in (raw.get("tags") or [])
+
+
 class MarketRagPreparer:
     def __init__(self, retriever: Retriever, *, config: MarketConfig | None = None):
         self.retriever = retriever
@@ -80,7 +89,7 @@ class MarketRagPreparer:
         # Industry PDF pages are replaced by RAG results, never forwarded wholesale.
         remaining = self.config.max_context_chars
         for raw in supplied_records:
-            if raw.get("dimension") != "context" and raw.get("company_id") != request.company_id:
+            if raw.get("dimension") != "context" and not _is_company_record(raw, request.company_id):
                 continue
             if raw.get("dimension") not in (None, "context"):
                 continue

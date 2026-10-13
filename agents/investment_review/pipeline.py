@@ -1,15 +1,21 @@
 """전체 그래프: Orchestrator(기업별 Worker 실행·판정) → 선정 → 보고서(취합 → 작성 → 품질 평가).
 
-    START ─(기업별 Send)→ company ─→ select ─→ aggregate_results ─→ write_report ─→ review_quality
-                                      ↑                                  ↑                │
-                                      │                                  └── report 이슈 ──┤ (재작성 ≤ 2회)
-                                      └──── orchestrator_review ←── interpretation 이슈 ───┤ (재검토 ≤ 1회)
-                                                                                           └→ END
+    START ─(기업별 Send)→ company ─→ select ─→ aggregate_results ─(충분)→ write_report ─→ review_quality
+                                      ↑  ↑                 │                       ↑                │
+                                      │  │       (데이터 부족)│                       └── report 이슈 ──┤ (재작성 ≤ 2회)
+                                      │  └ recollect_company ←Send─ recollect_plan      (재수집 ≤ 1회)    │
+                                      └──── orchestrator_review ←── interpretation 이슈 ──────────────┤ (재검토 ≤ 1회)
+                                                                                                      └→ END
 
 - company            : agents/orchestrator 기업 그래프(build_company_graph) 그대로. 자료 있는 Worker만 실행·보완·판정.
 - select             : 적격 기업 중 상위 K개 (Orchestrator select와 같은 규칙, orchestration 기록 유지).
 - orchestrator_review: 품질 평가가 'Worker 결과가 이상하다'(interpretation)고 본 기업·Worker만 공통 형식 review_request로
                        다시 실행하고, Orchestrator finalize로 다시 판정한다. 이후 선정부터 다시 하고 보고서를 새로 쓴다.
+- recollect_plan       : 취합 노드가 데이터 부족(unresolved_items)이라고 판단하면 기업별 collection_request를 만든다
+                       (agents/data_collect/recollect.requests_from_unresolved). 재수집 횟수를 올리고 후속 결과를 비운다.
+- recollect_company    : 기업마다 병렬(Send)로 재수집(recollect.collect_additional). 새 자료가 있으면(updated) 데이터셋을
+                       저장소에 다시 저장하고, 자료가 늘어난 Worker만 재평가 → Orchestrator finalize로 재판정.
+                       새 자료가 없으면(no_new_data 등) 같은 평가를 반복하지 않는다 (common_state.md 6장).
 - agents/orchestrator 코드는 바꾸지 않고 함수(build_company_graph·_payload·_worker_node·_finalize_node)를 가져다 쓴다.
 
     python -m agents.investment_review.pipeline --input bundles.json --out outputs/pipeline
@@ -27,15 +33,16 @@ from typing import Annotated, Any, Callable, Optional
 from langgraph.graph import START, StateGraph
 from langgraph.types import Send
 
-from agents.orchestrator.store import dataset_version
+from agents.orchestrator.store import dataset_version, load_dataset, put_dataset
 
 from .contract import InvestmentReview
 from .policy import DEFAULT_POLICY, POLICIES
 from .report.evaluator import issue_company
-from .report.nodes import ReportConfig, ReportStageState, _log, _rereview_targets, add_report_nodes
+from .report.nodes import ReportConfig, ReportStageState, _collections, _log, _rereview_targets, add_report_nodes
 from .selection import select
 
 WorkerFn = Callable[[dict], dict]
+CollectFn = Callable[..., dict]            # recollect.collect_additional과 같은 인자·반환
 
 
 def merge(a: Optional[dict], b: Optional[dict]) -> dict:
@@ -46,6 +53,8 @@ class PipelineState(ReportStageState, total=False):
     companies: list[dict]                            # [{company_id, company_profile, dataset}, ...] (Orchestrator 입력)
     company_states: Annotated[dict, merge]           # {company_id: Orchestrator 기업 그래프 최종 State}
     worker_log: Annotated[list, operator.add]
+    collection_requests: dict                        # {company_id: collection_request} (recollect_plan가 이번 라운드에 만든 것)
+    collection_log: Annotated[list, operator.add]    # 기업별 재수집 결과 요약 (병렬 쓰기 → 누적)
 
 
 def _review_request(cs: dict, worker: str, issues: list[dict], attempt: int) -> dict:
@@ -62,13 +71,17 @@ def _review_request(cs: dict, worker: str, issues: list[dict], attempt: int) -> 
 
 
 def build_pipeline(workers: Optional[dict[str, WorkerFn]] = None, policy_name: str = "zero_fill",
-                   cfg: Optional[ReportConfig] = None, checkpointer: Any = None, **company_kwargs):
+                   cfg: Optional[ReportConfig] = None, checkpointer: Any = None,
+                   collector: Optional[CollectFn] = None, **company_kwargs):
     from agents.orchestrator.graph import (_finalize_node, _payload, _worker_node, build_company_graph,
                                            default_workers)
     policy = POLICIES.get(policy_name, DEFAULT_POLICY)
     workers = workers if workers is not None else default_workers()
     cfg = (cfg or ReportConfig(policy_name=policy_name)).resolved()
     cfg.rereview = True
+    if collector is None:
+        from agents.data_collect.recollect import collect_additional as collector
+    cfg.collect = True
     # 기업 그래프는 노드 안에서 호출하므로 자체 저장은 끄고, 기업 결과는 상위 그래프 체크포인트에 남긴다
     company_graph = build_company_graph(workers, policy, checkpointer=False, **company_kwargs)
     finalize = _finalize_node(policy)
@@ -130,30 +143,80 @@ def build_pipeline(workers: Optional[dict[str, WorkerFn]] = None, policy_name: s
                 "orchestration": {**orch, "retry_counts": counts},
                 "aggregated_result": None, "report": None, "quality_review": None, "report_draft": {}}
 
+    def recollect_plan(state: dict) -> dict:
+        """데이터 부족 → 기업별 collection_request (취합 노드가 고른 경로). 재수집 횟수·후속 결과 초기화는 여기서 한 번만."""
+        from agents.data_collect.recollect import requests_from_unresolved
+        states = state.get("company_states") or {}
+        attempt = _collections(state) + 1
+        unresolved = (state.get("aggregated_result") or {}).get("unresolved_items") or []
+        requests = requests_from_unresolved(unresolved, {cid: dataset_version(cs) for cid, cs in states.items()},
+                                            attempt)
+        orch = dict(state.get("orchestration") or {})
+        counts = {**(orch.get("retry_counts") or {}), "collection": attempt}
+        _log(state, "recollect_plan", "recollect",
+             f"{attempt}차 재수집 · 기업 {len(requests)}곳 · 항목 {sum(len(r['items']) for r in requests.values())}건")
+        return {"collection_requests": requests, "orchestration": {**orch, "retry_counts": counts},
+                "aggregated_result": None, "report": None, "quality_review": None, "report_draft": {}}
+
+    def dispatch_collection(state: dict):
+        requests = state.get("collection_requests") or {}
+        states = state.get("company_states") or {}
+        return [Send("recollect_company", {"company_state": states[cid], "request": req, "run_id": state.get("run_id")})
+                for cid, req in requests.items() if cid in states] or "select"
+
+    def recollect_company(payload: dict) -> dict:
+        cs, req = dict(payload["company_state"]), payload["request"]
+        cid = cs["company_id"]
+        out = collector(cid, cs.get("company_profile") or {}, load_dataset(cs), req, cs["as_of"])
+        result = out["collection_result"]
+        rerun, log = [], []
+        if result["status"] == "updated":
+            cs["dataset_ref"], cs["dataset"] = put_dataset(out["dataset"]), None
+            selected = (cs.get("plan") or {}).get("selected") or []
+            for w in [w for w in result["updated_workers"] if w in selected and w in workers]:
+                res = _worker_node(w, workers[w])(_payload(cs, w))      # previous_result 포함, 새 자료로 재평가
+                cs["worker_results"] = {**(cs.get("worker_results") or {}), **res["worker_results"]}
+                log += res["worker_log"]
+                rerun.append(w)
+            cs["worker_log"] = (cs.get("worker_log") or []) + log
+            if rerun:
+                cs.update(finalize(cs))                                    # Orchestrator finalize로 다시 판정
+        summary = {"company_id": cid, "request_id": req["request_id"], "attempt": req["attempt"],
+                   "status": result["status"], "added_records": result.get("added_records", 0), "rerun": rerun}
+        cs["collection_history"] = (cs.get("collection_history") or []) + [summary]
+        return {"company_states": {cid: cs}, "worker_log": log, "collection_log": [summary]}
+
     g = StateGraph(PipelineState)
     g.add_node("company", company)
     g.add_node("select", selection)
     g.add_node("orchestrator_review", orchestrator_review)
+    g.add_node("recollect_plan", recollect_plan)
+    g.add_node("recollect_company", recollect_company)
     add_report_nodes(g, cfg)
     g.add_conditional_edges(START, fan_out, ["company", "select"])
     g.add_edge("company", "select")
     g.add_edge("select", "aggregate_results")
     g.add_edge("orchestrator_review", "select")
+    g.add_conditional_edges("recollect_plan", dispatch_collection, ["recollect_company", "select"])
+    g.add_edge("recollect_company", "select")
     return g.compile(checkpointer=checkpointer)
 
 
 def run_pipeline(companies: list[dict], run_id: str, as_of: str, cfg: ReportConfig,
                  workers: Optional[dict[str, WorkerFn]] = None, max_concurrency: int = 5,
-                 checkpointer: Any = None, thread_id: Optional[str] = None, **company_kwargs) -> dict:
+                 checkpointer: Any = None, thread_id: Optional[str] = None,
+                 collector: Optional[CollectFn] = None, **company_kwargs) -> dict:
     """checkpointer와 thread_id를 주면 단계마다 저장하고, 같은 thread_id로 다시 부르면 멈춘 곳부터 이어서 실행한다."""
     from agents.orchestrator.store import externalize, invoke_resumable
-    graph = build_pipeline(workers, cfg.policy_name, cfg, checkpointer=checkpointer, **company_kwargs)
+    graph = build_pipeline(workers, cfg.policy_name, cfg, checkpointer=checkpointer, collector=collector,
+                           **company_kwargs)
     config: dict = {"max_concurrency": max_concurrency, "run_name": "investment_pipeline",
                     "metadata": {"run_id": run_id, "thread_id": thread_id}}
     if thread_id:
         config["configurable"] = {"thread_id": thread_id}
     return invoke_resumable(graph, {"run_id": run_id, "as_of": as_of, "companies": externalize(companies),
-                                    "orchestration": {"retry_counts": {"report_rereview": 0}}}, config)
+                                    "orchestration": {"retry_counts": {"report_rereview": 0, "collection": 0}}},
+                            config)
 
 
 def main() -> None:
@@ -221,7 +284,7 @@ def main() -> None:
         total = "-" if r["total_score"] is None else f"{r['total_score']:.1f}"
         print(f"{r['company_id']} {r['final_status']:12} {total:>6}  {r['selection']['reason']}")
     print(f"\n보고서: {args.out / 'final_report.md'} · 품질 평가 {ev['status']} ({ev['attempts']}회 작성, "
-          f"재검토 {ev['rereviews']}회, 종료 사유 {ev['termination_reason']})")
+          f"재검토 {ev['rereviews']}회, 재수집 {ev['collections']}회, 종료 사유 {ev['termination_reason']})")
 
 
 if __name__ == "__main__":

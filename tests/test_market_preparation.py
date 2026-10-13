@@ -166,6 +166,22 @@ def test_company_context_is_bounded_and_not_mixed_with_industry_evidence():
     assert all(len(evidence) == 1 for evidence, _ in reasoner.inputs.values())
 
 
+def test_recollected_market_record_supplements_company_context():
+    payload = worker_input(profile={"company_id": "company-1", "company_name": "Acme"})
+    payload["dataset"]["records"] = [
+        {"source_id": "report-1", "company_ids": ["company-1"], "tags": ["market", "recollected"],
+         "text": "Acme sells to hospital procurement teams."},
+        {"source_id": "report-1", "company_ids": ["company-1"], "tags": ["traction", "recollected"],
+         "text": "Traction-only record."},
+        {"source_id": "report-1", "company_ids": ["other"], "tags": ["market", "recollected"],
+         "text": "Other company record."},
+        {"source_id": "report-1", "company_ids": [], "text": "Shared industry page."},
+    ]
+    prepared = MarketRagPreparer(FakeRetriever()).prepare(payload)
+    context = [r["text"] for r in prepared["dataset"]["records"] if r["dimension"] == "context"]
+    assert context == ["Acme sells to hospital procurement teams."]
+
+
 def test_review_never_sends_prior_pdf_evidence_back_to_llm():
     payload = worker_input()
     payload["previous_result"] = {
