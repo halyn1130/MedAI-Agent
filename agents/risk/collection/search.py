@@ -8,7 +8,7 @@ from urllib.parse import urlsplit
 import requests
 
 from ..errors import ProviderError
-from ..schema import Source
+from .schema import Source
 
 
 class TavilySearch:
